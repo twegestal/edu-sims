@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "edu-sims",
+  "scripts": {
+    "dev-client": "pnpm --prefix apps/client run dev",
+    "dev-server": "pnpm --prefix apps/server run dev",
+    "dev": "concurrently \"pnpm --prefix apps/client run dev\" \"pnpm --prefix apps/server run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
+}
