@@ -43,4 +43,4 @@ The project is structured as a monorepo with two main packages:
 
 A proxy has been set up in the Vite configuration. This means that API calls from the client with paths starting with `/api` will be automatically proxied to the server.
 
-Example, a fetch requesdt in the client to `/api/hello` will be handeled by the server route `/hello`.
+Example, a fetch request in the client to `/api/hello` will be handeled by the server route `/hello`.
