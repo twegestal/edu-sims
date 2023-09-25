@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "edu-sims",
+  "type": "module",
   "scripts": {
     "dev-client": "pnpm --prefix apps/client run dev",
     "dev-server": "pnpm --prefix apps/server run dev",

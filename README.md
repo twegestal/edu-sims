@@ -1,6 +1,6 @@
 # Edu-Sims Monorepo
 
-This repository contains a monorepo setup for the Edu-Sims project, which includes a React client and an Express server.
+This repository contains a monorepo setup, which includes a React client and an Express server.
 
 ## Getting Started
 
