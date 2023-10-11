@@ -1,7 +1,7 @@
 //const { Sequelize } = require('sequelize');
-import { Sequelize, Transaction } from 'sequelize'
+import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize(
+export const db = new Sequelize(
     'edu_sims_test', 'am6110', 'eky5mc9s', {
         host: 'pgserver.mau.se',
         dialect: 'postgres',
@@ -13,5 +13,4 @@ const sequelize = new Sequelize(
     }
 );
 
-export default sequelize;
 
