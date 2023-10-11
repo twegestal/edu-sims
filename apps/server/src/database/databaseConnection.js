@@ -1,18 +1,17 @@
-//import { Client } from 'pg'
-import pkg from 'pg';
-const {Client} = pkg;
+//const { Sequelize } = require('sequelize');
+import { Sequelize, Transaction } from 'sequelize'
 
-export const connectToDatabase = async () => {
-    const client = new Client({
+const sequelize = new Sequelize(
+    'edu_sims_test', 'am6110', 'eky5mc9s', {
         host: 'pgserver.mau.se',
-        port: 5432,
-        database: 'edu_sims_test',
-        user: 'am6110',
-        password: 'eky5mc9s',
-    });
-      
-    await client.connect();
+        dialect: 'postgres',
+        port : 5432,
+        pool : {
+            max: 90,
+            min: 0
+        }
+    }
+);
 
-    return client;
-}
+export default sequelize;
 

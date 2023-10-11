@@ -1,11 +1,12 @@
 import express from 'express';
 import { getUserRoutes } from './routes/userRoutes.js';
+import sequelize from './database/databaseConnection.js';
 
 export const createServer = () => {
     const app = express();
 
     app.use(express.json());
-    app.use('/user', getUserRoutes());
+    app.use('/user', getUserRoutes(sequelize));
 
     app.get('/hello', (req, res) => {
         res.status(201).json(greetingPhrase());

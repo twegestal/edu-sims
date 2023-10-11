@@ -1,15 +1,27 @@
 import { Router } from "express";
-import { connectToDatabase } from "../database/databaseConnection.js";
-import pkg from 'pg';
-const {Client} = pkg;
+import { setupModel } from '../objects/end_user.js';
 
-export const getUserRoutes = () => {
+export const getUserRoutes = (sequalize) => {
     const router = Router();
 
-    router.post('/register', (req, res, next) => {
-        res.status(201).json('hej registrering');
+    router.post('/register', async (req, res, next) => {
+        try {
+            await sequalize.authenticate();
+            console.log('Connection has been established successfully.');
+          } catch (error) {
+            console.error('Unable to connect to the database:', error);
+        }
+
+        const user = await end_user.create({
+            email : 'hej@gmail.com',
+            password : '12345',
+            salt : 'kjhfaskjhf',
+            is_admin : true
+        })
     })
 
+    
+    /*
     router.post('/create', async (req, res, next) => {
         const client = new Client({
             host: 'pgserver.mau.se',
@@ -28,6 +40,7 @@ export const getUserRoutes = () => {
 
         await client.end()
     })
+    */
     
     return router;
 }
