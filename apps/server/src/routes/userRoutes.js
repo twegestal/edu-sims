@@ -5,21 +5,28 @@ export const getUserRoutes = (db) => {
     const router = Router();
 
     router.post('/register', async (req, res, next) => {
-        try {
-            await db.authenticate();
-            console.log('Connection has been established successfully.');
-          } catch (error) {
-            console.error('Unable to connect to the database:', error);
-        }
-
+    /*
+    Registers a user in the DB using the end_user class
+    */
+        console.log(req.body.email)
         const user = await end_user.create({
-            email : 'hej@gmail.com',
-            password : '12345',
-            salt : 'kjhfaskjhf',
-            is_admin : true
+            group_id : req.body.group_id,
+            email : req.body.email,
+            password : req.body.password,
+            is_admin : false
         })
-        res.status(201).json(user.email); 
+        res.status(201).json(''); 
     })
+       
     
+    router.post('/login', async (req, res, next) => {
+        const result = await end_user.findAll({
+            where: {
+            email: 'hej@gmail.com'
+            }
+        });
+        console.log(result[0].email)
+    })
+
     return router;
 }

@@ -8,6 +8,8 @@ export const createServer = () => {
     app.use(express.json());
     app.use('/user', getUserRoutes(db));
 
+
+
     app.get('/hello', (req, res) => {
         res.status(201).json(greetingPhrase());
     })

@@ -25,8 +25,11 @@ export const end_user = db.define('end_user', {
     type : DataTypes.BOOLEAN,
     allowNull : false
   },
+  group_id : {
+    type: DataTypes.TEXT
+  }
 }, {
-  // Other model options go here
+  // Other model are go here
   freezeTableName : true,
   timestamps : false
 });
