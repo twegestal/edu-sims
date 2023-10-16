@@ -1,5 +1,6 @@
 import express from 'express';
 import { getUserRoutes } from './routes/userRoutes.js';
+import { getCaseRoutes } from './routes/caseRoutes.js';
 import { db } from './database/databaseConnection.js';
 
 export const createServer = () => {
@@ -7,6 +8,7 @@ export const createServer = () => {
 
     app.use(express.json());
     app.use('/user', getUserRoutes(db));
+    app.use('/case', getCaseRoutes(db));
 
 
 
