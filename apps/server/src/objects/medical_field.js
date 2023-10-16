@@ -1,10 +1,10 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 import { medical_case } from './medical_case.js';
-import { attempt } from './attempt.js';
+import { diagnosis_list } from './diagnosis_list.js';
 
 
-export const end_user = db.define('end_user', {
+export const medical_field = db.define('medical_field', {
   // Model attributes are defined here
   id : {
     type : DataTypes.UUID,
@@ -12,33 +12,13 @@ export const end_user = db.define('end_user', {
     allowNull : false,
     primaryKey: true
   },
-  email: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  password: {
-    type: DataTypes.TEXT,
-    allowNull : false
-  },
-  salt : {
+  name: {
     type : DataTypes.TEXT
-  },
-  is_admin : {
-    type : DataTypes.BOOLEAN,
-    allowNull : false
-  },
-  group_id : {
-    type: DataTypes.TEXT
   }
 }, {
-  // Other model are go here
+  // Other model information goes here
   freezeTableName : true,
   timestamps : false
 });
-
-
-
-
-
 
 

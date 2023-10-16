@@ -1,10 +1,9 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 import { medical_case } from './medical_case.js';
-import { attempt } from './attempt.js';
+import { module_type } from './module_type.js';
 
-
-export const end_user = db.define('end_user', {
+export const step = db.define('step', {
   // Model attributes are defined here
   id : {
     type : DataTypes.UUID,
@@ -12,33 +11,24 @@ export const end_user = db.define('end_user', {
     allowNull : false,
     primaryKey: true
   },
-  email: {
-    type: DataTypes.TEXT,
-    allowNull: false
+  case_id: {
+    type : DataTypes.UUID,
+    allowNull : false,
   },
-  password: {
-    type: DataTypes.TEXT,
-    allowNull : false
+  index: {
+    type : DataTypes.INTEGER,
   },
-  salt : {
-    type : DataTypes.TEXT
+  module_type_identifier: {
+    type : DataTypes.INTEGER,
   },
-  is_admin : {
-    type : DataTypes.BOOLEAN,
-    allowNull : false
-  },
-  group_id : {
-    type: DataTypes.TEXT
+  step_id: {
+    type : DataTypes.UUID,
+    allowNull : false,
   }
 }, {
-  // Other model are go here
+  // Other model information goes here
   freezeTableName : true,
   timestamps : false
 });
-
-
-
-
-
 
 
