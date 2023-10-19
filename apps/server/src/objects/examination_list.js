@@ -1,37 +1,23 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 
-export const examination = db.define('examination', {
+export const examination_list = db.define('examination_list', {
     id : {
         type : DataTypes.UUID,
         defaultValue : DataTypes.UUIDV4,
         allowNull : false,
         primaryKey : true
     },
-    prompt:{
+    name:{
         type:DataTypes.TEXT
     },
-    examination_to_display:{
-        type:DataTypes.JSON
+    examination_type_id:{
+        type: DataTypes.UUID,
+        defaultValue : DataTypes.UUIDV4
     },
-    feedback_correct:{
-        type:DataTypes.TEXT
-    },
-    feedback_incorrect:{
-        type:DataTypes.TEXT
-    },
-    max_nbr_tests:{
-        type:DataTypes.INTEGER
+    examination_subtype_id:{
+        type:DataTypes.UUID,
+        defaultValue : DataTypes.UUIDV4
     }
-},{
-    // Other model are go here
-    freezeTableName : true,
-    timestamps : false
 });
-const examination_list = {
-    id: String,
-    name: String,
-    examination_type_id: String,
-    examination_subtype_id: String
-    }
 

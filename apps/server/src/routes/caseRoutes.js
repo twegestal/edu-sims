@@ -3,7 +3,7 @@ import { medical_case } from '../objects/medical_case.js';
 import { step } from "../objects/step.js";
 import { summary } from "../objects/summary.js";
 import { introduction } from "../objects/introduction.js";
-import { examination } from "../objects/examination_list.js";
+import { examination } from "../objects/examination.js";
 
 export const getCaseRoutes = (db) => {
     const router = Router();
