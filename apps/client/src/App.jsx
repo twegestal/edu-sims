@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import Login from './login.jsx'
+import Register from './register.jsx'
 import './App.css'
 
 function App() {
   const [message, setMessage] = useState('');
   const [user, setUser] = useState({});
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const groupId = urlParams.get("groupId");
 
   const updateLoggedInUser = (id, email, is_admin) => {
     setUser({
@@ -57,13 +61,30 @@ function App() {
 
   return (
     <>
-      <h1>{message}</h1>
-      <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
-      <Login user = {user}
-      postToApi = {postCallToApi}
-      updateLoggedInUser = {updateLoggedInUser}
-      getCallToApi = {getCallToApi}></Login>
+      {groupId != null && 
+        <Register
+        postCallToApi = {postCallToApi}
+        getCallToApi = {getCallToApi}
+        updateLoggedInUser = {updateLoggedInUser}
+        groupId = {groupId}></Register>
+      }
+      {groupId === null &&
+        <div>
+          <h1>{message}</h1>
+        <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
+        <Login user = {user}
+        postToApi = {postCallToApi}
+        updateLoggedInUser = {updateLoggedInUser}
+        getCallToApi = {getCallToApi}></Login>
+        </div>
+      }
+
+      
+      
+
+      
       <h1>{user.email}</h1>
+      
     </>
   )
 }

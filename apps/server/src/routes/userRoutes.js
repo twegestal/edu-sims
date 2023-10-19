@@ -75,7 +75,7 @@ export const getUserRoutes = (db) => {
                 is_admin : false
             })
             res.status(201).json({
-                email : req.body.email,
+                id : user.id,
                 message : 'Registration successful'
             }); 
         }
