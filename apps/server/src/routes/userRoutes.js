@@ -5,7 +5,7 @@ export const getUserRoutes = (db) => {
     const router = Router();
 
     router.get('', async (req, res, next) => {
-        const user = await end_user.findOne({
+        const user = await object.end_user.findOne({
             where : {
                 id : req.body.user_id
             }
@@ -23,7 +23,7 @@ export const getUserRoutes = (db) => {
         /*
         Sequelize uses the provided email to query the database:
         */
-        const user = await end_user.findOne({
+        const user = await object.end_user.findOne({
             where : {
                 email : req.body.email
             }
@@ -51,7 +51,7 @@ export const getUserRoutes = (db) => {
         /*
         Queries the database to see if the email is already in use:
         */
-        const result = await end_user.findOne({
+        const result = await object.end_user.findOne({
             where : {
                 email : req.body.email
             }
@@ -64,7 +64,7 @@ export const getUserRoutes = (db) => {
             /*
             If the email is not found in the database, inserts a new row with new user in the end_user table:
             */
-            const user = await end_user.create({
+            const user = await object.end_user.create({
                 group_id : req.body.group_id,
                 email : req.body.email,
                 password : req.body.password,
@@ -82,7 +82,7 @@ export const getUserRoutes = (db) => {
         /*
         Query the database to see if the user exists:
         */
-        const user = await end_user.findOne({
+        const user = await object.end_user.findOne({
             where : {
                 id : req.body.user_id
             }
@@ -104,7 +104,7 @@ export const getUserRoutes = (db) => {
         /*
         Query the database to see if the user exists:
         */
-        const user = await end_user.findOne({
+        const user = await object.end_user.findOne({
             where : {
                 id : req.body.user_id
             }
@@ -125,7 +125,7 @@ export const getUserRoutes = (db) => {
     })
 
     router.delete('/delete-all-users', async (req, res, next) => {
-        //await end_user.truncate();
+        //await object.end_user.truncate();
         //metoden ovan funkar inte när det finns foreign key constraints, jag blev lite skraj och har inte fortsatt :)
         res.status(200).json('All users removed');
     })
