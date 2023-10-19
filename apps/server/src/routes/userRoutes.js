@@ -37,9 +37,10 @@ export const getUserRoutes = (db) => {
             if (req.body.password === user.password) {
                 res.status(200).json(
                     {
-                        id : result.id
+                        id : user.id
                     }
                 );
+
             }
             else {
                 res.status(404).json('Username or password incorrect'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
