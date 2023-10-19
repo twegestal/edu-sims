@@ -20,9 +20,6 @@ export const end_user = db.define('end_user', {
     type: DataTypes.TEXT,
     allowNull : false
   },
-  salt : {
-    type : DataTypes.TEXT
-  },
   is_admin : {
     type : DataTypes.BOOLEAN,
     allowNull : false
