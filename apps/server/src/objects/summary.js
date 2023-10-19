@@ -1,34 +1,25 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 
-export const medical_case = db.define('medical_case', {
+export const summary = db.define('summary', {
     id : {
         type : DataTypes.UUID,
         defaultValue : DataTypes.UUIDV4,
         allowNull : false,
         primaryKey : true
     },
-    name : {
+    process : {
         type : DataTypes.TEXT,
-        allowNull : false,
-    },
-    medical_field_id : { 
-        type : DataTypes.UUID,
-        references: 'medical_field',
-        referencesKey: 'id',
         allowNull : false
     },
-    creator_user_id : { 
-        type : DataTypes.UUID,
-        references: 'end_user',
-        referencesKey: 'id',
+    additional_info: {
+        type : DataTypes.TEXT,
         allowNull : false
     },
-    published : {
-        type : DataTypes.BOOLEAN,
+    additional_links : {
+        type : DataTypes.TEXT,
         allowNull : false
     }
-
 },{
     // Other model are go here
     freezeTableName : true,
