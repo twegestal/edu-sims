@@ -4,13 +4,13 @@ import './App.css'
 
 function App() {
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState({
-    id : ""
-  });
+  const [user, setUser] = useState({});
 
-  const updateLoggedInUser = (id) => {
+  const updateLoggedInUser = (id, email, is_admin) => {
     setUser({
-      id : id
+      id : id,
+      email : email,
+      is_admin : is_admin
     })
   }
 
@@ -22,7 +22,7 @@ function App() {
       })
   }
   
-  const postToApi = async (body, url) => {
+  const postCallToApi = async (body, url) => {
     const options = {
       method : "POST",
       headers : {
@@ -33,17 +33,37 @@ function App() {
     var apiResponse = "";
     
     apiResponse = await fetch(url, options);
+
     apiResponse = apiResponse.json();
     
     return apiResponse;
     
   }
 
+  const getCallToApi = async (url, inputHeaders) => {
+    const options = {
+      method : "GET",
+      headers : inputHeaders
+    }
+    
+    var apiResponse = "";
+
+    apiResponse = await fetch(url, options);
+
+    apiResponse = apiResponse.json();
+
+    return apiResponse;
+  }
+
   return (
     <>
       <h1>{message}</h1>
       <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
-      <Login user = {user} postToApi = {postToApi} updateLoggedInUser = {updateLoggedInUser}></Login>
+      <Login user = {user}
+      postToApi = {postCallToApi}
+      updateLoggedInUser = {updateLoggedInUser}
+      getCallToApi = {getCallToApi}></Login>
+      <h1>{user.email}</h1>
     </>
   )
 }

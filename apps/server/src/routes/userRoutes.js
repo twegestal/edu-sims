@@ -7,7 +7,7 @@ export const getUserRoutes = (db) => {
     router.get('', async (req, res, next) => {
         const user = await object.end_user.findOne({
             where : {
-                id : req.body.user_id
+                id : req.header('user_id')
             }
         })
 
@@ -31,7 +31,8 @@ export const getUserRoutes = (db) => {
 
 
         if (user === null) {
-            res.status(404).json('Username or password incorrect'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
+            res.status(404).json({
+                message : 'Username or password incorrect'}) //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
         }
         else {
             if (req.body.password === user.password) {
@@ -43,7 +44,9 @@ export const getUserRoutes = (db) => {
 
             }
             else {
-                res.status(404).json('Username or password incorrect'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
+                res.status(404).json({
+                    message : 'Username or password incorrect'
+                }); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
             }
         }
     })
