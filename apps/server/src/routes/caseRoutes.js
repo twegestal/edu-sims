@@ -1,9 +1,5 @@
 import { Router } from "express";
-import { medical_case } from '../objects/medical_case.js';
-import { step } from "../objects/step.js";
-import { summary } from "../objects/summary.js";
-import { introduction } from "../objects/introduction.js";
-import { examination } from "../objects/examination.js";
+import * as object from "../objects/object_index.js";
 
 export const getCaseRoutes = (db) => {
     const router = Router();
@@ -12,7 +8,7 @@ export const getCaseRoutes = (db) => {
         
     })
     router.get('/getAllCases',async(req,res,next)=>{
-        const Cases = await medical_case.findAll();    
+        const Cases = await object.medical_case.findAll();    
         res.status(200).json(Cases);
     }) 
     router.get('/getCaseById', async(req,res,next)=>{
@@ -24,7 +20,7 @@ export const getCaseRoutes = (db) => {
             }
         });
         */
-        const caseSteps = await step.findAll({
+        const caseSteps = await object.step.findAll({
             where: {
                 case_id: req.query.id
             }
@@ -44,7 +40,7 @@ export const getCaseRoutes = (db) => {
             }
         })
         */
-       
+
         res.status(201).json(caseSteps)
     })
 
