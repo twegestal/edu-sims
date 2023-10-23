@@ -24,7 +24,6 @@ export const getCaseRoutes = (db) => {
             where: {
                 case_id: req.query.id
             }
-            
         });
         //detta är bara en reminder på hur det funkar
         /*const plan = await examination.findOne({
@@ -43,6 +42,58 @@ export const getCaseRoutes = (db) => {
 
         res.status(201).json(caseSteps)
     })
+    router.get('/getMedicalFields', async(req,res,next)=>{
+        const Value = await object.medical_field.findAll({});
+        res.status(200).json(Value);
+    })
+    //TODO fixa 5 endpoints för alla typer ov steps + hämsta listan av case type
+
+    //Hämta specifict Introduction step
+    router.get('/getIntroductionStep', async(req,res,next)=>{
+        const IntroductionValue = await object.introduction.findAll({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.status(200).json(IntroductionValue);
+    })
+    //Hämta specifict Examination step
+    router.get('/getExaminationStep', async(req,res,next)=>{
+        const examinationValue = await object.examination.findAll({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.status(200).json(examinationValue);
+    })
+    //Hämta specifict Diagnosis step
+    router.get('/getDiagnosisStep', async(req,res,next)=>{
+        const diagnosisValue = await object.diagnosis.findAll({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.status(200).json(diagnosisValue);
+    })
+    //Hämta specifict Treatment step
+    router.get('/getTreatmentStep', async(req,res,next)=>{
+        const treatmentValue = await object.treatment.findAll({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.status(200).json(treatmentValue);
+    })
+    //Hämta specifict Summary step
+    router.get('/getSummaryStep', async(req,res,next)=>{
+        const summaryValue = await object.summary.findAll({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.status(200).json(summaryValue);
+    })
+
 
     return router;
 }
