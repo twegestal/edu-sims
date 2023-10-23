@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Input, Button } from '@chakra-ui/react'
 
 export default function Login(props) {
     const [emailInput, setEmailInput] = useState('Email');
@@ -31,9 +32,9 @@ export default function Login(props) {
     return (
         <div>
             <form onSubmit={postToLogin}>
-                <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)}/>
-                <input type="text" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
-                <input type="submit" value="Logga in"/>
+                <Input placeholder="Email" onChange={(e) => setEmailInput(e.target.value)}/>
+                <Input placeholder="Password" onChange={(e) => setPasswordInput(e.target.value)} />
+                <Button type="submit">Logga in</Button>
             </form>
         </div>
         
