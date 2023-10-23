@@ -11,31 +11,41 @@ export const getCaseRoutes = (db) => {
     router.post('/createCase', async (req, res, next) => {
         
     })
-    router.get('/GetCaseById', async(req,res,next)=>{
+    router.get('/getAllCases',async(req,res,next)=>{
+        const Cases = await medical_case.findAll();    
+        res.status(200).json(Cases);
+    }) 
+    router.get('/getCaseById', async(req,res,next)=>{
+        /*
+        Hämta specific case
         const result = await medical_case.findOne({
             where: {
             id: req.query.id
             }
         });
-        const test = await step.findAll({
+        */
+        const caseSteps = await step.findAll({
             where: {
                 case_id: req.query.id
             }
+            
         });
-        //detta fungerar bara som ett reminder hur det funkar
+        //detta är bara en reminder på hur det funkar
         /*const plan = await examination.findOne({
             where:{
                 id: test[3].step_id
             }
         })
         res.status(201).json(plan.examination_to_display)
-        */
+        
         const plan = await examination.findOne({
             where:{
                 id: test[3].step_id
             }
         })
-        res.status(201).json(plan.examination_to_display.Labbanalyser[0])
+        */
+       
+        res.status(201).json(caseSteps)
     })
 
     return router;
