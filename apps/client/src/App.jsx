@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Login from './login.jsx'
 import Register from './register.jsx'
+import ShowAllCases from './show_all_cases.jsx'
 import './App.css'
 
 function App() {
@@ -68,7 +69,7 @@ function App() {
         updateLoggedInUser = {updateLoggedInUser}
         groupId = {groupId}></Register>
       }
-      {groupId === null &&
+      {groupId === null & user.hasOwnProperty('id') == false &&
         <div>
           <h1>{message}</h1>
         <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
@@ -76,6 +77,14 @@ function App() {
         postToApi = {postCallToApi}
         updateLoggedInUser = {updateLoggedInUser}
         getCallToApi = {getCallToApi}></Login>
+        </div>
+      }
+
+      {user.hasOwnProperty('id') &&
+        <div>
+          <ShowAllCases
+          getCallToApi = {getCallToApi}>
+          </ShowAllCases>
         </div>
       }
 

@@ -17,7 +17,6 @@ export default function Register(props) {
 
             const response = await props.postCallToApi(body, 'http://localhost:5173/api/user/register');
 
-            console.log('returnerat användarobj' + response);
 
             const headers = {
                 "Content-type" : "application/json",
