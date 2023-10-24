@@ -71,27 +71,6 @@ function App() {
         updateLoggedInUser = {updateLoggedInUser}
         groupId = {groupId}></Register>
       }
-      {/*
-      {groupId === null & user.hasOwnProperty('id') == false &&
-        <div>
-          <h1>{message}</h1>
-        <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
-        <Login user = {user}
-        postToApi = {postCallToApi}
-        updateLoggedInUser = {updateLoggedInUser}
-        getCallToApi = {getCallToApi}></Login>
-        </div>
-      }
-      */}
-      {/*
-      {user.hasOwnProperty('id') &&
-        <div>
-          <ShowAllCases
-          getCallToApi = {getCallToApi}>
-          </ShowAllCases>
-        </div>
-      }
-      */}
 
       <Routes>
         <Route path='/' element={<Home
