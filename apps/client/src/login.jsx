@@ -23,7 +23,6 @@ export default function Login(props) {
             }
             const user = await props.getCallToApi('http://localhost:5173/api/user', headers);
 
-            console.log('user tillbaka i login.jsx: ' + user);
 
             props.updateLoggedInUser(user.id, user.email, user.is_admin);
         }

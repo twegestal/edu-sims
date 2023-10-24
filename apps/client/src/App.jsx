@@ -10,6 +10,7 @@ function App() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const groupId = urlParams.get("groupId");
+  const isIntroduction = urlParams.get("isIntroduction");
 
   const updateLoggedInUser = (id, email, is_admin) => {
     setUser({
@@ -56,7 +57,6 @@ function App() {
     apiResponse = await fetch(url, options);
 
     apiResponse = apiResponse.json();
-    console.log('apiResponse efter json: ' + apiResponse);
 
     return apiResponse;
   }
@@ -70,7 +70,7 @@ function App() {
         updateLoggedInUser = {updateLoggedInUser}
         groupId = {groupId}></Register>
       }
-      {groupId === null &&
+      {groupId === null && isIntroduction === null &&
         <div>
           <h1>{message}</h1>
         <button onClick={handleFetchMessageFromBackend}>Klicka här</button>
@@ -79,11 +79,12 @@ function App() {
         updateLoggedInUser = {updateLoggedInUser}
         getCallToApi = {getCallToApi}></Login>
 
-        <Introduction user = {user}
-        getCallToApi = {getCallToApi}>
-
-        </Introduction>
+        
         </div>
+      }
+      {isIntroduction != null &&
+        <Introduction user = {user}
+        getCallToApi = {getCallToApi}></Introduction>
       }
 
       
