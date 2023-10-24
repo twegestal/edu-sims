@@ -20,15 +20,10 @@ export const getCaseRoutes = (db) => {
             }
         });
         */
-        const caseSteps = await object.step.findAll({
-            where: {
-                case_id: req.query.id
-            }
-        });
-        //detta är bara en reminder på hur det funkar
-        /*const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
+       //detta är bara en reminder på hur det funkar
+       /*const plan = await examination.findOne({
+           where:{
+               id: test[3].step_id
             }
         })
         res.status(201).json(plan.examination_to_display)
@@ -39,8 +34,13 @@ export const getCaseRoutes = (db) => {
             }
         })
         */
-
-        res.status(201).json(caseSteps)
+       const caseSteps = await object.step.findAll({
+           where: {
+               case_id: req.query.id
+           }
+       });
+       
+       res.status(201).json(caseSteps)
     })
     router.get('/getMedicalFields', async(req,res,next)=>{
         const Value = await object.medical_field.findAll({});
@@ -92,6 +92,33 @@ export const getCaseRoutes = (db) => {
             }
         });
         res.status(200).json(summaryValue);
+    })
+
+    router.get('/getSpecificValues', async(req,res,next)=>{
+        const summaryValue = await object.step_specific_values.findAll({
+            where:{
+                id : req.query.id
+            }
+        });
+        res.status(200).json(summaryValue);
+    })
+
+    router.get('/getExaminationTypes', async (req,res,next)=>{
+        const Value = await object.examination_type.findAll({});
+        res.status(200).json(Value);
+    })
+    // Tar emot en examination types id och hämtar alla subtyper för det id
+    router.get('/getExaminationSubtypes', async (req,res,next)=>{
+        const Value = await object.examination_subtype.findAll({
+            where : {
+                examination_type_id : req.query.id
+            }
+        });
+        res.status(200).json(Value);
+    })
+    router.get('/getExaminationList', async (req,res,next)=>{
+        const Value = await object.examination_list.findAll({});
+        res.status(200).json(Value);
     })
 
 
