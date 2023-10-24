@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useDisclosure } from "@chakra-ui/react";
 import { 
     VStack,
     HStack,
@@ -54,13 +55,14 @@ export default function Introduction(props) {
         fetchStep();
     }, []);
 
-    
+    const { isOpen, onToggle } = useDisclosure();
 
     const handleFeedback = (event) => {
+        setDisplayFeedback(true);
+        onToggle();
         //tillfällig lösning baserat på att vi kollar om det finns fler steg eller inte:
         switch (event.id) {
             case 'yesButton' : {
-                setDisplayFeedback(true);
                 if (caseData.length > 2) {
                     setFeedbackToDisplay(stepData.feedback_correct);
                 }
@@ -70,7 +72,6 @@ export default function Introduction(props) {
                 break;
             }
             case 'noButton' : {
-                setDisplayFeedback(true);
                 if (caseData.length > 2) {
                     setFeedbackToDisplay(stepData.feedback_incorrect);
                 }
@@ -97,15 +98,17 @@ export default function Introduction(props) {
 
                 <Card>
                     {(displayFeedback) ?
+
                     <Card> 
-                    <CardHeader>
-                        <Heading size='md'>Feedback</Heading>
-                    </CardHeader>
+                    <Button onClick={onToggle}>Feedback</Button>
+                    <Collapse in={isOpen}>
+                    
                     <CardBody>
                         <Text align='left'>{feedbackToDisplay}</Text>
                     </CardBody>
+                    
+                    </Collapse>
                     </Card>
-
                     :
                     
 
