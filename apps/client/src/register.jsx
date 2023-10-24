@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {Input, Button} from '@chakra-ui/react';
 
 export default function Register(props) {
     const [emailInput, setEmailInput] = useState('Email');
@@ -35,9 +36,9 @@ export default function Register(props) {
     return (
         <div>
             <form onSubmit={postToRegister}>
-                <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)}/>
-                <input type="text" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
-                <input type="submit" value="Skapa konto"/>
+                <Input placeholder='Email' onChange={(e) => setEmailInput(e.target.value)}/>
+                <Input placeholder='Password' onChange={(e) => setPasswordInput(e.target.value)} />
+                <Button type="submit">Skapa konto</Button>
             </form>
         </div>
     )
