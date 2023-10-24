@@ -84,7 +84,11 @@ function App() {
           getCallToApi = {getCallToApi}
         ></Login>}/>
         <Route path="/case">
-            <Route path=":caseid" element={<PerformCase></PerformCase>}></Route>
+            <Route path=":caseid" element={
+              <PerformCase
+                getCallToApi = {getCallToApi}
+              ></PerformCase>}>
+            </Route>
         </Route>
       </Routes>
       

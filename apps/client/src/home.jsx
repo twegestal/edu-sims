@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 import ShowAllCases from './show_all_cases.jsx'
 import { Link } from 'react-router-dom'
 
@@ -17,7 +18,7 @@ export default function Home(props) {
             {props.user.hasOwnProperty('id') == false &&
                 <div>
                     <h2>Du behöver logga in för att se innehållet</h2>
-                    <Link to="/login">Login</Link>
+                    <Link to="/login"><Button>Logga in</Button></Link>
                 </div>
             }
         </>

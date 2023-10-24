@@ -22,8 +22,11 @@ export const getCaseRoutes = (db) => {
         */
         const caseSteps = await object.step.findAll({
             where: {
-                case_id: req.query.id
-            }
+                case_id: req.header('case_id')
+            },
+            order: [
+                ['index', 'ASC']
+            ]
         });
         //detta är bara en reminder på hur det funkar
         /*const plan = await examination.findOne({

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from 'react-router-dom';
 import {
 IconButton,
@@ -22,19 +23,48 @@ import {BiTestTube} from 'react-icons/bi';
 export default function PerformCase(props) {
 
     let { caseid } = useParams()
+    caseid = caseid.split('caseid=')[1]
     const { isOpen : isNotesOpen, onOpen: onNotesOpen, onClose : onNotesClose } = useDisclosure();
     const { isOpen : isHomeOpen, onOpen: onHomeOpen, onClose : onHomeClose } = useDisclosure();
     const { isOpen : isDescOpen, onOpen: onDescOpen, onClose : onDescClose } = useDisclosure();
     const { isOpen : isFeedbackOpen, onOpen: onFeedbackOpen, onClose : onFeedbackClose } = useDisclosure();
     const { isOpen : isTestOpen, onOpen: onTestOpen, onClose : onTestClose } = useDisclosure();
+    const [caseList, setCaseList] = useState([]);
+    const  [currentStep, setCurrentStep] = useState({})
+    const [currentIndex, setCurrentIndex] = useState()
 
+    useEffect(() => {
+        const getCaseList = async (event) => {
+            
+            const headers = {
+                "Content-type" : "application/json",
+                "case_id" : caseid
+            }
+            const caseListFromApi = await props.getCallToApi('http://localhost:5173/api/case/getCaseById', headers);
 
+            setCaseList(caseListFromApi)
+            setCurrentStep(caseListFromApi[0])
+            setCurrentIndex(caseListFromApi[0].index)
+        };
+
+        getCaseList();
+    }, []); 
+
+    const nextStep = async (event) => {
+
+        let nextIndex = currentIndex + 1
+
+        let indexOfNextStep = caseList.findIndex(x => x.index === nextIndex);
+
+        setCurrentStep(caseList[indexOfNextStep])
+        setCurrentIndex(caseList[indexOfNextStep].index)
+    }
 
     return (
         <>
             <nav>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <div class="Notes">
+                    <div className="Notes">
                         <IconButton
                         onClick={onNotesOpen}
                         variant='solid'
@@ -60,7 +90,7 @@ export default function PerformCase(props) {
                             </ModalContent>
                         </Modal>
                     </div>
-                    <div class="Home">
+                    <div className="Home">
                         <IconButton
                         onClick={onHomeOpen}
                         variant='solid'
@@ -88,7 +118,7 @@ export default function PerformCase(props) {
                             </ModalContent>
                         </Modal>
                     </div>
-                    <div class="Desc">
+                    <div className="Desc">
                         <IconButton
                         onClick={onDescOpen}
                         variant='solid'
@@ -114,7 +144,7 @@ export default function PerformCase(props) {
                             </ModalContent>
                         </Modal>
                     </div>
-                    <div class="Feedback">
+                    <div className="Feedback">
                         <IconButton
                         onClick={onFeedbackOpen}
                         variant='solid'
@@ -140,7 +170,7 @@ export default function PerformCase(props) {
                             </ModalContent>
                         </Modal>
                     </div>
-                    <div class="Tests">
+                    <div className="Tests">
                         <IconButton
                         onClick={onTestOpen}
                         variant='solid'
@@ -168,7 +198,38 @@ export default function PerformCase(props) {
                     </div>
                 </Box>
             </nav>
-            <p>CASE {caseid}</p>
+            <p>CASE</p>
+            {currentStep.module_type_identifier == 0 &&
+                <div>
+                    <p>Introduktion</p>
+                </div>
+            }
+            {currentStep.module_type_identifier == 1 &&
+                <div>
+                    <p>Examination</p>
+                </div>
+            }
+            {currentStep.module_type_identifier == 2 &&
+                <div>
+                    <p>Diagnos</p>
+                </div>
+            }
+            {currentStep.module_type_identifier == 3 &&
+                <div>
+                    <p>Behandling</p>
+                </div>
+            }
+            {currentStep.module_type_identifier == 4 &&
+                <div>
+                    <p>Sammanfattning</p>
+                </div>
+            }
+            {currentIndex + 1 <= caseList.length -1 &&
+                <Button onClick={nextStep} >Nästa</Button>
+            }
+            {currentIndex + 1 > caseList.length -1 &&
+                <Link to="/"><Button>Avsluta</Button></Link>
+            }
         </>
         
     );
