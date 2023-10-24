@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon,
 } from '@chakra-ui/react'
+import { Link } from 'react-router-dom';
 
 export default function ShowAllCases(props) {
     const [allCases, setAllCases] = useState([]);
@@ -54,6 +54,9 @@ export default function ShowAllCases(props) {
                                     {groupedCases[medicalFieldId].map((caseItem) => (
                                     <div key={caseItem.id}>
                                         <p>Name: {caseItem.name}</p>
+                                        <Link to={"/case/caseid=" + caseItem.id}>
+                                            <button>Starta fallet</button>
+                                        </Link>
                                     </div>
                                     ))}
                             </AccordionPanel>
