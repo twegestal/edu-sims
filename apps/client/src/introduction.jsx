@@ -8,13 +8,15 @@ import {
     Heading,
     Text,
     CardBody,
+    Collapse,
 Button } from "@chakra-ui/react";
 
 export default function Introduction(props) {
     const [stepData, setStep] = useState({});
     //den här ska antagligen göras någon annanstans och skickas in som props men hämtar caset här tills vidare:
-    const [caseData, setCase] = useState({});
+    const [caseData, setCase] = useState([]);
     const [displayFeedback, setDisplayFeedback] = useState(false);
+    const [feedbackToDisplay, setFeedbackToDisplay] = useState();
 
     useEffect(() => {
         const fetchStep = async () => {
@@ -22,7 +24,7 @@ export default function Introduction(props) {
                 "Content-type" : "application/json"
             }
             
-            //hårdkodar detta case-id för tillfället:
+            //hårdkodar detta step-id för tillfället:
             const queryParams = '9bea0534-b426-423c-bd2e-3594815ba566';
     
             const response = await props.getCallToApi('http://localhost:5173/api/case/getIntroductionStep?id=' + queryParams, headers);
@@ -42,28 +44,39 @@ export default function Introduction(props) {
             }
             
             //hårdkodar detta case-id för tillfället:
-            const queryParams = '9bea0534-b426-423c-bd2e-3594815ba566';
+            const queryParams = 'c79e80c2-a164-4f8b-9a56-a3cb4fc85647';
 
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getIntroductionStep?id=' + queryParams, headers);
+            const response = await props.getCallToApi('http://localhost:5173/api/case/getCaseById?id=' + queryParams, headers);
 
-            setCase({
-                
-            })
+            setCase(response);
         }
-
+        fetchCase();
         fetchStep();
     }, []);
 
+    
+
     const handleFeedback = (event) => {
+        //tillfällig lösning baserat på att vi kollar om det finns fler steg eller inte:
         switch (event.id) {
             case 'yesButton' : {
                 setDisplayFeedback(true);
-
+                if (caseData.length > 2) {
+                    setFeedbackToDisplay(stepData.feedback_correct);
+                }
+                else { //dvs att det bara finns ett introsteg och ett summarysteg
+                    setFeedbackToDisplay(stepData.feedback_incorrect)
+                }
                 break;
             }
             case 'noButton' : {
                 setDisplayFeedback(true);
-
+                if (caseData.length > 2) {
+                    setFeedbackToDisplay(stepData.feedback_incorrect);
+                }
+                else { //dvs att det bara finns ett introsteg och ett summarysteg
+                    setFeedbackToDisplay(stepData.feedback_correct)
+                }
                 break;
             }
         }
@@ -78,7 +91,7 @@ export default function Introduction(props) {
                     </CardHeader>
 
                     <CardBody>
-                        <Text>{stepData.description}</Text>
+                        <Text align='left'>{stepData.description}</Text>
                     </CardBody>
                 </Card>
 
@@ -86,18 +99,19 @@ export default function Introduction(props) {
                     {(displayFeedback) ?
                     <Card> 
                     <CardHeader>
-                        <Heading>Feedback</Heading>
+                        <Heading size='md'>Feedback</Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text>{stepData.feedback_correct}</Text>
+                        <Text align='left'>{feedbackToDisplay}</Text>
                     </CardBody>
                     </Card>
 
                     :
+                    
 
-                    <Card>
+                    <Card align='center'>
                     <CardHeader>
-                        <Heading>{stepData.prompt}</Heading>
+                        <Heading size='md'>{stepData.prompt}</Heading>
                     </CardHeader>
 
                     <CardBody>
@@ -110,6 +124,10 @@ export default function Introduction(props) {
                     }
                     
                 </Card>
+
+                {displayFeedback &&
+                <Button>Gå vidare</Button>
+                }
             </VStack>
         </div>
     )
