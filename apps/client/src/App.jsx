@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Login from './login.jsx'
 import Register from './register.jsx'
 import './App.css'
+import Introduction from './introduction.jsx';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -55,6 +56,7 @@ function App() {
     apiResponse = await fetch(url, options);
 
     apiResponse = apiResponse.json();
+    console.log('apiResponse efter json: ' + apiResponse);
 
     return apiResponse;
   }
@@ -76,6 +78,11 @@ function App() {
         postToApi = {postCallToApi}
         updateLoggedInUser = {updateLoggedInUser}
         getCallToApi = {getCallToApi}></Login>
+
+        <Introduction user = {user}
+        getCallToApi = {getCallToApi}>
+
+        </Introduction>
         </div>
       }
 
