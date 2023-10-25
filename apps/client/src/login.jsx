@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Input, Button } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login(props) {
     const [emailInput, setEmailInput] = useState('Email');
     const [passwordInput, setPasswordInput] = useState('Password');
+    const navigate = useNavigate()
 
     const postToLogin = async (event) => {
         event.preventDefault();
+
         
         if (emailInput != 'Email' && passwordInput != 'Password') {
             const body = JSON.stringify({
@@ -16,7 +19,6 @@ export default function Login(props) {
     
             const response = await props.postToApi(body, 'http://localhost:5173/api/user/login');
 
-
             const headers = {
                 "Content-type" : "application/json",
                 "user_id" : response.id
@@ -25,6 +27,7 @@ export default function Login(props) {
 
 
             props.updateLoggedInUser(user.id, user.email, user.is_admin);
+            navigate("/")
         }
 
         

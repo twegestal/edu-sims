@@ -23,10 +23,18 @@ export const getCaseRoutes = (db) => {
             }
         });
         */
-       //detta är bara en reminder på hur det funkar
-       /*const plan = await examination.findOne({
-           where:{
-               id: test[3].step_id
+        const caseSteps = await object.step.findAll({
+            where: {
+                case_id: req.header('case_id')
+            },
+            order: [
+                ['index', 'ASC']
+            ]
+        });
+        //detta är bara en reminder på hur det funkar
+        /*const plan = await examination.findOne({
+            where:{
+                id: test[3].step_id
             }
         })
         res.status(201).json(plan.examination_to_display)
@@ -37,11 +45,6 @@ export const getCaseRoutes = (db) => {
             }
         })
         */
-       const caseSteps = await object.step.findAll({
-           where: {
-               case_id: req.query.id
-           }
-       });
        
        res.status(201).json(caseSteps)
     })
