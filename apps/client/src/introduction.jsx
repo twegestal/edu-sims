@@ -51,9 +51,12 @@ export default function Introduction(props) {
 
             setCase(response);
         }
+
         fetchCase();
         fetchStep();
     }, []);
+
+
 
     const { isOpen, onToggle } = useDisclosure();
 
@@ -84,52 +87,55 @@ export default function Introduction(props) {
     }
 
     return (
-        <div>               
+        <div>
+            {caseData.length > 0 &&
             <VStack align="stretch">
-                <Card variant="filled">
-                    <CardHeader>
-                        <Heading size='md'>Patientmöte</Heading>
-                    </CardHeader>
+            <Card variant="filled">
+                <CardHeader>
+                    <Heading size='md'>Patientmöte</Heading>
+                </CardHeader>
 
+                <CardBody>
+                    <Text align='left'>{stepData.description}</Text>
+                </CardBody>
+            </Card>
+
+            <Card variant="filled">
+                {(displayFeedback) ?
+
+                <Card variant="filled"> 
+                <Button onClick={onToggle}>Feedback</Button>
+                <Collapse in={isOpen}>
                     <CardBody>
-                        <Text align='left'>{stepData.description}</Text>
+                        <Text align='left'>{feedbackToDisplay}</Text>
                     </CardBody>
+                </Collapse>
                 </Card>
 
-                <Card variant="filled">
-                    {(displayFeedback) ?
+                :
 
-                    <Card variant="filled"> 
-                    <Button onClick={onToggle}>Feedback</Button>
-                    <Collapse in={isOpen}>
-                        <CardBody>
-                            <Text align='left'>{feedbackToDisplay}</Text>
-                        </CardBody>
-                    </Collapse>
-                    </Card>
-                    :
-                    
+                <Card align="center" variant="filled">
+                <CardHeader>
+                    <Heading size='md'>{stepData.prompt}</Heading>
+                </CardHeader>
 
-                    <Card align="center" variant="filled">
-                    <CardHeader>
-                        <Heading size='md'>{stepData.prompt}</Heading>
-                    </CardHeader>
-
-                    <CardBody>
-                    <HStack>
-                            <Button id="yesButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>JA</Button>
-                            <Button id="noButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
-                        </HStack>
-                    </CardBody>
-                    </Card>
-                    }
-                    
+                <CardBody>
+                <HStack>
+                        <Button id="yesButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>JA</Button>
+                        <Button id="noButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
+                    </HStack>
+                </CardBody>
                 </Card>
-
-                {displayFeedback &&
-                <Button colorScheme="teal">Gå vidare</Button>
                 }
-            </VStack>
+                
+            </Card>
+
+            {displayFeedback &&
+            <Button colorScheme="teal">Gå vidare</Button>
+            }
+        </VStack>
+            }               
+            
         </div>
     )
 }
