@@ -18,7 +18,8 @@ import { AiFillHome } from 'react-icons/ai';
 import {BsFileEarmarkPerson} from 'react-icons/bs';
 import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
-import Introduction from './introduction.jsx'
+import Introduction from './introduction.jsx';
+import Examination from './examination.jsx';
 
 
 export default function PerformCase(props) {
@@ -214,7 +215,12 @@ export default function PerformCase(props) {
             }
             {currentStep.module_type_identifier == 1 &&
                 <div>
-                    <p>Examination</p>
+                    <Examination
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}
+                        displayFeedback = {displayFeedback}
+                        setDisplayFeedback = {setDisplayFeedback}
+                    ></Examination>
                 </div>
             }
             {currentStep.module_type_identifier == 2 &&

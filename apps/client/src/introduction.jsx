@@ -10,7 +10,8 @@ import {
     Text,
     CardBody,
     Collapse,
-Button } from "@chakra-ui/react";
+    Button
+} from "@chakra-ui/react";
 
 export default function Introduction(props) {
     const [stepData, setStep] = useState({});
