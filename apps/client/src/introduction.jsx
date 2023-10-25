@@ -23,7 +23,6 @@ export default function Introduction(props) {
                 "id": props.stepId
             }
             
-            //hårdkodar detta step-id för tillfället:
     
             const response = await props.getCallToApi('http://localhost:5173/api/case/getIntroductionStep', headers);
 
