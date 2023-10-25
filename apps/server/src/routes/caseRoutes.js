@@ -59,7 +59,7 @@ export const getCaseRoutes = (db) => {
     router.get('/getIntroductionStep', async(req,res,next)=>{
         const reuslt = await object.introduction.findAll({
             where: {
-                id: req.query.id
+                id: req.header('id')
             }
         });
         res.status(200).json(reuslt);
