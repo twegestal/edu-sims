@@ -18,6 +18,7 @@ import { AiFillHome } from 'react-icons/ai';
 import {BsFileEarmarkPerson} from 'react-icons/bs';
 import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
+import Introduction from './introduction.jsx'
 
 
 export default function PerformCase(props) {
@@ -32,6 +33,7 @@ export default function PerformCase(props) {
     const [caseList, setCaseList] = useState([]);
     const  [currentStep, setCurrentStep] = useState({})
     const [currentIndex, setCurrentIndex] = useState()
+    const [displayFeedback, setDisplayFeedback] = useState(false);
 
     useEffect(() => {
         const getCaseList = async (event) => {
@@ -201,7 +203,13 @@ export default function PerformCase(props) {
             <p>CASE</p>
             {currentStep.module_type_identifier == 0 &&
                 <div>
-                    <p>Introduktion</p>
+                    <Introduction
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}
+                        caseData = {caseList}
+                        displayFeedback = {displayFeedback}
+                        setDisplayFeedback = {setDisplayFeedback}
+                    ></Introduction>
                 </div>
             }
             {currentStep.module_type_identifier == 1 &&
@@ -224,7 +232,7 @@ export default function PerformCase(props) {
                     <p>Sammanfattning</p>
                 </div>
             }
-            {currentIndex + 1 <= caseList.length -1 &&
+            {currentIndex + 1 <= caseList.length -1 && displayFeedback &&
                 <Button onClick={nextStep} >Nästa</Button>
             }
             {currentIndex + 1 > caseList.length -1 &&
