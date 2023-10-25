@@ -106,7 +106,7 @@ step_specific_treatment.belongsTo(treatment, {
   }
 });
 
-step_specific_treatment.hasOne(treatment_list)
+//step_specific_treatment.hasOne(treatment_list)
 
 step_specific_values.belongsTo(examination, {
   foreignKey: {

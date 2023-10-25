@@ -15,28 +15,7 @@ export const getCaseRoutes = (db) => {
     }) 
     // Hämtar ett specifict case beroende på dess id
     router.get('/getCaseById', async(req,res,next)=>{
-        /*
-        Hämta specific case
-        const result = await medical_case.findOne({
-            where: {
-            id: req.query.id
-            }
-        });
-        */
-       //detta är bara en reminder på hur det funkar
-       /*const plan = await examination.findOne({
-           where:{
-               id: test[3].step_id
-            }
-        })
-        res.status(201).json(plan.examination_to_display)
         
-        const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        */
        const caseSteps = await object.step.findAll({
            where: {
                case_id: req.query.id
@@ -50,7 +29,6 @@ export const getCaseRoutes = (db) => {
         const result = await object.medical_field.findAll({});
         res.status(200).json(result);
     })
-    //TODO fixa 5 endpoints för alla typer ov steps + hämsta listan av case type
 
     //Hämta specifict Introduction step
     router.get('/getIntroductionStep', async(req,res,next)=>{
@@ -98,8 +76,9 @@ export const getCaseRoutes = (db) => {
         res.status(200).json(result);
     })
 
-    router.get('/getSpecificValues', async(req,res,next)=>{
+    router.get('/getExaminationSpecificValues', async(req,res,next)=>{
         const result = await object.step_specific_values.findAll({
+            // id som kommer in är det id som den specifika examinationen har 
             where:{
                 id : req.query.id
             }
@@ -127,23 +106,83 @@ export const getCaseRoutes = (db) => {
     })
     // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
     router.get('/getExaminationList', async (req,res,next)=>{
-        const Value = await examination_list.findAll({});
-        res.status(200).json(Value);
+        if(req.query.id == null){
+            const Value = await object.examination_list.findAll({});
+            res.status(200).json(Value);
+        }else{
+            const Value = await object.examination_list.findAll({
+                where :{
+                    examination_type_id : req.query.id
+                }
+            });
+            res.status(200).json(Value);
+        }
     })
-
+    // hämta treatments
     router.get('/getTreatmentTypes', async (req,res,next)=>{
-        const result = object.treatment_type.findAll({});
+        const result = await object.treatment_type.findAll({});
         res.status(200).json(result);
     })
     router.get('/getTreatmentSubtypes', async (req,res,next)=>{
-        const result = object.treatment_type.findAll({
-            where :{
-                treatment_type_id : req.query.id
+        if(req.query.id == null){
+            res.status(404).json("NOT FOUND");
+        }
+        else{
+            const result = await object.treatment_type.findAll({
+                where :{
+                    treatment_type_id : req.query.id
+                }
+            });
+            res.status(200).json(result);
+        }
+    })
+    router.get('/getTreatmentList', async(req,res,next)=>{
+        if(req.query.id == null){
+            const Value = await object.treatment_list.findAll({});
+            res.status(200).json(Value);
+        }else{
+            const Value = await object.treatment_list.findAll({
+                where :{
+                    treatment_type_id : req.query.id
+                }
+            });
+            res.status(200).json(Value);
+        }
+    })
+
+    router.get('/getTreatmentSpecificValues', async(req,res,next)=>{
+        const result = await object.step_specific_treatment.findAll({
+            where : {
+                treatment_step_id : id
             }
-        });
+        })
         res.status(200).json(result);
     })
 
-
     return router;
 }
+
+
+
+/*
+        Hämta specific case
+        const result = await medical_case.findOne({
+            where: {
+            id: req.query.id
+            }
+        });
+        */
+       //detta är bara en reminder på hur det funkar
+       /*const plan = await examination.findOne({
+           where:{
+               id: test[3].step_id
+            }
+        })
+        res.status(201).json(plan.examination_to_display)
+        
+        const plan = await examination.findOne({
+            where:{
+                id: test[3].step_id
+            }
+        })
+        */
