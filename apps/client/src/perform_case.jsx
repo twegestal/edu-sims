@@ -19,6 +19,7 @@ import {BsFileEarmarkPerson} from 'react-icons/bs';
 import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
 import Introduction from './introduction.jsx'
+import Diagnosis from './diagnosis.jsx'
 import { Editor } from '@tinymce/tinymce-react';
 
 
@@ -253,7 +254,13 @@ export default function PerformCase(props) {
             }
             {currentStep.module_type_identifier == 2 &&
                 <div>
-                    <p>Diagnos</p>
+                    <Diagnosis
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}
+                        displayFeedback = {displayFeedback}
+                        setDisplayFeedback = {setDisplayFeedback}
+                        setFeedback = {setFeedback}
+                    ></Diagnosis>
                 </div>
             }
             {currentStep.module_type_identifier == 3 &&

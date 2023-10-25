@@ -77,7 +77,7 @@ export const getCaseRoutes = (db) => {
     router.get('/getDiagnosisStep', async(req,res,next)=>{
         const result = await object.diagnosis.findAll({
             where: {
-                id: req.query.id
+                id: req.header('id')
             }
         });
         res.status(200).json(result);
