@@ -85,8 +85,8 @@ export default function Introduction(props) {
 
     return (
         <div>               
-            <VStack>
-                <Card>
+            <VStack align="stretch">
+                <Card variant="filled">
                     <CardHeader>
                         <Heading size='md'>Patientmöte</Heading>
                     </CardHeader>
@@ -96,31 +96,29 @@ export default function Introduction(props) {
                     </CardBody>
                 </Card>
 
-                <Card>
+                <Card variant="filled">
                     {(displayFeedback) ?
 
-                    <Card> 
+                    <Card variant="filled"> 
                     <Button onClick={onToggle}>Feedback</Button>
                     <Collapse in={isOpen}>
-                    
-                    <CardBody>
-                        <Text align='left'>{feedbackToDisplay}</Text>
-                    </CardBody>
-                    
+                        <CardBody>
+                            <Text align='left'>{feedbackToDisplay}</Text>
+                        </CardBody>
                     </Collapse>
                     </Card>
                     :
                     
 
-                    <Card align='center'>
+                    <Card align="center" variant="filled">
                     <CardHeader>
                         <Heading size='md'>{stepData.prompt}</Heading>
                     </CardHeader>
 
                     <CardBody>
                     <HStack>
-                            <Button id="yesButton" onClick={(e) => handleFeedback(e.target)}>JA</Button>
-                            <Button id="noButton" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
+                            <Button id="yesButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>JA</Button>
+                            <Button id="noButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
                         </HStack>
                     </CardBody>
                     </Card>
@@ -129,7 +127,7 @@ export default function Introduction(props) {
                 </Card>
 
                 {displayFeedback &&
-                <Button>Gå vidare</Button>
+                <Button colorScheme="teal">Gå vidare</Button>
                 }
             </VStack>
         </div>
