@@ -82,6 +82,16 @@ export const getCaseRoutes = (db) => {
         });
         res.status(200).json(result);
     })
+
+    router.get('/getDiagnosisList', async(req,res,next)=>{
+        const result = await object.diagnosis_list.findAll({
+            where: {
+                medical_field_id: req.header('id')
+            }
+        });
+        res.status(200).json(result);
+    })
+
     //Hämta specifict Treatment step
     router.get('/getTreatmentStep', async(req,res,next)=>{
         const result = await object.treatment.findAll({
