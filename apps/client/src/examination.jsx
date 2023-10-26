@@ -9,6 +9,8 @@ import {
     Box,
     Text,
     Card,
+    Stack,
+    Skeleton
 } from "@chakra-ui/react";
 
 export default function Examination(props) {
@@ -36,7 +38,7 @@ export default function Examination(props) {
                     max_nbr_tests : response[0].max_nbr_tests
                 });
 
-                setLoading(false)
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setLoading(false);
@@ -67,7 +69,11 @@ export default function Examination(props) {
                     </AccordionButton>
                     <AccordionPanel pb={4}>
                         {loading ? (
-                            <p>loading.....</p>
+                            <Stack>
+                                <Skeleton height='20px' />
+                                <Skeleton height='20px' />
+                                <Skeleton height='20px' />
+                            </Stack>
                         ) : (
                             <Accordion allowMultiple>
                             {Object.entries(stepData.examination_to_display).map(([category, examinations], index) => (
