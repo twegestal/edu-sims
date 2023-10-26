@@ -48,13 +48,14 @@ diagnosis_list.belongsTo(medical_field, {
   }
 });
 
+/*
 diagnosis.hasOne(diagnosis_list, {
   foreignKey: {
     name: 'diagnosis_id',
     type: DataTypes.UUID,
   }
 });
-
+*/
 
 examination_list.belongsTo(examination_type, {
   foreignKey: {

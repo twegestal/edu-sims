@@ -33,6 +33,8 @@ export default function Introduction(props) {
                 feedback_correct : response[0].feedback_correct,
                 feedback_incorrect : response[0].feedback_incorrect
             });
+
+            props.setDescription(response[0].description)
         }
 
         fetchStep();
@@ -67,6 +69,11 @@ export default function Introduction(props) {
             }
         }
     }
+
+    useEffect(() => {
+        /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
+        props.setFeedback(feedbackToDisplay);
+    }, [feedbackToDisplay]);
 
     return (
         <div>

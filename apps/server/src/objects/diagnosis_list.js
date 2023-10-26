@@ -14,7 +14,7 @@ export const diagnosis_list = db.define('diagnosis_list', {
   name: {
     type : DataTypes.TEXT
   },
-  medical_field_id_id: {
+  medical_field_id: {
     type : DataTypes.UUID,
     allowNull: false
   }

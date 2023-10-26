@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from 'react-router-dom';
 import {
 IconButton,
@@ -20,6 +20,8 @@ import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
 import Introduction from './introduction.jsx'
 import Summary from "./summary.jsx";
+import Diagnosis from './diagnosis.jsx'
+import { Editor } from '@tinymce/tinymce-react';
 
 
 export default function PerformCase(props) {
@@ -30,11 +32,18 @@ export default function PerformCase(props) {
     const { isOpen : isHomeOpen, onOpen: onHomeOpen, onClose : onHomeClose } = useDisclosure();
     const { isOpen : isDescOpen, onOpen: onDescOpen, onClose : onDescClose } = useDisclosure();
     const { isOpen : isFeedbackOpen, onOpen: onFeedbackOpen, onClose : onFeedbackClose } = useDisclosure();
-    const { isOpen : isTestOpen, onOpen: onTestOpen, onClose : onTestClose } = useDisclosure();
+    const { isOpen : isTreatmentResultsOpen, onOpen: onTreatmentResultsOpen, onClose : onTreatmentResultsClose } = useDisclosure();
     const [caseList, setCaseList] = useState([]);
     const  [currentStep, setCurrentStep] = useState({})
     const [currentIndex, setCurrentIndex] = useState()
     const [displayFeedback, setDisplayFeedback] = useState(false);
+    const [description, setDescription] = useState('')
+    const [notes, setNotes] = useState('')
+    const [feedback, setFeedback] = useState('')
+    const [treatmentResults, setTreatmentResults] = useState('')
+    const editorRef = useRef(null);
+
+
 
     useEffect(() => {
         const getCaseList = async (event) => {
@@ -63,6 +72,14 @@ export default function PerformCase(props) {
         setCurrentIndex(caseList[indexOfNextStep].index)
     }
 
+
+    const saveNotes = () => {
+    /*Saves text from the text editor to the notes variable */
+        if (editorRef.current) {
+        setNotes(editorRef.current.getContent())
+        }
+    };
+
     return (
         <>
             <nav>
@@ -82,7 +99,23 @@ export default function PerformCase(props) {
                                 <ModalHeader>Anteckningar</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    <p>Anteckning</p>
+                                    <Editor
+                                    apiKey='f20f7hhnsnotsjt5l3nxit8s7mxfmgoncdx2smt22tl5k8es'
+                                    onInit={(evt, editor) => editorRef.current = editor}
+                                    init={{
+                                        plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+                                        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                                        tinycomments_mode: 'embedded',
+                                        tinycomments_author: 'Author name',
+                                        mergetags_list: [
+                                        { value: 'First.Name', title: 'First Name' },
+                                        { value: 'Email', title: 'Email' },
+                                        ],
+                                        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+                                    }}
+                                    initialValue={notes}
+                                    />
+                                    <Button onClick={saveNotes}>Spara anteckningar</Button>
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -136,7 +169,7 @@ export default function PerformCase(props) {
                                 <ModalHeader>Beskrivning</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    <p>Beskrivning</p>
+                                    {description}
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -162,7 +195,7 @@ export default function PerformCase(props) {
                                 <ModalHeader>Feedback</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    <p>Feedback</p>
+                                    {feedback}
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -173,26 +206,26 @@ export default function PerformCase(props) {
                             </ModalContent>
                         </Modal>
                     </div>
-                    <div className="Tests">
+                    <div className="TreatmentResults">
                         <IconButton
-                        onClick={onTestOpen}
+                        onClick={onTreatmentResultsOpen}
                         variant='solid'
                         colorScheme='blue'
                         aria-label='Results'
                         fontSize='20px'
                         icon={<BiTestTube />}
                         />
-                        <Modal isOpen={isTestOpen} onClose={onTestClose}>
+                        <Modal isOpen={isTreatmentResultsOpen} onClose={onTreatmentResultsClose}>
                             <ModalOverlay />
                             <ModalContent>
                                 <ModalHeader>Labbtester</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    <p>Resultat</p>
+                                    {treatmentResults}
                                 </ModalBody>
 
                                 <ModalFooter>
-                                    <Button colorScheme='blue' mr={3} onClick={onTestClose}>
+                                    <Button colorScheme='blue' mr={3} onClick={onTreatmentResultsClose}>
                                     Close
                                     </Button>
                                 </ModalFooter>
@@ -210,6 +243,8 @@ export default function PerformCase(props) {
                         caseData = {caseList}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
+                        setDescription = {setDescription}
+                        setFeedback = {setFeedback}
                     ></Introduction>
                 </div>
             }
@@ -220,7 +255,14 @@ export default function PerformCase(props) {
             }
             {currentStep.module_type_identifier == 2 &&
                 <div>
-                    <p>Diagnos</p>
+                    <Diagnosis
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}
+                        displayFeedback = {displayFeedback}
+                        setDisplayFeedback = {setDisplayFeedback}
+                        setFeedback = {setFeedback}
+                        feedback = {feedback}
+                    ></Diagnosis>
                 </div>
             }
             {currentStep.module_type_identifier == 3 &&
