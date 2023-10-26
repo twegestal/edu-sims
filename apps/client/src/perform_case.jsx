@@ -260,6 +260,7 @@ export default function PerformCase(props) {
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
                         setFeedback = {setFeedback}
+                        feedback = {feedback}
                     ></Diagnosis>
                 </div>
             }

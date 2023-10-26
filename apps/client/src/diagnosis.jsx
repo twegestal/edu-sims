@@ -7,7 +7,8 @@ import {
     Input,
     Box,
     Text,
-    Flex
+    Flex,
+    Card
 } from '@chakra-ui/react'
 import { useDisclosure } from "@chakra-ui/react";
 
@@ -19,7 +20,6 @@ export default function Diagnosis(props) {
     const [diagnosisList, setDiagnosisList] = useState([])
     const [diagnosisListHtml, setDiagnosisListHtml] = useState("")
     const [feedbackToDisplay, setFeedbackToDisplay] = useState();
-    const { isOpen, onToggle } = useDisclosure();
 
 
     useEffect(() => {
@@ -61,51 +61,49 @@ export default function Diagnosis(props) {
 
     const findDiagnosis = async(searchString) => {
         /* Filters the diagnosis list based on the param search string  */
+        var filterdList = []
         if(searchString.length > 0){
-            var filterdList = diagnosisList.filter(obj => {
+            filterdList = diagnosisList.filter(obj => {
             return obj.name.toLowerCase().includes(searchString.toLowerCase());
             })
-        } else{
-            filterdList = [{}]
         }
   
         setDiagnosisListHtml(
             filterdList.map((caseItem) => (
-                <Box key={caseItem.id}>
-                    {caseItem.name}
-                    <Button onClick={(e) => handleFeedback(caseItem.id)}>Ställ diagnos</Button>
+                <Box key={caseItem.id} borderWidth='2px'>
+                    <p key={'p_' + caseItem.id}>{caseItem.name}</p>
+                    <Button className="diagnosis_button" key={'set_diagnosis_' + caseItem.id} onClick={(e) => handleFeedback(caseItem.id)}>Ställ diagnos</Button>
                 </Box>
-
             ))
         )
 
     }
+    
 
     const handleFeedback = (choosenDiagnosId) => {
         props.setDisplayFeedback(true);
+        console.log('Knappen fungerar')
 
-        if(choosenDiagnosId == stepData.id){
+        if(choosenDiagnosId == stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_correct);
+            props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_correct))
         }
 
-        if(choosenDiagnosId != stepData.id){
+        if(choosenDiagnosId != stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_incorrect);
+            props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_incorrect))
         }
     }
+
+
 
     return ( 
         <div>
             <h2>Diagnos</h2>
 
-            <Collapse in={isOpen} startingHeight={30} noOfLines={1}>
+            <Card>
                 {stepData.prompt}
-            </Collapse>
-            {isOpen == false && 
-            <Button onClick={onToggle}>Visa mer</Button>
-            }
-            {isOpen && 
-            <Button onClick={onToggle}>Visa mindre</Button>
-            }
+            </Card>
 
             <Input onChange={(e) => findDiagnosis(e.target.value)} placeholder='Skriv din diagnos här'/>
             {diagnosisListHtml}
