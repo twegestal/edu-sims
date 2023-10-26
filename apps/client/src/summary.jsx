@@ -4,6 +4,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { 
     VStack,
     HStack,
+    Box,
     Card,
     CardHeader,
     Heading,
@@ -14,6 +15,10 @@ import {
     AccordionItem,
     AccordionButton,
     AccordionPanel,
+    Fade, 
+    ScaleFade, 
+    Slide, 
+    SlideFade,
 Button } from "@chakra-ui/react";
 
 export default function Summary(props){
@@ -24,7 +29,7 @@ export default function Summary(props){
         const fetchStep = async () => {
             const headers = {
                 "Content-type" : "application/json",
-                "id": "b4a5265f-dbe4-4d53-a649-2c85874d65fc"
+                "id": props.stepId,
             }
             
             //hårdkodar detta step-id för tillfället:
@@ -43,6 +48,7 @@ export default function Summary(props){
     }, []);
 
     const { isOpen, onToggle } = useDisclosure();
+    
     return (
         
         <div>   
@@ -63,19 +69,23 @@ export default function Summary(props){
                     <Text align='left'>{stepData.process}</Text>
                 </CardBody>
             </Card>
-            */}
+    */}
+
             <Card variant="filled" width={''}>
                 <CardHeader>
                     <Heading size='md'>Summary</Heading>
                 </CardHeader>
                 <Accordion allowToggle>
+                    
+                        
+
                     <AccordionItem >
                         <AccordionButton>
                             <h2>Process</h2>
                         </AccordionButton>
                         <AccordionPanel >
                             <h2 align="left" key={"process"}>{stepData.process}</h2>
-                        </AccordionPanel>
+                        </AccordionPanel>   
                     </AccordionItem>
 
                     <AccordionItem >
@@ -98,6 +108,7 @@ export default function Summary(props){
                         
                 </Accordion>
             </Card>
+
             </VStack>
         </div>
     )

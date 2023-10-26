@@ -19,6 +19,7 @@ import {BsFileEarmarkPerson} from 'react-icons/bs';
 import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
 import Introduction from './introduction.jsx'
+import Summary from "./summary.jsx";
 
 
 export default function PerformCase(props) {
@@ -229,7 +230,10 @@ export default function PerformCase(props) {
             }
             {currentStep.module_type_identifier == 4 &&
                 <div>
-                    <p>Sammanfattning</p>
+                    <Summary  
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}>
+                    </Summary>
                 </div>
             }
             {currentIndex + 1 <= caseList.length -1 && displayFeedback &&
