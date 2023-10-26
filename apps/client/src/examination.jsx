@@ -10,7 +10,8 @@ import {
     Text,
     Card,
     Stack,
-    Skeleton
+    Skeleton,
+    VStack
 } from "@chakra-ui/react";
 
 export default function Examination(props) {
@@ -18,7 +19,7 @@ export default function Examination(props) {
     const [stepData, setStep] = useState({});
     const [feedBackToDisplay, setFeedbackToDisplay] = useState();
     const [categoryNames, setCategoryNames] = useState({});
-    const [subCategoryNames, setSubCategoryNames] = useState({});
+    const [subCategoryNames, setSubCategoryNames] = useState([]);
     
 
     useEffect(() => {
@@ -55,7 +56,7 @@ export default function Examination(props) {
     }, []);
 
     useEffect(() => {
-        // Fetch and store category names
+        // Fetch and store category names:
         const fetchCategoryNames = async () => {
             const categoryNamesMap = {};
 
@@ -85,7 +86,6 @@ export default function Examination(props) {
                     subCategoryNamesMap[subCategory] = subCategoryName;
                 }
             }
-
             setSubCategoryNames(subCategoryNamesMap);
         }
 
@@ -110,7 +110,6 @@ export default function Examination(props) {
         try {
             const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationTypes', headers);
 
-            
             return response.name;
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -126,8 +125,7 @@ export default function Examination(props) {
         try {
             const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationSubtypes', headers);
 
-            
-            return response.name;
+            return response[0].name;
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -135,62 +133,66 @@ export default function Examination(props) {
 
     return (
         <div>
-            <Card variant='filled' padding='5'>
-                <Text align='left'>{stepData.prompt}</Text> 
-            </Card>
-            <Accordion defaultIndex={[0]} allowMultiple>
-                <AccordionItem>
-                    <AccordionButton>
-                        <Box as="span" flex='1' textAlign='left'>
-                            Utredningar
-                        </Box>
-                        <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel pb={4}>
-                        {loading ? (
-                            <Stack>
-                                <Skeleton height='20px' />
-                                <Skeleton height='20px' />
-                                <Skeleton height='20px' />
-                            </Stack>
-                        ) : (
-        
-
-                            <Accordion allowMultiple>
-                            {Object.entries(stepData.examination_to_display).map(([category, subCategories], index) => (
-                                <AccordionItem key={index}>
-                                    <h2>
-                                        <AccordionButton>
-                                            {categoryNames[category]} {/* THIS IS WHERE I WOULD LIKE TO GET THE ACTUAL CATEGORY NAME */}
-                                            <AccordionIcon />
-                                        </AccordionButton>
-                                    </h2>
-                                    <AccordionPanel>
-                                        <Accordion allowMultiple>
-                                            {subCategories.map((subCategory, i) => (
-                                               <AccordionItem key={i}>
-                                                    <AccordionButton>
-                                                        {subCategoryNames[subCategory]}
-                                                        <AccordionIcon />
-                                                    </AccordionButton>
-                                                    <AccordionPanel>
-                                                        <Text>Här ska det vara massa grejor</Text>
-                                                    </AccordionPanel>
-                                               </AccordionItem> 
-                                            ))}
-                                        </Accordion>
-                                    </AccordionPanel>
-                                </AccordionItem>
-
-                            ))}
-                        </Accordion>                            
-                        )}
-                        
-                    </AccordionPanel>
-                </AccordionItem>
-
+            <VStack>
+                <Card variant='filled' padding='5'>
+                    <Text align='left'>{stepData.prompt}</Text> 
+                </Card>
+                <Card variant='filled'>
+                    <Accordion defaultIndex={[0]} allowMultiple>
+                        <AccordionItem>
+                            <AccordionButton>
+                                <Box as="span" flex='1' textAlign='left'>
+                                    Utredningar
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                {loading ? (
+                                    <Stack>
+                                        <Skeleton height='20px' />
+                                        <Skeleton height='20px' />
+                                        <Skeleton height='20px' />
+                                    </Stack>
+                                ) : (
                 
-            </Accordion>
+
+                                    <Accordion allowMultiple>
+                                    {Object.entries(stepData.examination_to_display).map(([category, subCategories], index) => (
+                                        <AccordionItem key={index}>
+                                            <h2>
+                                                <AccordionButton>
+                                                    {categoryNames[category]} {/* THIS IS WHERE I WOULD LIKE TO GET THE ACTUAL CATEGORY NAME */}
+                                                    <AccordionIcon />
+                                                </AccordionButton>
+                                            </h2>
+                                            <AccordionPanel>
+                                                <Accordion allowMultiple>
+                                                    {subCategories.map((subCategory, i) => (
+                                                    <AccordionItem key={i}>
+                                                            <AccordionButton>
+                                                                {subCategoryNames[subCategory]}
+                                                                <AccordionIcon />
+                                                            </AccordionButton>
+                                                            <AccordionPanel>
+                                                                <Text>Här ska det vara massa grejor</Text>
+                                                            </AccordionPanel>
+                                                    </AccordionItem> 
+                                                    ))}
+                                                </Accordion>
+                                            </AccordionPanel>
+                                        </AccordionItem>
+
+                                    ))}
+                                </Accordion>                            
+                                )}
+                                
+                            </AccordionPanel>
+                        </AccordionItem>
+
+                        
+                    </Accordion>
+                </Card>
+            </VStack>
         </div>
     )
 }
