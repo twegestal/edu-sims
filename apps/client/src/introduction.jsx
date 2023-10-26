@@ -34,6 +34,8 @@ export default function Introduction(props) {
                 feedback_correct : response[0].feedback_correct,
                 feedback_incorrect : response[0].feedback_incorrect
             });
+
+            
         }
 
         fetchStep();
