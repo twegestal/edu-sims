@@ -22,6 +22,7 @@ import Introduction from './introduction.jsx'
 import Summary from "./summary.jsx";
 import Diagnosis from './diagnosis.jsx'
 import { Editor } from '@tinymce/tinymce-react';
+import Treatment from "./Treatment.jsx";
 
 
 export default function PerformCase(props) {
@@ -267,7 +268,12 @@ export default function PerformCase(props) {
             }
             {currentStep.module_type_identifier == 3 &&
                 <div>
-                    <p>Behandling</p>
+                    <Treatment
+                        getCallToApi = {props.getCallToApi}
+                        stepId = {currentStep.step_id}
+                        displayFeedback = {displayFeedback}
+                        setDisplayFeedback = {setDisplayFeedback}
+                    ></Treatment>
                 </div>
             }
             {currentStep.module_type_identifier == 4 &&
