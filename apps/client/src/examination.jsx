@@ -12,11 +12,13 @@ import {
     Stack,
     Skeleton,
     VStack,
+    HStack,
     List,
     ListItem,
     Checkbox,
     Button
 } from "@chakra-ui/react";
+import {WarningIcon} from "@chakra-ui/icons";
 
 export default function Examination(props) {
     const [loading, setLoading] = useState(true);
@@ -28,6 +30,7 @@ export default function Examination(props) {
     const [examinationsFetched, setExaminationsFetched] = useState(false);
     const [stepSpecificValues, setStepSpecificValues] = useState({});
     const [results, setResults] = useState({});
+    const [resultsReady, setResultsReady] = useState(false);
     
 
     useEffect(() => {
@@ -118,13 +121,12 @@ export default function Examination(props) {
     //    console.log(stepData);
     //}, [stepData]);
     
-    useEffect(() => {
-        if (examinationsFetched) {
-            console.log('examinations:')
-            console.log(examinations);
-        }
-        
-    }, [examinations]);
+    //useEffect(() => {
+    //    if (examinationsFetched) {
+    //        console.log(examinations);
+    //    }
+    //    
+    //}, [examinations]);
 
     useEffect(() => {
         if (!loading) {
@@ -133,24 +135,37 @@ export default function Examination(props) {
     }, [stepSpecificValues])
 
     useEffect(() => {
+        console.log(results);
+        setResultsReady(true);
+    }, [results])
+
+    useEffect(() => {
         const fetchExaminations = async () => {
             const examinationsMap = {};
             for (const subCategoryId of Object.keys(subCategoryNames)) {
                 
                 const examinationsResponse = await getExaminations(subCategoryId);
 
-                const array = [];
+                //const array = [];
+                //for (let i = 0; i < examinationsResponse.length; i++) {
+                //    array.push({
+                //        name : examinationsResponse[i].name,
+                //        id : examinationsResponse[i].id
+                //    });
+                //}
+                //examinationsMap[subCategoryId] = array;
+
+                const entry = {};
                 for (let i = 0; i < examinationsResponse.length; i++) {
-                    array.push({
-                        name : examinationsResponse[i].name,
-                        id : examinationsResponse[i].id
-                    });
+                    const id = examinationsResponse[i].id;
+                    const name = examinationsResponse[i].name;
+                    
+                    
+                    entry[id] = name;
+
+                    
                 }
-                examinationsMap[subCategoryId] = array;
-
-                
-
-                
+                examinationsMap[subCategoryId] = entry;
             }
             setExaminations(examinationsMap);
             setExaminationsFetched(true);
@@ -224,8 +239,16 @@ export default function Examination(props) {
         const examinationsToRun = [];
 
         for (const subCategory of Object.keys(examinations)) {
-            for (let i = 0; i < examinations[subCategory].length; i++) {
-                const checkBox = document.getElementById(examinations[subCategory][i].id);
+            //for (let i = 0; i < examinations[subCategory].length; i++) {
+            //    const checkBox = document.getElementById(examinations[subCategory][i].id);
+            //    
+            //    if (checkBox.checked) {
+            //        examinationsToRun.push(checkBox.id);
+            //    }
+            //}
+
+            for (const examinationId of Object.keys(examinations[subCategory])) {
+                const checkBox = document.getElementById(examinationId);
                 
                 if (checkBox.checked) {
                     examinationsToRun.push(checkBox.id);
@@ -234,19 +257,57 @@ export default function Examination(props) {
             
         }
 
-        console.log(examinationsToRun);
-
+        setResultsReady(false);
         const resultsMap = {};
 
         for (let i = 0; i < examinationsToRun.length; i++) {
-            console.log(examinationsToRun[i]);
             if (stepSpecificValues.hasOwnProperty(examinationsToRun[i])) {
                 setStepSpecificValues({
                     ...stepSpecificValues,
                     ...stepSpecificValues[examinationsToRun[i]].userHasTested = true
                 })
+
+                let examinationName = '';
+
+                for (const subCategory of Object.keys(examinations)) {
+                    for (const examinationId of Object.keys(examinations[subCategory])) {
+                        if (examinationId === examinationsToRun[i]) {
+                            examinationName = examinations[subCategory][examinationId];
+                        }
+                    }
+                }
+
+                resultsMap[examinationsToRun[i]] = {
+                    name : examinationName,
+                    value : stepSpecificValues[examinationsToRun[i]].value,
+                    isNormal : stepSpecificValues[examinationsToRun[i]].isNormal
+                }
+
+            } else {
+                let examinationName = '';
+
+                for (const subCategory of Object.keys(examinations)) {
+                    for (const examinationId of Object.keys(examinations[subCategory])) {
+                        if (examinationId === examinationsToRun[i]) {
+                            examinationName = examinations[subCategory][examinationId];
+                        }
+                    }
+                }
+
+                resultsMap[examinationsToRun[i]] = {
+                    name : examinationName,
+                    value : "Normalvärde",
+                    isNormal : true
+                }
             }
+
+            
         }
+
+        setResults(resultsMap);
+        
+
+
     }
 
     return (
@@ -293,14 +354,14 @@ export default function Examination(props) {
                                                             </AccordionButton>
                                                             <AccordionPanel>
                                                                 <List> 
-                                                                    {
-                                                                        examinationsFetched &&
-                                                                        examinations[subCategory].map((element, index) => (
-                                                                            <ListItem key={element.id}>
-                                                                                <Checkbox id={element.id}>{element.name}</Checkbox>
-                                                                            </ListItem>
-                                                                        ))
-                                                                    }
+                                                                {
+                                                                    examinationsFetched &&
+                                                                    Object.entries(examinations[subCategory]).map(([id, name], index) => (
+                                                                        <ListItem key={index}>
+                                                                            <Checkbox id={id}>{name}</Checkbox>
+                                                                        </ListItem>
+                                                                    ))
+                                                                }
                                                                 </List>
                                                             </AccordionPanel>
                                                     </AccordionItem> 
@@ -332,7 +393,24 @@ export default function Examination(props) {
                                 <AccordionIcon />
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                {}
+                                <List>
+                                    {
+                                        resultsReady &&
+                                        Object.entries(results).map(([id, fields], index) => (
+                                            <ListItem key={index}>
+                                                <HStack>
+                                                    {!fields.isNormal &&
+                                                        <WarningIcon />
+                                                    }
+                                                    <Text>{fields.name} : {fields.value}</Text>
+                                                </HStack>
+                                                
+                                                
+                                                
+                                            </ListItem>
+                                        ))
+                                    }
+                                </List>
                             </AccordionPanel>
                         </AccordionItem>
                     </Accordion>
