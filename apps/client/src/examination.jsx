@@ -9,6 +9,7 @@ import {
     Box,
     Text,
     Card,
+    CardBody,
     Stack,
     Skeleton,
     VStack,
@@ -16,14 +17,16 @@ import {
     List,
     ListItem,
     Checkbox,
-    Button
+    Button,
+    useDisclosure,
+    Collapse
 } from "@chakra-ui/react";
 import {WarningIcon} from "@chakra-ui/icons";
 
 export default function Examination(props) {
     const [loading, setLoading] = useState(true);
     const [stepData, setStep] = useState({});
-    const [feedBackToDisplay, setFeedbackToDisplay] = useState();
+    const [feedbackToDisplay, setFeedbackToDisplay] = useState();
     const [categoryNames, setCategoryNames] = useState({});
     const [subCategoryNames, setSubCategoryNames] = useState({});
     const [examinations, setExaminations] = useState({});
@@ -31,9 +34,11 @@ export default function Examination(props) {
     const [stepSpecificValues, setStepSpecificValues] = useState({});
     const [results, setResults] = useState({});
     const [resultsReady, setResultsReady] = useState(false);
+    const { isOpen, onToggle } = useDisclosure();
     
 
     useEffect(() => {
+        props.setDisplayFeedback(false);
         const fetchStep = async () => {
             const headers = {
                 "Content-type" : "application/json",
@@ -305,14 +310,34 @@ export default function Examination(props) {
         }
 
         setResults(resultsMap);
-        
+    }
 
+    const evaluateAnswer = async () => {
+        await props.setDisplayFeedback(true);
+        onToggle();
+        const feedbackCard = document.getElementById('feedback');
+        if (checkExams()) {
+            feedbackCard.setAttribute('color', 'green'); //detta funkar inte :(
+            setFeedbackToDisplay(stepData.feedback_correct);
+        } else {
+            feedbackCard.setAttribute('color', 'red'); // detta funkar inte :(
+            setFeedbackToDisplay(stepData.feedback_incorrect);
+        }
+    }
 
+    const checkExams = () => {
+        for (const examination of Object.keys(stepSpecificValues)) {
+            
+            if (!stepSpecificValues[examination].userHasTested) {
+                return false;
+            }
+        }
+        return true;
     }
 
     return (
         <div>
-            <VStack>
+            <VStack alignItems='stretch'>
                 <Card variant='filled' padding='5'>
                     <Text align='left'>{stepData.prompt}</Text> 
                 </Card>
@@ -320,7 +345,7 @@ export default function Examination(props) {
                     <Accordion allowMultiple>
                         <AccordionItem>
                             <AccordionButton>
-                                <Box as="span" flex='1' textAlign='left'>
+                                <Box as="span" flex='1' textAlign='center'>
                                     Utredningar
                                 </Box>
                                 <AccordionIcon />
@@ -381,13 +406,13 @@ export default function Examination(props) {
                     </Accordion>
                 </Card>
 
-                <Button onClick={runExams}>Kör utredningar</Button>
+                <Button onClick={runExams} colorScheme='teal'>Kör utredningar</Button>
 
                 <Card variant='filled'>
                     <Accordion>
                         <AccordionItem>
                             <AccordionButton>
-                            <Box as="span" flex='1' textAlign='left'>
+                            <Box as="span" flex='1' textAlign='center'>
                                     Resultat
                                 </Box>
                                 <AccordionIcon />
@@ -415,6 +440,20 @@ export default function Examination(props) {
                         </AccordionItem>
                     </Accordion>
                 </Card>
+                
+                {(props.displayFeedback) ? (
+                    <Card variant="filled"> 
+                    <Button onClick={onToggle}>Feedback</Button>
+                    <Collapse in={isOpen}>
+                        <CardBody id='feedback'>
+                            <Text align='left'>{feedbackToDisplay}</Text>
+                        </CardBody>
+                    </Collapse>
+                    </Card>
+                ) : (
+                    <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>Klar med utredningar</Button>
+                )}
+                
             </VStack>
         </div>
     )
