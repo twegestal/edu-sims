@@ -11,7 +11,11 @@ import {
     Card,
     Stack,
     Skeleton,
-    VStack
+    VStack,
+    List,
+    ListItem,
+    Checkbox,
+    Button
 } from "@chakra-ui/react";
 
 export default function Examination(props) {
@@ -19,7 +23,11 @@ export default function Examination(props) {
     const [stepData, setStep] = useState({});
     const [feedBackToDisplay, setFeedbackToDisplay] = useState();
     const [categoryNames, setCategoryNames] = useState({});
-    const [subCategoryNames, setSubCategoryNames] = useState([]);
+    const [subCategoryNames, setSubCategoryNames] = useState({});
+    const [examinations, setExaminations] = useState({});
+    const [examinationsFetched, setExaminationsFetched] = useState(false);
+    const [stepSpecificValues, setStepSpecificValues] = useState({});
+    const [results, setResults] = useState({});
     
 
     useEffect(() => {
@@ -68,13 +76,6 @@ export default function Examination(props) {
             setCategoryNames(categoryNamesMap);
         };
 
-        if (!loading) {
-            fetchCategoryNames();
-        }
-    }, [loading, stepData]);
-
-    useEffect(() => {
-        //fetch and store subcategory names:
         const fetchSubCategoryNames = async () => {
             const subCategoryNamesMap = {};
 
@@ -89,15 +90,91 @@ export default function Examination(props) {
             setSubCategoryNames(subCategoryNamesMap);
         }
 
+        const fetchStepValues = async () => {
+            const stepValuesMap = {};
+            const stepValuesResponse = await getStepValues(props.stepId);
+
+            for (let i = 0; i < stepValuesResponse.length; i++) {
+                const newPair = {
+                    value : stepValuesResponse[i].value,
+                    isNormal : stepValuesResponse[i].is_normal,
+                    userHasTested : false
+                }
+                stepValuesMap[stepValuesResponse[i].examination_id] = newPair;
+            }
+            setStepSpecificValues(stepValuesMap);
+        }
+
         if (!loading) {
+            fetchCategoryNames();
             fetchSubCategoryNames();
+            fetchStepValues();
         }
     }, [loading, stepData]);
 
+
     //denna loggar bara för debugging, tas bort sedan:
+    //useEffect(() => {
+    //    console.log(stepData);
+    //}, [stepData]);
+    
     useEffect(() => {
-        console.log(stepData);
-    }, [stepData]);
+        if (examinationsFetched) {
+            console.log('examinations:')
+            console.log(examinations);
+        }
+        
+    }, [examinations]);
+
+    useEffect(() => {
+        if (!loading) {
+            console.log(stepSpecificValues);
+        }
+    }, [stepSpecificValues])
+
+    useEffect(() => {
+        const fetchExaminations = async () => {
+            const examinationsMap = {};
+            for (const subCategoryId of Object.keys(subCategoryNames)) {
+                
+                const examinationsResponse = await getExaminations(subCategoryId);
+
+                const array = [];
+                for (let i = 0; i < examinationsResponse.length; i++) {
+                    array.push({
+                        name : examinationsResponse[i].name,
+                        id : examinationsResponse[i].id
+                    });
+                }
+                examinationsMap[subCategoryId] = array;
+
+                
+
+                
+            }
+            setExaminations(examinationsMap);
+            setExaminationsFetched(true);
+        }
+
+        if (!loading && !examinationsFetched) {
+            fetchExaminations();
+        }
+    }, [subCategoryNames])
+
+    const getExaminations = async (examinationSubTypeId) => {
+        const headers = {
+            "Content-type" : "application/json",
+            "examination_subtype_id" : examinationSubTypeId
+        }
+
+        try {
+            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationList', headers);
+
+            return response;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
 
     const getCategoryName = async (categoryId) => {
         const headers = {
@@ -105,8 +182,6 @@ export default function Examination(props) {
             "id": categoryId
         }
 
-        
-        
         try {
             const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationTypes', headers);
 
@@ -131,6 +206,49 @@ export default function Examination(props) {
         }
     }
 
+    const getStepValues = async (stepId) => {
+        const headers = {
+            "Content-type" : "application/json",
+            "step_id" : stepId
+        }
+
+        try {
+            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationSpecificValues', headers);
+            return response;
+        } catch (error) {
+            console.error("Error fetching stepValues:", error);
+        }
+    }
+
+    const runExams = () => {
+        const examinationsToRun = [];
+
+        for (const subCategory of Object.keys(examinations)) {
+            for (let i = 0; i < examinations[subCategory].length; i++) {
+                const checkBox = document.getElementById(examinations[subCategory][i].id);
+                
+                if (checkBox.checked) {
+                    examinationsToRun.push(checkBox.id);
+                }
+            }
+            
+        }
+
+        console.log(examinationsToRun);
+
+        const resultsMap = {};
+
+        for (let i = 0; i < examinationsToRun.length; i++) {
+            console.log(examinationsToRun[i]);
+            if (stepSpecificValues.hasOwnProperty(examinationsToRun[i])) {
+                setStepSpecificValues({
+                    ...stepSpecificValues,
+                    ...stepSpecificValues[examinationsToRun[i]].userHasTested = true
+                })
+            }
+        }
+    }
+
     return (
         <div>
             <VStack>
@@ -138,7 +256,7 @@ export default function Examination(props) {
                     <Text align='left'>{stepData.prompt}</Text> 
                 </Card>
                 <Card variant='filled'>
-                    <Accordion defaultIndex={[0]} allowMultiple>
+                    <Accordion allowMultiple>
                         <AccordionItem>
                             <AccordionButton>
                                 <Box as="span" flex='1' textAlign='left'>
@@ -161,7 +279,7 @@ export default function Examination(props) {
                                         <AccordionItem key={index}>
                                             <h2>
                                                 <AccordionButton>
-                                                    {categoryNames[category]} {/* THIS IS WHERE I WOULD LIKE TO GET THE ACTUAL CATEGORY NAME */}
+                                                    {categoryNames[category]}
                                                     <AccordionIcon />
                                                 </AccordionButton>
                                             </h2>
@@ -169,12 +287,21 @@ export default function Examination(props) {
                                                 <Accordion allowMultiple>
                                                     {subCategories.map((subCategory, i) => (
                                                     <AccordionItem key={i}>
-                                                            <AccordionButton>
+                                                            <AccordionButton alignContent='left'>
                                                                 {subCategoryNames[subCategory]}
                                                                 <AccordionIcon />
                                                             </AccordionButton>
                                                             <AccordionPanel>
-                                                                <Text>Här ska det vara massa grejor</Text>
+                                                                <List> 
+                                                                    {
+                                                                        examinationsFetched &&
+                                                                        examinations[subCategory].map((element, index) => (
+                                                                            <ListItem key={element.id}>
+                                                                                <Checkbox id={element.id}>{element.name}</Checkbox>
+                                                                            </ListItem>
+                                                                        ))
+                                                                    }
+                                                                </List>
                                                             </AccordionPanel>
                                                     </AccordionItem> 
                                                     ))}
@@ -190,6 +317,24 @@ export default function Examination(props) {
                         </AccordionItem>
 
                         
+                    </Accordion>
+                </Card>
+
+                <Button onClick={runExams}>Kör utredningar</Button>
+
+                <Card variant='filled'>
+                    <Accordion>
+                        <AccordionItem>
+                            <AccordionButton>
+                            <Box as="span" flex='1' textAlign='left'>
+                                    Resultat
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                {}
+                            </AccordionPanel>
+                        </AccordionItem>
                     </Accordion>
                 </Card>
             </VStack>
