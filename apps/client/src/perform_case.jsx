@@ -19,6 +19,7 @@ import {BsFileEarmarkPerson} from 'react-icons/bs';
 import {MdFeedback} from 'react-icons/md';
 import {BiTestTube} from 'react-icons/bi';
 import Introduction from './introduction.jsx'
+import Examination from "./examination.jsx";
 import Summary from "./summary.jsx";
 import Diagnosis from './diagnosis.jsx'
 import { Editor } from '@tinymce/tinymce-react';
