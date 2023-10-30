@@ -193,7 +193,10 @@ export const getCaseRoutes = (db) => {
             const response = await object.examination_list.findAll({
                 where : {
                     examination_subtype_id : req.header('examination_subtype_id')
-                }
+                },
+                order : [
+                    ['name', 'ASC']
+                ]
             });
 
             res.status(200).json(response);
