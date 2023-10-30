@@ -191,7 +191,7 @@ export const getCaseRoutes = (db) => {
         else {
             if(req.header('id') == ''){
                 const Value = await object.examination_list.findAll({});
-                res.status(200).json(Value);
+                res.status(404).json(Value);
             }else{
                 const Value = await object.examination_list.findAll({
                     where :{
