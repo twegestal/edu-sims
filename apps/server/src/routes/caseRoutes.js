@@ -134,22 +134,44 @@ export const getCaseRoutes = (db) => {
     })
 
     router.get('/getExaminationSpecificValues', async(req,res,next)=>{
-        if (req.header('id')=='') {
-            res.status(404).json("not found");
-        }else{
+        if (req.header('step_id')) {
             const result = await object.step_specific_values.findAll({
-                // id som kommer in är det id som den specifika examinationen har 
-                where:{
-                    id : req.header('id')
+                where : {
+                    examination_step_id : req.header('step_id')
                 }
-            });
+            })
             res.status(200).json(result);
         }
+        else if (req.header('id')) {
+            if (req.header('id')=='') {
+                res.status(404).json("not found");
+            }else{
+                const result = await object.step_specific_values.findAll({
+                    // id som kommer in är det id som den specifika examinationen har 
+                    where:{
+                        id : req.header('id')
+                    }
+                });
+                res.status(200).json(result);
+            }
+        }
+        
+        
     })
 
     router.get('/getExaminationTypes', async (req,res,next)=>{
-        const Value = await object.examination_type.findAll({});
-        res.status(200).json(Value);
+        if (req.header('id') === '') {
+            const Value = await object.examination_type.findAll({});
+            res.status(200).json(Value);
+        } else {
+            const Value = await object.examination_type.findOne({
+                where : {
+                    id : req.header('id')
+                }
+            });
+            res.status(200).json(Value);
+        }
+        
     })
     // Tar emot en examination types id och hämtar alla subtyper för det id
     router.get('/getExaminationSubtypes', async (req,res,next)=>{
@@ -159,7 +181,7 @@ export const getCaseRoutes = (db) => {
         else{
             const result = await object.examination_subtype.findAll({
                 where : {
-                    examination_type_id : req.header('id')
+                    id : req.header('id')
                 }
             });
             res.status(200).json(result);
@@ -167,16 +189,27 @@ export const getCaseRoutes = (db) => {
     })
     // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
     router.get('/getExaminationList', async (req,res,next)=>{
-        if(req.header('id') == ''){
-            const Value = await object.examination_list.findAll({});
-            res.status(200).json(Value);
-        }else{
-            const Value = await object.examination_list.findAll({
-                where :{
-                    examination_type_id :req.header('id')
+        if (req.header('examination_subtype_id')) {
+            const response = await object.examination_list.findAll({
+                where : {
+                    examination_subtype_id : req.header('examination_subtype_id')
                 }
             });
-            res.status(200).json(Value);
+
+            res.status(200).json(response);
+        }
+        else {
+            if(req.header('id') == ''){
+                const Value = await object.examination_list.findAll({});
+                res.status(404).json(Value);
+            }else{
+                const Value = await object.examination_list.findAll({
+                    where :{
+                        examination_type_id :req.header('id')
+                    }
+                });
+                res.status(200).json(Value);
+            }
         }
     })
     // hämta treatments
