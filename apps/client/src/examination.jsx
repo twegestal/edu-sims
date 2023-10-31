@@ -337,6 +337,13 @@ export default function Examination(props) {
         return true;
     }
 
+    useEffect(() => {
+        /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
+        if (props.displayFeedback && !loading) {
+            props.updateFeedback(feedbackToDisplay);
+        }
+    }, [feedbackToDisplay]);
+
     return (
         <div>
             <VStack alignItems='stretch'>

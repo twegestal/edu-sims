@@ -16,6 +16,7 @@ import {
 export default function Introduction(props) {
     const [stepData, setStep] = useState({});
     const [feedbackToDisplay, setFeedbackToDisplay] = useState();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStep = async () => {
@@ -36,6 +37,7 @@ export default function Introduction(props) {
             });
 
             props.setDescription(response[0].description)
+            setLoading(false);
         }
 
         fetchStep();
@@ -73,7 +75,9 @@ export default function Introduction(props) {
 
     useEffect(() => {
         /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
-        props.setFeedback(feedbackToDisplay);
+        if (props.displayFeedback && !loading) {
+            props.updateFeedback(feedbackToDisplay);
+        }
     }, [feedbackToDisplay]);
 
     return (

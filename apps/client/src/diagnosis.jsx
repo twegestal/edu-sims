@@ -20,6 +20,7 @@ export default function Diagnosis(props) {
     const [diagnosisList, setDiagnosisList] = useState([])
     const [diagnosisListHtml, setDiagnosisListHtml] = useState("")
     const [feedbackToDisplay, setFeedbackToDisplay] = useState();
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
@@ -57,6 +58,7 @@ export default function Diagnosis(props) {
 
         fetchStep();
         fetchDiagnosisList();
+        setLoading(false);
     }, []);
 
     const findDiagnosis = async(searchString) => {
@@ -86,14 +88,21 @@ export default function Diagnosis(props) {
 
         if(choosenDiagnosId == stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_correct);
-            props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_correct))
+            //props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_correct))
         }
 
         if(choosenDiagnosId != stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_incorrect);
-            props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_incorrect))
+            //props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_incorrect))
         }
     }
+
+    useEffect(() => {
+        /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
+        if (props.displayFeedback && !loading) {
+            props.updateFeedback(feedbackToDisplay);
+        }
+    }, [feedbackToDisplay]);
 
 
 
