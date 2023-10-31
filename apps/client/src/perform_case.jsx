@@ -41,7 +41,7 @@ export default function PerformCase(props) {
     const [description, setDescription] = useState('')
     const [notes, setNotes] = useState('')
     const [feedback, setFeedback] = useState('')
-    const [treatmentResults, setTreatmentResults] = useState('')
+    const [treatmentResults, setTreatmentResults] = useState([])
     const editorRef = useRef(null);
 
 
@@ -80,6 +80,30 @@ export default function PerformCase(props) {
         setNotes(editorRef.current.getContent())
         }
     };
+
+
+    const updateLabResultsList = (resultsObject) => {
+        console.log(resultsObject)
+        setTreatmentResults([
+            ...treatmentResults,
+            <>
+                {Object.keys(resultsObject).map(index => (
+                    resultsObject[index].isNormal ? 
+                        <Box background="green" key={index}>
+                            <p>{resultsObject[index].name}</p>
+                            <p>{resultsObject[index].value}</p>
+                        </Box>
+                        :
+                        <Box background="red" key={index}>
+                            <p>{resultsObject[index].name}</p>
+                            <p>{resultsObject[index].value}</p>
+                        </Box>
+                    )
+                )}
+            </>
+        ])
+    } 
+
 
     return (
         <>
@@ -256,6 +280,7 @@ export default function PerformCase(props) {
                         stepId = {currentStep.step_id}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
+                        updateLabResultsList = {updateLabResultsList}
                     ></Examination>
                 </div>
             }

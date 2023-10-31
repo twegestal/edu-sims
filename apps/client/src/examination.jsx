@@ -134,13 +134,6 @@ export default function Examination(props) {
     //}, [examinations]);
 
     useEffect(() => {
-        if (!loading) {
-            console.log(stepSpecificValues);
-        }
-    }, [stepSpecificValues])
-
-    useEffect(() => {
-        console.log(results);
         setResultsReady(true);
     }, [results])
 
@@ -311,6 +304,15 @@ export default function Examination(props) {
 
         setResults(resultsMap);
     }
+
+    useEffect(() => {
+        if (loading == false){
+            props.updateLabResultsList(results)
+        }
+    }, [results]); 
+
+
+    
 
     const evaluateAnswer = async () => {
         await props.setDisplayFeedback(true);

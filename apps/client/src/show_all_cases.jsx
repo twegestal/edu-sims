@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
+  Button
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom';
 
@@ -55,7 +56,7 @@ export default function ShowAllCases(props) {
                                     <div key={caseItem.id}>
                                         <p>Name: {caseItem.name}</p>
                                         <Link to={"/case/caseid=" + caseItem.id}>
-                                            <button>Starta fallet</button>
+                                            <Button>Starta fallet</Button>
                                         </Link>
                                     </div>
                                     ))}
