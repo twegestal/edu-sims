@@ -32,6 +32,8 @@ import Examination from "./examination.jsx";
 import Summary from "./summary.jsx";
 import Diagnosis from './diagnosis.jsx'
 import { Editor } from '@tinymce/tinymce-react';
+import {WarningIcon} from "@chakra-ui/icons";
+
 
 
 export default function PerformCase(props) {
@@ -95,21 +97,20 @@ export default function PerformCase(props) {
         console.log(resultsObject)
         setTreatmentResults([
             ...treatmentResults,
-            <>
+            <Flex alignItems="center" flexDirection="column">
                 {Object.keys(resultsObject).map(index => (
                     resultsObject[index].isNormal ? 
-                        <Box background="green" key={index}>
-                            <p>{resultsObject[index].name}</p>
-                            <p>{resultsObject[index].value}</p>
-                        </Box>
+                        <Flex key={index} flexDirection="row">
+                            <p>{resultsObject[index].name} : {resultsObject[index].value} </p>
+                        </Flex>
                         :
-                        <Box background="red" key={index}>
-                            <p>{resultsObject[index].name}</p>
-                            <p>{resultsObject[index].value}</p>
-                        </Box>
+                        <Flex key={index} flexDirection="row" justifyContent="space-between">
+                            <WarningIcon />
+                            <p>{resultsObject[index].name} : {resultsObject[index].value}</p>                                                         
+                        </Flex>
                     )
                 )}
-            </>
+            </Flex>
         ])
     } 
 
@@ -133,10 +134,6 @@ export default function PerformCase(props) {
             </Card>
         ])
     }
-
-    useEffect(() => {
-        console.log(feedback)
-    }, [feedback]);
 
     return (
         <>
@@ -327,6 +324,7 @@ export default function PerformCase(props) {
                     <Diagnosis
                         getCallToApi = {props.getCallToApi}
                         stepId = {currentStep.step_id}
+                        medicalFieldId = {currentStep.medical_case.medical_field_id}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
                         updateFeedback = {updateFeedback}

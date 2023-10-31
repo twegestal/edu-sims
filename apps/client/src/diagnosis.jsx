@@ -27,7 +27,7 @@ export default function Diagnosis(props) {
         const fetchStep = async () => {
             const headers = {
                 "Content-type" : "application/json",
-                "id": 'dce351f8-db4e-4e91-a1d2-a5dc12f090c7'            //hårdkodar detta step-id för tillfället:
+                "id": props.stepId
             }
             
     
@@ -46,7 +46,7 @@ export default function Diagnosis(props) {
         const fetchDiagnosisList = async () => {
             const headers = {
                 "Content-type" : "application/json",
-                "id": '6ff9e368-1e44-46d1-8192-ac3069c34f20'            //hårdkodar detta medical_field_id för tillfället:
+                "id": props.medicalFieldId          
             }
             
     
@@ -84,7 +84,6 @@ export default function Diagnosis(props) {
 
     const handleFeedback = (choosenDiagnosId) => {
         props.setDisplayFeedback(true);
-        console.log('Knappen fungerar')
 
         if(choosenDiagnosId == stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_correct);

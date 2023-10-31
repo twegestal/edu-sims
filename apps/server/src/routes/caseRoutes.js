@@ -29,7 +29,10 @@ export const getCaseRoutes = (db) => {
             },
             order: [
                 ['index', 'ASC']
-            ]
+            ],
+            include: [{
+            model: object.medical_case
+            }]
         });
         //detta är bara en reminder på hur det funkar
         /*const plan = await examination.findOne({
