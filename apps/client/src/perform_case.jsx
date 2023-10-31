@@ -329,7 +329,6 @@ export default function PerformCase(props) {
                         stepId = {currentStep.step_id}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
-                        //setFeedback = {setFeedback}
                         updateFeedback = {updateFeedback}
                         feedback = {feedback}
                     ></Diagnosis>
