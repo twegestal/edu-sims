@@ -15,10 +15,13 @@ import {
     Checkbox,
     IconButton,
     HStack,
-    Button
+    Button,
+    VStack
 } from "@chakra-ui/react";
 import {
-    SmallAddIcon
+    CloseIcon,
+    SmallAddIcon,
+    SmallCloseIcon
 } from '@chakra-ui/icons'
 
 export default function Treatment(props) {
@@ -82,9 +85,6 @@ export default function Treatment(props) {
         }
     }, [treatmentTypes]);
     useEffect(() =>{
-        console.log("treatment")
-        console.log(treatmentList)
-        console.log("list")
     },[treatmentList]);
 
     // hämta lista av typer av behandlingar.
@@ -100,24 +100,44 @@ export default function Treatment(props) {
             console.error("Error in fetching medicine types", error);
         }
     }
-    const checkTreatmentBox = (treatmentId) => {
+    const checkTreatmentBox = (treatmentId, name) => {
         setCheckedTreatments((oldValues) => [
             ...oldValues,
-            treatmentId
-        ]);
+            {treatmentId,name}
+        ]); 
     }
+    const removeAddedTreatment = (id) => {
+        const newArr =[];
+        for (let index = 0; index < checkedTreatments.length; index++) {
+           if(id != checkedTreatments[index].treatmentId){
+                newArr.push(checkedTreatments[index]);
+           }  
+        }
+        setCheckedTreatments(newArr);
+    } 
+
     useEffect(() => {
         console.log(checkedTreatments)
     }, [checkedTreatments]);
 
-    console.log(Checkbox.checked);
+    const checkForId = (id) => {
+        let ok = true;
+        for (let index = 0; index < checkedTreatments.length; index++) {
+            if (checkedTreatments[index].treatmentId == id) {
+                ok=false;
+            }
+        }
+        return ok;
+    }
 
     const findTreatment = (searchString, treatmentTypeId) => {
-        console.log(treatmentTypeId);
         let filteredList = [];
-        if (searchString.length > 0 && !checkTreatmentBox.contains(treatmentTypeId)) {
+        if (searchString.length > 0 ) {
             filteredList = treatmentList[treatmentTypeId].filter(obj => {
-                return obj.name.toLowerCase().includes(searchString.toLowerCase());
+                if(checkForId(obj.id)){
+                    return obj.name.toLowerCase().includes(searchString.toLowerCase());
+                }
+                return;
             })
         }
         setSearchResults(
@@ -127,7 +147,7 @@ export default function Treatment(props) {
                         <Text>
                             {treatmentItem.name}
                         </Text>
-                        <IconButton id={treatmentItem.id} icon={<SmallAddIcon />} onClick={(e) => checkTreatmentBox(e.target.id)}>
+                        <IconButton id={treatmentItem.id}  margin={0.5} colorScheme="teal" icon={<SmallAddIcon onClick={() => checkTreatmentBox(IconButton.id, treatmentItem.name)}/>} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
                         </IconButton>
                     </HStack>
                 </ListItem>
@@ -161,13 +181,31 @@ export default function Treatment(props) {
                                         <List id={treatmentType.id}>
                                             {searchResults}
                                         </List>
-                                        <Input onChange={(e) => findTreatment(e.target.value, treatmentType.id)} placeholder="Välj behandling genom att söka" />
+                                        <Input id="inputField" onChange={(e) => findTreatment(e.target.value, treatmentType.id)} placeholder="Välj behandling genom att söka" />
                                     </AccordionPanel>
                                 </h2>
                             }
                         </AccordionItem>
                     ))
                     }
+                    <AccordionItem key={"AddedValues"}>
+                        <AccordionButton>Added Treatments<AccordionIcon /></AccordionButton>
+                        <AccordionPanel>
+                            {checkedTreatments.map((Item)=>(
+                              <h2>
+                                <VStack alignItems={"left"}>
+                                    <HStack>
+                                        <Text>
+                                          {Item.name}
+                                        </Text>
+                                        <IconButton key={Item.treatmentId}  icon={<SmallCloseIcon/>} colorScheme="teal" margin={0.5} onClick={() => removeAddedTreatment(Item.treatmentId)}></IconButton>
+                                    </HStack>
+                                </VStack>
+                              </h2>
+                            ))
+                            }
+                        </AccordionPanel>
+                    </AccordionItem>
                 </Accordion>
             </Card>
         </div>
