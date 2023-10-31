@@ -11,7 +11,16 @@ ModalFooter,
 ModalBody,
 ModalCloseButton,
 useDisclosure,
-Button
+Button,
+Accordion,
+AccordionItem,
+AccordionButton,
+AccordionIcon,
+AccordionPanel,
+VStack,
+Flex,
+Spacer,
+Card
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -40,7 +49,7 @@ export default function PerformCase(props) {
     const [displayFeedback, setDisplayFeedback] = useState(false);
     const [description, setDescription] = useState('')
     const [notes, setNotes] = useState('')
-    const [feedback, setFeedback] = useState('')
+    const [feedback, setFeedback] = useState([])
     const [treatmentResults, setTreatmentResults] = useState('')
     const editorRef = useRef(null);
 
@@ -80,6 +89,31 @@ export default function PerformCase(props) {
         setNotes(editorRef.current.getContent())
         }
     };
+
+    const updateFeedback = (feedbackToDisplay) => {
+        setFeedback([
+            ...feedback,
+            <Card variant='filled'>
+                <Accordion allowMultiple>
+                    <AccordionItem>
+                        <AccordionButton>
+                            <Box as="span" flex='1' textAlign='center'>
+                                Feedback från steg # {currentIndex + 1}
+                            </Box>
+                            <AccordionIcon />
+                        </AccordionButton>
+                        <AccordionPanel>
+                            {feedbackToDisplay}
+                        </AccordionPanel>
+                    </AccordionItem>
+                </Accordion>
+            </Card>
+        ])
+    }
+
+    useEffect(() => {
+        console.log(feedback)
+    }, [feedback]);
 
     return (
         <>
@@ -196,7 +230,11 @@ export default function PerformCase(props) {
                                 <ModalHeader>Feedback</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    {feedback}
+                                    <Flex direction='column' rowGap='2'>
+                                        {feedback}
+                                    </Flex>
+                                        
+                                    
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -245,7 +283,7 @@ export default function PerformCase(props) {
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
                         setDescription = {setDescription}
-                        setFeedback = {setFeedback}
+                        updateFeedback = {updateFeedback}
                     ></Introduction>
                 </div>
             }
@@ -256,6 +294,7 @@ export default function PerformCase(props) {
                         stepId = {currentStep.step_id}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
+                        updateFeedback = {updateFeedback}
                     ></Examination>
                 </div>
             }
@@ -266,7 +305,8 @@ export default function PerformCase(props) {
                         stepId = {currentStep.step_id}
                         displayFeedback = {displayFeedback}
                         setDisplayFeedback = {setDisplayFeedback}
-                        setFeedback = {setFeedback}
+                        //setFeedback = {setFeedback}
+                        updateFeedback = {updateFeedback}
                         feedback = {feedback}
                     ></Diagnosis>
                 </div>
