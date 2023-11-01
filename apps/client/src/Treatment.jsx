@@ -171,7 +171,7 @@ export default function Treatment(props) {
                         <Text>
                             {treatmentItem.name}
                         </Text>
-                        <IconButton id={treatmentItem.id} margin={0.5} colorScheme="teal" icon={<SmallAddIcon onClick={() => checkTreatmentBox(IconButton.id, treatmentItem.name)} />} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
+                        <IconButton id={treatmentItem.id} margin={0.5} size='xs' colorScheme="teal" icon={<SmallAddIcon/>} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
                         </IconButton>
                     </HStack>
                 </ListItem>
