@@ -284,7 +284,7 @@ export default function Treatment(props) {
                     </Collapse>
                 </Card>
                     //{feedbackWindow}
-                ) : (<Button margin='0.5%' onClick={() => ValuateFeedback()}>Medicinera</Button>)}
+                ) : (<Button colorScheme='teal' margin='0.5%' onClick={() => ValuateFeedback()}>Klar med behandlingar</Button>)}
 
             </Card>
 
