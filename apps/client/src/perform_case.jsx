@@ -294,63 +294,65 @@ export default function PerformCase(props) {
                 </Box>
             </nav>
             <p>CASE</p>
-            {currentStep.module_type_identifier == 0 &&
-                <div>
-                    <Introduction
-                        getCallToApi = {props.getCallToApi}
-                        stepId = {currentStep.step_id}
-                        caseData = {caseList}
-                        displayFeedback = {displayFeedback}
-                        setDisplayFeedback = {setDisplayFeedback}
-                        setDescription = {setDescription}
-                        updateFeedback = {updateFeedback}
-                    ></Introduction>
-                </div>
-            }
-            {currentStep.module_type_identifier == 1 &&
-                <div>
-                    <Examination
-                        getCallToApi = {props.getCallToApi}
-                        stepId = {currentStep.step_id}
-                        displayFeedback = {displayFeedback}
-                        setDisplayFeedback = {setDisplayFeedback}
-                        updateLabResultsList = {updateLabResultsList}
-                        updateFeedback = {updateFeedback}
-                    ></Examination>
-                </div>
-            }
-            {currentStep.module_type_identifier == 2 &&
-                <div>
-                    <Diagnosis
-                        getCallToApi = {props.getCallToApi}
-                        stepId = {currentStep.step_id}
-                        medicalFieldId = {currentStep.medical_case.medical_field_id}
-                        displayFeedback = {displayFeedback}
-                        setDisplayFeedback = {setDisplayFeedback}
-                        updateFeedback = {updateFeedback}
-                        feedback = {feedback}
-                    ></Diagnosis>
-                </div>
-            }
-            {currentStep.module_type_identifier == 3 &&
-                <div>
-                    <p>Behandling</p>
-                </div>
-            }
-            {currentStep.module_type_identifier == 4 &&
-                <div>
-                    <Summary  
-                        getCallToApi = {props.getCallToApi}
-                        stepId = {currentStep.step_id}>
-                    </Summary>
-                </div>
-            }
-            {currentIndex + 1 <= caseList.length -1 && displayFeedback &&
-                <Button onClick={nextStep} >Nästa</Button>
-            }
-            {currentIndex + 1 > caseList.length -1 &&
-                <Link to="/"><Button>Avsluta</Button></Link>
-            }
+            <VStack alignItems='stretch'>
+                {currentStep.module_type_identifier == 0 &&
+                    <div>
+                        <Introduction
+                            getCallToApi = {props.getCallToApi}
+                            stepId = {currentStep.step_id}
+                            caseData = {caseList}
+                            displayFeedback = {displayFeedback}
+                            setDisplayFeedback = {setDisplayFeedback}
+                            setDescription = {setDescription}
+                            updateFeedback = {updateFeedback}
+                        ></Introduction>
+                    </div>
+                }
+                {currentStep.module_type_identifier == 1 &&
+                    <div>
+                        <Examination
+                            getCallToApi = {props.getCallToApi}
+                            stepId = {currentStep.step_id}
+                            displayFeedback = {displayFeedback}
+                            setDisplayFeedback = {setDisplayFeedback}
+                            updateLabResultsList = {updateLabResultsList}
+                            updateFeedback = {updateFeedback}
+                        ></Examination>
+                    </div>
+                }
+                {currentStep.module_type_identifier == 2 &&
+                    <div>
+                        <Diagnosis
+                            getCallToApi = {props.getCallToApi}
+                            stepId = {currentStep.step_id}
+                            medicalFieldId = {currentStep.medical_case.medical_field_id}
+                            displayFeedback = {displayFeedback}
+                            setDisplayFeedback = {setDisplayFeedback}
+                            updateFeedback = {updateFeedback}
+                            feedback = {feedback}
+                        ></Diagnosis>
+                    </div>
+                }
+                {currentStep.module_type_identifier == 3 &&
+                    <div>
+                        <p>Behandling</p>
+                    </div>
+                }
+                {currentStep.module_type_identifier == 4 &&
+                    <div>
+                        <Summary  
+                            getCallToApi = {props.getCallToApi}
+                            stepId = {currentStep.step_id}>
+                        </Summary>
+                    </div>
+                }
+                {currentIndex + 1 <= caseList.length -1 && displayFeedback &&
+                    <Button onClick={nextStep} colorScheme='teal'>Nästa</Button>
+                }
+                {currentIndex + 1 > caseList.length -1 &&
+                    <Link to="/"><Button colorScheme='teal'>Avsluta</Button></Link>
+                }
+            </VStack>
         </>
         
     );

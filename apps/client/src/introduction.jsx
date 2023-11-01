@@ -12,6 +12,7 @@ import {
     Collapse,
     Button
 } from "@chakra-ui/react";
+import LoadingSkeleton from './loadingSkeleton.jsx';
 
 export default function Introduction(props) {
     const [stepData, setStep] = useState({});
@@ -82,49 +83,57 @@ export default function Introduction(props) {
 
     return (
         <div>
-            <VStack align="stretch">
-            <Card variant="filled">
-                <CardHeader>
-                    <Heading size='md'>Patientmöte</Heading>
-                </CardHeader>
+            {loading ? (
+                <LoadingSkeleton></LoadingSkeleton>
+            ) : (
+                <VStack align="stretch">
+                <Card variant="filled">
+                    <CardHeader>
+                        <Heading size='md'>Patientmöte</Heading>
+                    </CardHeader>
 
-                <CardBody>
-                    <Text align='left'>{stepData.description}</Text>
-                </CardBody>
-            </Card>
-
-            <Card variant="filled">
-                {(props.displayFeedback) ?
-
-                <Card variant="filled"> 
-                <Button onClick={onToggle}>Feedback</Button>
-                <Collapse in={isOpen}>
                     <CardBody>
-                        <Text align='left'>{feedbackToDisplay}</Text>
+                        <Text align='left'>{stepData.description}</Text>
                     </CardBody>
-                </Collapse>
                 </Card>
 
-                :
+                <Card variant="filled">
+                    {(props.displayFeedback) ?
 
-                <Card align="center" variant="filled">
-                <CardHeader>
-                    <Heading size='md'>{stepData.prompt}</Heading>
-                </CardHeader>
+                    <Card variant="filled"> 
+                    <Button onClick={onToggle}>Feedback</Button>
+                    <Collapse in={isOpen}>
+                        <CardBody>
+                            <Text align='left'>{feedbackToDisplay}</Text>
+                        </CardBody>
+                    </Collapse>
+                    </Card>
 
-                <CardBody>
-                <HStack>
-                        <Button id="yesButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>JA</Button>
-                        <Button id="noButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
-                    </HStack>
-                </CardBody>
+                    :
+
+                    <Card align="center" variant="filled">
+                    <CardHeader>
+                        <Heading size='md'>{stepData.prompt}</Heading>
+                    </CardHeader>
+
+                    <CardBody>
+                    <HStack>
+                            <Button id="yesButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>JA</Button>
+                            <Button id="noButton" colorScheme="teal" onClick={(e) => handleFeedback(e.target)}>NEJ</Button>
+                        </HStack>
+                    </CardBody>
+                    </Card>
+                    }
+                    
                 </Card>
-                }
+
+
+            </VStack>    
+            )
                 
-            </Card>
-
-
-        </VStack>           
+            }
+        
+                   
             
         </div>
     )
