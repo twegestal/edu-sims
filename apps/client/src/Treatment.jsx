@@ -214,6 +214,14 @@ export default function Treatment(props) {
         //console.log(correctValues[0]);
     }
 
+    useEffect(() => {
+        /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
+        if (props.displayFeedback && !loading) {
+            props.updateFeedback(feedbackText);
+        }
+    }, [feedbackText]);
+
+
     return (
         <div>
             <Card variant='filled' padding='5'>
