@@ -56,7 +56,7 @@ export default function ShowAllCases(props) {
                                     <div key={caseItem.id}>
                                         <p>Name: {caseItem.name}</p>
                                         <Link to={"/case/caseid=" + caseItem.id}>
-                                            <Button>Starta fallet</Button>
+                                            <Button colorScheme='teal'>Starta fallet</Button>
                                         </Link>
                                     </div>
                                     ))}

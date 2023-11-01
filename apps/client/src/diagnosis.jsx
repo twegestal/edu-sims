@@ -8,9 +8,12 @@ import {
     Box,
     Text,
     Flex,
-    Card
+    Card,
+    CardBody,
+    VStack,
+    useDisclosure
 } from '@chakra-ui/react'
-import { useDisclosure } from "@chakra-ui/react";
+import LoadingSkeleton from "./loadingSkeleton.jsx"
 
 
 
@@ -21,6 +24,7 @@ export default function Diagnosis(props) {
     const [diagnosisListHtml, setDiagnosisListHtml] = useState("")
     const [feedbackToDisplay, setFeedbackToDisplay] = useState();
     const [loading, setLoading] = useState(true);
+    const { isOpen, onToggle } = useDisclosure();
 
 
     useEffect(() => {
@@ -74,7 +78,7 @@ export default function Diagnosis(props) {
             filterdList.map((caseItem) => (
                 <Box key={caseItem.id} borderWidth='2px'>
                     <p key={'p_' + caseItem.id}>{caseItem.name}</p>
-                    <Button className="diagnosis_button" key={'set_diagnosis_' + caseItem.id} onClick={(e) => handleFeedback(caseItem.id)}>Ställ diagnos</Button>
+                    <Button colorScheme='teal' className="diagnosis_button" key={'set_diagnosis_' + caseItem.id} onClick={(e) => handleFeedback(caseItem.id)}>Ställ diagnos</Button>
                 </Box>
             ))
         )
@@ -83,7 +87,7 @@ export default function Diagnosis(props) {
     
 
     const handleFeedback = (choosenDiagnosId) => {
-        props.setDisplayFeedback(true);
+        
 
         if(choosenDiagnosId == stepData.diagnosis_id){
             setFeedbackToDisplay(stepData.feedback_correct);
@@ -94,6 +98,10 @@ export default function Diagnosis(props) {
             setFeedbackToDisplay(stepData.feedback_incorrect);
             //props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_incorrect))
         }
+
+        props.setDisplayFeedback(true);
+        onToggle();
+
     }
 
     useEffect(() => {
@@ -107,15 +115,34 @@ export default function Diagnosis(props) {
 
     return ( 
         <div>
-            <h2>Diagnos</h2>
+            {loading ? (
+                <LoadingSkeleton></LoadingSkeleton>
+            ) : (
+                <VStack alignItems='stretch'>
+                    <h2>Diagnos</h2>
 
-            <Card>
-                {stepData.prompt}
-            </Card>
-
-            <Input onChange={(e) => findDiagnosis(e.target.value)} placeholder='Skriv din diagnos här'/>
-            {diagnosisListHtml}
-            {feedbackToDisplay}
+                    <Card variant='filled' padding='5'>
+                        {stepData.prompt}
+                    </Card>
+                    {props.displayFeedback ? (
+                        
+                        <Card variant="filled"> 
+                        <Button onClick={onToggle}>Feedback</Button>
+                        <Collapse in={isOpen}>
+                            <CardBody id='feedback'>
+                                <Text align='left'>{feedbackToDisplay}</Text>
+                            </CardBody>
+                        </Collapse>
+                        </Card>
+                    ) : (
+                        <Card>
+                            <Input onChange={(e) => findDiagnosis(e.target.value)} placeholder='Skriv din diagnos här'/>
+                            {diagnosisListHtml}
+                        </Card>
+                        
+                    )}
+                </VStack>
+            )}
         </div>
     )
 }

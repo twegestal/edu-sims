@@ -346,90 +346,83 @@ export default function Examination(props) {
 
     return (
         <div>
-            <VStack alignItems='stretch'>
-                <Card variant='filled' padding='5'>
-                    <Text align='left'>{stepData.prompt}</Text> 
-                </Card>
-                <Card variant='filled'>
-                    <Accordion allowMultiple>
-                        <AccordionItem>
-                            <AccordionButton>
-                                <Box as="span" flex='1' textAlign='center'>
-                                    Utredningar
-                                </Box>
-                                <AccordionIcon />
-                            </AccordionButton>
-                            <AccordionPanel pb={4}>
-                                {loading ? (
-                                    <Stack>
-                                        <Skeleton height='20px' />
-                                        <Skeleton height='20px' />
-                                        <Skeleton height='20px' />
-                                    </Stack>
-                                ) : (
-                
+            {loading ? (
+                <Stack>
+                    <Skeleton height='20px' />
+                    <Skeleton height='20px' />
+                    <Skeleton height='20px' />
+                </Stack>
+            ) : (
+                <VStack alignItems='stretch'>
+                    <Card variant='filled' padding='5'>
+                        <Text align='left'>{stepData.prompt}</Text> 
+                    </Card>
 
+                    <Card variant='filled'>
+                        <Accordion allowMultiple>
+                            <AccordionItem>
+                                <AccordionButton>
+                                    <Box as="span" flex='1' textAlign='center'>
+                                        Utredningar
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+
+                                <AccordionPanel pb={4}>
                                     <Accordion allowMultiple>
-                                    {Object.entries(stepData.examination_to_display).map(([category, subCategories], index) => (
-                                        <AccordionItem key={index}>
-                                            <h2>
-                                                <AccordionButton>
-                                                    {categoryNames[category]}
-                                                    <AccordionIcon />
-                                                </AccordionButton>
-                                            </h2>
-                                            <AccordionPanel>
-                                                <Accordion allowMultiple>
-                                                    {subCategories.map((subCategory, i) => (
-                                                    <AccordionItem key={i}>
-                                                            <AccordionButton alignContent='left'>
-                                                                {subCategoryNames[subCategory]}
-                                                                <AccordionIcon />
-                                                            </AccordionButton>
-                                                            <AccordionPanel>
-                                                                <List> 
-                                                                {
-                                                                    examinationsFetched &&
-                                                                    Object.entries(examinations[subCategory]).map(([id, name], index) => (
-                                                                        <ListItem key={index}>
-                                                                            <Checkbox id={id}>{name}</Checkbox>
-                                                                        </ListItem>
-                                                                    ))
-                                                                }
-                                                                </List>
-                                                            </AccordionPanel>
-                                                    </AccordionItem> 
-                                                    ))}
-                                                </Accordion>
-                                            </AccordionPanel>
-                                        </AccordionItem>
+                                        {Object.entries(stepData.examination_to_display).map(([category, subCategories], index) => (
+                                            <AccordionItem key={index}>
+                                                <h2>
+                                                    <AccordionButton>
+                                                        {categoryNames[category]}
+                                                        <AccordionIcon />
+                                                    </AccordionButton>
+                                                </h2>
+                                                <AccordionPanel>
+                                                    <Accordion allowMultiple>
+                                                        {subCategories.map((subCategory, i) => (
+                                                        <AccordionItem key={i}>
+                                                                <AccordionButton alignContent='left'>
+                                                                    {subCategoryNames[subCategory]}
+                                                                    <AccordionIcon />
+                                                                </AccordionButton>
+                                                                <AccordionPanel>
+                                                                    <List> 
+                                                                    {
+                                                                        examinationsFetched &&
+                                                                        Object.entries(examinations[subCategory]).map(([id, name], index) => (
+                                                                            <ListItem key={index}>
+                                                                                <Checkbox id={id}>{name}</Checkbox>
+                                                                            </ListItem>
+                                                                        ))
+                                                                    }
+                                                                    </List>
+                                                                </AccordionPanel>
+                                                        </AccordionItem> 
+                                                        ))}
+                                                    </Accordion>
+                                                </AccordionPanel>
+                                            </AccordionItem>))}
+                                    </Accordion>
+                                </AccordionPanel>
+                            </AccordionItem>
+                        </Accordion>
+                    </Card>
 
-                                    ))}
-                                </Accordion>                            
-                                )}
-                                
-                            </AccordionPanel>
-                        </AccordionItem>
+                    <Button onClick={runExams} colorScheme='teal'>Kör utredningar</Button>
 
-                        
-                    </Accordion>
-                </Card>
-
-                <Button onClick={runExams} colorScheme='teal'>Kör utredningar</Button>
-
-                <Card variant='filled'>
-                    <Accordion>
-                        <AccordionItem>
-                            <AccordionButton>
-                            <Box as="span" flex='1' textAlign='center'>
-                                    Resultat
-                                </Box>
-                                <AccordionIcon />
-                            </AccordionButton>
-                            <AccordionPanel pb={4}>
-                                <List>
-                                    {
-                                        resultsReady &&
+                    <Card variant='filled'>
+                        <Accordion>
+                            <AccordionItem>
+                                <AccordionButton>
+                                <Box as="span" flex='1' textAlign='center'>
+                                        Resultat
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel pb={4}>
+                                    <List>
+                                        {resultsReady &&
                                         Object.entries(results).map(([id, fields], index) => (
                                             <ListItem key={index}>
                                                 <HStack>
@@ -437,33 +430,30 @@ export default function Examination(props) {
                                                         <WarningIcon />
                                                     }
                                                     <Text>{fields.name} : {fields.value}</Text>
-                                                </HStack>
-                                                
-                                                
-                                                
+                                                </HStack>    
                                             </ListItem>
-                                        ))
-                                    }
-                                </List>
-                            </AccordionPanel>
-                        </AccordionItem>
-                    </Accordion>
-                </Card>
-                
-                {(props.displayFeedback) ? (
-                    <Card variant="filled"> 
-                    <Button onClick={onToggle}>Feedback</Button>
-                    <Collapse in={isOpen}>
-                        <CardBody id='feedback'>
-                            <Text align='left'>{feedbackToDisplay}</Text>
-                        </CardBody>
-                    </Collapse>
+                                        ))}
+                                    </List>
+                                </AccordionPanel>
+                            </AccordionItem>
+                        </Accordion>
                     </Card>
-                ) : (
-                    <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>Klar med utredningar</Button>
-                )}
                 
-            </VStack>
+                    {(props.displayFeedback) ? (
+                        <Card variant="filled"> 
+                        <Button onClick={onToggle}>Feedback</Button>
+                        <Collapse in={isOpen}>
+                            <CardBody id='feedback'>
+                                <Text align='left'>{feedbackToDisplay}</Text>
+                            </CardBody>
+                        </Collapse>
+                        </Card>
+                    ) : (
+                        <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>Klar med utredningar</Button>
+                    )}
+                
+                </VStack>                            
+            )}
         </div>
     )
 }

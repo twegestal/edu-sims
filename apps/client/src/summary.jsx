@@ -19,11 +19,14 @@ import {
     ScaleFade, 
     Slide, 
     SlideFade,
+    AccordionIcon,
 Button } from "@chakra-ui/react";
+import LoadingSkeleton from "./loadingSkeleton.jsx";
 
 export default function Summary(props){
     const [stepData, setStep] = useState({});
     const [feedbackToDisplay, setFeedbackToDisplay] = useState();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStep = async () => {
@@ -42,6 +45,8 @@ export default function Summary(props){
                 additional_info : response[0].additional_info,
                 additional_links : response[0].additional_links
             });
+
+            setLoading(false);
         }
 
         fetchStep();
@@ -53,7 +58,7 @@ export default function Summary(props){
         
         <div>   
           
-          <VStack align="stretch">
+          
            {/* <Card variant="filled">
                 <CardHeader>
                     <Heading size='md'>Process</Heading>
@@ -70,46 +75,55 @@ export default function Summary(props){
                 </CardBody>
             </Card>
     */}
+            {loading ? (
+                <LoadingSkeleton></LoadingSkeleton>
+            ) : (
+                <VStack alignItems='stretch'>
+                    <Card variant="filled">
+                        <CardHeader>
+                            <Heading size='md'>Sammanfattning</Heading>
+                        </CardHeader>
+                        <Accordion allowMultiple defaultIndex={[0]}>
+                            <AccordionItem >
+                                <AccordionButton>
+                                    <Box as="span" flex='1' textAlign='center'>
+                                        Process
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel >
+                                    <h2 align="left" key={"process"}>{stepData.process}</h2>
+                                </AccordionPanel>   
+                            </AccordionItem>
 
-            <Card variant="filled" width={''}>
-                <CardHeader>
-                    <Heading size='md'>Summary</Heading>
-                </CardHeader>
-                <Accordion allowToggle>
-                    
-                        
-
-                    <AccordionItem >
-                        <AccordionButton>
-                            <h2>Process</h2>
-                        </AccordionButton>
-                        <AccordionPanel >
-                            <h2 align="left" key={"process"}>{stepData.process}</h2>
-                        </AccordionPanel>   
-                    </AccordionItem>
-
-                    <AccordionItem >
-                        <AccordionButton>
-                            <h2>Additional Info</h2>
-                        </AccordionButton>
-                        <AccordionPanel >
-                            <h2 align="left" key={"process"}>{stepData.additional_info}</h2>
-                        </AccordionPanel>
-                    </AccordionItem>
+                            <AccordionItem >
+                                <AccordionButton>
+                                    <Box as="span" flex='1' textAlign='center'>
+                                        Övrig information
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel >
+                                    <h2 align="left" key={"process"}>{stepData.additional_info}</h2>
+                                </AccordionPanel>
+                            </AccordionItem>
+                                        
+                            <AccordionItem >
+                                <AccordionButton>
+                                    <Box as="span" flex='1' textAlign='center'>
+                                        Övriga länkar
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel >
+                                    <h2 align="left" key={"process"}>{stepData.additional_links}</h2>
+                                </AccordionPanel>
+                            </AccordionItem>
                                 
-                    <AccordionItem >
-                        <AccordionButton>
-                            <h2>Additional Links    </h2>
-                        </AccordionButton>
-                        <AccordionPanel >
-                            <h2 align="left" key={"process"}>{stepData.additional_links}</h2>
-                        </AccordionPanel>
-                    </AccordionItem>
-                        
-                </Accordion>
-            </Card>
-
-            </VStack>
+                        </Accordion>
+                    </Card>
+                </VStack>
+            )}
         </div>
     )
 }
