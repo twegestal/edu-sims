@@ -8,6 +8,9 @@ import {
     AccordionButton,
     AccordionIcon,
     AccordionPanel,
+    CardBody,
+    Collapse,
+    useDisclosure,
     Input,
     List,
     ListIcon,
@@ -16,7 +19,8 @@ import {
     IconButton,
     HStack,
     Button,
-    VStack
+    VStack,
+    Step
 } from "@chakra-ui/react";
 import {
     CloseIcon,
@@ -32,8 +36,13 @@ export default function Treatment(props) {
     const [searchResults, setSearchResults] = useState();
     const [treatmentsFetched, setTreatmentsFetched] = useState(false);
     const [checkedTreatments, setCheckedTreatments] = useState([]);
+    const [correctValues, setCorrectValues] = useState([]);
+    const [feedbackText, setFeedbackText] = useState();
+    const { isOpen, onToggle } = useDisclosure();
+    const [feedbackWindow, setFeedbackWindow] = useState();
 
     useEffect(() => {
+        props.setDisplayFeedback(false);
         // Hämta nuvarande treatmentsteg
         const fetchStep = async () => {
             const headers = {
@@ -54,6 +63,20 @@ export default function Treatment(props) {
                 console.error("Error in fetching treatments", error);
             }
         }
+        // hämta step specific values
+        const fetchStepValues = async () => {
+            const headers = {
+                "Content-type": "application/json",
+                "id": props.stepId
+            }
+            try {
+                const response = await props.getCallToApi("http://localhost:5173/api/case/getTreatmentSpecificValues", headers);
+                setCorrectValues(response);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error in fetching treatments correct values", error);
+            }
+        }
         // hämta kategories av treatments
         const fetchTreatmentTypes = async () => {
             const headers = {
@@ -68,6 +91,7 @@ export default function Treatment(props) {
             }
         }
         fetchStep();
+        fetchStepValues();
         fetchTreatmentTypes();
     }, []);
 
@@ -84,8 +108,8 @@ export default function Treatment(props) {
             getTreatmentList();
         }
     }, [treatmentTypes]);
-    useEffect(() =>{
-    },[treatmentList]);
+    useEffect(() => {
+    }, [treatmentList]);
 
     // hämta lista av typer av behandlingar.
     const fetchTreatmentList = async (treatmentTypeId) => {
@@ -103,18 +127,18 @@ export default function Treatment(props) {
     const checkTreatmentBox = (treatmentId, name) => {
         setCheckedTreatments((oldValues) => [
             ...oldValues,
-            {treatmentId,name}
-        ]); 
+            { treatmentId, name }
+        ]);
     }
     const removeAddedTreatment = (id) => {
-        const newArr =[];
+        const newArr = [];
         for (let index = 0; index < checkedTreatments.length; index++) {
-           if(id != checkedTreatments[index].treatmentId){
+            if (id != checkedTreatments[index].treatmentId) {
                 newArr.push(checkedTreatments[index]);
-           }  
+            }
         }
         setCheckedTreatments(newArr);
-    } 
+    }
 
     useEffect(() => {
         console.log(checkedTreatments)
@@ -124,7 +148,7 @@ export default function Treatment(props) {
         let ok = true;
         for (let index = 0; index < checkedTreatments.length; index++) {
             if (checkedTreatments[index].treatmentId == id) {
-                ok=false;
+                ok = false;
             }
         }
         return ok;
@@ -132,9 +156,9 @@ export default function Treatment(props) {
 
     const findTreatment = (searchString, treatmentTypeId) => {
         let filteredList = [];
-        if (searchString.length > 0 ) {
+        if (searchString.length > 0) {
             filteredList = treatmentList[treatmentTypeId].filter(obj => {
-                if(checkForId(obj.id)){
+                if (checkForId(obj.id)) {
                     return obj.name.toLowerCase().includes(searchString.toLowerCase());
                 }
                 return;
@@ -147,12 +171,47 @@ export default function Treatment(props) {
                         <Text>
                             {treatmentItem.name}
                         </Text>
-                        <IconButton id={treatmentItem.id}  margin={0.5} colorScheme="teal" icon={<SmallAddIcon onClick={() => checkTreatmentBox(IconButton.id, treatmentItem.name)}/>} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
+                        <IconButton id={treatmentItem.id} margin={0.5} colorScheme="teal" icon={<SmallAddIcon onClick={() => checkTreatmentBox(IconButton.id, treatmentItem.name)} />} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
                         </IconButton>
                     </HStack>
                 </ListItem>
             ))
         )
+    }
+
+    const ValuateFeedback = () => {
+        let ok = true;
+        if (checkedTreatments.length == correctValues.length) {
+            for (let index = 0; index < correctValues.length; index++) {
+                for (let jindex = 0; jindex < checkedTreatments.length; jindex++) {
+                    if (correctValues[index.treatment_Id] == checkedTreatments[jindex].treatmentId) {
+                        break;
+                    }
+                    else {
+                        ok = false;
+                    }
+                }
+            }
+        }
+        else {
+            ok = false;
+        }
+        ok = false;
+
+        
+        if (ok) {
+            setFeedbackText(stepData.feedback_correct);
+            setFeedbackWindow();
+        }
+        else {
+            setFeedbackText(stepData.feedback_incorrect);
+            setFeedbackWindow();
+        }
+
+        props.setDisplayFeedback(true);
+        onToggle();
+        console.log();
+        //console.log(correctValues[0]);
     }
 
     return (
@@ -191,23 +250,36 @@ export default function Treatment(props) {
                     <AccordionItem key={"AddedValues"}>
                         <AccordionButton>Added Treatments<AccordionIcon /></AccordionButton>
                         <AccordionPanel>
-                            {checkedTreatments.map((Item)=>(
-                              <h2>
-                                <VStack alignItems={"left"}>
-                                    <HStack>
-                                        <Text>
-                                          {Item.name}
-                                        </Text>
-                                        <IconButton key={Item.treatmentId}  icon={<SmallCloseIcon/>} colorScheme="teal" margin={0.5} onClick={() => removeAddedTreatment(Item.treatmentId)}></IconButton>
-                                    </HStack>
-                                </VStack>
-                              </h2>
+                            {checkedTreatments.map((Item) => (
+                                <h2>
+                                    <VStack alignItems={"left"}>
+                                        <HStack>
+                                            <Text>
+                                                {Item.name}
+                                            </Text>
+                                            <IconButton key={Item.treatmentId} icon={<SmallCloseIcon />} colorScheme="teal" margin={0.5} onClick={() => removeAddedTreatment(Item.treatmentId)}></IconButton>
+                                        </HStack>
+                                    </VStack>
+                                </h2>
                             ))
                             }
                         </AccordionPanel>
                     </AccordionItem>
                 </Accordion>
+                {props.displayFeedback ? (
+                    <Card variant="filled" margin='0.5%'>
+                    <Button onClick={onToggle}>Feedback</Button>
+                    <Collapse in={isOpen}>
+                        <CardBody>
+                            <Text align='left'>{feedbackText}</Text>
+                        </CardBody>
+                    </Collapse>
+                </Card>
+                    //{feedbackWindow}
+                ) : (<Button margin='0.5%' onClick={() => ValuateFeedback()}>Medicinera</Button>)}
+
             </Card>
+
         </div>
     )
 }
