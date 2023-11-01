@@ -54,6 +54,7 @@ export default function PerformCase(props) {
     const [feedback, setFeedback] = useState([])
     const [treatmentResults, setTreatmentResults] = useState([])
     const editorRef = useRef(null);
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -69,10 +70,11 @@ export default function PerformCase(props) {
             setCaseList(caseListFromApi)
             setCurrentStep(caseListFromApi[0])
             setCurrentIndex(caseListFromApi[0].index)
+            setLoading(false)
         };
 
         getCaseList();
-    }, []); 
+    }, []);
 
     const nextStep = async (event) => {
 
@@ -293,7 +295,9 @@ export default function PerformCase(props) {
                     </div>
                 </Box>
             </nav>
-            <p>CASE</p>
+            <div>
+                {loading ? (<p></p>) : (<p>{caseList[0].medical_case.name}</p>)}
+            </div>
             <VStack alignItems='stretch'>
                 {currentStep.module_type_identifier == 0 &&
                     <div>
@@ -343,6 +347,8 @@ export default function PerformCase(props) {
                         <Summary  
                             getCallToApi = {props.getCallToApi}
                             stepId = {currentStep.step_id}>
+                            displayFeedback = {displayFeedback}
+                            setDisplayFeedback = {setDisplayFeedback}
                         </Summary>
                     </div>
                 }
