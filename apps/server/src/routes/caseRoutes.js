@@ -178,8 +178,17 @@ export const getCaseRoutes = (db) => {
     })
     // Tar emot en examination types id och hämtar alla subtyper för det id
     router.get('/getExaminationSubtypes', async (req,res,next)=>{
-        if(req.header('id') == ''){
-            res.status(404).json("NOT FOUND");
+        if (req.header('examination_type_id')) {
+            const response = await object.examination_subtype.findAll({
+                where : {
+                    examination_type_id : req.header('examination_type_id')
+                }
+            })
+            res.status(200).json(response);
+        }
+        else if(req.header('id') == ''){
+            const Value = await object.examination_subtype.findAll({});
+            res.status(200).json(Value);
         }
         else{
             const result = await object.examination_subtype.findAll({

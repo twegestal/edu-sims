@@ -6,7 +6,7 @@ import Home from './home.jsx'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 import Introduction from './introduction.jsx';
-import Summary from './summary.jsx';
+import CreateCase from "./create_case/createCase.jsx";
 
 function App() {
   const [message, setMessage] = useState('');
@@ -94,9 +94,10 @@ function App() {
             </Route>
         </Route>
         <Route path='/test' element={
-        <Summary
+        <CreateCase
             getCallToApi = {getCallToApi}
-        ></Summary>}>
+            postCallToApi = {postCallToApi}
+        ></CreateCase>}>
         </Route>
       </Routes>
       
