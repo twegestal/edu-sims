@@ -27,7 +27,7 @@ export default function Introduction(props) {
             }
             
     
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getIntroductionStep', headers);
+            const response = await props.getCallToApi('/api/case/getIntroductionStep', headers);
 
             setStep({
                 id : response[0].id,

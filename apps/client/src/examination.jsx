@@ -46,7 +46,7 @@ export default function Examination(props) {
             }
             
             try {
-                const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationStep', headers);
+                const response = await props.getCallToApi('/api/case/getExaminationStep', headers);
 
                 setStep({
                     id : response[0].id,
@@ -181,7 +181,7 @@ export default function Examination(props) {
         }
 
         try {
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationList', headers);
+            const response = await props.getCallToApi('/api/case/getExaminationList', headers);
 
             return response;
         } catch (error) {
@@ -196,7 +196,7 @@ export default function Examination(props) {
         }
 
         try {
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationTypes', headers);
+            const response = await props.getCallToApi('/api/case/getExaminationTypes', headers);
 
             return response.name;
         } catch (error) {
@@ -211,7 +211,7 @@ export default function Examination(props) {
         }
             
         try {
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationSubtypes', headers);
+            const response = await props.getCallToApi('/api/case/getExaminationSubtypes', headers);
 
             return response[0].name;
         } catch (error) {
@@ -226,7 +226,7 @@ export default function Examination(props) {
         }
 
         try {
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getExaminationSpecificValues', headers);
+            const response = await props.getCallToApi('/api/case/getExaminationSpecificValues', headers);
             return response;
         } catch (error) {
             console.error("Error fetching stepValues:", error);

@@ -17,13 +17,13 @@ export default function Login(props) {
                 password : passwordInput
             })
     
-            const response = await props.postToApi(body, 'http://localhost:5173/api/user/login');
+            const response = await props.postToApi(body, '/api/user/login');
 
             const headers = {
                 "Content-type" : "application/json",
                 "user_id" : response.id
             }
-            const user = await props.getCallToApi('http://localhost:5173/api/user', headers);
+            const user = await props.getCallToApi('/api/user', headers);
 
 
             props.updateLoggedInUser(user.id, user.email, user.is_admin);

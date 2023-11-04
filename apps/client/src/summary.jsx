@@ -37,7 +37,7 @@ export default function Summary(props){
             
             //hårdkodar detta step-id för tillfället:
     
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getSummaryStep', headers);
+            const response = await props.getCallToApi('/api/case/getSummaryStep', headers);
 
             setStep({
                 id : response[0].id,
