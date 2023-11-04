@@ -16,7 +16,7 @@ To install all the necessary dependencies, run the following command from the ro
 pnpm install
 ```
 
-This will install all dependencies for both the client and the server.
+This will install dependencies for all workspaces.
 
 ### Available Scripts
 
@@ -25,6 +25,8 @@ From the project root, you can run the following scripts using `pnpm run <script
 `dev`: Starts both the client and the server in development mode.
 `dev-client`: Starts only the client in development mode.
 `dev-server`: Starts only the server in development mode.
+`lint`: Linting for all workspaces.
+`format`: Formatting for all workspaces.
 
 Example, to start both the client and server, run:
 
@@ -34,10 +36,11 @@ pnpm run dev
 
 ### Project Structure
 
-The project is structured as a monorepo with two main packages:
+The project is structured as a monorepo with three main packages:
 
 `apps/client`: React client, bootstrapped with `Vite`.
 `apps/server`: Express server.
+`packages/api`: Utils and validators shared between client and server.
 
 ### API Proxy
 
