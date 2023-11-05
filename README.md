@@ -42,8 +42,18 @@ The project is structured as a monorepo with three main packages:
 `apps/server`: Express server.
 `packages/api`: Utils and validators shared between client and server.
 
+```bash
+.
+├── apps
+│   ├── client                 # React + Vite
+│   └── server                 # Node + Express
+│   
+└── packages
+.    ├── api                    # Shared validators and utils
+.    └── eslint-config-custom   # Shared eslint config
+
+```
+
 ### API Proxy
 
 A proxy has been set up in the Vite configuration. This means that API calls from the client with paths starting with `/api` will be automatically proxied to the server.
-
-Example, a fetch request in the client to `/api/hello` will be handeled by the server route `/hello`.
