@@ -22,12 +22,6 @@ This will install dependencies for all workspaces.
 
 From the project root, you can run the following scripts using `pnpm run <script_name>`:
 
-`dev`:
-``: 
-`dev-server`: Starts only the server in development mode.
-`lint`: Linting for all workspaces.
-`format`: Formatting for all workspaces.
-
 ```sh
 pnpm run dev #Starts both the client and the server in development mode
 pnpm run dev-client #Starts only the client in development mode
