@@ -22,16 +22,18 @@ This will install dependencies for all workspaces.
 
 From the project root, you can run the following scripts using `pnpm run <script_name>`:
 
-`dev`: Starts both the client and the server in development mode.
-`dev-client`: Starts only the client in development mode.
+`dev`:
+``: 
 `dev-server`: Starts only the server in development mode.
 `lint`: Linting for all workspaces.
 `format`: Formatting for all workspaces.
 
-Example, to start both the client and server, run:
-
 ```sh
-pnpm run dev
+pnpm run dev #Starts both the client and the server in development mode
+pnpm run dev-client #Starts only the client in development mode
+pnpm run dev-server #Starts only the server in development mode
+pnpm run lint #Linting for all workspaces
+pnpm format #Formatting for all workspaces
 ```
 
 ### Project Structure
@@ -47,7 +49,7 @@ The project is structured as a monorepo with three main packages:
 ├── apps
 │   ├── client                 # React + Vite
 │   └── server                 # Node + Express
-│   
+│  
 └── packages
 .    ├── api                    # Shared validators and utils
 .    └── eslint-config-custom   # Shared eslint config
