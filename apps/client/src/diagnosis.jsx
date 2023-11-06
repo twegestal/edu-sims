@@ -35,7 +35,7 @@ export default function Diagnosis(props) {
             }
             
     
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getDiagnosisStep', headers);
+            const response = await props.getCallToApi('/api/case/getDiagnosisStep', headers);
 
 
             setStepData({
@@ -54,7 +54,7 @@ export default function Diagnosis(props) {
             }
             
     
-            const response = await props.getCallToApi('http://localhost:5173/api/case/getDiagnosisList', headers);
+            const response = await props.getCallToApi('/api/case/getDiagnosisList', headers);
             setDiagnosisList(response)
         }
 

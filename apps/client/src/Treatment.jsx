@@ -50,7 +50,7 @@ export default function Treatment(props) {
                 "id": props.stepId
             }
             try {
-                const response = await props.getCallToApi("http://localhost:5173/api/case/getTreatmentStep", headers);
+                const response = await props.getCallToApi("/api/case/getTreatmentStep", headers);
                 setStep({
                     id: response[0].id,
                     prompt: response[0].prompt,
@@ -70,7 +70,7 @@ export default function Treatment(props) {
                 "id": props.stepId
             }
             try {
-                const response = await props.getCallToApi("http://localhost:5173/api/case/getTreatmentSpecificValues", headers);
+                const response = await props.getCallToApi("/api/case/getTreatmentSpecificValues", headers);
                 setCorrectValues(response);
                 setLoading(false);
             } catch (error) {
@@ -83,7 +83,7 @@ export default function Treatment(props) {
                 "Content-type": "application/json"
             }
             try {
-                const response = await props.getCallToApi("http://localhost:5173/api/case/getTreatmentTypes", headers);
+                const response = await props.getCallToApi("/api/case/getTreatmentTypes", headers);
                 setTreatmentTypes(response);
                 setTreatmentsFetched(true);
             } catch (error) {
@@ -118,7 +118,7 @@ export default function Treatment(props) {
             "id": treatmentTypeId
         }
         try {
-            const response = await props.getCallToApi("http://localhost:5173/api/case/getTreatmentList", headers);
+            const response = await props.getCallToApi("/api/case/getTreatmentList", headers);
             return response;
         } catch (error) {
             console.error("Error in fetching medicine types", error);

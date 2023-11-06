@@ -65,7 +65,7 @@ export default function PerformCase(props) {
                 "Content-type" : "application/json",
                 "case_id" : caseid
             }
-            const caseListFromApi = await props.getCallToApi('http://localhost:5173/api/case/getCaseById', headers);
+            const caseListFromApi = await props.getCallToApi('/api/case/getCaseById', headers);
 
             setCaseList(caseListFromApi)
             setCurrentStep(caseListFromApi[0])

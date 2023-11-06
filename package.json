@@ -5,9 +5,13 @@
   "scripts": {
     "dev-client": "pnpm --prefix apps/client run dev",
     "dev-server": "pnpm --prefix apps/server run dev",
-    "dev": "concurrently \"pnpm --prefix apps/client run dev\" \"pnpm --prefix apps/server run dev\""
+    "dev": "concurrently \"pnpm --prefix apps/client run dev\" \"pnpm --prefix apps/server run dev\"",
+    "lint": "eslint './{apps,packages}/**/src/**/*.{js,jsx}'",
+    "format": "prettier --write '**/*.{js,jsx,json,css}'"
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "eslint": "^8.53.0",
+    "prettier": "^3.0.3"
   }
 }

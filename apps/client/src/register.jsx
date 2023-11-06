@@ -16,14 +16,14 @@ export default function Register(props) {
                 group_id : groupId
             })
 
-            const response = await props.postCallToApi(body, 'http://localhost:5173/api/user/register');
+            const response = await props.postCallToApi(body, '/api/user/register');
 
 
             const headers = {
                 "Content-type" : "application/json",
                 "user_id" : response.id
             }
-            const user = await props.getCallToApi('http://localhost:5173/api/user', headers);
+            const user = await props.getCallToApi('/api/user', headers);
 
             props.updateLoggedInUser(user.id, user.email, user.is_admin);
             

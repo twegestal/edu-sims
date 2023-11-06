@@ -18,8 +18,8 @@ export default function ShowAllCases(props) {
                 "Content-type": "application/json",
             };
 
-            const cases = await props.getCallToApi('http://localhost:5173/api/case/GetAllCases', headers);
-            const fields = await props.getCallToApi('http://localhost:5173/api/case/getMedicalFields', headers);
+            const cases = await props.getCallToApi('/api/case/GetAllCases', headers);
+            const fields = await props.getCallToApi('/api/case/getMedicalFields', headers);
 
             setAllCases(cases);
             setMedicalFields(fields);
