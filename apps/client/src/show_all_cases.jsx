@@ -5,6 +5,7 @@ import {
   AccordionButton,
   AccordionPanel,
   Button,
+  Flex
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
@@ -53,10 +54,14 @@ export default function ShowAllCases(props) {
             <AccordionPanel pb={4}>
               {groupedCases[medicalFieldId].map((caseItem) => (
                 <div key={caseItem.id}>
-                  <p>Name: {caseItem.name}</p>
-                  <Link to={'/case/caseid=' + caseItem.id}>
-                    <Button colorScheme='teal'>Starta fallet</Button>
-                  </Link>
+                  {props.user.isAdmin && (
+                  <Flex direction={row}>
+                    <p>Name: {caseItem.name}</p>
+                    <Link to={'/case/caseid=' + caseItem.id}>
+                        <Button colorScheme='teal'>Starta fallet</Button>
+                    </Link>
+                  </Flex>
+                )}
                 </div>
               ))}
             </AccordionPanel>

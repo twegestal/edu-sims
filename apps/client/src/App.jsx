@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Introduction from './introduction.jsx';
 import CreateCase from './create_case/createCase.jsx';
+import ManageCases from './adminPage/manageCases.jsx'
 
 function App() {
   const [message, setMessage] = useState('');
@@ -20,7 +21,7 @@ function App() {
     setUser({
       id: id,
       email: email,
-      is_admin: is_admin,
+      isAdmin: is_admin,
     });
   };
 
@@ -76,7 +77,13 @@ function App() {
       )}
 
       <Routes>
-        <Route path='/' element={<Home user={user} getCallToApi={getCallToApi}></Home>} />
+        <Route
+          path='/'
+          element={<Home 
+            user={user}
+            getCallToApi={getCallToApi}
+          ></Home>} 
+        ></Route>
         <Route
           path='/login'
           element={
@@ -95,9 +102,15 @@ function App() {
           ></Route>
         </Route>
         <Route
-          path='/test'
+          path='/createCase'
           element={
             <CreateCase getCallToApi={getCallToApi} postCallToApi={postCallToApi}></CreateCase>
+          }
+        ></Route>
+        <Route
+          path='/manageCases'
+          element={
+            <ManageCases getCallToApi={getCallToApi} postCallToApi={postCallToApi}></ManageCases>
           }
         ></Route>
       </Routes>
