@@ -1,6 +1,5 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
-import { step_specific_values } from './step_specific_values.js';
 
 export const examination = db.define(
   'examination',

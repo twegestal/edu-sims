@@ -1,7 +1,5 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
-import { medical_case } from './medical_case.js';
-import { attempt } from './attempt.js';
 
 export const end_user = db.define(
   'end_user',

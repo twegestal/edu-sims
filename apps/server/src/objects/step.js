@@ -1,7 +1,5 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
-import { medical_case } from './medical_case.js';
-import { module_type } from './module_type.js';
 
 export const step = db.define(
   'step',

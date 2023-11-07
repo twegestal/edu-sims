@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { attempt } from './attempt.js';
 import { diagnosis_list } from './diagnosis_list.js';
 import { diagnosis } from './diagnosis.js';
@@ -121,11 +121,8 @@ step.belongsTo(medical_case, {
 });
 
 step.belongsTo(module_type, {
-  foreignKey: {
-    name: 'module_type_identifier',
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
+  foreignKey: 'module_type_identifier',
+  targetKey: 'module_type_identifier',
 });
 
 treatment_list.belongsTo(treatment_type, {

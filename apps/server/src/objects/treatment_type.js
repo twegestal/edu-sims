@@ -1,6 +1,5 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
-import { treatment_list } from './treatment_list.js';
 
 export const treatment_type = db.define(
   'treatment_type',
