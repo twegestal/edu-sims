@@ -5,13 +5,9 @@ dotenv.config();
 const environment = process.env.DEV_ENVIRONMENT;
 
 const getDBName = () => (environment === 'development' ? 'edu_sims_test' : process.env.DB_NAME);
-
 const getDBUser = () => (environment === 'development' ? 'am6110' : process.env.DB_USER);
-
 const getDBPassword = () => (environment === 'development' ? 'eky5mc9s' : process.env.DB_PASSWORD);
-
 const getDBHost = () => (environment === 'development' ? 'pgserver.mau.se' : process.env.DB_HOST);
-
 const getDBPort = () => (environment === 'development' ? 5432 : process.env.DB_PORT);
 
 const connectToDatabase = async () => {

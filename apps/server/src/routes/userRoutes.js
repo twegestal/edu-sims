@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as object from '../objects/object_index.js';
+import * as object from '../models/object_index.js';
 
 export const getUserRoutes = (db) => {
   const router = Router();

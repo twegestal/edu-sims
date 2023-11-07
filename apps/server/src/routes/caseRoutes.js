@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import * as object from '../objects/object_index.js';
-import { examination_list } from '../objects/examination_list.js';
+import * as object from '../models/object_index.js';
 
-export const getCaseRoutes = (db) => {
+export const getCaseRoutes = () => {
   const router = Router();
 
   router.post('/createCase', async (req, res, next) => {});
