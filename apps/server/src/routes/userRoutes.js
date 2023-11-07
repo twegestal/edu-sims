@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
+import { generateJWT } from '../utils/jwtHandler.js';
 
 export const getUserRoutes = (db) => {
   const router = Router();
@@ -19,9 +20,6 @@ export const getUserRoutes = (db) => {
   });
 
   router.post('/login', async (req, res, next) => {
-    /*
-        Sequelize uses the provided email to query the database:
-        */
     const user = await object.end_user.findOne({
       where: {
         email: req.body.email,
@@ -36,6 +34,8 @@ export const getUserRoutes = (db) => {
       if (req.body.password === user.password) {
         res.status(200).json({
           id: user.id,
+          email: user.email,
+          token: generateJWT(user),
         });
       } else {
         res.status(404).json({

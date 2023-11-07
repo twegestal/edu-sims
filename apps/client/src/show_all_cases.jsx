@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
-export default function ShowAllCases(props) {
+export default function ShowAllCases() {
   const [allCases, setAllCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
 
@@ -37,10 +37,10 @@ export default function ShowAllCases(props) {
     return acc;
   }, {});
 
-  function getMedicalFieldName(medicalFieldId) {
+  const getMedicalFieldName = (medicalFieldId) => {
     const medicalField = medicalFields.find((field) => field.id === medicalFieldId);
     return medicalField ? medicalField.name : 'Unknown';
-  }
+  };
 
   return (
     <div>
