@@ -81,7 +81,7 @@ export default function Introduction(props) {
   return (
     <div>
       {loading ? (
-        <LoadingSkeleton></LoadingSkeleton>
+        <LoadingSkeleton />
       ) : (
         <VStack align='stretch'>
           <Card variant='filled'>

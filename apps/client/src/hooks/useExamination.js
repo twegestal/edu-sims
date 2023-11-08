@@ -12,7 +12,6 @@ export const useExamination = () => {
   const getExaminationSpecificValues = async (id) => {
     try {
       return await getExaminationSpecificValuesApi({ headers: { step_id: id } });
-      setExaminationSpecificValues(result);
     } catch (error) {
       console.error('error fetching examination specific values: ', error);
     }
