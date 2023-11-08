@@ -7,15 +7,11 @@ export const useExamination = () => {
   const getExaminationSubtypesApi = useApi('getExaminationSubtypes');
   const getExaminationListApi = useApi('getExaminationList');
 
-  const [examionationSpecificValues, setExaminationSpecificValues] = useState({});
   const [examinationStep, setExaminationStep] = useState([]);
-  const [examinationTypes, setExaminationTypes] = useState({});
-  const [examinationSubtypes, setExaminationSubtypes] = useState({});
-  const [examinationList, setExaminationList] = useState({});
 
   const getExaminationSpecificValues = async (id) => {
     try {
-      const result = await getExaminationSpecificValuesApi({ headers: { step_id: id } });
+      return await getExaminationSpecificValuesApi({ headers: { step_id: id } });
       setExaminationSpecificValues(result);
     } catch (error) {
       console.error('error fetching examination specific values: ', error);
@@ -33,8 +29,7 @@ export const useExamination = () => {
 
   const getExaminationTypes = async (id) => {
     try {
-      const result = await getExaminationTypesApi({ headers: { id: id } });
-      setExaminationTypes(result);
+      return await getExaminationTypesApi({ headers: { id: id } });
     } catch (error) {
       console.error('error fetching examinationt type: ', error);
     }
@@ -42,8 +37,7 @@ export const useExamination = () => {
 
   const getExaminationSubtypes = async (id) => {
     try {
-      const result = await getExaminationSubtypesApi({ headers: { examination_type_id: id } });
-      setExaminationSubtypes(result);
+      return await getExaminationSubtypesApi({ headers: { examination_type_id: id } });
     } catch (error) {
       console.error('error fetching examination suntypes: ', error);
     }
@@ -51,19 +45,14 @@ export const useExamination = () => {
 
   const getExaminationList = async (id) => {
     try {
-      const result = await getExaminationListApi({ headers: { examination_subtype_id: id } });
-      setExaminationList(result);
+      return await getExaminationListApi({ headers: { examination_subtype_id: id } });
     } catch (error) {
       console.error('error fetching examination list: ', error);
     }
   };
 
   return {
-    examionationSpecificValues,
     examinationStep,
-    examinationTypes,
-    examinationSubtypes,
-    examinationList,
     getExaminationSpecificValues,
     getExaminationStep,
     getExaminationTypes,
