@@ -15,10 +15,11 @@ export const useApi = (method) => {
   const token = user ? user.token : undefined;
 
   const apiClient = useMemo(
-    () => ky.create({
-      prefixUrl,
-      headers: getHeaders(token),
-    }),
+    () =>
+      ky.create({
+        prefixUrl,
+        headers: getHeaders(token),
+      }),
     [token],
   );
 

@@ -3,56 +3,34 @@ import { useEffect } from 'react';
 import {
   Collapse,
   Button,
-  Heading,
   Input,
   Box,
   Text,
-  Flex,
   Card,
   CardBody,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
 import LoadingSkeleton from './loadingSkeleton.jsx';
+import { useDiagnosis } from './hooks/useDiagnosis.js';
 
 export default function Diagnosis(props) {
-  const [stepData, setStepData] = useState({});
-  const [diagnosisList, setDiagnosisList] = useState([]);
   const [diagnosisListHtml, setDiagnosisListHtml] = useState('');
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [loading, setLoading] = useState(true);
   const { isOpen, onToggle } = useDisclosure();
 
+  const { diagnosisStep, getDiagnosisStep, diagnosisList, getDiagnosisList } = useDiagnosis();
+
   useEffect(() => {
     const fetchStep = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: props.stepId,
-      };
-
-      const response = await props.getCallToApi('/api/case/getDiagnosisStep', headers);
-
-      setStepData({
-        id: response[0].id,
-        prompt: response[0].prompt,
-        diagnosis_id: response[0].diagnosis_id,
-        feedback_correct: response[0].feedback_correct,
-        feedback_incorrect: response[0].feedback_incorrect,
-      });
+      await getDiagnosisStep({ headers: { id: props.stepId } });
     };
 
     const fetchDiagnosisList = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: props.medicalFieldId,
-      };
-
-      const response = await props.getCallToApi('/api/case/getDiagnosisList', headers);
-      setDiagnosisList(response);
+      await getDiagnosisList({ headers: { id: props.medicalFieldId } });
     };
-
     props.setDisplayFeedback(false);
-
     fetchStep();
     fetchDiagnosisList();
     setLoading(false);
@@ -85,14 +63,14 @@ export default function Diagnosis(props) {
   };
 
   const handleFeedback = (choosenDiagnosId) => {
-    if (choosenDiagnosId == stepData.diagnosis_id) {
-      setFeedbackToDisplay(stepData.feedback_correct);
-      //props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_correct))
+    if (choosenDiagnosId == diagnosisStep.diagnosis_id) {
+      setFeedbackToDisplay(diagnosisStep.feedback_correct);
+      //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_correct))
     }
 
-    if (choosenDiagnosId != stepData.diagnosis_id) {
-      setFeedbackToDisplay(stepData.feedback_incorrect);
-      //props.setFeedback(props.feedback.concat("Diagnossteg: " + stepData.feedback_incorrect))
+    if (choosenDiagnosId != diagnosisStep.diagnosis_id) {
+      setFeedbackToDisplay(diagnosisStep.feedback_incorrect);
+      //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_incorrect))
     }
 
     props.setDisplayFeedback(true);
@@ -109,13 +87,13 @@ export default function Diagnosis(props) {
   return (
     <div>
       {loading ? (
-        <LoadingSkeleton></LoadingSkeleton>
+        <LoadingSkeleton />
       ) : (
         <VStack alignItems='stretch'>
           <h2>Diagnos</h2>
 
           <Card variant='filled' padding='5'>
-            {stepData.prompt}
+            {diagnosisStep.prompt}
           </Card>
           {props.displayFeedback ? (
             <Card variant='filled'>

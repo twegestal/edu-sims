@@ -14,9 +14,8 @@ export default function App() {
 
   return (
     <>
-      {user ? (
+      {user.token ? (
         <>
-          <h2>Logged in</h2>
           <Home />
           <Button onClick={logout}>Logout</Button>
         </>

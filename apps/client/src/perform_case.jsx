@@ -34,8 +34,9 @@ import Diagnosis from './diagnosis.jsx';
 import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
+import { useCases } from './hooks/useCases.js';
 
-export default function PerformCase(props) {
+export default function PerformCase() {
   let { caseid } = useParams();
   caseid = caseid.split('caseid=')[1];
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
@@ -51,7 +52,7 @@ export default function PerformCase(props) {
     onOpen: onTreatmentResultsOpen,
     onClose: onTreatmentResultsClose,
   } = useDisclosure();
-  const [caseList, setCaseList] = useState([]);
+  //const [caseList, setCaseList] = useState([]);
   const [currentStep, setCurrentStep] = useState({});
   const [currentIndex, setCurrentIndex] = useState();
   const [displayFeedback, setDisplayFeedback] = useState(false);
@@ -62,22 +63,22 @@ export default function PerformCase(props) {
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getCaseList = async (event) => {
-      const headers = {
-        'Content-type': 'application/json',
-        case_id: caseid,
-      };
-      const caseListFromApi = await props.getCallToApi('/api/case/getCaseById', headers);
+  const { caseById, getCaseById } = useCases();
 
-      setCaseList(caseListFromApi);
-      setCurrentStep(caseListFromApi[0]);
-      setCurrentIndex(caseListFromApi[0].index);
+  useEffect(() => {
+    const getCaseList = async () => {
+      await getCaseById(caseid);
       setLoading(false);
     };
-
     getCaseList();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setCurrentStep(caseById[0]);
+      setCurrentIndex(caseById[0].index);
+    }
+  }, [caseById]);
 
   const nextStep = async (event) => {
     let nextIndex = currentIndex + 1;
@@ -301,7 +302,6 @@ export default function PerformCase(props) {
         {currentStep.module_type_identifier == 0 && (
           <div>
             <Introduction
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               caseData={caseList}
               displayFeedback={displayFeedback}
@@ -314,7 +314,6 @@ export default function PerformCase(props) {
         {currentStep.module_type_identifier == 1 && (
           <div>
             <Examination
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
@@ -326,7 +325,6 @@ export default function PerformCase(props) {
         {currentStep.module_type_identifier == 2 && (
           <div>
             <Diagnosis
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               medicalFieldId={currentStep.medical_case.medical_field_id}
               displayFeedback={displayFeedback}
@@ -339,7 +337,6 @@ export default function PerformCase(props) {
         {currentStep.module_type_identifier == 3 && (
           <div>
             <Treatment
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
@@ -349,7 +346,7 @@ export default function PerformCase(props) {
         )}
         {currentStep.module_type_identifier == 4 && (
           <div>
-            <Summary getCallToApi={props.getCallToApi} stepId={currentStep.step_id}>
+            <Summary stepId={currentStep.step_id}>
               displayFeedback = {displayFeedback}
               setDisplayFeedback = {setDisplayFeedback}
             </Summary>

@@ -7,7 +7,7 @@ export default function Home() {
   const { user } = useAuth();
   return (
     <>
-      {user.id && (
+      {user && (
         <div>
           <h2>{user.email}</h2>
           {/* <ShowAllCases /> */}
