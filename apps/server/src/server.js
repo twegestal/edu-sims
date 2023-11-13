@@ -10,15 +10,9 @@ export const createServer = () => {
   app.use('/user', getUserRoutes(db));
   app.use('/case', getCaseRoutes(db));
 
-  app.get('/hello', (req, res) => {
-    res.status(201).json(greetingPhrase());
+  app.get('/', (_req, res) => {
+    res.json('Hello, world!');
   });
 
   return app;
-};
-
-const greetingPhrase = () => {
-  const phrases = ['Hallå eller!', 'E du go eller', 'Full bäs', 'Kamma dej', 'Abrovinsch'];
-
-  return phrases[Math.floor(Math.random() * phrases.length)];
 };
