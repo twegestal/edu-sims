@@ -9,7 +9,10 @@ export default function Home(props) {
       {(props.user.hasOwnProperty('id') && props.user.isAdmin == false) && (
         <div>
           <h2>{props.user.email}</h2>
-          <ShowAllCases getCallToApi={props.getCallToApi}></ShowAllCases>
+          <ShowAllCases 
+            getCallToApi={props.getCallToApi}
+            user = {props.user}
+          ></ShowAllCases>
         </div>
       )}
 
