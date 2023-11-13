@@ -1,4 +1,3 @@
-import { DataTypes, Sequelize } from 'sequelize';
 import { attempt } from './attempt.js';
 import { diagnosis_list } from './diagnosis_list.js';
 import { diagnosis } from './diagnosis.js';
@@ -25,26 +24,15 @@ Defines the relations between all objects and initializes them
 */
 
 attempt.belongsTo(end_user, {
-  foreignKey: {
-    name: 'user_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'user_id',
 });
 
 attempt.belongsTo(medical_case, {
-  foreignKey: {
-    name: 'case_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'case_id',
 });
 
 diagnosis_list.belongsTo(medical_field, {
-  foreignKey: {
-    name: 'medical_field_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'medical_field_id',
 });
 
 /*
@@ -57,97 +45,56 @@ diagnosis.hasOne(diagnosis_list, {
 */
 
 examination_list.belongsTo(examination_type, {
-  foreignKey: {
-    name: 'examination_type_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'examination_type_id',
 });
 
 examination_list.belongsTo(examination_subtype, {
-  foreignKey: {
-    name: 'examination_subtype_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'examination_subtype_id',
 });
 
 examination_subtype.belongsTo(examination_type, {
-  foreignKey: {
-    name: 'examination_type_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'examination_type_id',
 });
 
 medical_case.belongsTo(end_user, {
-  foreignKey: {
-    name: 'creator_user_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'creator_user_id',
 });
 
 medical_case.belongsTo(medical_field, {
-  foreignKey: {
-    name: 'medical_field_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'medical_field_id',
 });
 
 step_specific_treatment.belongsTo(treatment, {
-  foreignKey: {
-    name: 'treatment_step_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'treatment_step_id',
 });
 
 //step_specific_treatment.hasOne(treatment_list)
 
 step_specific_values.belongsTo(examination, {
-  foreignKey: {
-    name: 'examination_step_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'examination_step_id',
 });
 
 //step_specific_values.hasOne(examination_list)
 
 step.belongsTo(medical_case, {
-  foreignKey: {
-    name: 'case_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'case_id',
 });
 
 step.belongsTo(module_type, {
-  foreignKey: {
-    name: 'module_type_identifier',
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
+  foreignKey: 'module_type_identifier',
+  targetKey: 'module_type_identifier',
 });
 
 treatment_list.belongsTo(treatment_type, {
-  foreignKey: {
-    name: 'treatment_type_id',
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
+  foreignKey: 'treatment_type_id',
 });
 
 treatment_list.belongsTo(treatment_subtype, {
-  foreignKey: {
-    name: 'treatment_subtype_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'treatment_subtype_id',
 });
 
 treatment_subtype.belongsTo(treatment_type, {
-  foreignKey: {
-    name: 'treatment_type_id',
-    type: DataTypes.UUID,
-  },
+  foreignKey: 'treatment_type_id',
 });
 
 export {
