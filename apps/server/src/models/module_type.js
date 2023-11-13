@@ -18,6 +18,7 @@ export const module_type = db.define(
     module_type_identifier: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      unique: true
     },
   },
   {

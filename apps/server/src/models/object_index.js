@@ -1,23 +1,32 @@
+import { end_user } from './end_user.js';
+import { medical_case } from './medical_case.js';
+import { medical_field } from './medical_field.js';
+import { examination_type } from './examination_type.js';
+import { examination_subtype } from './examination_subtype.js';
+import { step } from './step.js';
+import { treatment } from './treatment.js';
 import { attempt } from './attempt.js';
 import { diagnosis_list } from './diagnosis_list.js';
 import { diagnosis } from './diagnosis.js';
-import { end_user } from './end_user.js';
 import { examination_list } from './examination_list.js';
-import { examination_subtype } from './examination_subtype.js';
-import { examination_type } from './examination_type.js';
+import { module_type } from './module_type.js';
 import { examination } from './examination.js';
 import { introduction } from './introduction.js';
-import { medical_case } from './medical_case.js';
-import { medical_field } from './medical_field.js';
-import { module_type } from './module_type.js';
 import { step_specific_treatment } from './step_specific_treatment.js';
 import { step_specific_values } from './step_specific_values.js';
-import { step } from './step.js';
 import { summary } from './summary.js';
 import { treatment_list } from './treatment_list.js';
 import { treatment_subtype } from './treatment_subtype.js';
 import { treatment_type } from './treatment_type.js';
-import { treatment } from './treatment.js';
+import { db } from '../database/databaseConnection.js';
+import dotenv from 'dotenv';
+import { populateDB } from '../database/populateDB.js';
+import * as object from '../models/object_index.js'
+
+
+dotenv.config();
+const environment = process.env.DEV_ENVIRONMENT;
+
 
 /*
 Defines the relations between all objects and initializes them
@@ -25,6 +34,10 @@ Defines the relations between all objects and initializes them
 
 attempt.belongsTo(end_user, {
   foreignKey: 'user_id',
+});
+
+medical_case.belongsTo(end_user, {
+  foreignKey: 'creator_user_id',
 });
 
 attempt.belongsTo(medical_case, {
@@ -35,14 +48,18 @@ diagnosis_list.belongsTo(medical_field, {
   foreignKey: 'medical_field_id',
 });
 
-/*
-diagnosis.hasOne(diagnosis_list, {
+
+diagnosis.belongsTo(diagnosis_list, {
   foreignKey: {
     name: 'diagnosis_id',
-    type: DataTypes.UUID,
   }
 });
-*/
+
+
+
+examination_subtype.belongsTo(examination_type, {
+  foreignKey: 'examination_type_id',
+});
 
 examination_list.belongsTo(examination_type, {
   foreignKey: 'examination_type_id',
@@ -50,14 +67,6 @@ examination_list.belongsTo(examination_type, {
 
 examination_list.belongsTo(examination_subtype, {
   foreignKey: 'examination_subtype_id',
-});
-
-examination_subtype.belongsTo(examination_type, {
-  foreignKey: 'examination_type_id',
-});
-
-medical_case.belongsTo(end_user, {
-  foreignKey: 'creator_user_id',
 });
 
 medical_case.belongsTo(medical_field, {
@@ -68,7 +77,10 @@ step_specific_treatment.belongsTo(treatment, {
   foreignKey: 'treatment_step_id',
 });
 
-//step_specific_treatment.hasOne(treatment_list)
+step_specific_treatment.belongsTo(treatment_list,{
+  foreignKey: 'treatment_id'
+}
+)
 
 step_specific_values.belongsTo(examination, {
   foreignKey: 'examination_step_id',
@@ -96,6 +108,24 @@ treatment_list.belongsTo(treatment_subtype, {
 treatment_subtype.belongsTo(treatment_type, {
   foreignKey: 'treatment_type_id',
 });
+
+
+  if (process.env.DEV_ENVIRONMENT === 'local') {
+    try {
+      await db.authenticate();
+      console.log('Connection has been established successfully.');
+      await db.sync({ force: true });
+      console.log('Tables synchronized successfully.');
+      await populateDB()
+      console.log('Inserted succesfully.');
+    } catch (error) {
+      console.log('Sync error: ', error);
+    }
+  }
+
+
+
+
 
 export {
   attempt,

@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 const environment = process.env.DEV_ENVIRONMENT;
 
@@ -19,15 +20,8 @@ const connectToDatabase = async () => {
       max: 90,
       min: 0,
     },
-  });
+    });
 
-  if (process.env.DEV_ENVIRONMENT === 'local') {
-    try {
-      await db.sync({ force: false });
-    } catch (error) {
-      console.log('Sync error: ', error);
-    }
-  }
   return db;
 };
 
