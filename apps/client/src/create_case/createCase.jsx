@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import CreateIntroduction from './createIntro.jsx';
 import CreateExamination from "./createExamination.jsx";
+import CreateDiagnosis from "./createDignosis.jsx";
 
 export default function CreateCase(props) {
     const [caseObject, setCaseObject] = useState({
@@ -77,7 +78,9 @@ export default function CreateCase(props) {
                         }
 
                         {module === '2' &&
-                            <p>diagnios</p>
+                            <CreateDiagnosis>
+                                
+                            </CreateDiagnosis>
                         }
 
                         {module === '3' &&

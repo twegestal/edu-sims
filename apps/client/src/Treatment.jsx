@@ -38,7 +38,7 @@ export default function Treatment(props) {
     const [checkedTreatments, setCheckedTreatments] = useState([]);
     const [correctValues, setCorrectValues] = useState([]);
     const [feedbackText, setFeedbackText] = useState();
-    const { isOpen, onToggle } = useDisclosure();
+    const {isOpen, onToggle } = useDisclosure();
     const [feedbackWindow, setFeedbackWindow] = useState();
 
     useEffect(() => {
@@ -171,7 +171,7 @@ export default function Treatment(props) {
                         <Text>
                             {treatmentItem.name}
                         </Text>
-                        <IconButton id={treatmentItem.id} margin={0.5} size='xs' colorScheme="teal" icon={<SmallAddIcon/>} onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)}>
+                        <IconButton id={treatmentItem.id} margin={0.5} size='xs' colorScheme="teal" onClick={(e) => checkTreatmentBox(e.target.id, treatmentItem.name)} icon={<SmallAddIcon/>}>
                         </IconButton>
                     </HStack>
                 </ListItem>

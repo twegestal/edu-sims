@@ -49,9 +49,6 @@ export default function CreateIntro(props) {
             feedback_incorrect : feedback
         })
     }
-
-    
-
     return (
         <div>
             <FormControl>
