@@ -114,9 +114,14 @@ treatment_subtype.belongsTo(treatment_type, {
     try {
       await db.authenticate();
       console.log('Connection has been established successfully.');
-      await db.sync({ force: true });
+     
+      /*dom utkommenterade metoderna nedanför är utkommenterade för försäkra att live-databasen inte skrivs över av misstag
+        om du vill sätta upp och populera en lokal databas måste dessa kommenteras in igen
+      */
+
+      //await db.sync({ force: true });
       console.log('Tables synchronized successfully.');
-      await populateDB()
+      //await populateDB()
       console.log('Inserted succesfully.');
     } catch (error) {
       console.log('Sync error: ', error);
