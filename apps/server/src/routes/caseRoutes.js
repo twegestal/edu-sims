@@ -233,11 +233,11 @@ export const getCaseRoutes = (db) => {
         res.status(200).json(result);
     })
     router.get('/getTreatmentSubtypes', async (req,res,next)=>{
-        if(req.header('id') == ''){
+        if(req.header('id') === ''){
             res.status(404).json("NOT FOUND");
         }
         else{
-            const result = await object.treatment_type.findAll({
+            const result = await object.treatment_subtype.findAll({
                 where :{
                     treatment_type_id : req.header('id')
                 }
@@ -246,7 +246,14 @@ export const getCaseRoutes = (db) => {
         }
     })
     router.get('/getTreatmentList', async(req,res,next)=>{
-        if(req.header('id') == ''){
+        if (req.header('treatment_subtype_id')) {
+            const response = await object.treatment_list.findAll({
+                where: {
+                    treatment_subtype_id: req.header('treatment_subtype_id')
+                }
+            })
+        }
+        else if(req.header('id') == ''){
             const Value = await object.treatment_list.findAll({});
             res.status(200).json(Value);
         }else{

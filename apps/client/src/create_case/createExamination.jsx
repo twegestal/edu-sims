@@ -114,7 +114,7 @@ export default function CreateExamination(props) {
                     <Textarea placeholder='Prompt' onChange={(e) => setPrompt(e.target.value)}></Textarea>
 
                     <VStack>
-                        <Text>vstacken!!!</Text>
+                        <FormLabel>Utredningar att visa för användaren</FormLabel>
                         {Object.entries(examinationCategories).map(([id, name]) => (
                             
                             <>

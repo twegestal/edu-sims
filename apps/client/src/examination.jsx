@@ -387,15 +387,17 @@ export default function Examination(props) {
                                                                     <AccordionIcon />
                                                                 </AccordionButton>
                                                                 <AccordionPanel>
-                                                                    <List> 
-                                                                    {
-                                                                        examinationsFetched &&
-                                                                        Object.entries(examinations[subCategory]).map(([id, name], index) => (
-                                                                            <ListItem key={index}>
-                                                                                <Checkbox id={id}>{name}</Checkbox>
-                                                                            </ListItem>
-                                                                        ))
-                                                                    }
+                                                                    <List>
+                                                                        <VStack alignItems='flex-start'>
+                                                                        {
+                                                                            examinationsFetched &&
+                                                                            Object.entries(examinations[subCategory]).map(([id, name], index) => (
+                                                                                <ListItem key={index}>
+                                                                                    <Checkbox id={id}>{name}</Checkbox>
+                                                                                </ListItem>
+                                                                        ))}
+                                                                        </VStack> 
+                                                                    
                                                                     </List>
                                                                 </AccordionPanel>
                                                         </AccordionItem> 
