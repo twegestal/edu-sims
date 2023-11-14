@@ -43,6 +43,16 @@ export default function ShowAllCases(props) {
     return medicalField ? medicalField.name : 'Unknown';
   }
 
+  function handlePublish(caseId, published) {
+    if (published == true){
+      alert('Är du säker på att du vill avpublicera?')
+    }
+    if (published == false || published == null){
+      alert('Är du säker på att du vill publicera?')
+    }
+
+  }
+
   return (
     <div>
       <Accordion allowToggle>
@@ -54,12 +64,30 @@ export default function ShowAllCases(props) {
             <AccordionPanel pb={4}>
               {groupedCases[medicalFieldId].map((caseItem) => (
                 <div key={caseItem.id}>
-                  <Flex>
+                {props.user.isAdmin && (
+                  <Flex direction='row'>
+                    <p>Name: {caseItem.name}</p>
+                    <Link to={'/case/caseid=' + caseItem.id}>
+                      <Button colorScheme='teal'>Starta fallet</Button>
+                    </Link>
+                    <Button colorScheme='teal'>Redigera fallet</Button>
+                    {caseItem.published == false || caseItem.published == null && (
+                      <Button onClick={(e) => handlePublish(caseItem.id, caseItem.published)} colorScheme='teal'>Publicera fallet</Button>
+                    )}
+                    {caseItem.published && (
+                      <Button onClick={(e) => handlePublish(caseItem.id, caseItem.published)} colorScheme='teal'>Avpublicera fallet</Button>
+                    )}
+                    <Button colorScheme='teal'>Ta bort fallet</Button>
+                  </Flex>
+                )}
+                {props.user.isAdmin == false && (
+                  <Flex direction='row'>
                     <p>Name: {caseItem.name}</p>
                     <Link to={'/case/caseid=' + caseItem.id}>
                         <Button colorScheme='teal'>Starta fallet</Button>
                     </Link>
                   </Flex>
+                )}
                 </div>
               ))}
             </AccordionPanel>

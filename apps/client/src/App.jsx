@@ -110,7 +110,11 @@ function App() {
         <Route
           path='/manageCases'
           element={
-            <ManageCases getCallToApi={getCallToApi} postCallToApi={postCallToApi}></ManageCases>
+            <ManageCases 
+              getCallToApi={getCallToApi}
+              postCallToApi={postCallToApi}
+              user={user}
+            ></ManageCases>
           }
         ></Route>
       </Routes>
