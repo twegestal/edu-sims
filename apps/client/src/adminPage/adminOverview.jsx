@@ -12,12 +12,14 @@ export default function AdminOverview(props) {
     <div>
       <Flex direction={'column'}>
         <h2>Adminvy</h2>
-
-        <Button>Se statistik</Button>
-        <Button>Hantera användare</Button>
-
+        <Link to={'/showStatistics'}>
+          <Button>Se statistik</Button>
+        </Link>
         <Link to={'/manageCases'}>
             <Button>Hantera fall</Button>
+        </Link>
+        <Link to={'/manageUsers'}>
+            <Button>Hantera användare</Button>
         </Link>
       </Flex>
     </div>

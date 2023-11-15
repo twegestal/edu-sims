@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import ShowAllCases from './show_all_cases.jsx';
+import ShowAllCases from './showCases/show_all_cases.jsx';
 import AdminOverview from './adminPage/adminOverview.jsx';
 import { Link, Navigate } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ export default function Home(props) {
       {(props.user.hasOwnProperty('id') && props.user.isAdmin) && ( 
         <AdminOverview
           user={props.user}
+          getCallToApi={props.getCallToApi}
         ></AdminOverview>
       )}
 

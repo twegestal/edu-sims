@@ -44,14 +44,31 @@ export default function ShowAllCases(props) {
   }
 
   function handlePublish(caseId, published) {
+
     if (published == true){
-      alert('Är du säker på att du vill avpublicera?')
+      if(confirm('Är du säker på att du vill avpublicera?')){
+        //API call
+        console.log("Avpublicerad")
+      }
     }
     if (published == false || published == null){
-      alert('Är du säker på att du vill publicera?')
+      if(confirm('Är du säker på att du vill publicera?')){
+        //API call
+        console.log("publicerad")
+      }
     }
 
   }
+
+  function removeCase(caseId) {
+
+    if(confirm('Är du säker på att du vill ta bort fallet?')){
+      //API call
+      console.log("Ta bort")
+    }
+
+  }
+
 
   return (
     <div>
@@ -65,7 +82,7 @@ export default function ShowAllCases(props) {
               {groupedCases[medicalFieldId].map((caseItem) => (
                 <div key={caseItem.id}>
                 {props.user.isAdmin && (
-                  <Flex direction='row'>
+                  <Flex justify={'space-evenly'} id="navigationButtons" direction={'column'}>
                     <p>Name: {caseItem.name}</p>
                     <Link to={'/case/caseid=' + caseItem.id}>
                       <Button colorScheme='teal'>Starta fallet</Button>
@@ -77,11 +94,11 @@ export default function ShowAllCases(props) {
                     {caseItem.published && (
                       <Button onClick={(e) => handlePublish(caseItem.id, caseItem.published)} colorScheme='teal'>Avpublicera fallet</Button>
                     )}
-                    <Button colorScheme='teal'>Ta bort fallet</Button>
+                    <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal'>Ta bort fallet</Button>
                   </Flex>
                 )}
                 {props.user.isAdmin == false && (
-                  <Flex direction='row'>
+                  <Flex>
                     <p>Name: {caseItem.name}</p>
                     <Link to={'/case/caseid=' + caseItem.id}>
                         <Button colorScheme='teal'>Starta fallet</Button>

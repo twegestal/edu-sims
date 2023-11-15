@@ -8,6 +8,8 @@ import './App.css';
 import Introduction from './introduction.jsx';
 import CreateCase from './create_case/createCase.jsx';
 import ManageCases from './adminPage/manageCases.jsx'
+import ShowStatistics from './statistics/showStatistics.jsx';
+import ManageUsers from './adminPage/manageUsers.jsx';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -115,6 +117,20 @@ function App() {
               postCallToApi={postCallToApi}
               user={user}
             ></ManageCases>
+          }
+        ></Route>
+        <Route
+          path='/showStatistics'
+          element={
+            <ShowStatistics
+            ></ShowStatistics>
+          }
+        ></Route>
+        <Route
+          path='/manageUsers'
+          element={
+            <ManageUsers
+            ></ManageUsers>
           }
         ></Route>
       </Routes>
