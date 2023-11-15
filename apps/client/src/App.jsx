@@ -8,6 +8,8 @@ import ManageCases from './adminPage/manageCases.jsx'
 import Login from './login.jsx';
 import { useAuth } from './hooks/useAuth.jsx';
 import { Button } from '@chakra-ui/react';
+import ShowStatistics from './statistics/showStatistics.jsx';
+import ManageUsers from './adminPage/manageUsers.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
@@ -34,10 +36,12 @@ export default function App() {
           }
         ></Route>
         <Route
-          path='/manageCases'
-          element={
-            <ManageCases />
-          }
+          path='/manageCases' element={ <ManageCases />}
+        ></Route>
+        <Route
+          path='/showStatistics'
+          element={ <ShowStatistics /> } />
+        <Route path='/manageUsers' element={ <ManageUsers />}
         ></Route>
       </Routes>
           <Button onClick={logout}>Logout</Button>

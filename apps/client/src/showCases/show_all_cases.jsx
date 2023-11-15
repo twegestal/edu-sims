@@ -36,6 +36,33 @@ export default function ShowAllCases() {
     return medicalField ? medicalField.name : 'Unknown';
   };
 
+  function handlePublish(caseId, published) {
+
+    if (published == true){
+      if(confirm('Är du säker på att du vill avpublicera?')){
+        //API call
+        console.log("Avpublicerad")
+      }
+    }
+    if (published == false || published == null){
+      if(confirm('Är du säker på att du vill publicera?')){
+        //API call
+        console.log("publicerad")
+      }
+    }
+
+  }
+
+  function removeCase(caseId) {
+
+    if(confirm('Är du säker på att du vill ta bort fallet?')){
+      //API call
+      console.log("Ta bort")
+    }
+
+  }
+
+
   return (
     <div>
       <Accordion allowToggle>
@@ -47,12 +74,30 @@ export default function ShowAllCases() {
             <AccordionPanel pb={4}>
               {groupedCases[medicalFieldId].map((caseItem) => (
                 <div key={caseItem.id}>
+                {props.user.isAdmin && (
+                  <Flex justify={'space-evenly'} id="navigationButtons" direction={'column'}>
+                    <p>Name: {caseItem.name}</p>
+                    <Link to={'/case/caseid=' + caseItem.id}>
+                      <Button colorScheme='teal'>Starta fallet</Button>
+                    </Link>
+                    <Button colorScheme='teal'>Redigera fallet</Button>
+                    {caseItem.published == false || caseItem.published == null && (
+                      <Button onClick={(e) => handlePublish(caseItem.id, caseItem.published)} colorScheme='teal'>Publicera fallet</Button>
+                    )}
+                    {caseItem.published && (
+                      <Button onClick={(e) => handlePublish(caseItem.id, caseItem.published)} colorScheme='teal'>Avpublicera fallet</Button>
+                    )}
+                    <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal'>Ta bort fallet</Button>
+                  </Flex>
+                )}
+                {props.user.isAdmin == false && (
                   <Flex>
                     <p>Name: {caseItem.name}</p>
                     <Link to={'/case/caseid=' + caseItem.id}>
                         <Button colorScheme='teal'>Starta fallet</Button>
                     </Link>
                   </Flex>
+                )}
                 </div>
               ))}
             </AccordionPanel>

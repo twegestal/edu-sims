@@ -1,6 +1,5 @@
-import ShowAllCases from './show_all_cases.jsx';
+import ShowAllCases from './showCases/show_all_cases.jsx';
 import AdminOverview from './adminPage/adminOverview.jsx';
-import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth.jsx';
 
 export default function Home() {
@@ -13,9 +12,7 @@ export default function Home() {
           <ShowAllCases />
         </div>
       ) : (
-        <AdminOverview
-          user={user}
-        ></AdminOverview>
+        <AdminOverview user={user} />
       )}
     </>
   );

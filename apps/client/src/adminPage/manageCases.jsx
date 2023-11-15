@@ -3,7 +3,7 @@ import {
   Button
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import ShowAllCases from '../show_all_cases';
+import ShowAllCases from '../showCases/show_all_cases';
 
 
 export default function AdminOverview(props) {
