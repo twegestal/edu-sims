@@ -255,6 +255,28 @@ export const getCaseRoutes = () => {
     }
   });
 
+  router.put('/publishCase', async (req, res, next) => {
+    if (req.header('id') == '') {
+      res.status(404).json('Not Found');
+    } else {
+      let publish = false
+      if ((req.header('isPublished') == 'false' || req.header('isPublished') == 'null')){
+        publish = true
+      }
+      if (req.header('isPublished') == true){
+        publish = false
+      }
+      const result = await object.medical_case.update(
+      {published: publish},
+      {
+        where: {
+          id: req.header('id'),
+        },
+      });
+      res.status(200).json(result);
+    }
+  });
+
   return router;
 };
 

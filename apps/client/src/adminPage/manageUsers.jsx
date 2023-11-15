@@ -66,7 +66,7 @@ export default function ManageUsers(props) {
       <h2>Hantera användare</h2>
 
       <TableContainer maxWidth='90%'>
-        <Table variant='striped' colorScheme='teal'>
+        <Table>
           <Thead>
             <Tr>
               <Th>Email</Th>
