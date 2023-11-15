@@ -5,7 +5,7 @@ import { generateJWT } from '../utils/jwtHandler.js';
 export const getUserRoutes = (db) => {
   const router = Router();
 
-  router.get('', async (req, res, next) => {
+  router.get('/', async (req, res, next) => {
     const user = await object.end_user.findOne({
       where: {
         id: req.header('user_id'),
@@ -36,6 +36,7 @@ export const getUserRoutes = (db) => {
           id: user.id,
           email: user.email,
           token: generateJWT(user),
+          isAdmin: user.is_admin,
         });
       } else {
         res.status(404).json({

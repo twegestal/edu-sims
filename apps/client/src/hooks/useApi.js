@@ -32,7 +32,6 @@ export const useApi = (method) => {
         ...customHeaders,
       },
     };
-
     const apiMethod = api(apiClient)[method];
     if (typeof apiMethod !== 'function') {
       throw new Error(`API method '${method}' is not defined`);

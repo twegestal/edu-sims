@@ -24,11 +24,11 @@ export default function Diagnosis(props) {
 
   useEffect(() => {
     const fetchStep = async () => {
-      await getDiagnosisStep({ headers: { id: props.stepId } });
+      await getDiagnosisStep(props.stepId);
     };
 
     const fetchDiagnosisList = async () => {
-      await getDiagnosisList({ headers: { id: props.medicalFieldId } });
+      await getDiagnosisList(props.medicalFieldId);
     };
     props.setDisplayFeedback(false);
     fetchStep();

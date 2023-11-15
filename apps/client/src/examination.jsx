@@ -21,75 +21,44 @@ import {
 } from '@chakra-ui/react';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useExamination } from './hooks/useExamination';
+import { useExaminationUtils } from './hooks/useExaminationUtils';
 import LoadingSkeleton from './loadingSkeleton';
-import {
-  fetchCategoryNames,
-  fetchSubCategoryNames,
-  fetchStepValues,
-  fetchExaminationList,
-  updateResults,
-} from './utils/examinationUtils';
 
 export default function Examination(props) {
   const [loading, setLoading] = useState(true);
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
-  const [categoryNames, setCategoryNames] = useState({});
-  const [subCategoryNames, setSubCategoryNames] = useState({});
-  const [examinations, setExaminations] = useState({});
-  const [examinationsFetched, setExaminationsFetched] = useState(false);
-  const [stepSpecificValues, setStepSpecificValues] = useState({});
   const [results, setResults] = useState({});
   const [resultsReady, setResultsReady] = useState(false);
   const { isOpen, onToggle } = useDisclosure();
   const { examinationStep, getExaminationStep } = useExamination();
+  const {
+    categoryNames,
+    subCategoryNames,
+    stepValues,
+    examinationList,
+    examinationsFetched,
+    updateResults,
+  } = useExaminationUtils(examinationStep, props.stepId, loading);
 
   useEffect(() => {
     props.setDisplayFeedback(false);
     const fetchStep = async () => {
       await getExaminationStep(props.stepId);
-
       setLoading(false);
     };
-
     fetchStep();
   }, []);
-
-  useEffect(async () => {
-    if (!loading) {
-      const categoryNamesMap = await fetchCategoryNames(examinationStep);
-      setCategoryNames(categoryNamesMap);
-
-      const subCategoryNamesMap = await fetchSubCategoryNames(examinationStep);
-      setSubCategoryNames(subCategoryNamesMap);
-
-      const stepValuesMap = await fetchStepValues(props.stepId);
-      setStepSpecificValues(stepValuesMap);
-    }
-  }, [loading, examinationStep]);
 
   useEffect(() => {
     setResultsReady(true);
   }, [results]);
 
-  useEffect(() => {
-    const fetchExaminations = async () => {
-      const examinationsMap = await fetchExaminationList(subCategoryNames);
-
-      setExaminations(examinationsMap);
-      setExaminationsFetched(true);
-    };
-
-    if (!loading && !examinationsFetched) {
-      fetchExaminations();
-    }
-  }, [subCategoryNames]);
-
   const runExams = () => {
     //TODO: lös denna skiten! ändra till att varje checkbox lägger till sig själv onclick/ontoggle typ
     const examinationsToRun = [];
 
-    for (const subCategory of Object.keys(examinations)) {
-      for (const examinationId of Object.keys(examinations[subCategory])) {
+    for (const subCategory of Object.keys(examinationList)) {
+      for (const examinationId of Object.keys(examinationList[subCategory])) {
         const checkBox = document.getElementById(examinationId);
 
         if (checkBox.checked) {
@@ -99,7 +68,7 @@ export default function Examination(props) {
     }
 
     setResultsReady(false);
-    const resultsMap = updateResults(examinationsToRun, examinations);
+    const resultsMap = updateResults(examinationsToRun, examinationList);
     setResults(resultsMap);
   };
 
@@ -115,8 +84,8 @@ export default function Examination(props) {
   };
 
   const checkExams = () => {
-    for (const examination of Object.keys(stepSpecificValues)) {
-      if (!stepSpecificValues[examination].userHasTested) {
+    for (const examination of Object.keys(stepValues)) {
+      if (!stepValues[examination].userHasTested) {
         return false;
       }
     }
@@ -125,13 +94,13 @@ export default function Examination(props) {
 
   useEffect(() => {
     /* Waits for feedbackToDisplay to be set, and then updates the feedback variable*/
-    if (props.displayFeedback && !loading) {
+    if (!loading && props.displayFeedback) {
       props.updateFeedback(feedbackToDisplay);
     }
   }, [feedbackToDisplay]);
 
   useEffect(() => {
-    if (loading == false) {
+    if (!loading) {
       props.updateLabResultsList(results);
     }
   }, [results]);
@@ -143,7 +112,7 @@ export default function Examination(props) {
       ) : (
         <VStack alignItems='stretch'>
           <Card variant='filled' padding='5'>
-            <Text align='left'>{examinationStep.prompt}</Text>
+            {examinationStep && <Text align='left'>{examinationStep.prompt}</Text>}
           </Card>
 
           <Card variant='filled'>
@@ -177,14 +146,16 @@ export default function Examination(props) {
                                   </AccordionButton>
                                   <AccordionPanel>
                                     <List>
+                                      <VStack alignItems={'flex-start'}>
                                       {examinationsFetched &&
-                                        Object.entries(examinations[subCategory]).map(
+                                        Object.entries(examinationList[subCategory]).map(
                                           ([id, name], index) => (
                                             <ListItem key={index}>
                                               <Checkbox id={id}>{name}</Checkbox>
                                             </ListItem>
                                           ),
                                         )}
+                                        </VStack>
                                     </List>
                                   </AccordionPanel>
                                 </AccordionItem>

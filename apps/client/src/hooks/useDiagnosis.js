@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useApi } from './useApi.js';
 
 export const useDiagnosis = () => {
   const getDiagnosisStepApi = useApi('getDiagnosisStep');
@@ -9,8 +10,8 @@ export const useDiagnosis = () => {
 
   const getDiagnosisStep = async (id) => {
     try {
-      const result = await getDiagnosisStepApi({ headers: { id: id } });
-      setDiagnosisStep(result);
+      const response = await getDiagnosisStepApi({ headers: { id: id } });
+      setDiagnosisStep(response);
     } catch (error) {
       console.error('error fetching diagnosis step: ', error);
     }
@@ -18,8 +19,8 @@ export const useDiagnosis = () => {
 
   const getDiagnosisList = async (id) => {
     try {
-      const result = await getDiagnosisListApi({ headers: { id: id } });
-      setDiagnosisList(result);
+      const response = await getDiagnosisListApi({ headers: { id: id } });
+      setDiagnosisList(response);
     } catch (error) {
       console.error('error fetching diagnosis list, ', error);
     }

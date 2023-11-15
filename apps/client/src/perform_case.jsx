@@ -19,7 +19,6 @@ import {
   AccordionPanel,
   VStack,
   Flex,
-  Spacer,
   Card,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
@@ -52,7 +51,6 @@ export default function PerformCase() {
     onOpen: onTreatmentResultsOpen,
     onClose: onTreatmentResultsClose,
   } = useDisclosure();
-  //const [caseList, setCaseList] = useState([]);
   const [currentStep, setCurrentStep] = useState({});
   const [currentIndex, setCurrentIndex] = useState();
   const [displayFeedback, setDisplayFeedback] = useState(false);
@@ -83,10 +81,10 @@ export default function PerformCase() {
   const nextStep = async (event) => {
     let nextIndex = currentIndex + 1;
 
-    let indexOfNextStep = caseList.findIndex((x) => x.index === nextIndex);
+    let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
 
-    setCurrentStep(caseList[indexOfNextStep]);
-    setCurrentIndex(caseList[indexOfNextStep].index);
+    setCurrentStep(caseById[indexOfNextStep]);
+    setCurrentIndex(caseById[indexOfNextStep].index);
   };
 
   const saveNotes = () => {
@@ -95,12 +93,11 @@ export default function PerformCase() {
       setNotes(editorRef.current.getContent());
     }
   };
-
+  //FIXME: key is not unique
   const updateLabResultsList = (resultsObject) => {
-    console.log(resultsObject);
     setTreatmentResults([
       ...treatmentResults,
-      <Flex alignItems='center' flexDirection='column'>
+      <Flex key={'1'} alignItems='center' flexDirection='column'>
         {Object.keys(resultsObject).map((index) =>
           resultsObject[index].isNormal ? (
             <Flex key={index} flexDirection='row'>
@@ -124,7 +121,7 @@ export default function PerformCase() {
   const updateFeedback = (feedbackToDisplay) => {
     setFeedback([
       ...feedback,
-      <Card variant='filled'>
+      <Card key={currentIndex} variant='filled'>
         <Accordion allowMultiple>
           <AccordionItem>
             <AccordionButton>
@@ -297,13 +294,13 @@ export default function PerformCase() {
           </div>
         </Box>
       </nav>
-      <div>{loading ? <p></p> : <p>{caseList[0].medical_case.name}</p>}</div>
+      <div>{loading ? <p></p> : <p>{caseById[0].medical_case.name}</p>}</div>
       <VStack alignItems='stretch'>
-        {currentStep.module_type_identifier == 0 && (
+        {currentStep.module_type_identifier === 0 && (
           <div>
             <Introduction
               stepId={currentStep.step_id}
-              caseData={caseList}
+              caseData={caseById}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
               setDescription={setDescription}
@@ -311,7 +308,7 @@ export default function PerformCase() {
             ></Introduction>
           </div>
         )}
-        {currentStep.module_type_identifier == 1 && (
+        {currentStep.module_type_identifier === 1 && (
           <div>
             <Examination
               stepId={currentStep.step_id}
@@ -322,7 +319,7 @@ export default function PerformCase() {
             ></Examination>
           </div>
         )}
-        {currentStep.module_type_identifier == 2 && (
+        {currentStep.module_type_identifier === 2 && (
           <div>
             <Diagnosis
               stepId={currentStep.step_id}
@@ -334,7 +331,7 @@ export default function PerformCase() {
             ></Diagnosis>
           </div>
         )}
-        {currentStep.module_type_identifier == 3 && (
+        {currentStep.module_type_identifier === 3 && (
           <div>
             <Treatment
               stepId={currentStep.step_id}
@@ -344,7 +341,7 @@ export default function PerformCase() {
             ></Treatment>
           </div>
         )}
-        {currentStep.module_type_identifier == 4 && (
+        {currentStep.module_type_identifier === 4 && (
           <div>
             <Summary stepId={currentStep.step_id}>
               displayFeedback = {displayFeedback}
@@ -352,12 +349,12 @@ export default function PerformCase() {
             </Summary>
           </div>
         )}
-        {currentIndex + 1 <= caseList.length - 1 && displayFeedback && (
+        {currentIndex + 1 <= caseById.length - 1 && displayFeedback && (
           <Button onClick={nextStep} colorScheme='teal'>
             Nästa
           </Button>
         )}
-        {currentIndex + 1 > caseList.length - 1 && (
+        {currentIndex + 1 > caseById.length - 1 && (
           <Link to='/'>
             <Button colorScheme='teal'>Avsluta</Button>
           </Link>

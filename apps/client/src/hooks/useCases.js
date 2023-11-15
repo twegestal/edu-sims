@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useApi } from './useApi';
 
 export const useCases = () => {
@@ -5,19 +6,21 @@ export const useCases = () => {
   const getAllCasesApi = useApi('getAllCases');
   const getCaseByIdApi = useApi('getCaseById');
   const getMedicalFieldsApi = useApi('getMedicalFields');
-  const getIntroductionStep = useApi('getIntroductionStep');
+  const getIntroductionStepApi = useApi('getIntroductionStep');
   const getSummaryStepApi = useApi('getSummaryStep');
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
   const [caseById, setCaseById] = useState([]);
+  const [introductionStep, setIntroductionStep] = useState({});
+  const [summaryStep, setSummaryStep] = useState({});
 
   const getAllCases = async () => {
     try {
       const result = await getAllCasesApi();
-      setCases[result];
+      setCases(result);
     } catch (error) {
-      console.log('Error fetching cases: ', error);
+      console.error('Error fetching cases: ', error);
     }
   };
 
@@ -26,7 +29,7 @@ export const useCases = () => {
       const result = await getMedicalFieldsApi();
       setMedicalFields(result);
     } catch (error) {
-      console.log('error fetching medical fields: ', error);
+      console.error('error fetching medical fields: ', error);
     }
   };
 
@@ -35,8 +38,41 @@ export const useCases = () => {
       const result = await getCaseByIdApi({ headers: { case_id: id } });
       setCaseById(result);
     } catch (error) {
-      console.log('Error fetching case by id: ', error);
+      console.error('Error fetching case by id: ', error);
     }
   };
-  return { cases, getAllCases, medicalFields, getMedicalFields, caseById, getCaseById };
+
+  const getIntroductionStep = async (id) => {
+    try {
+      const result = await getIntroductionStepApi({ headers: { id: id } });
+      if (result) {
+        setIntroductionStep(result);
+      }
+    } catch (error) {
+      console.error('Error fetch introduction step', error);
+    }
+  };
+
+  const getSummaryStep = async (id) => {
+    try {
+      const result = await getSummaryStepApi({ headers: { id: id } });
+      if (result) {
+        setSummaryStep(result);
+      }
+    } catch (error) {
+      console.error('error fetch summary step: ', error);
+    }
+  };
+  return {
+    cases,
+    getAllCases,
+    medicalFields,
+    getMedicalFields,
+    caseById,
+    getCaseById,
+    introductionStep,
+    getIntroductionStep,
+    getSummaryStep,
+    summaryStep,
+  };
 };

@@ -1,6 +1,4 @@
-import { Button } from '@chakra-ui/react';
 import ShowAllCases from './show_all_cases.jsx';
-import { Link } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth.jsx';
 
 export default function Home() {
@@ -10,7 +8,7 @@ export default function Home() {
       {user && (
         <div>
           <h2>{user.email}</h2>
-          {/* <ShowAllCases /> */}
+          <ShowAllCases />
         </div>
       )}
 

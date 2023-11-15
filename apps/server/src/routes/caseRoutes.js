@@ -59,7 +59,7 @@ export const getCaseRoutes = () => {
     if (req.header('id') == null) {
       res.status(404).json('inget id i headern angavs');
     }
-    const result = await object.introduction.findAll({
+    const result = await object.introduction.findOne({
       where: {
         id: req.header('id'),
       },
@@ -71,12 +71,12 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('not found');
     } else {
-      const reuslt = await object.examination.findAll({
+      const result = await object.examination.findOne({
         where: {
           id: req.header('id'),
         },
       });
-      res.status(200).json(reuslt);
+      res.status(200).json(result);
     }
   });
   //Hämta specifict Diagnosis step
@@ -84,7 +84,7 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('not found');
     } else {
-      const result = await object.diagnosis.findAll({
+      const result = await object.diagnosis.findOne({
         where: {
           id: req.header('id'),
         },
@@ -107,7 +107,7 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('not found');
     } else {
-      const result = await object.treatment.findAll({
+      const result = await object.treatment.findOne({
         where: {
           id: req.header('id'),
         },
@@ -120,7 +120,7 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('not found');
     } else {
-      const result = await object.summary.findAll({
+      const result = await object.summary.findOne({
         where: {
           id: req.header('id'),
         },
@@ -178,7 +178,7 @@ export const getCaseRoutes = () => {
       const Value = await object.examination_subtype.findAll({});
       res.status(200).json(Value);
     } else {
-      const result = await object.examination_subtype.findAll({
+      const result = await object.examination_subtype.findOne({
         where: {
           id: req.header('id'),
         },

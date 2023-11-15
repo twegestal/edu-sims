@@ -21,13 +21,13 @@ const connectToDatabase = async () => {
     },
   });
 
-  if (process.env.DEV_ENVIRONMENT === 'local') {
-    try {
-      await db.sync({ force: false });
-    } catch (error) {
-      console.log('Sync error: ', error);
-    }
-  }
+  //if (process.env.DEV_ENVIRONMENT === 'local') {
+  //  try {
+  //    await db.sync({ force: false });
+  //  } catch (error) {
+  //    console.log('Sync error: ', error);
+  //  }
+  //}
   return db;
 };
 

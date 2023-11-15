@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useApi } from './useApi.js';
 
 export const useExamination = () => {
   const getExaminationSpecificValuesApi = useApi('getExaminationSpecificValues');
@@ -19,8 +20,8 @@ export const useExamination = () => {
 
   const getExaminationStep = async (id) => {
     try {
-      const result = await getExaminationStepApi({ headers: { id: id } });
-      setExaminationStep(result);
+      const response = await getExaminationStepApi({ headers: { id: id } });
+      setExaminationStep(response);
     } catch (error) {
       console.error('error fetching examination step: ', error);
     }
@@ -28,7 +29,10 @@ export const useExamination = () => {
 
   const getExaminationTypes = async (id) => {
     try {
-      return await getExaminationTypesApi({ headers: { id: id } });
+      const response = await getExaminationTypesApi({ headers: { id: id } });
+      if (response) {
+        return response.name;
+      }
     } catch (error) {
       console.error('error fetching examinationt type: ', error);
     }
@@ -36,7 +40,10 @@ export const useExamination = () => {
 
   const getExaminationSubtypes = async (id) => {
     try {
-      return await getExaminationSubtypesApi({ headers: { examination_type_id: id } });
+      const response = await getExaminationSubtypesApi({ headers: { id: id } });
+      if (response) {
+        return response.name;
+      }
     } catch (error) {
       console.error('error fetching examination suntypes: ', error);
     }

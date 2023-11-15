@@ -23,7 +23,7 @@ export const validateLogin = (data) => {
         errors: errors,
       };
     } else {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }

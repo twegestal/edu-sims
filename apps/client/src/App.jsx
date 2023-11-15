@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Register from './register.jsx';
 import PerformCase from './perform_case.jsx';
 import Home from './home.jsx';
@@ -11,12 +10,22 @@ import { Button } from '@chakra-ui/react';
 
 export default function App() {
   const { user, logout } = useAuth();
+  const groupId = null;
 
   return (
     <>
-      {user.token ? (
+      {groupId !== null && (
+        <Register updateLoggedInUser={updateLoggedInUser} groupId={groupId}></Register>
+      )}
+      {user ? (
         <>
-          <Home />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/case'>
+              <Route path=':caseid' element={<PerformCase />} />
+            </Route>
+            <Route path='/test' element={<CreateCase />} />
+          </Routes>
           <Button onClick={logout}>Logout</Button>
         </>
       ) : (
@@ -24,44 +33,4 @@ export default function App() {
       )}
     </>
   );
-
-  // return (
-  //   <>
-  //     {groupId != null && (
-  //       <Register
-  //         postCallToApi={postCallToApi}
-  //         getCallToApi={getCallToApi}
-  //         updateLoggedInUser={updateLoggedInUser}
-  //         groupId={groupId}
-  //       ></Register>
-  //     )}
-
-  //     <Routes>
-  //       <Route path='/' element={<Home user={user} getCallToApi={getCallToApi}></Home>} />
-  //       <Route
-  //         path='/login'
-  //         element={
-  //           <Login
-  //             user={user}
-  //             postToApi={postCallToApi}
-  //             updateLoggedInUser={updateLoggedInUser}
-  //             getCallToApi={getCallToApi}
-  //           ></Login>
-  //         }
-  //       />
-  //       <Route path='/case'>
-  //         <Route
-  //           path=':caseid'
-  //           element={<PerformCase getCallToApi={getCallToApi}></PerformCase>}
-  //         ></Route>
-  //       </Route>
-  //       <Route
-  //         path='/test'
-  //         element={
-  //           <CreateCase getCallToApi={getCallToApi} postCallToApi={postCallToApi}></CreateCase>
-  //         }
-  //       ></Route>
-  //     </Routes>
-  //   </>
-  // );
 }

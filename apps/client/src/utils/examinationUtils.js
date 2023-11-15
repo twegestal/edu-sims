@@ -1,23 +1,19 @@
-import { useExamination } from '../hooks/useExamination';
-
-const {
-  getExaminationSpecificValues,
-  getExaminationTypes,
-  getExaminationSubtypes,
-  getExaminationList,
-} = useExamination();
+import { useExamination } from '../hooks/useExamination.js';
 
 export const fetchCategoryNames = async (examinationStep) => {
+  const { getExaminationTypes } = useExamination();
   const categoryNamesMap = {};
 
   for (const category of Object.keys(examinationStep.examination_to_display)) {
     const categoryName = await getExaminationTypes(category);
     categoryNamesMap[category] = categoryName;
   }
+
   return categoryNamesMap;
 };
 
 export const fetchSubCategoryNames = async (examinationStep) => {
+  const { getExaminationSubtypes } = useExamination();
   const subCategoryNamesMap = {};
 
   for (const category of Object.keys(examinationStep.examination_to_display)) {
@@ -33,8 +29,9 @@ export const fetchSubCategoryNames = async (examinationStep) => {
 };
 
 export const fetchStepValues = async (stepId) => {
+  const { getExaminationSpecificValues } = useExamination();
   const stepValuesMap = {};
-  const stepValuesResponse = await getExaminationSpecificValues(props.stepId);
+  const stepValuesResponse = await getExaminationSpecificValues(stepId);
 
   for (let i = 0; i < stepValuesResponse.length; i++) {
     const newPair = {
@@ -49,7 +46,9 @@ export const fetchStepValues = async (stepId) => {
 };
 
 export const fetchExaminationList = async (subCategoryNames) => {
+  const { getExaminationList } = useExamination();
   const examinationsMap = {};
+
   for (const subCategoryId of Object.keys(subCategoryNames)) {
     const examinationsResponse = await getExaminationList(subCategoryId);
     const entry = {};

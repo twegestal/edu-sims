@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
 const KEY = process.env.JWT_KEY;

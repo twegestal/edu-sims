@@ -22,19 +22,18 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async (id) => {
     try {
-      await logoutApi(id);
+      //await logoutApi(id);
       setUser(null);
     } catch (error) {
-      console.log('Logout failed', error);
+      console.error('Logout failed', error);
     }
   };
 
   const resetPassword = async (email) => {
     try {
       //await resetPassword(email);
-      return <p>Ett email har skickats till {email}</p>;
     } catch (error) {
-      console.log('Reset password error', error);
+      console.error('Reset password error', error);
     }
   };
 

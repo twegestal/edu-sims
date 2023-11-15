@@ -22,69 +22,45 @@ import {
   VStack,
   Step,
 } from '@chakra-ui/react';
-import { CloseIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { useTreatment } from './hooks/useTreatment';
 
 export default function Treatment(props) {
-  const [stepData, setStep] = useState({});
-  const [treatmentTypes, setTreatmentTypes] = useState([]);
   const [treatmentList, setTreatmentList] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState();
   const [treatmentsFetched, setTreatmentsFetched] = useState(false);
   const [checkedTreatments, setCheckedTreatments] = useState([]);
-  const [correctValues, setCorrectValues] = useState([]);
   const [feedbackText, setFeedbackText] = useState();
   const { isOpen, onToggle } = useDisclosure();
   const [feedbackWindow, setFeedbackWindow] = useState();
+
+  const {
+    getTreatmentStep,
+    treatmentStep,
+    getTreatmentSpecificValues,
+    treatmentSpecificValues,
+    getTreatmentTypes,
+    treatmentTypes,
+    getTreatmentList,
+  } = useTreatment();
 
   useEffect(() => {
     props.setDisplayFeedback(false);
     // Hämta nuvarande treatmentsteg
     const fetchStep = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: props.stepId,
-      };
-      try {
-        const response = await props.getCallToApi('/api/case/getTreatmentStep', headers);
-        setStep({
-          id: response[0].id,
-          prompt: response[0].prompt,
-          treatments_to_display: response[0].treatments_to_display,
-          feedback_correct: response[0].feedback_correct,
-          feedback_incorrect: response[0].feedback_incorrect,
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('Error in fetching treatments', error);
-      }
+      await getTreatmentStep(props.stepId);
+      setLoading(false);
     };
     // hämta step specific values
     const fetchStepValues = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: props.stepId,
-      };
-      try {
-        const response = await props.getCallToApi('/api/case/getTreatmentSpecificValues', headers);
-        setCorrectValues(response);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error in fetching treatments correct values', error);
-      }
+      await getTreatmentSpecificValues(props.stepId);
+      setLoading(false);
     };
     // hämta kategories av treatments
     const fetchTreatmentTypes = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-      };
-      try {
-        const response = await props.getCallToApi('/api/case/getTreatmentTypes', headers);
-        setTreatmentTypes(response);
-        setTreatmentsFetched(true);
-      } catch (error) {
-        console.error('Error in fetching treatment types', error);
-      }
+      await getTreatmentTypes();
+      setTreatmentsFetched(true);
     };
     fetchStep();
     fetchStepValues();
@@ -92,7 +68,7 @@ export default function Treatment(props) {
   }, []);
 
   useEffect(() => {
-    const getTreatmentList = async () => {
+    const getTreatmentListMap = async () => {
       const treatmentMap = {};
       for (let i = 0; i < treatmentTypes.length; i++) {
         const response = await fetchTreatmentList(treatmentTypes[i].id);
@@ -101,23 +77,13 @@ export default function Treatment(props) {
       setTreatmentList(treatmentMap);
     };
     if (!loading) {
-      getTreatmentList();
+      getTreatmentListMap();
     }
   }, [treatmentTypes]);
-  useEffect(() => {}, [treatmentList]);
 
   // hämta lista av typer av behandlingar.
   const fetchTreatmentList = async (treatmentTypeId) => {
-    const headers = {
-      'Content-type': 'application/json',
-      id: treatmentTypeId,
-    };
-    try {
-      const response = await props.getCallToApi('/api/case/getTreatmentList', headers);
-      return response;
-    } catch (error) {
-      console.error('Error in fetching medicine types', error);
-    }
+    return await getTreatmentList(treatmentTypeId);
   };
   const checkTreatmentBox = (treatmentId, name) => {
     setCheckedTreatments((oldValues) => [...oldValues, { treatmentId, name }]);
@@ -132,9 +98,7 @@ export default function Treatment(props) {
     setCheckedTreatments(newArr);
   };
 
-  useEffect(() => {
-    console.log(checkedTreatments);
-  }, [checkedTreatments]);
+  useEffect(() => {}, [checkedTreatments]);
 
   const checkForId = (id) => {
     let ok = true;
@@ -177,10 +141,12 @@ export default function Treatment(props) {
 
   const ValuateFeedback = () => {
     let ok = true;
-    if (checkedTreatments.length == correctValues.length) {
-      for (let index = 0; index < correctValues.length; index++) {
+    if (checkedTreatments.length === treatmentSpecificValues.length) {
+      for (let index = 0; index < treatmentSpecificValues.length; index++) {
         for (let jindex = 0; jindex < checkedTreatments.length; jindex++) {
-          if (correctValues[index.treatment_Id] == checkedTreatments[jindex].treatmentId) {
+          if (
+            treatmentSpecificValues[index.treatment_Id] === checkedTreatments[jindex].treatmentId
+          ) {
             break;
           } else {
             ok = false;
@@ -193,17 +159,15 @@ export default function Treatment(props) {
     ok = false;
 
     if (ok) {
-      setFeedbackText(stepData.feedback_correct);
+      setFeedbackText(treatmentStep.feedback_correct);
       setFeedbackWindow();
     } else {
-      setFeedbackText(stepData.feedback_incorrect);
+      setFeedbackText(treatmentStep.feedback_incorrect);
       setFeedbackWindow();
     }
 
     props.setDisplayFeedback(true);
     onToggle();
-    console.log();
-    //console.log(correctValues[0]);
   };
 
   useEffect(() => {
@@ -216,7 +180,7 @@ export default function Treatment(props) {
   return (
     <div>
       <Card variant='filled' padding='5'>
-        <Text allign='left'>{stepData.prompt}</Text>
+        <Text allign='left'>{treatmentStep.prompt}</Text>
       </Card>
       <Card>
         <Accordion>
@@ -249,7 +213,7 @@ export default function Treatment(props) {
             </AccordionButton>
             <AccordionPanel>
               {checkedTreatments.map((Item) => (
-                <h2>
+                <h2 key={Item}>
                   <VStack alignItems={'left'}>
                     <HStack>
                       <Text>{Item.name}</Text>
