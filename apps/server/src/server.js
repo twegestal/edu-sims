@@ -6,8 +6,8 @@ export const createServer = () => {
   const app = express();
 
   app.use(express.json());
-  app.use('/user', getUserRoutes(db));
-  app.use('/case', getCaseRoutes(db));
+  app.use('/user', getUserRoutes());
+  app.use('/case', getCaseRoutes());
 
   app.get('/', (_req, res) => {
     res.json('Hello, world!');

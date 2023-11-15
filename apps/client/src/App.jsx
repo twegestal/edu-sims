@@ -4,6 +4,7 @@ import Home from './home.jsx';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import CreateCase from './create_case/createCase.jsx';
+import ManageCases from './adminPage/manageCases.jsx'
 import Login from './login.jsx';
 import { useAuth } from './hooks/useAuth.jsx';
 import { Button } from '@chakra-ui/react';
@@ -29,13 +30,13 @@ export default function App() {
         <Route
           path='/createCase'
           element={
-            <CreateCase getCallToApi={getCallToApi} postCallToApi={postCallToApi}></CreateCase>
+            <CreateCase />
           }
         ></Route>
         <Route
           path='/manageCases'
           element={
-            <ManageCases getCallToApi={getCallToApi} postCallToApi={postCallToApi}></ManageCases>
+            <ManageCases />
           }
         ></Route>
       </Routes>

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 
-export const getUserRoutes = (db) => {
+export const getUserRoutes = () => {
   const router = Router();
 
   router.get('/', async (req, res, next) => {
@@ -34,7 +34,7 @@ export const getUserRoutes = (db) => {
         res.status(200).json({
           id: user.id,
           email: user.email,
-          token: generateJWT(user),
+          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c', //FIXME: placeholder token
           isAdmin: user.is_admin,
         });
       } else {
