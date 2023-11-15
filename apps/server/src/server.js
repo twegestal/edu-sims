@@ -1,7 +1,6 @@
 import express from 'express';
 import { getUserRoutes } from './routes/userRoutes.js';
 import { getCaseRoutes } from './routes/caseRoutes.js';
-import { db } from './database/databaseConnection.js';
 
 export const createServer = () => {
   const app = express();

@@ -1,6 +1,5 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
-import { step } from './step.js';
 
 export const module_type = db.define(
   'module_type',
@@ -18,7 +17,7 @@ export const module_type = db.define(
     module_type_identifier: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true
+      unique: true,
     },
   },
   {

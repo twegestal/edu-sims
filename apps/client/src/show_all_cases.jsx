@@ -8,28 +8,21 @@ import {
   Flex
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useCases } from './hooks/useCases';
 
-export default function ShowAllCases(props) {
-  const [allCases, setAllCases] = useState([]);
-  const [medicalFields, setMedicalFields] = useState([]);
+export default function ShowAllCases() {
+  const { cases, getAllCases, medicalFields, getMedicalFields } = useCases();
 
   useEffect(() => {
     const fetchCases = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-      };
-
-      const cases = await props.getCallToApi('/api/case/GetAllCases', headers);
-      const fields = await props.getCallToApi('/api/case/getMedicalFields', headers);
-
-      setAllCases(cases);
-      setMedicalFields(fields);
+      await getAllCases();
+      await getMedicalFields();
     };
 
     fetchCases();
-  }, []); // Empty dependency array runs the effect once when the component mounts
+  }, []);
 
-  const groupedCases = allCases.reduce((acc, caseItem) => {
+  const groupedCases = cases.reduce((acc, caseItem) => {
     const medicalFieldId = caseItem.medical_field_id;
     if (!acc[medicalFieldId]) {
       acc[medicalFieldId] = [];
@@ -38,10 +31,10 @@ export default function ShowAllCases(props) {
     return acc;
   }, {});
 
-  function getMedicalFieldName(medicalFieldId) {
+  const getMedicalFieldName = (medicalFieldId) => {
     const medicalField = medicalFields.find((field) => field.id === medicalFieldId);
     return medicalField ? medicalField.name : 'Unknown';
-  }
+  };
 
   return (
     <div>

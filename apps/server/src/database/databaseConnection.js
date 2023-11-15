@@ -21,7 +21,7 @@ const connectToDatabase = async () => {
       min: 0,
     },
     });
-
+    
   return db;
 };
 

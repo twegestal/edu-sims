@@ -48,14 +48,11 @@ diagnosis_list.belongsTo(medical_field, {
   foreignKey: 'medical_field_id',
 });
 
-
 diagnosis.belongsTo(diagnosis_list, {
   foreignKey: {
     name: 'diagnosis_id',
   }
 });
-
-
 
 examination_subtype.belongsTo(examination_type, {
   foreignKey: 'examination_type_id',

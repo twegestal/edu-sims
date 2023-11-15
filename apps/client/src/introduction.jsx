@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
+import { useCases } from './hooks/useCases.js';
 import {
   VStack,
   HStack,
@@ -15,35 +16,25 @@ import {
 import LoadingSkeleton from './loadingSkeleton.jsx';
 
 export default function Introduction(props) {
-  const [stepData, setStep] = useState({});
+  //const [stepData, setStep] = useState({});
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [loading, setLoading] = useState(true);
+  const { isOpen, onToggle } = useDisclosure();
+  const { getIntroductionStep, introductionStep } = useCases();
 
   useEffect(() => {
     const fetchStep = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: props.stepId,
-      };
-
-      const response = await props.getCallToApi('/api/case/getIntroductionStep', headers);
-
-      setStep({
-        id: response[0].id,
-        description: response[0].description,
-        prompt: response[0].prompt,
-        feedback_correct: response[0].feedback_correct,
-        feedback_incorrect: response[0].feedback_incorrect,
-      });
-
-      props.setDescription(response[0].description);
+      await getIntroductionStep(props.stepId);
       setLoading(false);
     };
-
     fetchStep();
   }, []);
 
-  const { isOpen, onToggle } = useDisclosure();
+  useEffect(() => {
+    if (!loading) {
+      props.setDescription(introductionStep.description);
+    }
+  }, [introductionStep]);
 
   const handleFeedback = (event) => {
     props.setDisplayFeedback(true);
@@ -52,19 +43,19 @@ export default function Introduction(props) {
     switch (event.id) {
       case 'yesButton': {
         if (props.caseData.length > 2) {
-          setFeedbackToDisplay(stepData.feedback_correct);
+          setFeedbackToDisplay(introductionStep.feedback_correct);
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
-          setFeedbackToDisplay(stepData.feedback_incorrect);
+          setFeedbackToDisplay(introductionStep.feedback_incorrect);
         }
         break;
       }
       case 'noButton': {
         if (props.caseData.length > 2) {
-          setFeedbackToDisplay(stepData.feedback_incorrect);
+          setFeedbackToDisplay(introductionStep.feedback_incorrect);
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
-          setFeedbackToDisplay(stepData.feedback_correct);
+          setFeedbackToDisplay(introductionStep.feedback_correct);
         }
         break;
       }
@@ -81,7 +72,7 @@ export default function Introduction(props) {
   return (
     <div>
       {loading ? (
-        <LoadingSkeleton></LoadingSkeleton>
+        <LoadingSkeleton />
       ) : (
         <VStack align='stretch'>
           <Card variant='filled'>
@@ -90,7 +81,7 @@ export default function Introduction(props) {
             </CardHeader>
 
             <CardBody>
-              <Text align='left'>{stepData.description}</Text>
+              <Text align='left'>{introductionStep.description}</Text>
             </CardBody>
           </Card>
 
@@ -107,7 +98,7 @@ export default function Introduction(props) {
             ) : (
               <Card align='center' variant='filled'>
                 <CardHeader>
-                  <Heading size='md'>{stepData.prompt}</Heading>
+                  <Heading size='md'>{introductionStep.prompt}</Heading>
                 </CardHeader>
 
                 <CardBody>

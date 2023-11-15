@@ -1,34 +1,21 @@
-import { Button } from '@chakra-ui/react';
 import ShowAllCases from './show_all_cases.jsx';
 import AdminOverview from './adminPage/adminOverview.jsx';
 import { Link, Navigate } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth.jsx';
 
-export default function Home(props) {
+export default function Home() {
+  const { user } = useAuth();
   return (
     <>
-      {(props.user.hasOwnProperty('id') && props.user.isAdmin == false) && (
+      {!user.isAdmin ? (
         <div>
-          <h2>{props.user.email}</h2>
-          <ShowAllCases 
-            getCallToApi={props.getCallToApi}
-            user = {props.user}
-          ></ShowAllCases>
+          <h2>{user.email}</h2>
+          <ShowAllCases />
         </div>
-      )}
-
-      {(props.user.hasOwnProperty('id') && props.user.isAdmin) && ( 
+      ) : (
         <AdminOverview
-          user={props.user}
+          user={user}
         ></AdminOverview>
-      )}
-
-      {props.user.hasOwnProperty('id') == false && (
-        <div>
-          <h2>Du behöver logga in för att se innehållet</h2>
-          <Link to='/login'>
-            <Button>Logga in</Button>
-          </Link>
-        </div>
       )}
     </>
   );

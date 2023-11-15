@@ -19,7 +19,6 @@ import {
   AccordionPanel,
   VStack,
   Flex,
-  Spacer,
   Card,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
@@ -34,8 +33,9 @@ import Diagnosis from './diagnosis.jsx';
 import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
+import { useCases } from './hooks/useCases.js';
 
-export default function PerformCase(props) {
+export default function PerformCase() {
   let { caseid } = useParams();
   caseid = caseid.split('caseid=')[1];
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
@@ -51,7 +51,6 @@ export default function PerformCase(props) {
     onOpen: onTreatmentResultsOpen,
     onClose: onTreatmentResultsClose,
   } = useDisclosure();
-  const [caseList, setCaseList] = useState([]);
   const [currentStep, setCurrentStep] = useState({});
   const [currentIndex, setCurrentIndex] = useState();
   const [displayFeedback, setDisplayFeedback] = useState(false);
@@ -62,30 +61,30 @@ export default function PerformCase(props) {
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getCaseList = async (event) => {
-      const headers = {
-        'Content-type': 'application/json',
-        case_id: caseid,
-      };
-      const caseListFromApi = await props.getCallToApi('/api/case/getCaseById', headers);
+  const { caseById, getCaseById } = useCases();
 
-      setCaseList(caseListFromApi);
-      setCurrentStep(caseListFromApi[0]);
-      setCurrentIndex(caseListFromApi[0].index);
+  useEffect(() => {
+    const getCaseList = async () => {
+      await getCaseById(caseid);
       setLoading(false);
     };
-
     getCaseList();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setCurrentStep(caseById[0]);
+      setCurrentIndex(caseById[0].index);
+    }
+  }, [caseById]);
 
   const nextStep = async (event) => {
     let nextIndex = currentIndex + 1;
 
-    let indexOfNextStep = caseList.findIndex((x) => x.index === nextIndex);
+    let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
 
-    setCurrentStep(caseList[indexOfNextStep]);
-    setCurrentIndex(caseList[indexOfNextStep].index);
+    setCurrentStep(caseById[indexOfNextStep]);
+    setCurrentIndex(caseById[indexOfNextStep].index);
   };
 
   const saveNotes = () => {
@@ -94,12 +93,11 @@ export default function PerformCase(props) {
       setNotes(editorRef.current.getContent());
     }
   };
-
+  //FIXME: key is not unique
   const updateLabResultsList = (resultsObject) => {
-    console.log(resultsObject);
     setTreatmentResults([
       ...treatmentResults,
-      <Flex alignItems='center' flexDirection='column'>
+      <Flex key={'1'} alignItems='center' flexDirection='column'>
         {Object.keys(resultsObject).map((index) =>
           resultsObject[index].isNormal ? (
             <Flex key={index} flexDirection='row'>
@@ -123,7 +121,7 @@ export default function PerformCase(props) {
   const updateFeedback = (feedbackToDisplay) => {
     setFeedback([
       ...feedback,
-      <Card variant='filled'>
+      <Card key={currentIndex} variant='filled'>
         <Accordion allowMultiple>
           <AccordionItem>
             <AccordionButton>
@@ -296,14 +294,13 @@ export default function PerformCase(props) {
           </div>
         </Box>
       </nav>
-      <div>{loading ? <p></p> : <p>{caseList[0].medical_case.name}</p>}</div>
+      <div>{loading ? <p></p> : <p>{caseById[0].medical_case.name}</p>}</div>
       <VStack alignItems='stretch'>
-        {currentStep.module_type_identifier == 0 && (
+        {currentStep.module_type_identifier === 0 && (
           <div>
             <Introduction
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
-              caseData={caseList}
+              caseData={caseById}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
               setDescription={setDescription}
@@ -311,10 +308,9 @@ export default function PerformCase(props) {
             ></Introduction>
           </div>
         )}
-        {currentStep.module_type_identifier == 1 && (
+        {currentStep.module_type_identifier === 1 && (
           <div>
             <Examination
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
@@ -323,10 +319,9 @@ export default function PerformCase(props) {
             ></Examination>
           </div>
         )}
-        {currentStep.module_type_identifier == 2 && (
+        {currentStep.module_type_identifier === 2 && (
           <div>
             <Diagnosis
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               medicalFieldId={currentStep.medical_case.medical_field_id}
               displayFeedback={displayFeedback}
@@ -336,10 +331,9 @@ export default function PerformCase(props) {
             ></Diagnosis>
           </div>
         )}
-        {currentStep.module_type_identifier == 3 && (
+        {currentStep.module_type_identifier === 3 && (
           <div>
             <Treatment
-              getCallToApi={props.getCallToApi}
               stepId={currentStep.step_id}
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
@@ -347,20 +341,20 @@ export default function PerformCase(props) {
             ></Treatment>
           </div>
         )}
-        {currentStep.module_type_identifier == 4 && (
+        {currentStep.module_type_identifier === 4 && (
           <div>
-            <Summary getCallToApi={props.getCallToApi} stepId={currentStep.step_id}>
+            <Summary stepId={currentStep.step_id}>
               displayFeedback = {displayFeedback}
               setDisplayFeedback = {setDisplayFeedback}
             </Summary>
           </div>
         )}
-        {currentIndex + 1 <= caseList.length - 1 && displayFeedback && (
+        {currentIndex + 1 <= caseById.length - 1 && displayFeedback && (
           <Button onClick={nextStep} colorScheme='teal'>
             Nästa
           </Button>
         )}
-        {currentIndex + 1 > caseList.length - 1 && (
+        {currentIndex + 1 > caseById.length - 1 && (
           <Link to='/'>
             <Button colorScheme='teal'>Avsluta</Button>
           </Link>
