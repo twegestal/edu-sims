@@ -1,7 +1,6 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
-
 dotenv.config();
 const environment = process.env.DEV_ENVIRONMENT;
 
@@ -20,8 +19,8 @@ const connectToDatabase = async () => {
       max: 90,
       min: 0,
     },
-    });
-    
+  });
+
   return db;
 };
 

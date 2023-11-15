@@ -21,12 +21,10 @@ import { treatment_type } from './treatment_type.js';
 import { db } from '../database/databaseConnection.js';
 import dotenv from 'dotenv';
 import { populateDB } from '../database/populateDB.js';
-import * as object from '../models/object_index.js'
-
+import * as object from '../models/object_index.js';
 
 dotenv.config();
 const environment = process.env.DEV_ENVIRONMENT;
-
 
 /*
 Defines the relations between all objects and initializes them
@@ -51,7 +49,7 @@ diagnosis_list.belongsTo(medical_field, {
 diagnosis.belongsTo(diagnosis_list, {
   foreignKey: {
     name: 'diagnosis_id',
-  }
+  },
 });
 
 examination_subtype.belongsTo(examination_type, {
@@ -74,10 +72,9 @@ step_specific_treatment.belongsTo(treatment, {
   foreignKey: 'treatment_step_id',
 });
 
-step_specific_treatment.belongsTo(treatment_list,{
-  foreignKey: 'treatment_id'
-}
-)
+step_specific_treatment.belongsTo(treatment_list, {
+  foreignKey: 'treatment_id',
+});
 
 step_specific_values.belongsTo(examination, {
   foreignKey: 'examination_step_id',
@@ -106,28 +103,23 @@ treatment_subtype.belongsTo(treatment_type, {
   foreignKey: 'treatment_type_id',
 });
 
+if (process.env.DEV_ENVIRONMENT === 'local') {
+  try {
+    await db.authenticate();
+    console.log('Connection has been established successfully.');
 
-  if (process.env.DEV_ENVIRONMENT === 'local') {
-    try {
-      await db.authenticate();
-      console.log('Connection has been established successfully.');
-     
-      /*dom utkommenterade metoderna nedanför är utkommenterade för försäkra att live-databasen inte skrivs över av misstag
+    /*dom utkommenterade metoderna nedanför är utkommenterade för försäkra att live-databasen inte skrivs över av misstag
         om du vill sätta upp och populera en lokal databas måste dessa kommenteras in igen
       */
 
-      //await db.sync({ force: true });
-      console.log('Tables synchronized successfully.');
-      //await populateDB()
-      console.log('Inserted succesfully.');
-    } catch (error) {
-      console.log('Sync error: ', error);
-    }
+    //await db.sync({ force: true });
+    console.log('Tables synchronized successfully.');
+    //await populateDB()
+    console.log('Inserted succesfully.');
+  } catch (error) {
+    console.log('Sync error: ', error);
   }
-
-
-
-
+}
 
 export {
   attempt,

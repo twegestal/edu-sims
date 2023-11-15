@@ -60,6 +60,6 @@ export const useTreatment = () => {
     treatmentSpecificValues,
     getTreatmentTypes,
     treatmentTypes,
-    getTreatmentList
+    getTreatmentList,
   };
 };

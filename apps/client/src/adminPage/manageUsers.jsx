@@ -16,92 +16,84 @@ import {
   FormHelperText,
 } from '@chakra-ui/react';
 
-import {
-    DeleteIcon
-} from '@chakra-ui/icons'
-
+import { DeleteIcon } from '@chakra-ui/icons';
 
 export default function ManageUsers(props) {
+  const [allUsers, setAllUsers] = useState([]);
 
-    const [allUsers, setAllUsers] = useState([]);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      //Skall ersättas med API kall
 
+      const apiData = [
+        {
+          id: '1',
+          email: 'test@gmail.com',
+        },
+        {
+          id: '2',
+          email: 'annan@gmail.com',
+        },
+        {
+          id: '3',
+          email: 'fler@gmail.com',
+        },
+        {
+          id: '4',
+          email: 'entill@gmail.com',
+        },
+        {
+          id: '5',
+          email: 'ochentill@gmail.com',
+        },
+      ];
 
-    useEffect(() => {
+      setAllUsers(apiData);
+    };
 
-        const getAllUsers = async () => {
-            //Skall ersättas med API kall
-
-            const apiData = [
-                {
-                    'id': '1',
-                    'email': 'test@gmail.com',
-                },
-                {
-                    'id': '2',
-                    'email': 'annan@gmail.com',
-                },
-                {
-                    'id': '3',
-                    'email': 'fler@gmail.com',
-                },
-                {
-                    'id': '4',
-                    'email': 'entill@gmail.com',
-                },
-                {
-                    'id': '5',
-                    'email': 'ochentill@gmail.com',
-                },
-            ]
-
-            setAllUsers(apiData)
-        };
-
-        getAllUsers()
-
-    }, []);
-
+    getAllUsers();
+  }, []);
 
   function removeCase(userId) {
-
-    if(confirm('Är du säker på att du vill ta bort användaren?')){
-      console.log("Ta bort" + userId)
+    if (confirm('Är du säker på att du vill ta bort användaren?')) {
+      console.log('Ta bort' + userId);
       //API kall
     }
-
   }
 
   return (
     <div>
-        <h2>Hantera användare</h2>
+      <h2>Hantera användare</h2>
 
-        <TableContainer maxWidth='90%'>
+      <TableContainer maxWidth='90%'>
         <Table variant='striped' colorScheme='teal'>
-            <Thead>
+          <Thead>
             <Tr>
-                <Th>Email</Th>
-                <Th>Byt lösenord</Th>
-                <Th isNumeric>Ta bort användare</Th>
+              <Th>Email</Th>
+              <Th>Byt lösenord</Th>
+              <Th isNumeric>Ta bort användare</Th>
             </Tr>
-            </Thead>
-            <Tbody>
+          </Thead>
+          <Tbody>
             {allUsers.map((user, index) => (
-                <Tr key={index}>
-                    <Td>{user.email}</Td>
-                    <Td>
-                        <FormControl display={'flex'} flexDirection={'column'}>
-                            <Input type='email' />
-                            <Button> Sätt nytt lösenord </Button>
-                        </FormControl>
-                    </Td>
-                    <Td><Button onClick={(e) => removeCase(user.id)}><DeleteIcon /></Button></Td>
-                </Tr>
+              <Tr key={index}>
+                <Td>{user.email}</Td>
+                <Td>
+                  <FormControl display={'flex'} flexDirection={'column'}>
+                    <Input type='email' />
+                    <Button> Sätt nytt lösenord </Button>
+                  </FormControl>
+                </Td>
+                <Td>
+                  <Button onClick={(e) => removeCase(user.id)}>
+                    <DeleteIcon />
+                  </Button>
+                </Td>
+              </Tr>
             ))}
-            </Tbody>
+          </Tbody>
         </Table>
-        </TableContainer>
-
-</div>
+      </TableContainer>
+    </div>
   );
-
 }
