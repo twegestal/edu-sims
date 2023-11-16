@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 export const hashPassword = async (password) => {
     try {
-        return await bcrypt.hash(password, 10);
+        return await bcrypt.hash(password, saltRounds);
     } catch (error) {
         console.error(error)
     }

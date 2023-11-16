@@ -1,15 +1,13 @@
 import { createServer } from './server.js';
 import fs from 'fs';
 import https from 'https';
-import dotenv from 'dotenv';
 
-dotenv.config();
 const port = 443;
 
 const server = createServer();
 
-const privateKey = fs.readFileSync('C:/Users/vikto/Documents/GitHub/edu-sims/apps/server/certificates/key.pem', 'utf8');
-const certificate = fs.readFileSync('C:/Users/vikto/Documents/GitHub/edu-sims/apps/server/certificates/cert.pem', 'utf8');
+const privateKey = fs.readFileSync(process.env.PATH_TO_KEY, 'utf8');
+const certificate = fs.readFileSync(process.env.PATH_TO_CERT, 'utf8');
 
 const credentials = { key: privateKey, cert: certificate };
 

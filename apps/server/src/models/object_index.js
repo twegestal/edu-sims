@@ -19,11 +19,7 @@ import { treatment_list } from './treatment_list.js';
 import { treatment_subtype } from './treatment_subtype.js';
 import { treatment_type } from './treatment_type.js';
 import { db } from '../database/databaseConnection.js';
-import dotenv from 'dotenv';
-import { populateDB } from '../database/populateDB.js';
-import * as object from '../models/object_index.js';
 
-dotenv.config();
 const environment = process.env.DEV_ENVIRONMENT;
 
 /*

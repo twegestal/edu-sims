@@ -1,2 +1,2 @@
-export * from './loginValidator.js';
-export * from './registrationValidator.js';
+export * from './userValidator.js';
+

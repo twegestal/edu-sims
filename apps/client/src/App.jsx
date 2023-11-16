@@ -10,15 +10,19 @@ import { useAuth } from './hooks/useAuth.jsx';
 import { Button } from '@chakra-ui/react';
 import ShowStatistics from './statistics/showStatistics.jsx';
 import ManageUsers from './adminPage/manageUsers.jsx';
+import AlertBanner from './alertBanner.jsx'
+import { useAlert } from './hooks/useAlert.js';
 
 export default function App() {
   const { user, logout } = useAuth();
-  const groupId = null;
+  const groupId = 'apan';
+  const {showAlert} = useAlert();
 
   return (
     <>
+      {showAlert && <AlertBanner />}
       {groupId !== null && (
-        <Register groupId={groupId}></Register>
+          <Register groupId={groupId}></Register>
       )}
       {user ? (
         <>
