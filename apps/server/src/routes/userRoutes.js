@@ -20,7 +20,7 @@ export const getUserRoutes = () => {
   });
 
   router.post('/login', async (req, res, next) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     const user = await object.end_user.findOne({
       where: {
         email: email,
@@ -32,8 +32,6 @@ export const getUserRoutes = () => {
         message: 'Username or password incorrect',
       }); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
     } else {
-
-
       if (await comparePasswords(password, user.password)) {
         res.status(200).json({
           id: user.id,
@@ -51,7 +49,7 @@ export const getUserRoutes = () => {
   });
 
   router.post('/register', async (req, res, next) => {
-    const {email, password, group_id} = req.body;
+    const { email, password, group_id } = req.body;
     const result = await object.end_user.findOne({
       where: {
         email: email,
@@ -71,7 +69,7 @@ export const getUserRoutes = () => {
       });
       res.status(201).json({
         id: user.id,
-        message: "Registration successful"
+        message: 'Registration successful',
       });
     }
   });
