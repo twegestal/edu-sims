@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
+import { hashPassword } from 'api';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -19,6 +20,8 @@ export const getUserRoutes = () => {
   });
 
   router.post('/login', async (req, res, next) => {
+
+
     const user = await object.end_user.findOne({
       where: {
         email: req.body.email,
@@ -47,31 +50,29 @@ export const getUserRoutes = () => {
   });
 
   router.post('/register', async (req, res, next) => {
-    /*
-        Queries the database to see if the email is already in use:
-        */
+    const {email, password, group_id} = req.body;
     const result = await object.end_user.findOne({
       where: {
-        email: req.body.email,
+        email: email,
       },
     });
+
+    const hashedPassword = await hashPassword(password);
 
     if (result != null) {
       res.status(400).json('Email is already registered'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
     } else {
-      /*
-            If the email is not found in the database, inserts a new row with new user in the end_user table:
-            */
       const user = await object.end_user.create({
-        group_id: req.body.group_id,
-        email: req.body.email,
-        password: req.body.password,
+        group_id: group_id,
+        email: email,
+        password: hashedPassword,
         is_admin: false,
       });
-      res.status(201).json({
-        id: user.id,
-        message: 'Registration successful',
-      });
+      res.status(201).send();
+      //res.json({
+      //  id: user.id,
+      //  message: 'Registration successful',
+      //});
     }
   });
 

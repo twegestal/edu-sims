@@ -8,6 +8,8 @@ export const AuthProvider = ({ children }) => {
   const loginApi = useApi('login');
   const logoutApi = useApi('logout');
   const resetPasswordApi = useApi('resetPassword');
+  const registerApi = useApi('register');
+
 
   const login = async (email, password) => {
     try {
@@ -29,6 +31,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (email, password, group_id) => {
+    try {
+      console.log('innan')
+      const response = await registerApi({
+        body: {
+          email,
+          password,
+          group_id,
+        }
+      });
+      console.log('efter');
+      console.log('response' + response);
+      if (response.status === 201) {
+        login(email, password);
+      }
+    } catch (error) {
+      console.error('Registration failed', error);
+    }
+  }
+
+
   const resetPassword = async (email) => {
     try {
       //await resetPassword(email);
@@ -37,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, logout, register }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

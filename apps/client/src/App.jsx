@@ -13,12 +13,12 @@ import ManageUsers from './adminPage/manageUsers.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
-  const groupId = null;
+  const groupId = 'apan';
 
   return (
     <>
       {groupId !== null && (
-        <Register updateLoggedInUser={updateLoggedInUser} groupId={groupId}></Register>
+        <Register groupId={groupId}></Register>
       )}
       {user ? (
         <>
