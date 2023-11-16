@@ -9,8 +9,8 @@ dotenv.config();
 const enableSSL = process.env.ENABLE_SSL;
 
 const options = {
-  key: fs.readFileSync('C:/Users/vikto/Documents/GitHub/edu-sims/apps/server/certificates/key.pem'),
-  cert: fs.readFileSync('C:/Users/vikto/Documents/GitHub/edu-sims/apps/server/certificates/cert.pem'),
+  key: fs.readFileSync(process.env.PATH_TO_KEY),
+  cert: fs.readFileSync(process.env.PATH_TO_CERT),
 }
 
 export default defineConfig({

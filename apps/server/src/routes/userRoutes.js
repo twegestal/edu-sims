@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
-import { hashPassword } from 'api';
+import { hashPassword, comparePasswords } from '../utils/crypting.js';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -20,11 +20,10 @@ export const getUserRoutes = () => {
   });
 
   router.post('/login', async (req, res, next) => {
-
-
+    const {email, password} = req.body;
     const user = await object.end_user.findOne({
       where: {
-        email: req.body.email,
+        email: email,
       },
     });
 
@@ -33,7 +32,9 @@ export const getUserRoutes = () => {
         message: 'Username or password incorrect',
       }); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
     } else {
-      if (req.body.password === user.password) {
+
+
+      if (await comparePasswords(password, user.password)) {
         res.status(200).json({
           id: user.id,
           email: user.email,
@@ -68,11 +69,10 @@ export const getUserRoutes = () => {
         password: hashedPassword,
         is_admin: false,
       });
-      res.status(201).send();
-      //res.json({
-      //  id: user.id,
-      //  message: 'Registration successful',
-      //});
+      res.status(201).json({
+        id: user.id,
+        message: "Registration successful"
+      });
     }
   });
 

@@ -13,9 +13,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const userData = await loginApi({ body: { email, password } });
-      if (userData.token) {
-        setUser(userData);
+      const response = await loginApi({ body: { email, password } });
+      if (response.data.token) {
+        setUser(response.data);
       }
     } catch (error) {
       console.log('Login failed', error);
@@ -33,16 +33,15 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, group_id) => {
     try {
-      console.log('innan')
       const response = await registerApi({
         body: {
-          email,
-          password,
-          group_id,
+          email: email,
+          password: password,
+          group_id: group_id
         }
       });
-      console.log('efter');
-      console.log('response' + response);
+      
+      console.log('response i useAuth', response);
       if (response.status === 201) {
         login(email, password);
       }

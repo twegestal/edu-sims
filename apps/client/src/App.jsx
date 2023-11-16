@@ -13,7 +13,7 @@ import ManageUsers from './adminPage/manageUsers.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
-  const groupId = 'apan';
+  const groupId = null;
 
   return (
     <>
