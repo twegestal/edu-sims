@@ -3,7 +3,10 @@ export const authApi = (apiClient) => ({
 
   logout: async (data) => apiClient.post('logout', { json: data }).json(),
 
-  register: async (data) => apiClient.post('register', { json: data }).json(),
+  register: async (body) => {
+    const response = await apiClient.post('register', body);
+    return { status: response.status, headers: response.headers, data: await response.json() };
+  },
 
   resetPassword: async (data) => apiClient.post('reset-password', { json: data }).json(),
 });
