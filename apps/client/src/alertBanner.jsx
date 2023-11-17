@@ -14,7 +14,7 @@ export default function AlertBanner() {
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{message}</AlertDescription>
 
-      <CloseButton onClick={() => resetAlert}></CloseButton>
+      <CloseButton onClick={resetAlert}></CloseButton>
     </Alert>
   );
 }
