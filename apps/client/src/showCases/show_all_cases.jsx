@@ -51,14 +51,11 @@ export default function ShowAllCases() {
   async function handlePublish(caseId, isPublished) {
     if (isPublished == true) {
       if (confirm('Är du säker på att du vill avpublicera?')) {
-        //API call
         await publishCase(caseId, isPublished);
-        console.log('Avpublicerad');
       }
     }
     if (isPublished == false || isPublished == null) {
       if (confirm('Är du säker på att du vill publicera?')) {
-        //API call
         await publishCase(caseId, isPublished);
       }
     }
