@@ -113,7 +113,7 @@ if (process.env.DEV_ENVIRONMENT === 'local') {
     //await populateDB()
     console.log('Inserted succesfully.');
   } catch (error) {
-    console.log('Sync error: ', error);
+    console.error('Sync error: ', error);
   }
 }
 

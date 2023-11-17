@@ -10,7 +10,7 @@ export const AlertProvider = ({ children }) => {
 
   const setAlert = (status, title, message) => {
     setStatus(status);
-    setTitle(title); 
+    setTitle(title);
     setMessage(message);
     setShowAlert(true);
   };
@@ -20,7 +20,6 @@ export const AlertProvider = ({ children }) => {
     setTitle('');
     setStatus('');
     setMessage('');
-    console.log(showAlert);
   };
 
   return (

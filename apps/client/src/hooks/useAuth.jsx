@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data);
       }
     } catch (error) {
-      console.log('Login failed', error);
+      console.error('Login failed', error);
     }
   };
 
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async ({email, password, group_id}) => {
+  const register = async ({ email, password, group_id }) => {
     try {
       const response = await registerApi({
         body: {

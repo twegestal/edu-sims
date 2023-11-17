@@ -21,7 +21,7 @@ export default function App() {
   return (
     <>
       {showAlert && <AlertBanner />}
-      {(groupId !== null && !user) && <Register groupId={groupId}></Register>}
+      {groupId !== null && !user && <Register groupId={groupId}></Register>}
       {user ? (
         <>
           <Routes>
