@@ -8,12 +8,13 @@ export const AuthProvider = ({ children }) => {
   const loginApi = useApi('login');
   const logoutApi = useApi('logout');
   const resetPasswordApi = useApi('resetPassword');
+  const registerApi = useApi('register');
 
   const login = async (email, password) => {
     try {
-      const userData = await loginApi({ body: { email, password } });
-      if (userData.token) {
-        setUser(userData);
+      const response = await loginApi({ body: { email, password } });
+      if (response.data.token) {
+        setUser(response.data);
       }
     } catch (error) {
       console.log('Login failed', error);
@@ -29,6 +30,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (email, password, group_id) => {
+    try {
+      const response = await registerApi({
+        body: {
+          email: email,
+          password: password,
+          group_id: group_id,
+        },
+      });
+
+      console.log('response i useAuth', response);
+      if (response.status === 201) {
+        login(email, password);
+      }
+    } catch (error) {
+      console.error('Registration failed', error);
+    }
+  };
+
   const resetPassword = async (email) => {
     try {
       //await resetPassword(email);
@@ -37,7 +57,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout, register }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
