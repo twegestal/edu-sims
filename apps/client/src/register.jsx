@@ -7,12 +7,12 @@ import {
   InputGroup,
   InputRightElement,
   Tooltip,
-  IconButton,
+  useBreakpointValue,
 } from '@chakra-ui/react';
+import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { useAuth } from './hooks/useAuth';
 import { validateRegistration } from 'api';
 import { useAlert } from './hooks/useAlert.jsx';
-import { FcInfo } from 'react-icons/fc';
 
 export default function Register(props) {
   const [emailInput, setEmailInput] = useState('');
@@ -21,6 +21,7 @@ export default function Register(props) {
   const [showTooltip, setShowTooltip] = useState(false);
   const { register } = useAuth();
   const { setAlert } = useAlert();
+  const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
 
   const postToRegister = async () => {
     const groupId = props.groupId;
@@ -41,10 +42,6 @@ export default function Register(props) {
     }
   };
 
-  const handleTooltipToggle = () => {
-    setShowTooltip(!showTooltip);
-  };
-
   return (
     <>
       <FormControl>
@@ -60,17 +57,17 @@ export default function Register(props) {
             <Tooltip
               label='Lösenordet måste innehålla minst 8 tecken och max 12 tecken. Lösenordet måste innehålla minst en versal, minst en gemen, minst en siffra och minst ett specialtecken'
               isOpen={showTooltip}
-              placement='right-end'
+              placement={placement}
+              shouldWrapChildren
+              trigger={{ base: "click", md: "hover" }}
               hasArrow
             >
-              <IconButton
-                icon={<FcInfo />}
-                size={'sm'}
-                variant={'ghost'}
-                onClick={handleTooltipToggle}
-                onMouseEnter={handleTooltipToggle}
-                onMouseLeave={handleTooltipToggle}
-                aria-label='Password requirements'
+              <InfoOutlineIcon
+                color="gray.500"
+                _focus={{outline: 'none'}}
+                onClick={() => setShowTooltip(!showTooltip)}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
               />
             </Tooltip>
           </InputRightElement>
