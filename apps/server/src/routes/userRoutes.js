@@ -48,8 +48,9 @@ export const getUserRoutes = () => {
     }
   });
 
-  router.post('/register', async (req, res, next) => {
+  router.post('/register', async (req, res, _next) => {
     const { email, password, group_id } = req.body;
+
     const result = await object.end_user.findOne({
       where: {
         email: email,
@@ -58,7 +59,7 @@ export const getUserRoutes = () => {
 
     const hashedPassword = await hashPassword(password);
 
-    if (result != null) {
+    if (result !== null) {
       res.status(400).json('Email is already registered'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
     } else {
       const user = await object.end_user.create({

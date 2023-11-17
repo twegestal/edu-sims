@@ -15,13 +15,13 @@ import { useAlert } from './hooks/useAlert.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
-  const groupId = 'apan';
+  const groupId = null;
   const { showAlert } = useAlert();
 
   return (
     <>
       {showAlert && <AlertBanner />}
-      {groupId !== null && <Register groupId={groupId}></Register>}
+      {(groupId !== null && !user) && <Register groupId={groupId}></Register>}
       {user ? (
         <>
           <Routes>

@@ -53,3 +53,13 @@ The project is structured as a monorepo with three main packages:
 ### API Proxy
 
 A proxy has been set up in the Vite configuration. This means that API calls from the client with paths starting with `/api` will be automatically proxied to the server.
+
+### Test users
+
+`admin:`
+`email:` admin@admin.admin
+`pwd:` Admin1337!
+
+`user:`
+`email:` apa@apa.se
+`pwd:` Aa1!Aa1!
