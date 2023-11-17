@@ -22,9 +22,7 @@ export default function Register(props) {
   const { register } = useAuth();
   const { setAlert } = useAlert();
 
-  const postToRegister = async (event) => {
-    event.preventDefault();
-
+  const postToRegister = async () => {
     const groupId = props.groupId;
     if (passwordInput === confirmPasswordInput) {
       const data = {
@@ -36,10 +34,10 @@ export default function Register(props) {
       if (validationResult.success) {
         await register(data);
       } else {
-        setAlert('error', 'Error when registering', validationResult.errors[0].message);
+        setAlert('error', 'Error vid registrering', validationResult.errors[0].message);
       }
     } else {
-      setAlert('error', 'Error when registering', 'Passwords must match');
+      setAlert('error', 'Error vid registrering', 'Lösenorden måste matcha');
     }
   };
 
