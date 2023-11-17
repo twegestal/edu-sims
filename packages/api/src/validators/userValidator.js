@@ -1,4 +1,5 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
+import { handleZodErrors } from '../utils';
 
 const loginSchema = z.object({
   email: z.string().email('Email must me a valid email address'),
@@ -27,7 +28,7 @@ export const validateLogin = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleErrors(error);
+    return handleZodErrors(error);
   }
 };
 
@@ -39,22 +40,6 @@ export const validateRegistration = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleErrors(error);
-  }
-};
-
-const handleErrors = (error) => {
-  if (error instanceof ZodError) {
-    const errors = error.errors.map((e) => ({
-      path: e.path[0],
-      message: e.message,
-    }));
-    return {
-      success: false,
-      errors: errors,
-    };
-  } else {
-    console.error(error);
-    throw error;
+    return handleZodErrors(error);
   }
 };

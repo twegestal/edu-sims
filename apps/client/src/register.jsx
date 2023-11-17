@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { useAuth } from './hooks/useAuth';
-import { validateRegistration } from 'api';
+import { validateRegistration, errorsToString } from 'api';
 import { useAlert } from './hooks/useAlert.jsx';
 
 export default function Register(props) {
@@ -35,7 +35,7 @@ export default function Register(props) {
       if (validationResult.success) {
         await register(data);
       } else {
-        setAlert('error', 'Error vid registrering', validationResult.errors[0].message);
+        setAlert('error', 'Error vid registrering', errorsToString(validationResult.errors));
       }
     } else {
       setAlert('error', 'Error vid registrering', 'Lösenorden måste matcha');

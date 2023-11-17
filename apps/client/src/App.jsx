@@ -15,7 +15,7 @@ import { useAlert } from './hooks/useAlert.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
-  const groupId = null;
+  const groupId = 'null';
   const { showAlert } = useAlert();
 
   return (
