@@ -8,12 +8,15 @@ export const useCases = () => {
   const getMedicalFieldsApi = useApi('getMedicalFields');
   const getIntroductionStepApi = useApi('getIntroductionStep');
   const getSummaryStepApi = useApi('getSummaryStep');
+  const publishCaseApi = useApi('publishCase');
+
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
   const [caseById, setCaseById] = useState([]);
   const [introductionStep, setIntroductionStep] = useState({});
   const [summaryStep, setSummaryStep] = useState({});
+  const [newPublishment, setNewPublishment] = useState('');
 
   const getAllCases = async () => {
     try {
@@ -63,6 +66,19 @@ export const useCases = () => {
       console.error('error fetch summary step: ', error);
     }
   };
+
+  const publishCase = async (id, isPublished) => {
+    try {
+      const result = await publishCaseApi({ headers: { id: id, isPublished: isPublished} });
+      if (result) {
+        setNewPublishment(isPublished + id)
+        return
+      }
+    } catch (error) {
+      console.error('error fetch summary step: ', error);
+    }
+  };
+
   return {
     cases,
     getAllCases,
@@ -74,5 +90,7 @@ export const useCases = () => {
     getIntroductionStep,
     getSummaryStep,
     summaryStep,
+    publishCase,
+    newPublishment,
   };
 };

@@ -18,6 +18,7 @@ import { summary } from './summary.js';
 import { treatment_list } from './treatment_list.js';
 import { treatment_subtype } from './treatment_subtype.js';
 import { treatment_type } from './treatment_type.js';
+import { user_group } from './user_group.js';
 import { db } from '../database/databaseConnection.js';
 
 const environment = process.env.DEV_ENVIRONMENT;
@@ -25,6 +26,10 @@ const environment = process.env.DEV_ENVIRONMENT;
 /*
 Defines the relations between all objects and initializes them
 */
+
+end_user.belongsTo(user_group, {
+  foreignKey: 'group_id',
+});
 
 attempt.belongsTo(end_user, {
   foreignKey: 'user_id',
@@ -138,4 +143,5 @@ export {
   treatment_subtype,
   treatment_type,
   treatment,
+  user_group,
 };

@@ -6,13 +6,14 @@ import {
   AccordionPanel,
   Button,
   Flex,
+  Box,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 
 export default function ShowAllCases() {
-  const { cases, getAllCases, medicalFields, getMedicalFields } = useCases();
+  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } = useCases();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -23,6 +24,15 @@ export default function ShowAllCases() {
 
     fetchCases();
   }, []);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      await getAllCases();
+      await getMedicalFields();
+    };
+
+    fetchCases();
+  }, [newPublishment]);
 
   const groupedCases = cases.reduce((acc, caseItem) => {
     const medicalFieldId = caseItem.medical_field_id;
@@ -38,17 +48,15 @@ export default function ShowAllCases() {
     return medicalField ? medicalField.name : 'Unknown';
   };
 
-  function handlePublish(caseId, published) {
-    if (published == true) {
+  async function handlePublish(caseId, isPublished) {
+    if (isPublished == true) {
       if (confirm('Är du säker på att du vill avpublicera?')) {
-        //API call
-        console.log('Avpublicerad');
+        await publishCase(caseId, isPublished);
       }
     }
-    if (published == false || published == null) {
+    if (isPublished == false || isPublished == null) {
       if (confirm('Är du säker på att du vill publicera?')) {
-        //API call
-        console.log('publicerad');
+        await publishCase(caseId, isPublished);
       }
     }
   }
@@ -70,45 +78,44 @@ export default function ShowAllCases() {
             </AccordionButton>
             <AccordionPanel pb={4}>
               {groupedCases[medicalFieldId].map((caseItem) => (
-                <div key={caseItem.id}>
+                <Box key={caseItem.id}>
                   {user.isAdmin && (
-                    <Flex justify={'space-evenly'} id='navigationButtons' direction={'column'}>
+                    <Flex justify={'space-evenly'} direction={'column'}>
                       <p>Name: {caseItem.name}</p>
                       <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal'>Starta fallet</Button>
+                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
                       </Link>
-                      <Button colorScheme='teal'>Redigera fallet</Button>
-                      {caseItem.published == false ||
-                        (caseItem.published == null && (
-                          <Button
+                      <Button colorScheme='teal' marginBottom='5%'>Redigera fallet</Button>
+                      {(caseItem.published == false || caseItem.published == null) && (
+                          <Button marginBottom='5%'
                             onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                             colorScheme='teal'
                           >
                             Publicera fallet
                           </Button>
-                        ))}
+                        )}
                       {caseItem.published && (
-                        <Button
+                        <Button marginBottom='5%'
                           onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                           colorScheme='teal'
                         >
                           Avpublicera fallet
                         </Button>
                       )}
-                      <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal'>
+                      <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal' marginBottom='5%'>
                         Ta bort fallet
                       </Button>
                     </Flex>
                   )}
-                  {user.isAdmin == false && (
-                    <Flex>
-                      <p>Name: {caseItem.name}</p>
+                  {user.isAdmin == false && caseItem.published && (
+                    <Flex direction={'column'}>
+                      <p>{caseItem.name}</p>
                       <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal'>Starta fallet</Button>
+                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
                       </Link>
                     </Flex>
                   )}
-                </div>
+                </Box>
               ))}
             </AccordionPanel>
           </AccordionItem>
