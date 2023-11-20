@@ -1,46 +1,36 @@
-import { useState } from "react";
-import { Input, Button } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { Input, Button } from '@chakra-ui/react';
+import { useAuth } from './hooks/useAuth';
+import { validateLogin } from 'api';
 
-export default function Login(props) {
-    const [emailInput, setEmailInput] = useState('Email');
-    const [passwordInput, setPasswordInput] = useState('Password');
-    const navigate = useNavigate()
+export default function Login() {
+  const { login } = useAuth();
+  const [emailInput, setEmailInput] = useState('Email');
+  const [passwordInput, setPasswordInput] = useState('Password');
 
-    const postToLogin = async (event) => {
-        event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        
-        if (emailInput != 'Email' && passwordInput != 'Password') {
-            const body = JSON.stringify({
-                email : emailInput,
-                password : passwordInput
-            })
-    
-            const response = await props.postToApi(body, 'http://localhost:5173/api/user/login');
-
-            const headers = {
-                "Content-type" : "application/json",
-                "user_id" : response.id
-            }
-            const user = await props.getCallToApi('http://localhost:5173/api/user', headers);
-
-
-            props.updateLoggedInUser(user.id, user.email, user.is_admin);
-            navigate("/")
-        }
-
-        
+    const data = { email: emailInput, password: passwordInput };
+    const result = validateLogin(data);
+    if (result.success) {
+      login(emailInput, passwordInput);
+    } else {
+      //TODO show alert with result.errors
     }
+  };
 
-    return (
-        <div>
-            <form onSubmit={postToLogin}>
-                <Input placeholder="Email" onChange={(e) => setEmailInput(e.target.value)}/>
-                <Input placeholder="Password" onChange={(e) => setPasswordInput(e.target.value)} />
-                <Button type="submit">Logga in</Button>
-            </form>
-        </div>
-        
-    );
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <Input placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
+        <Input
+          type='password'
+          placeholder='Password'
+          onChange={(e) => setPasswordInput(e.target.value)}
+        />
+        <Button type='submit'>Logga in</Button>
+      </form>
+    </>
+  );
 }

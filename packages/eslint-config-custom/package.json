@@ -1,0 +1,12 @@
+{
+  "name": "eslint-config-custom",
+  "version": "1.0.0",
+  "description": "Shared ESLint configuration",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/eslint-parser": "^7.22.15",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2"
+  }
+}

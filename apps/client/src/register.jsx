@@ -1,44 +1,84 @@
-import {useState} from 'react';
-import {Input, Button} from '@chakra-ui/react';
+import { useState } from 'react';
+import {
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputRightElement,
+  Tooltip,
+  useBreakpointValue,
+} from '@chakra-ui/react';
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { useAuth } from './hooks/useAuth';
+import { validateRegistration, errorsToString } from 'api';
+import { useAlert } from './hooks/useAlert.jsx';
 
 export default function Register(props) {
-    const [emailInput, setEmailInput] = useState('Email');
-    const [passwordInput, setPasswordInput] = useState('Password');
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
+  const { register } = useAuth();
+  const { setAlert } = useAlert();
+  const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
 
-    const postToRegister = async (event) => {
-        event.preventDefault();
-
-        const groupId = props.groupId;
-        if (emailInput != 'Email' && passwordInput != 'Password') {
-            const body = JSON.stringify({
-                email : emailInput,
-                password : passwordInput,
-                group_id : groupId
-            })
-
-            const response = await props.postCallToApi(body, 'http://localhost:5173/api/user/register');
-
-
-            const headers = {
-                "Content-type" : "application/json",
-                "user_id" : response.id
-            }
-            const user = await props.getCallToApi('http://localhost:5173/api/user', headers);
-
-            props.updateLoggedInUser(user.id, user.email, user.is_admin);
-            
-            window.history.pushState('state', 'title', '/');
-        }
+  const postToRegister = async () => {
+    const groupId = props.groupId;
+    if (passwordInput === confirmPasswordInput) {
+      const data = {
+        email: emailInput,
+        password: passwordInput,
+        group_id: groupId,
+      };
+      const validationResult = validateRegistration(data);
+      if (validationResult.success) {
+        await register(data);
+      } else {
+        setAlert('error', 'Error vid registrering', errorsToString(validationResult.errors));
+      }
+    } else {
+      setAlert('error', 'Error vid registrering', 'Lösenorden måste matcha');
     }
+  };
 
-    
-    return (
-        <div>
-            <form onSubmit={postToRegister}>
-                <Input placeholder='Email' onChange={(e) => setEmailInput(e.target.value)}/>
-                <Input placeholder='Password' onChange={(e) => setPasswordInput(e.target.value)} />
-                <Button type="submit">Skapa konto</Button>
-            </form>
-        </div>
-    )
+  return (
+    <>
+      <FormControl>
+        <FormLabel>Registrering</FormLabel>
+        <Input type='email' placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
+        <InputGroup>
+          <Input
+            type='password'
+            placeholder='Lösenord'
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
+          <InputRightElement width={'4.5rem'}>
+            <Tooltip
+              label='Lösenordet måste innehålla minst 8 tecken och max 12 tecken. Lösenordet måste innehålla minst en versal, minst en gemen, minst en siffra och minst ett specialtecken'
+              isOpen={showTooltip}
+              placement={placement}
+              shouldWrapChildren
+              trigger={{ base: "click", md: "hover" }}
+              hasArrow
+            >
+              <InfoOutlineIcon
+                color="gray.500"
+                _focus={{outline: 'none'}}
+                onClick={() => setShowTooltip(!showTooltip)}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              />
+            </Tooltip>
+          </InputRightElement>
+        </InputGroup>
+        <Input
+          type='password'
+          placeholder='Bekräfta lösenord'
+          onChange={(e) => setConfirmPasswordInput(e.target.value)}
+        />
+        <Button onClick={postToRegister}>Skapa konto</Button>
+      </FormControl>
+    </>
+  );
 }
