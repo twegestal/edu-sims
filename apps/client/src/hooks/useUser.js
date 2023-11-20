@@ -2,7 +2,6 @@ import { useApi } from './useApi.js';
 import { useAuth } from './useAuth.jsx';
 import { useState } from 'react';
 
-
 export const useUser = () => {
   const { user } = useAuth();
   const getUser = useApi('getUser');
@@ -10,11 +9,8 @@ export const useUser = () => {
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
 
-
-
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
-
 
   const getAllUsers = async (user_id) => {
     try {
@@ -33,22 +29,20 @@ export const useUser = () => {
     }
   };
 
-
   const createUserGroup = async (name) => {
     try {
       const result = await createUserGroupApi({ headers: { name: name } });
-      setCreatedUserGroup(result)
+      setCreatedUserGroup(result);
     } catch (error) {
       console.error('error creating user group: ', error);
     }
   };
-
 
   return {
     getAllUsers,
     allUsers,
     clearUserInfo,
     createUserGroup,
-    createdUserGroup
+    createdUserGroup,
   };
 };

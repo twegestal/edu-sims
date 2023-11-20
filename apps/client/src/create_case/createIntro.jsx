@@ -13,7 +13,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-export default function CreateIntro(props) {
+export default function CreateIntro({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
     module_type_identifier: 0,
     description: 'default',
@@ -75,7 +75,7 @@ export default function CreateIntro(props) {
           onChange={(e) => setFeedbackIncorrect(e.target.value)}
         ></Textarea>
 
-        <Button onClick={() => props.updateCaseObject(stepData)}>Klar med steget</Button>
+        <Button onClick={() => updateCaseObject(stepData)}>Klar med steget</Button>
       </FormControl>
     </div>
   );

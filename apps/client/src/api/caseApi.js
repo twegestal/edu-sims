@@ -45,6 +45,11 @@ export const caseApi = (apiClient) => ({
   getTreatmentSpecificValues: async (headers) =>
     apiClient.get(`${prefix}getTreatmentSpecificValues`, headers).json(),
 
-  publishCase: async (headers) =>
-    apiClient.put(`${prefix}publishCase`, headers).json(),
+  publishCase: async (headers) => apiClient.put(`${prefix}publishCase`, headers).json(),
+
+  getAllExaminationTypes: async (headers) =>
+    apiClient.get(`${prefix}getExaminationTypes`, headers).json(),
+
+  getAllExaminationSubtypes: async (headers) =>
+    apiClient.get(`${prefix}getExaminationSubtypes`, headers).json(),
 });

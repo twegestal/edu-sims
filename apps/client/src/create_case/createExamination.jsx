@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  RadioGroup,
-  Radio,
-  HStack,
   VStack,
   Button,
   Textarea,
   Checkbox,
-  Text,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
+import { useCreateCase } from '../hooks/useCreateCase';
 
-export default function CreateExamination(props) {
+export default function CreateExamination({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
     module_type_identifer: 1,
     prompt: 'default',
@@ -28,19 +26,15 @@ export default function CreateExamination(props) {
   });
   const [examinationCategories, setExaminationCategories] = useState();
   const [examinationSubcategories, setExaminationSubcategories] = useState();
+
+  const { getAllExaminationTypes, getAllExaminationSubtypes } = useCreateCase();
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-        id: '',
-      };
-
-      const categories = await props.getCallToApi(
-        'http://localhost:5173/api/case/getExaminationTypes',
-        headers,
-      );
+      const id = '';
+      const categories = await getAllExaminationTypes(id);
       const categoryMap = {};
       const subCategoryMap = {};
 
@@ -48,10 +42,8 @@ export default function CreateExamination(props) {
         categoryMap[categories[i].id] = categories[i].name;
 
         const subcategories = await fetchSubcategories(categories[i].id);
-
         let array = [];
         for (let j = 0; j < subcategories.length; j++) {
-          //subCategoryMap[categories[i].id] = {}
           let newEntry = {
             id: subcategories[j].id,
             name: subcategories[j].name,
@@ -70,22 +62,50 @@ export default function CreateExamination(props) {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    console.log(examinationCategories);
-    console.log(examinationSubcategories);
-  }, [examinationCategories, examinationSubcategories]);
-
   const fetchSubcategories = async (id) => {
-    const headers = {
-      'Content-type': 'application/json',
-      examination_type_id: id,
-    };
-
-    const response = await props.getCallToApi(
-      'http://localhost:5173/api/case/getExaminationSubtypes',
-      headers,
-    );
+    const response = await getAllExaminationSubtypes(id);
     return response;
+  };
+
+  const updateExaminationsTypesToDisplay = (checkbox, examinationTypeId) => {
+    if (checkbox.checked) {
+      const examinationMap = stepData.examination_to_display;
+      if (examinationMap[examinationTypeId] instanceof Array) {
+        examinationMap[examinationTypeId] = [...examinationMap[examinationTypeId], checkbox.id];
+
+        setStepData({
+          ...stepData,
+          examination_to_display: examinationMap,
+        });
+      } else {
+        examinationMap[examinationTypeId] = [checkbox.id];
+
+        setStepData({
+          ...stepData,
+          examination_to_display: examinationMap,
+        });
+      }
+    } else {
+      const examinationMap = stepData.examination_to_display;
+      let subTypesArray = examinationMap[examinationTypeId];
+      subTypesArray = subTypesArray.filter((id) => id !== checkbox.id);
+
+      examinationMap[examinationTypeId] = subTypesArray;
+
+      if (subTypesArray.length > 0) {
+        setStepData({
+          ...stepData,
+          examination_to_display: examinationMap,
+        });
+      } else {
+        delete examinationMap[examinationTypeId];
+
+        setStepData({
+          ...stepData,
+          examination_to_display: examinationMap,
+        });
+      }
+    }
   };
 
   const setPrompt = (prompt) => {
@@ -109,6 +129,13 @@ export default function CreateExamination(props) {
     });
   };
 
+  const setMaxNbrTests = (value) => {
+    setStepData({
+      ...stepData,
+      max_nbr_test: value,
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -118,22 +145,23 @@ export default function CreateExamination(props) {
           <FormLabel>Prompt</FormLabel>
           <Textarea placeholder='Prompt' onChange={(e) => setPrompt(e.target.value)}></Textarea>
 
-          <VStack>
-            <FormLabel>Utredningar att visa för användaren</FormLabel>
-            {Object.entries(examinationCategories).map(([id, name]) => (
-              <>
-                <Checkbox id={id} alignSelf='start'>
-                  {name}
-                </Checkbox>
+          <FormLabel>Utredningar att visa för användaren</FormLabel>
+          {Object.entries(examinationCategories).map(([categoryId, name]) => (
+            <VStack key={categoryId}>
+              <h2 id={categoryId}>{name}</h2>
 
-                {examinationSubcategories[id].map((element) => (
-                  <Checkbox id={element.id} alignSelf='center'>
-                    {element.name}
-                  </Checkbox>
-                ))}
-              </>
-            ))}
-          </VStack>
+              {examinationSubcategories[categoryId].map((element) => (
+                <Checkbox
+                  key={element.id}
+                  id={element.id}
+                  alignSelf='center'
+                  onChange={(e) => updateExaminationsTypesToDisplay(e.target, categoryId)}
+                >
+                  {element.name}
+                </Checkbox>
+              ))}
+            </VStack>
+          ))}
 
           <FormLabel>Korrekt feedback</FormLabel>
           <Textarea
@@ -147,7 +175,16 @@ export default function CreateExamination(props) {
             onChange={(e) => setFeedbackIncorrect(e.target.value)}
           ></Textarea>
 
-          <Button onClick={() => props.updateCaseObject(stepData)}>Klar med steget</Button>
+          <FormLabel>Max antal test</FormLabel>
+          <NumberInput onChange={(valueAsNumber) => setMaxNbrTests(valueAsNumber)}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+
+          <Button onClick={() => updateCaseObject(stepData)}>Klar med steget</Button>
         </FormControl>
       )}
     </>

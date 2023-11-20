@@ -12,26 +12,27 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import CreateIntroduction from './createIntro.jsx';
-import CreateExamination from "./createExamination.jsx";
-import CreateDiagnosis from "./createDiagnosis.jsx";
-import CreateTreatment from "./createTreatment.jsx";
+import CreateExamination from './createExamination.jsx';
+import CreateDiagnosis from './createDiagnosis.jsx';
+import CreateTreatment from './createTreatment.jsx';
 
 export default function CreateCase(props) {
   const [caseObject, setCaseObject] = useState({
+    name: 'default name',
     step: [],
   });
   const [module, setModule] = useState('0');
 
   const updateCaseObject = (updatedState) => {
-    //setCaseObject
-
     setCaseObject({
+      ...caseObject,
       step: [...caseObject.step, updatedState],
     });
   };
 
   const setCaseName = (caseName) => {
     setCaseObject({
+      ...caseObject,
       name: caseName,
     });
   };
@@ -48,7 +49,11 @@ export default function CreateCase(props) {
     <div>
       <FormControl>
         <VStack padding='5'>
-          <Input placeholder='Case-namn' id='caseNameInput' onChange={setCaseName}></Input>
+          <Input
+            placeholder='Case-namn'
+            id='caseNameInput'
+            onChange={(e) => setCaseName(e.target.value)}
+          ></Input>
 
           <RadioGroup defaultValue='0' onChange={(e) => changeModule(e)}>
             <HStack>
@@ -66,40 +71,17 @@ export default function CreateCase(props) {
             )}
 
             {module === '1' && (
-              <CreateExamination getCallToApi={props.getCallToApi}></CreateExamination>
+              <CreateExamination updateCaseObject={updateCaseObject}></CreateExamination>
             )}
 
-            {module === '2' && <p>diagnios</p>}
+            {module === '2' && <CreateDiagnosis></CreateDiagnosis>}
 
-            {module === '3' && <p>treatment</p>}
+            {module === '3' && <CreateTreatment></CreateTreatment>}
 
-                        {module === '1' &&
-                            <CreateExamination
-                            getCallToApi = {props.getCallToApi}
-                            ></CreateExamination>
-                        }
-
-                        {module === '2' &&
-                            <CreateDiagnosis>
-                                
-                            </CreateDiagnosis>
-                        }
-
-                        {module === '3' &&
-                            <CreateTreatment
-                            getCallToApi = {props.getCallToApi}
-                            ></CreateTreatment>
-                        }
-
-                        {module === '4' &&
-                            <p>summary</p>
-                        }
-
-
-                    </div>
-                </VStack>
-
-            </FormControl>
-        </div>
-    )
+            {module === '4' && <p>summary</p>}
+          </div>
+        </VStack>
+      </FormControl>
+    </div>
+  );
 }

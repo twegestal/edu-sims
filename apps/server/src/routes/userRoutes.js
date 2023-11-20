@@ -123,56 +123,53 @@ export const getUserRoutes = () => {
     //await object.end_user.truncate();
     //metoden ovan funkar inte när det finns foreign key constraints, jag blev lite skraj och har inte fortsatt :)
     res.status(200).json('All users removed');
-    });
+  });
 
   router.get('/getAllUsers', async (req, res, next) => {
-
     const request_user = await object.end_user.findOne({
       where: {
         id: req.header('user_id'),
       },
     });
     //Checks if the user_id the request comes with belongs to an admin
-    if (request_user.is_admin == true){
+    if (request_user.is_admin == true) {
       const user = await object.end_user.findAll();
 
       if (user === null) {
         res.status(404).json('No users found');
       } else {
         res.status(200).json(user);
-      } 
+      }
     } else {
       res.status(404).json('Only admins can perform this request');
     }
   });
 
   router.put('/clearUserInfo', async (req, res, next) => {
-
     function generatePass() {
-        let pass = '';
-        let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-            'abcdefghijklmnopqrstuvwxyz0123456789@#$';
-    
-        for (let i = 1; i <= 8; i++) {
-            let char = Math.floor(Math.random()
-                * str.length + 1);
-    
-            pass += str.charAt(char)
-        }
-    
-        return pass;
+      let pass = '';
+      let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
+      for (let i = 1; i <= 8; i++) {
+        let char = Math.floor(Math.random() * str.length + 1);
+
+        pass += str.charAt(char);
+      }
+
+      return pass;
     }
 
     const result = await object.end_user.update(
-    {
-      email: 'DeletedUser',
-      password: generatePass(),
-    },
-    {
-      where: {
-        id: req.header('user_id'),
+      {
+        email: 'DeletedUser',
+        password: generatePass(),
       },
-    });
+      {
+        where: {
+          id: req.header('user_id'),
+        },
+      },
+    );
 
     if (result === null) {
       res.status(404).json('No users found');
@@ -181,14 +178,10 @@ export const getUserRoutes = () => {
     }
   });
 
-
   router.post('/createUserGroup', async (req, res, next) => {
-
-    const result = await object.user_group.create(
-      {
-        name: req.header('name'),
-      },
-    );
+    const result = await object.user_group.create({
+      name: req.header('name'),
+    });
 
     if (result === null) {
       res.status(404).json('No group created');

@@ -16,23 +16,19 @@ import {
   CardHeader,
   CardBody,
   Text,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 
-
-
-
 export default function ManageUsers(props) {
-  const { getAllUsers, allUsers, clearUserInfo, createUserGroup, createdUserGroup} = useUser();
+  const { getAllUsers, allUsers, clearUserInfo, createUserGroup, createdUserGroup } = useUser();
   const { user } = useAuth();
-  const toast = useToast()
+  const toast = useToast();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [link, setLink] = useState('');
   const [userRemoved, setUserRemoved] = useState('');
-
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -44,20 +40,19 @@ export default function ManageUsers(props) {
 
   useEffect(() => {
     //Ändra URL till serverns domän
-    const url = 'http://localhost:5173'
-    setLink(url + '/register?groupId=' + createdUserGroup.id)
+    const url = 'http://localhost:5173';
+    setLink(url + '/register?groupId=' + createdUserGroup.id);
   }, [createdUserGroup]);
 
   useEffect(() => {
-
-    if(userRemoved != ''){
+    if (userRemoved != '') {
       toast({
         title: 'Information rensad',
         description: 'Information kopplad till användaren ' + userRemoved + ' har tagits bort',
         status: 'success',
         duration: 9000,
         isClosable: true,
-      })
+      });
     }
 
     const fetchUsers = async () => {
@@ -73,8 +68,8 @@ export default function ManageUsers(props) {
     This is done to be able to keep statistics consistent.
     */
     if (confirm('Är du säker på att du vill ta bort användaren?')) {
-      await clearUserInfo(userId)
-      setUserRemoved(userEmail)
+      await clearUserInfo(userId);
+      setUserRemoved(userEmail);
     }
   }
 
@@ -83,27 +78,23 @@ export default function ManageUsers(props) {
     setInputUserGroup(event.target.value);
   };
 
-
   const generateRegLink = () => {
-    if(inputUserGroup.length > 0){
-      createUserGroup(inputUserGroup)
+    if (inputUserGroup.length > 0) {
+      createUserGroup(inputUserGroup);
     }
-
   };
-
 
   return (
     <Flex direction={'column'} justifyContent={'space-between'}>
-
-      <Box mb="5%">
+      <Box mb='5%'>
         <h2>Hantera användare</h2>
       </Box>
 
-      <Box mb="5%">
+      <Box mb='5%'>
         <h3>Skapa registreringslänk för nya användare</h3>
         <FormControl>
           <Flex direction={'row'}>
-            <Input 
+            <Input
               placeholder='Skriv namnet på den nya användargrupp länken skall skapas för'
               value={inputUserGroup}
               onChange={handleInputUserGroupChange}
@@ -119,7 +110,14 @@ export default function ManageUsers(props) {
             <CardBody>
               <Flex direction={'row'}>
                 <Text>{link}</Text>
-                <Button onClick={() => {navigator.clipboard.writeText(link)}} marginLeft='1%'>Kopiera</Button>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(link);
+                  }}
+                  marginLeft='1%'
+                >
+                  Kopiera
+                </Button>
               </Flex>
             </CardBody>
           </Card>
@@ -138,24 +136,25 @@ export default function ManageUsers(props) {
               </Tr>
             </Thead>
             <Tbody>
-              {allUsers.map((aUser, index) => (
-                aUser.email !== "DeletedUser" && (
-                  <Tr key={index}>
-                    <Td>{aUser.email}</Td>
-                    <Td>
-                      <FormControl display={'flex'} flexDirection={'column'}>
-                        <Input/>
-                        <Button> Sätt nytt lösenord </Button>
-                      </FormControl>
-                    </Td>
-                    <Td>
-                      <Button onClick={(e) => removeUser(aUser.id, aUser.email)}>
-                        <DeleteIcon />
-                      </Button>
-                    </Td>
-                  </Tr>
-                )
-              ))}
+              {allUsers.map(
+                (aUser, index) =>
+                  aUser.email !== 'DeletedUser' && (
+                    <Tr key={index}>
+                      <Td>{aUser.email}</Td>
+                      <Td>
+                        <FormControl display={'flex'} flexDirection={'column'}>
+                          <Input />
+                          <Button> Sätt nytt lösenord </Button>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <Button onClick={(e) => removeUser(aUser.id, aUser.email)}>
+                          <DeleteIcon />
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ),
+              )}
             </Tbody>
           </Table>
         </TableContainer>

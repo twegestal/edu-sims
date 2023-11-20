@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import { ZodError } from 'zod';
 
 export const handleZodErrors = (error) => {
   if (error instanceof ZodError) {
@@ -14,8 +14,8 @@ export const handleZodErrors = (error) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const errorsToString = (errors) => {
-  return errors.map(error => error.message).join('.\n');
-}
+  return errors.map((error) => error.message).join('.\n');
+};
