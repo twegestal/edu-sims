@@ -148,4 +148,5 @@ export {
   treatment_subtype,
   treatment_type,
   treatment,
+  user_group,
 };

@@ -123,7 +123,7 @@ export const getUserRoutes = () => {
     //await object.end_user.truncate();
     //metoden ovan funkar inte när det finns foreign key constraints, jag blev lite skraj och har inte fortsatt :)
     res.status(200).json('All users removed');
-  });
+    });
 
   router.get('/getAllUsers', async (req, res, next) => {
 
@@ -186,14 +186,14 @@ export const getUserRoutes = () => {
 
     const result = await object.user_group.create(
       {
-        name: req.header('user_id'),
+        name: req.header('name'),
       },
     );
 
     if (result === null) {
-      res.status(404).json('No users found');
+      res.status(404).json('No group created');
     } else {
-      res.status(200).json();
+      res.status(200).json(result);
     }
   });
 
