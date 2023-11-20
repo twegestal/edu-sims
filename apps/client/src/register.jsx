@@ -13,6 +13,7 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { useAuth } from './hooks/useAuth';
 import { validateRegistration, errorsToString } from 'api';
 import { useAlert } from './hooks/useAlert.jsx';
+import { useParams } from 'react-router-dom';
 
 export default function Register(props) {
   const [emailInput, setEmailInput] = useState('');
@@ -22,9 +23,9 @@ export default function Register(props) {
   const { register } = useAuth();
   const { setAlert } = useAlert();
   const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
+  let { groupId } = useParams();
 
   const postToRegister = async () => {
-    const groupId = props.groupId;
     if (passwordInput === confirmPasswordInput) {
       const data = {
         email: emailInput,
