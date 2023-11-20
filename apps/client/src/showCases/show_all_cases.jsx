@@ -11,6 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
+import StartCase from './startCase.jsx';
 
 export default function ShowAllCases() {
   const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } = useCases();
@@ -82,9 +83,7 @@ export default function ShowAllCases() {
                   {user.isAdmin && (
                     <Flex justify={'space-evenly'} direction={'column'}>
                       <p>Name: {caseItem.name}</p>
-                      <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
-                      </Link>
+                      <StartCase caseId = {caseItem.id} />
                       <Button colorScheme='teal' marginBottom='5%'>Redigera fallet</Button>
                       {(caseItem.published == false || caseItem.published == null) && (
                           <Button marginBottom='5%'
@@ -110,9 +109,7 @@ export default function ShowAllCases() {
                   {user.isAdmin == false && caseItem.published && (
                     <Flex direction={'column'}>
                       <p>{caseItem.name}</p>
-                      <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
-                      </Link>
+                      <StartCase caseId = {caseItem.id}/>
                     </Flex>
                   )}
                 </Box>

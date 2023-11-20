@@ -277,8 +277,50 @@ export const getCaseRoutes = () => {
     }
   });
 
+  router.post('/createAttempt', async (req, res, next) => {
+    if (req.header('case_id') == '') {
+      res.status(404).json('Not Found');
+    } else {
+      const result = await object.attempt.create(
+        {
+          user_id: req.header('user_id'),
+          case_id: req.header('case_id'),
+          //Timestamp_started is automaticly created by Sequlize 
+        },
+      );
+      res.status(200).json(result);
+    }
+  });
+
+
+  router.put('/updateAttempt', async (req, res, next) => {
+    if (req.header('case_id') == '') {
+      res.status(404).json('Not Found');
+    } else {
+      const result = await object.attempt.update(
+        {
+          is_finished: req.header('is_finished'),
+          faults: req.header('faults'),
+          timestamp_finished: req.header('timestamp_finished'),
+          correct_diagnosis: req.header('correct_diagnosis'),
+          nbr_of_tests_performed: req.header('nbr_of_tests_performed')
+        },
+        {
+          where: {
+            user_id: req.header('user_id'),
+            case_id: req.header('case_id')
+          },
+        }
+      );
+      res.status(200).json(result);
+    }
+  });
+
+
   return router;
 };
+
+
 
 /*
         Hämta specific case

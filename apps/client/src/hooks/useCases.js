@@ -9,6 +9,10 @@ export const useCases = () => {
   const getIntroductionStepApi = useApi('getIntroductionStep');
   const getSummaryStepApi = useApi('getSummaryStep');
   const publishCaseApi = useApi('publishCase');
+  const createAttemptApi = useApi('createAttempt');
+  const updateAttemptApi = useApi('updateAttempt');
+
+
 
 
   const [cases, setCases] = useState([]);
@@ -79,6 +83,40 @@ export const useCases = () => {
     }
   };
 
+
+  const createAttempt = async (user_id, case_id) => {
+    try {
+      const result = await createAttemptApi({ headers: { user_id: user_id, case_id: case_id} });
+      if (result) {
+        return
+      }
+    } catch (error) {
+      console.error('error fetch summary step: ', error);
+    }
+  };
+
+
+  const updateAttempt = async (user_id, case_id, is_finished, faults, timestamp_finished, correct_diagnosis, nbr_of_tests_performed) => {
+    try {
+      const result = await updateAttemptApi({
+        headers: {
+          user_id: user_id,
+          case_id: case_id,
+          is_finished: is_finished,
+          faults: faults,
+          timestamp_finished: timestamp_finished,
+          correct_diagnosis: correct_diagnosis,
+          nbr_of_tests_performed: nbr_of_tests_performed
+        }
+      });
+      if (result) {
+        return
+      }
+    } catch (error) {
+      console.error('error fetch summary step: ', error);
+    }
+  };
+
   return {
     cases,
     getAllCases,
@@ -92,5 +130,7 @@ export const useCases = () => {
     summaryStep,
     publishCase,
     newPublishment,
+    createAttempt,
+    updateAttempt,
   };
 };

@@ -34,6 +34,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
+import { useAuth } from './hooks/useAuth.jsx';
+
 
 export default function PerformCase() {
   let { caseid } = useParams();
@@ -61,7 +63,9 @@ export default function PerformCase() {
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  const { caseById, getCaseById } = useCases();
+  const { caseById, getCaseById, updateAttempt } = useCases();
+  const { user } = useAuth();
+
 
   useEffect(() => {
     const getCaseList = async () => {
@@ -82,6 +86,24 @@ export default function PerformCase() {
     let nextIndex = currentIndex + 1;
 
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
+
+    //Variabels needed to update the attempt record
+    const isFinished = false;
+    const faults = 0;
+    const timestamp_finished = '2023-11-20 15:35:13.918+01';
+    const correct_diagnosis = false;
+    const nbr_of_tests_performed = 0;
+
+    //Updates the attempt record
+    updateAttempt(
+      user.id,
+      caseid,
+      isFinished,
+      faults,
+      timestamp_finished,
+      correct_diagnosis,
+      nbr_of_tests_performed,
+    )
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);

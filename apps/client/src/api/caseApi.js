@@ -47,4 +47,10 @@ export const caseApi = (apiClient) => ({
 
   publishCase: async (headers) =>
     apiClient.put(`${prefix}publishCase`, headers).json(),
+
+  createAttempt: async (headers) =>
+    apiClient.post(`${prefix}createAttempt`, headers).json(),
+
+  updateAttempt: async (headers) =>
+    apiClient.put(`${prefix}updateAttempt`, headers).json(),
 });

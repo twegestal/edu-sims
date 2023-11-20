@@ -31,6 +31,9 @@ export const attempt = db.define(
     correct_diagnosis: {
       type: DataTypes.BOOLEAN,
     },
+    nbr_of_tests_performed: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     // Other model are go here
