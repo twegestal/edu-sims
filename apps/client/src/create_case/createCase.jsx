@@ -74,9 +74,9 @@ export default function CreateCase(props) {
               <CreateExamination updateCaseObject={updateCaseObject}></CreateExamination>
             )}
 
-            {module === '2' && <CreateDiagnosis></CreateDiagnosis>}
+            {module === '2' && <CreateDiagnosis updateCaseObject={updateCaseObject}></CreateDiagnosis>}
 
-            {module === '3' && <CreateTreatment></CreateTreatment>}
+            {module === '3' && <CreateTreatment updateCaseObject={updateCaseObject}></CreateTreatment>}
 
             {module === '4' && <p>summary</p>}
           </div>

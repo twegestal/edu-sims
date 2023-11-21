@@ -7,10 +7,14 @@ import {
   Checkbox,
   Button,
   Input,
+  Heading,
+  Card,
+  CardBody
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
+import { useCreateCase } from '../hooks/useCreateCase';
 
-export default function CreateTreatment(props) {
+export default function CreateTreatment({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
     module_type_identifer: 3,
     prompt: 'default',
@@ -24,16 +28,14 @@ export default function CreateTreatment(props) {
   const [treatmentList, setTreatmentList] = useState();
   const [loading, setLoading] = useState(true);
 
+  const { getTreatmentTypes, getTreatmentSubtypes, getTreatmentList } = useCreateCase();
+
+
   useEffect(() => {
     const fetchTreatmentTypes = async () => {
-      const headers = {
-        'Content-type': 'application/json',
-      };
 
-      const treatmentTypes = await props.getCallToApi(
-        'http://localhost:5173/api/case/getTreatmentTypes',
-        headers,
-      );
+      const treatmentTypes = await getTreatmentTypes();
+
       const treatmentTypeMap = {};
       const treatmentSubtypeMap = {};
       const treatmentListMap = {};
@@ -82,29 +84,15 @@ export default function CreateTreatment(props) {
   }, [treatmentList]);
 
   const fetchSubtypes = async (id) => {
-    const headers = {
-      'Content-type': 'application/json',
-      id: id,
-    };
 
-    const response = await props.getCallToApi(
-      'http://localhost:5173/api/case/getTreatmentSubtypes',
-      headers,
-    );
+    const response = await getTreatmentSubtypes(id);
 
     return response;
   };
 
   const fetchTreatments = async (treatmentSubtypeId) => {
-    const headers = {
-      'Content-type': 'application/json',
-      treatment_subtype_id: treatmentSubtypeId,
-    };
 
-    const response = await props.getCallToApi(
-      'http://localhost:5173/api/case/getTreatmentList',
-      headers,
-    );
+    const response = await getTreatmentList(treatmentSubtypeId);
 
     return response;
   };
@@ -115,6 +103,23 @@ export default function CreateTreatment(props) {
       prompt: prompt,
     });
   };
+
+  const addTreatment = (treatmentId) => {
+    const dose = document.getElementById('input' + treatmentId).value;
+    let addedTreatments = stepData.step_specific_treatments;
+    addedTreatments.push({
+      treatmentId: treatmentId,
+      value: dose,
+    })
+    setStepData({
+      ...stepData,
+      step_specific_treatments: addedTreatments,
+    })
+  }
+
+  useEffect(() =>  {
+    console.log('stepData:', stepData)
+  }, [stepData])
 
   return (
     <>
@@ -130,13 +135,26 @@ export default function CreateTreatment(props) {
 
             {Object.entries(treatmentTypes).map(([id, name]) => (
               <>
-                <h2>{name}</h2>
+                <Heading as='h2' size='lg'>{name}</Heading>
 
                 {treatmentSubtypes[id].map((treatmentSubtype, index) => (
                   <>
-                    <Checkbox id={treatmentSubtype.id}>{treatmentSubtype.name}</Checkbox>
-                    <Input id={'input' + id} placeholder='dosering'></Input>
-                    <Button>Lägg till behandling</Button>
+                    <Heading as='h3' size='md'>{treatmentSubtype.name}</Heading>
+                    <VStack>
+                      {treatmentList[treatmentSubtype.id].map((treatment, index) => (
+                        <Card>
+                          <CardBody>
+                            <Checkbox id={treatment.id}>{treatment.name}</Checkbox>
+                            <Input id={'input' + treatment.id} placeholder='dosering'></Input>
+                            <Button onClick={() => {addTreatment(treatment.id)}}>Lägg till behandling</Button>
+                          </CardBody>
+                        </Card>
+                      ))}
+                    </VStack>
+
+                    
+                    
+                    
                   </>
                 ))}
               </>

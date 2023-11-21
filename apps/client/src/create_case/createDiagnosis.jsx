@@ -19,8 +19,9 @@ import {
 import { CloseIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { useCases } from '../hooks/useCases';
 import LoadingSkeleton from '../loadingSkeleton';
+import { useDiagnosis } from '../hooks/useDiagnosis';
 
-export default function CreateDiagnosis(props) {
+export default function CreateDiagnosis({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
     module_type_identifier: 2,
     prompt: 'default',
@@ -28,22 +29,48 @@ export default function CreateDiagnosis(props) {
     feedback_correct: 'default',
     feedback_incorrect: 'default',
   });
-  const [findDiagnosis, setFindDiagnosis] = useState([]);
+  const [diagnosisNames, setDiagnosisNames] = useState();
   const [resultDiagnosis, setResultDiagnosis] = useState([]);
   const [diagnosisHtml, setDiagnosisHtml] = useState('');
+
   const { medicalFields, getMedicalFields } = useCases();
+  const { diagnosisList, getDiagnosisList } = useDiagnosis();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMedicalFields = async () => {
       await getMedicalFields();
+      
     };
 
     const arr = ['s1', 's2', 's3', 's4'];
     setResultDiagnosis(arr);
 
     fetchMedicalFields();
+    
+    
   }, []);
+
+  const changeMedicalField = async (medicalFieldId) => {
+    await getDiagnosisList(medicalFieldId);
+  }
+
+  useEffect(() => {
+    if (diagnosisList.length > 0) {
+        let arr = [];
+        const diagnosisMap = {};
+        diagnosisList.map((diagnosis, index) => (
+            arr[index] = diagnosis.name,
+            diagnosisMap[diagnosis.name] = diagnosis.id
+        ));
+        setDiagnosisNames(diagnosisMap);
+        setResultDiagnosis(arr);
+
+
+    }
+    
+    console.log(diagnosisList);
+  }, [diagnosisList]);
 
   const setPrompt = (prompt) => {
     setStepData({
@@ -55,7 +82,7 @@ export default function CreateDiagnosis(props) {
   const setDiagnosis = (diagnosis) => {
     setStepData({
       ...stepData,
-      diagnosis: diagnosis,
+      diagnosis: diagnosisNames[diagnosis],
     });
   };
   const setFeedbackCorrect = (feedback) => {
@@ -75,6 +102,12 @@ export default function CreateDiagnosis(props) {
   useEffect(() => {
     console.log(stepData);
   }, [stepData]);
+
+  useEffect(() => {
+    if (medicalFields.length > 0) {
+        setLoading(false);
+    }
+  }, [medicalFields]);
 
   const filterDiagnosis = (searchString) => {
     var filterdList = [];
@@ -118,6 +151,14 @@ export default function CreateDiagnosis(props) {
             ></Textarea>
             <Card>
               <FormLabel>Ange korrekt diagnos</FormLabel>
+              <RadioGroup onChange={(e) => changeMedicalField(e)}>
+                <HStack>
+                    {medicalFields.map((element) => (
+                        <Radio value={element.id}>{element.name}</Radio>
+                    ))}
+                </HStack>
+                    </RadioGroup>
+              
               <Input
                 id='inputField'
                 placeholder='Sök korrekt diagnos här'
@@ -137,7 +178,7 @@ export default function CreateDiagnosis(props) {
               onChange={(e) => setFeedbackIncorrect(e.target.value)}
             ></Textarea>
 
-            <Button margin={'5'} onClick={() => props.updateCaseObject(stepData)}>
+            <Button margin={'5'} onClick={() => updateCaseObject(stepData)}>
               Klar med steget
             </Button>
           </FormControl>
