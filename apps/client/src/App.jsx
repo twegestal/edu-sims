@@ -21,7 +21,7 @@ export default function App() {
     <>
       {showAlert && <AlertBanner />}
       <Routes>
-          <Route path='/register/:groupId' element={<Register />}></Route>
+        <Route path='/register/:groupId' element={<Register />}></Route>
       </Routes>
       {user ? (
         <>

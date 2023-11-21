@@ -9,7 +9,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { useAuth } from './hooks/useAuth';
 import { validateRegistration, errorsToString } from 'api';
 import { useAlert } from './hooks/useAlert.jsx';
@@ -60,12 +60,12 @@ export default function Register(props) {
               isOpen={showTooltip}
               placement={placement}
               shouldWrapChildren
-              trigger={{ base: "click", md: "hover" }}
+              trigger={{ base: 'click', md: 'hover' }}
               hasArrow
             >
               <InfoOutlineIcon
-                color="gray.500"
-                _focus={{outline: 'none'}}
+                color='gray.500'
+                _focus={{ outline: 'none' }}
                 onClick={() => setShowTooltip(!showTooltip)}
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}

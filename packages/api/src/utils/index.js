@@ -1,1 +1,1 @@
-export * from './validationUtils.js'
+export * from './validationUtils.js';

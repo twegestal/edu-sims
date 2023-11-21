@@ -26,6 +26,12 @@ export const end_user = db.define(
     group_id: {
       type: DataTypes.TEXT,
     },
+    refresh_token: {
+      type: DataTypes.TEXT,
+    },
+    last_login: {
+      type: DataTypes.DATE,
+    },
   },
   {
     // Other model are go here

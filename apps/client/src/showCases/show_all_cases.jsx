@@ -13,7 +13,8 @@ import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 
 export default function ShowAllCases() {
-  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } = useCases();
+  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
+    useCases();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -83,26 +84,36 @@ export default function ShowAllCases() {
                     <Flex justify={'space-evenly'} direction={'column'}>
                       <p>Name: {caseItem.name}</p>
                       <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
+                        <Button colorScheme='teal' marginBottom='5%'>
+                          Starta fallet
+                        </Button>
                       </Link>
-                      <Button colorScheme='teal' marginBottom='5%'>Redigera fallet</Button>
+                      <Button colorScheme='teal' marginBottom='5%'>
+                        Redigera fallet
+                      </Button>
                       {(caseItem.published == false || caseItem.published == null) && (
-                          <Button marginBottom='5%'
-                            onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
-                            colorScheme='teal'
-                          >
-                            Publicera fallet
-                          </Button>
-                        )}
+                        <Button
+                          marginBottom='5%'
+                          onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
+                          colorScheme='teal'
+                        >
+                          Publicera fallet
+                        </Button>
+                      )}
                       {caseItem.published && (
-                        <Button marginBottom='5%'
+                        <Button
+                          marginBottom='5%'
                           onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                           colorScheme='teal'
                         >
                           Avpublicera fallet
                         </Button>
                       )}
-                      <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal' marginBottom='5%'>
+                      <Button
+                        onClick={(e) => removeCase(caseItem.id)}
+                        colorScheme='teal'
+                        marginBottom='5%'
+                      >
                         Ta bort fallet
                       </Button>
                     </Flex>
@@ -111,7 +122,9 @@ export default function ShowAllCases() {
                     <Flex direction={'column'}>
                       <p>{caseItem.name}</p>
                       <Link to={'/case/caseid=' + caseItem.id}>
-                        <Button colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
+                        <Button colorScheme='teal' marginBottom='5%'>
+                          Starta fallet
+                        </Button>
                       </Link>
                     </Flex>
                   )}
