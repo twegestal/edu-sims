@@ -19,8 +19,12 @@ export const useCases = () => {
 
   const getAllCases = async () => {
     try {
-      const result = await getAllCasesApi();
-      setCases(result);
+      const response = await getAllCasesApi();
+      if (response.status === 200) {
+        setCases(response.data);
+      } else {
+        
+      }
     } catch (error) {
       console.error('Error fetching cases: ', error);
     }
@@ -28,8 +32,8 @@ export const useCases = () => {
 
   const getMedicalFields = async () => {
     try {
-      const result = await getMedicalFieldsApi();
-      setMedicalFields(result);
+      const response = await getMedicalFieldsApi();
+      setMedicalFields(response);
     } catch (error) {
       console.error('error fetching medical fields: ', error);
     }
@@ -37,8 +41,8 @@ export const useCases = () => {
 
   const getCaseById = async (id) => {
     try {
-      const result = await getCaseByIdApi({ headers: { case_id: id } });
-      setCaseById(result);
+      const response = await getCaseByIdApi({ headers: { case_id: id } });
+      setCaseById(response);
     } catch (error) {
       console.error('Error fetching case by id: ', error);
     }
@@ -46,9 +50,9 @@ export const useCases = () => {
 
   const getIntroductionStep = async (id) => {
     try {
-      const result = await getIntroductionStepApi({ headers: { id: id } });
-      if (result) {
-        setIntroductionStep(result);
+      const response = await getIntroductionStepApi({ headers: { id: id } });
+      if (response) {
+        setIntroductionStep(response);
       }
     } catch (error) {
       console.error('Error fetch introduction step', error);
@@ -57,9 +61,9 @@ export const useCases = () => {
 
   const getSummaryStep = async (id) => {
     try {
-      const result = await getSummaryStepApi({ headers: { id: id } });
-      if (result) {
-        setSummaryStep(result);
+      const response = await getSummaryStepApi({ headers: { id: id } });
+      if (response) {
+        setSummaryStep(response);
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);
@@ -68,8 +72,8 @@ export const useCases = () => {
 
   const publishCase = async (id, isPublished) => {
     try {
-      const result = await publishCaseApi({ headers: { id: id, isPublished: isPublished } });
-      if (result) {
+      const response = await publishCaseApi({ headers: { id: id, isPublished: isPublished } });
+      if (response) {
         setNewPublishment(isPublished + id);
         return;
       }

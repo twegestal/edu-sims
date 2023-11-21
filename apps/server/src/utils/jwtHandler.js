@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import * as object from '../models/object_index.js';
 
 export const createToken = (id) => {
-  return jwt.sign({ id: id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ id: id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
 };
 
 export const createRefreshCookie = (id) => {

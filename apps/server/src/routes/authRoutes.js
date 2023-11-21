@@ -70,7 +70,7 @@ export const authRouter = () => {
     }
   });
 
-  router.patch('/update-password', async (req, res, next) => {
+  router.patch('/reset-password', async (req, res, next) => {
     const { user_id, new_password } = req.body;
     const user = await object.end_user.findOne({
       where: {

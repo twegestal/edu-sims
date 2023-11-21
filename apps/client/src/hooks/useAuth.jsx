@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const logoutApi = useApi('logout');
   const resetPasswordApi = useApi('resetPassword');
   const registerApi = useApi('register');
+  const refreshApi = useApi('refresh');
 
   const login = async (email, password) => {
     try {
@@ -48,6 +49,19 @@ export const AuthProvider = ({ children }) => {
       console.error('Registration failed', error);
     }
   };
+
+  const refresh = async () => {
+    try {
+      const respose = await refreshApi();
+      if (respose.data.token) {
+        const newUser = user;
+        newUser.token = respose.data.token;
+        setUser(newUser);
+      }
+    } catch (error) {
+      console.error('error refreshing', error);
+    }
+  }
 
   const resetPassword = async (email) => {
     try {

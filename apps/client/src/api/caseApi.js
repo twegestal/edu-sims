@@ -3,11 +3,11 @@ const prefix = 'case/';
 export const caseApi = (apiClient) => ({
   createCase: async (data) => apiClient.post(`${prefix}createCase`, { json: data }).json(),
 
-  getAllCases: async () => apiClient.get(`${prefix}getAllCases`).json(),
+  getAllCases: async () => packageResponse(apiClient.get(`${prefix}getAllCases`)),
 
-  getCaseById: async (headers) => apiClient.get(`${prefix}getCaseById`, headers).json(),
+  getCaseById: async (headers) => packageResponse(apiClient.get(`${prefix}getCaseById`, headers)),
 
-  getMedicalFields: async () => apiClient.get(`${prefix}getMedicalFields`).json(),
+  getMedicalFields: async () => packageResponse(apiClient.get(`${prefix}getMedicalFields`)),
 
   getIntroductionStep: async (headers) =>
     apiClient.get(`${prefix}getIntroductionStep`, headers).json(),
@@ -47,3 +47,7 @@ export const caseApi = (apiClient) => ({
 
   publishCase: async (headers) => apiClient.put(`${prefix}publishCase`, headers).json(),
 });
+
+const packageResponse = async (response) => {
+  return { status: response.status, headers: response.headers, data: await response.json() };
+}
