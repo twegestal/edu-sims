@@ -9,7 +9,12 @@ import {
   Input,
   Heading,
   Card,
-  CardBody
+  CardBody,
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+  AccordionIcon
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -124,43 +129,58 @@ export default function CreateTreatment({ updateCaseObject }) {
   return (
     <>
       {loading ? (
-        <LoadingSkeleton></LoadingSkeleton>
+        <LoadingSkeleton />
       ) : (
-        <FormControl>
-          <FormLabel>Prompt</FormLabel>
-          <Textarea placeholder='Prompt' onChange={(e) => setPrompt(e.target.value)}></Textarea>
-
-          <VStack>
-            <FormLabel>Stegspecifika behandlingar + dosering</FormLabel>
-
-            {Object.entries(treatmentTypes).map(([id, name]) => (
-              <>
-                <Heading as='h2' size='lg'>{name}</Heading>
-
-                {treatmentSubtypes[id].map((treatmentSubtype, index) => (
-                  <>
-                    <Heading as='h3' size='md'>{treatmentSubtype.name}</Heading>
-                    <VStack>
-                      {treatmentList[treatmentSubtype.id].map((treatment, index) => (
-                        <Card>
-                          <CardBody>
-                            <Checkbox id={treatment.id}>{treatment.name}</Checkbox>
-                            <Input id={'input' + treatment.id} placeholder='dosering'></Input>
-                            <Button onClick={() => {addTreatment(treatment.id)}}>Lägg till behandling</Button>
-                          </CardBody>
-                        </Card>
+        <VStack>
+          <FormControl align='stretch' spacing='10'>
+            <FormLabel>Prompt</FormLabel>
+            
+            <Textarea placeholder='Prompt' onChange={(e) => setPrompt(e.target.value)}></Textarea>
+            
+            <Accordion allowToggle>  
+              <AccordionItem>
+                <AccordionButton>
+                  <FormLabel>Stegspecifika behandlingar + dosering</FormLabel>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel>
+                  {Object.entries(treatmentTypes).map(([id, name]) => (
+                    <>
+                      <Heading as='h2' size='lg'>{name}</Heading>
+                  
+                      {treatmentSubtypes[id].map((treatmentSubtype, index) => (
+                        <>
+                          <Heading as='h3' size='md'>{treatmentSubtype.name}</Heading>
+                          
+                          <VStack>
+                            {treatmentList[treatmentSubtype.id].map((treatment, index) => (
+                              <Card>
+                                <CardBody>
+                                  <Checkbox id={treatment.id}>{treatment.name}</Checkbox>
+                                  <Input id={'input' + treatment.id} placeholder='dosering'></Input>
+                                  <Button onClick={() => {addTreatment(treatment.id)}}>Lägg till behandling</Button>
+                                </CardBody>
+                              </Card>
+                            ))}
+                          </VStack>
+                        </>
                       ))}
-                    </VStack>
+                    </>
+                  ))}
+                </AccordionPanel>       
+              </AccordionItem>
 
-                    
-                    
-                    
-                  </>
-                ))}
-              </>
-            ))}
-          </VStack>
-        </FormControl>
+              <AccordionItem>
+                <AccordionButton>
+                  <FormLabel>Behandlingar att visa för användaren</FormLabel>
+                </AccordionButton>
+              </AccordionItem>         
+            </Accordion>
+            
+            <Button onClick={() => updateCaseObject(stepData)}>Klar med steget</Button>
+          </FormControl>
+        </VStack>
+        
       )}
     </>
   );
