@@ -129,35 +129,52 @@ describe('registration validation', () => {
 
 describe('testing jwt tokens', () => {
   it('a valid token should be returned when logging in regular user', async () => {
-     const user = getRegularUser();
-     
-     await requestWithSupertest
-     .post('/auth/login')
-     .send({
-      email: user.email,
-      password: user.password,
-     })
-     .expect(200)
-     .then((res) => {
-      console.log('res.body: ', res.body);
-      expect(res.body.token).toBeDefined();
-     })
+    const user = getRegularUser();
+
+    await requestWithSupertest
+      .post('/auth/login')
+      .send(user)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.token).toBeDefined();
+      });
   });
 
   it('logging in with a user that does not exist should return http status 404', async () => {
     const user = {
       email: 'apannnnnn@apan.se',
-      password: 'Aa1!Aa1!'
-    }
+      password: 'Aa1!Aa1!',
+    };
 
     await requestWithSupertest
-     .post('/auth/login')
-     .send(user)
-     .expect(404)
-     .then((res) => {
-      expect(res.body.token).toBeUndefined();
-     })
+      .post('/auth/login')
+      .send(user)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.token).toBeUndefined();
+      });
+  });
+  it('should return refresh cookie', async () => {
+    const user = getRegularUser();
+
+    await requestWithSupertest
+      .post('/auth/login')
+      .send(user)
+      .expect(200)
+      .then((res) => {
+        expect(res.headers['set-cookie']).toBeDefined();
+      });
   });
 
-  it('')
+  it('should return valid token, when calling refresh endpoint', async () => {
+    const user = getRegularUser();
+
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.headers['set-cookie'][0].split('refreshToken=')[1].split(';')[0];
+    const refreshResponse = await requestWithSupertest
+      .post('/auth/refresh')
+      .set('Cookie', `refreshToken=${token}`);
+
+    expect(refreshResponse.body.token).toBeDefined();
+  });
 });

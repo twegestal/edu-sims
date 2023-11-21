@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { getUserRoutes } from './routes/userRoutes.js';
 import { getCaseRoutes } from './routes/caseRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
@@ -11,12 +12,11 @@ export const createServer = () => {
     res.json('Hello, world!');
   });
   app.use(express.json());
+  app.use(cookieParser());
   app.use('/auth', authRouter());
   app.use(validateToken);
   app.use('/user', getUserRoutes());
   app.use('/case', getCaseRoutes());
-  
-  
 
   return app;
 };

@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { createRefreshCookie, createToken } from '../utils/jwtHandler.js';
+import { createRefreshCookie, createToken, validateRefreshToken } from '../utils/jwtHandler.js';
 import { comparePasswords, hashPassword } from '../utils/crypting.js';
 import * as object from '../models/object_index.js';
 
 export const authRouter = () => {
   const router = Router();
 
-  router.post('/login', async (req, res, next) => {
+  router.post('/login', async (req, res, _next) => {
     const { email, password } = req.body;
     const user = await object.end_user.findOne({
       where: {
@@ -18,8 +18,8 @@ export const authRouter = () => {
       res.status(404).send({ message: 'Username or password incorrect' });
     } else {
       if (await comparePasswords(password, user.password)) {
-        const token = createToken(user);
-        const refreshToken = createRefreshCookie(user);
+        const token = createToken(user.id);
+        const refreshToken = createRefreshCookie(user.id);
         user.refresh_token = refreshToken;
         user.last_login = Date();
         try {
@@ -87,6 +87,18 @@ export const authRouter = () => {
       });
 
       res.status(200).send('Password updated successfully');
+    }
+  });
+
+  router.post('/refresh', async (req, res, _next) => {
+    const token = req.cookies['refreshToken'];
+    const userId = await validateRefreshToken(token, res);
+    console.log('WHAT DO WE HAVE HERE?', userId);
+    if (userId) {
+      const token = createToken(userId);
+      res.status(200).send({ token: token });
+    } else {
+      res.status(401).send('Invalid refresh token');
     }
   });
 

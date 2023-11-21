@@ -1,21 +1,12 @@
 import jwt from 'jsonwebtoken';
+import * as object from '../models/object_index.js';
 
-export const createToken = (user) => {
-  const payload = {
-    email: user.email,
-    is_admin: user.is_admin,
-    last_login: user.last_login,
-  }
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+export const createToken = (id) => {
+  return jwt.sign({ id: id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 };
 
-export const createRefreshCookie = (user) => {
-  const payload = {
-    email: user.email,
-    is_admin: user.is_admin,
-    last_login: user.last_login,
-  }
-  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+export const createRefreshCookie = (id) => {
+  return jwt.sign({ id: id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 };
 
 export const validateToken = (req, res, next) => {
@@ -24,13 +15,27 @@ export const validateToken = (req, res, next) => {
     return res.status(401).send('No token provided');
   }
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      return res.status(401).send('Invalid token');
-    }
-    //req.user = user;
+  try {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     next();
-  });
+  } catch (error) {
+    return res.status(401).send('Invalid token');
+  }
 };
 
-export const validateRefreshToken = async () => {};
+export const validateRefreshToken = async (refreshToken, res) => {
+  try {
+    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const dbUser = await object.end_user.findOne({
+      attributes: ['refresh_token'],
+      where: {
+        id: user.id,
+      },
+    });
+
+    return dbUser.refresh_token === refreshToken ? user.id : null;
+  } catch (error) {
+    console.error('Error parsing refresh token: ', error);
+    res.status(401).send('Invalid refresh token');
+  }
+};
