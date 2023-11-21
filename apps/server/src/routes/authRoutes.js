@@ -15,7 +15,7 @@ export const authRouter = () => {
     });
 
     if (user === null) {
-      res.status(404).json({ message: 'Username or password incorrect' });
+      res.status(404).send({ message: 'Username or password incorrect' });
     } else {
       if (await comparePasswords(password, user.password)) {
         const token = createToken(user);
@@ -38,7 +38,7 @@ export const authRouter = () => {
             isAdmin: user.is_admin,
           });
       } else {
-        res.status(404).json({ message: 'Username or password incorrect' });
+        res.status(404).send({ message: 'Username or password incorrect' });
       }
     }
   });

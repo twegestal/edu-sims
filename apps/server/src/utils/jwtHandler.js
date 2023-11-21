@@ -1,11 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-export const createToken = async (user) => {
-  return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+export const createToken = (user) => {
+  const payload = {
+    email: user.email,
+    is_admin: user.is_admin,
+    last_login: user.last_login,
+  }
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 };
 
-export const createRefreshCookie = async (user) => {
-  return jwt.sign({ user: user }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+export const createRefreshCookie = (user) => {
+  const payload = {
+    email: user.email,
+    is_admin: user.is_admin,
+    last_login: user.last_login,
+  }
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 };
 
 export const validateToken = (req, res, next) => {

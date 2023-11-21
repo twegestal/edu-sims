@@ -7,14 +7,15 @@ import { validateToken } from './utils/jwtHandler.js';
 export const createServer = () => {
   const app = express();
 
+  app.get('/', (_req, res) => {
+    res.json('Hello, world!');
+  });
   app.use(express.json());
   app.use('/auth', authRouter());
   app.use(validateToken);
   app.use('/user', getUserRoutes());
   app.use('/case', getCaseRoutes());
-  app.get('/', (_req, res) => {
-      res.json('Hello, world!');
-    });
+  
   
 
   return app;
