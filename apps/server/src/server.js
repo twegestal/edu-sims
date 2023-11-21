@@ -9,13 +9,13 @@ export const createServer = () => {
 
   app.use(express.json());
   app.use('/auth', authRouter());
-  app.use(validateToken());
+  app.use(validateToken);
   app.use('/user', getUserRoutes());
   app.use('/case', getCaseRoutes());
-
   app.get('/', (_req, res) => {
-    res.json('Hello, world!');
-  });
+      res.json('Hello, world!');
+    });
+  
 
   return app;
 };

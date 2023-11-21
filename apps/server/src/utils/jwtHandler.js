@@ -8,11 +8,8 @@ export const createRefreshCookie = async (user) => {
   return jwt.sign({ user: user }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 };
 
-export const validateToken = async (req, res, next) => {
-  if (!req.headers['Authorization']) {
-    return res.status(401).send('No token provided');
-  }
-  const token = req.headers['Authorization'].split(' ')[1];
+export const validateToken = (req, res, next) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) {
     return res.status(401).send('No token provided');
   }
@@ -21,7 +18,7 @@ export const validateToken = async (req, res, next) => {
     if (err) {
       return res.status(401).send('Invalid token');
     }
-    req.user = user;
+    //req.user = user;
     next();
   });
 };

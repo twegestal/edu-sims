@@ -3,7 +3,7 @@ import { createRefreshCookie, createToken } from '../utils/jwtHandler.js';
 import { comparePasswords, hashPassword } from '../utils/crypting.js';
 import * as object from '../models/object_index.js';
 
-export const authRouter = async () => {
+export const authRouter = () => {
   const router = Router();
 
   router.post('/login', async (req, res, next) => {
@@ -89,4 +89,6 @@ export const authRouter = async () => {
       res.status(200).send('Password updated successfully');
     }
   });
+
+  return router;
 };
