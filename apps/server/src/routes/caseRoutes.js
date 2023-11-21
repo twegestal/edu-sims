@@ -4,7 +4,10 @@ import * as object from '../models/object_index.js';
 export const getCaseRoutes = () => {
   const router = Router();
 
-  router.post('/createCase', async (req, res, next) => {});
+  router.post('/createCase', async (req, res, next) => {
+    console.log('request body: ', req.body.json);
+  });
+
   //hämtar alla cases
   router.get('/getAllCases', async (req, res, next) => {
     const Cases = await object.medical_case.findAll();

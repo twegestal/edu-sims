@@ -100,10 +100,6 @@ export default function CreateDiagnosis({ updateCaseObject }) {
   };
 
   useEffect(() => {
-    console.log(stepData);
-  }, [stepData]);
-
-  useEffect(() => {
     if (medicalFields.length > 0) {
         setLoading(false);
     }

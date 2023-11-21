@@ -14,7 +14,8 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  AccordionIcon
+  AccordionIcon,
+  Text
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -122,9 +123,19 @@ export default function CreateTreatment({ updateCaseObject }) {
     })
   }
 
-  useEffect(() =>  {
-    console.log('stepData:', stepData)
-  }, [stepData])
+  const setFeedbackCorrect = (feedback) => {
+    setStepData({
+      ...stepData,
+      feedback_correct: feedback,
+    });
+  };
+
+  const setFeedbackIncorrect = (feedback) => {
+    setStepData({
+      ...stepData,
+      feedback_incorrect: feedback,
+    });
+  };
 
   return (
     <>
@@ -173,9 +184,28 @@ export default function CreateTreatment({ updateCaseObject }) {
               <AccordionItem>
                 <AccordionButton>
                   <FormLabel>Behandlingar att visa för användaren</FormLabel>
+                  <AccordionIcon />
+
+                  <AccordionPanel>
+                    <Text>Jag sket i detta så länge eftersom vi inte använder treatments_to_display i treatment.jsx //Viktor</Text>
+                  </AccordionPanel>
                 </AccordionButton>
               </AccordionItem>         
             </Accordion>
+
+            <FormLabel>Korrekt feedback</FormLabel>
+            <Textarea
+              placeholder='Korrekt Feedback'
+              onChange={(e) => setFeedbackCorrect(e.target.value)}
+            ></Textarea>
+
+            <FormLabel>Inkorrekt feedback</FormLabel>
+            <Textarea
+              placeholder='Inkorrekt feedback'
+              onChange={(e) => setFeedbackIncorrect(e.target.value)}
+            ></Textarea>
+
+            
             
             <Button onClick={() => updateCaseObject(stepData)}>Klar med steget</Button>
           </FormControl>

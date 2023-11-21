@@ -10,11 +10,14 @@ import {
   Radio,
   HStack,
   VStack,
+  Button
 } from '@chakra-ui/react';
 import CreateIntroduction from './createIntro.jsx';
 import CreateExamination from './createExamination.jsx';
 import CreateDiagnosis from './createDiagnosis.jsx';
 import CreateTreatment from './createTreatment.jsx';
+import CreateSummary from './createSummary.jsx';
+import { useCreateCase } from '../hooks/useCreateCase.js';
 
 export default function CreateCase(props) {
   const [caseObject, setCaseObject] = useState({
@@ -22,6 +25,7 @@ export default function CreateCase(props) {
     step: [],
   });
   const [module, setModule] = useState('0');
+  const { createCase } = useCreateCase();
 
   const updateCaseObject = (updatedState) => {
     setCaseObject({
@@ -78,8 +82,10 @@ export default function CreateCase(props) {
 
             {module === '3' && <CreateTreatment updateCaseObject={updateCaseObject}></CreateTreatment>}
 
-            {module === '4' && <p>summary</p>}
+            {module === '4' && <CreateSummary updateCaseObject={updateCaseObject}></CreateSummary>}
           </div>
+
+          <Button onClick={() => createCase(caseObject)}>Skapa fall!!!!!</Button>
         </VStack>
       </FormControl>
     </div>

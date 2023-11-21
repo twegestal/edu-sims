@@ -7,6 +7,7 @@ export const useCreateCase = () => {
   const getTreatmentTypesApi = useApi('getTreatmentTypes');
   const getTreatmentSubtypesApi = useApi('getTreatmentSubtypes');
   const getTreatmentListApi = useApi('getTreatmentList');
+  const createCaseApi = useApi('createCase');
 
   const getAllExaminationTypes = async (id) => {
     try {
@@ -65,11 +66,20 @@ export const useCreateCase = () => {
     }
   }
 
+  const createCase = async (caseData) => {
+    try {
+      const result = await createCaseApi({ body: caseData });
+    } catch (error) {
+      console.error('error creating case: ', error);
+    }
+  }
+
   return {
     getAllExaminationTypes,
     getAllExaminationSubtypes,
     getTreatmentTypes,
     getTreatmentSubtypes,
-    getTreatmentList
+    getTreatmentList,
+    createCase
   };
 };
