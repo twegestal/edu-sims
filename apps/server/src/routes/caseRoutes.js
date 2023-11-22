@@ -297,20 +297,38 @@ export const getCaseRoutes = () => {
     if (req.header('attempt_id') == '') {
       res.status(404).json('Not Found');
     } else {
-      const result = await object.attempt.update(
-        {
-          is_finished: req.header('is_finished'),
-          faults: req.header('faults'),
-          timestamp_finished: req.header('timestamp_finished'),
-          correct_diagnosis: req.header('correct_diagnosis'),
-          nbr_of_tests_performed: req.header('nbr_of_tests_performed')
-        },
-        {
-          where: {
-            id: req.header('attempt_id'),
+      let result = [];
+      if (req.header('timestamp_finished') == ""){
+        result = await object.attempt.update(
+          {
+            is_finished: req.header('is_finished'),
+            faults: req.header('faults'),
+            correct_diagnosis: req.header('correct_diagnosis'),
+            nbr_of_tests_performed: req.header('nbr_of_tests_performed')
           },
-        }
-      );
+          {
+            where: {
+              id: req.header('attempt_id'),
+            },
+          }
+        );
+      } else {
+        result = await object.attempt.update(
+          {
+            is_finished: req.header('is_finished'),
+            faults: req.header('faults'),
+            timestamp_finished: req.header('timestamp_finished'),
+            correct_diagnosis: req.header('correct_diagnosis'),
+            nbr_of_tests_performed: req.header('nbr_of_tests_performed')
+          },
+          {
+            where: {
+              id: req.header('attempt_id'),
+            },
+          }
+        );
+
+      }
       res.status(200).json(result);
     }
   });

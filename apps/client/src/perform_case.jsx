@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   IconButton,
   Box,
@@ -53,6 +53,7 @@ export default function PerformCase() {
     onOpen: onTreatmentResultsOpen,
     onClose: onTreatmentResultsClose,
   } = useDisclosure();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState({});
   const [currentIndex, setCurrentIndex] = useState();
   const [displayFeedback, setDisplayFeedback] = useState(false);
@@ -63,6 +64,15 @@ export default function PerformCase() {
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [faultsCounter, setFaultsCounter] = useState(0);
+  const [correctDiagnosis, setCorrectDiagnosis] = useState(false);
+  const [caseIsFinished, setCaseIsFinished] = useState(false);
+  const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
+  const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
+
+
+
+
+
 
 
 
@@ -85,19 +95,32 @@ export default function PerformCase() {
     }
   }, [caseById]);
 
+  useEffect(() => {
+  // When caseIsFinished variable is set to true, the attempt data will be updated
+  if(caseIsFinished == true) {
+    attemptUpdateFunction()
+    return navigate('/')
+  }
 
+  }, [caseIsFinished]);
 
-  const nextStep = async (event) => {
-    let nextIndex = currentIndex + 1;
+  useEffect(() => {
+  // When caseIsFinished variable is set to true, the attempt data will be updated
+  if(caseIsFinished == true) {
+    attemptUpdateFunction()
+    return navigate('/')
+  }
 
-    let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
+  }, [caseIsFinished]);
+
+  const attemptUpdateFunction = () => {
 
     //Variabels needed to update the attempt record
-    const isFinished = false;
+    const isFinished = caseIsFinished;
     const faults = faultsCounter;
-    const timestamp_finished = '2023-11-20 15:35:13.918+01';
-    const correct_diagnosis = false;
-    const nbr_of_tests_performed = 0;
+    const timestamp_finished = finishCaseTimestamp;
+    const correct_diagnosis = correctDiagnosis;
+    const nbr_of_tests_performed = nbrTestPerformed;
 
     //Updates the attempt record
     updateAttempt(
@@ -108,6 +131,15 @@ export default function PerformCase() {
       correct_diagnosis,
       nbr_of_tests_performed,
     )
+  }
+
+
+  const nextStep = async (event) => {
+    let nextIndex = currentIndex + 1;
+
+    let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
+    attemptUpdateFunction()
+
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
@@ -142,6 +174,7 @@ export default function PerformCase() {
         )}
       </Flex>,
     ]);
+    setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length) // saves the number of tests performed, for use in statistics
   };
 
   const updateFeedback = (feedbackToDisplay) => {
@@ -162,6 +195,36 @@ export default function PerformCase() {
       </Card>,
     ]);
   };
+
+  const finishCase = () => {
+    setCaseIsFinished(true)
+    setFinishCaseTimestamp(getCurrentTimestamp())
+  }
+
+  const getCurrentTimestamp = () => {
+    const currentDate = new Date();
+    
+    // Get parts of the timestamp
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+    
+    // Get the UTC offset
+    const timezoneOffset = -currentDate.getTimezoneOffset() / 60;
+    const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+    const timezoneOffsetString = String(Math.abs(timezoneOffset)).padStart(2, '0');
+    
+    // Construct the timestamp string
+    const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${timezoneOffsetString}`;
+    
+    return timestamp;
+  }
+
+
 
   return (
     <>
@@ -346,6 +409,7 @@ export default function PerformCase() {
               updateFeedback={updateFeedback}
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
+              setNbrTestPerformed={setNbrTestPerformed}
             ></Examination>
           </div>
         )}
@@ -360,6 +424,7 @@ export default function PerformCase() {
               feedback={feedback}
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
+              setCorrectDiagnosis={setCorrectDiagnosis}
             ></Diagnosis>
           </div>
         )}
@@ -389,9 +454,7 @@ export default function PerformCase() {
           </Button>
         )}
         {currentIndex + 1 > caseById.length - 1 && (
-          <Link to='/'>
-            <Button colorScheme='teal'>Avsluta</Button>
-          </Link>
+            <Button onClick={finishCase} colorScheme='teal'>Avsluta</Button>
         )}
       </VStack>
     </>
