@@ -26,6 +26,9 @@ export const useUser = () => {
   const clearUserInfo = async (user_id) => {
     try {
       const response = await clearUserInfoApi({ headers: { user_id: user_id } });
+      if (response === 200) {
+        //hantera detta?
+      }
     } catch (error) {
       console.error('error clearing user info: ', error);
     }
