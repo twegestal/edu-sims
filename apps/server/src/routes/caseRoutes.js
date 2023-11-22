@@ -46,7 +46,7 @@ export const getCaseRoutes = () => {
         })
         */
 
-    res.status(201).json(caseSteps);
+    res.status(200).json(caseSteps);
   });
   //Hemta alla medical fields
   router.get('/getMedicalFields', async (req, res, next) => {
