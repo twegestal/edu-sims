@@ -23,7 +23,7 @@ export const useCases = () => {
       if (response.status === 200) {
         setCases(response.data);
       } else {
-        
+        //refresh?
       }
     } catch (error) {
       console.error('Error fetching cases: ', error);
@@ -33,7 +33,9 @@ export const useCases = () => {
   const getMedicalFields = async () => {
     try {
       const response = await getMedicalFieldsApi();
-      setMedicalFields(response);
+      if (response.status === 200) {
+        setMedicalFields(response.data);
+      }
     } catch (error) {
       console.error('error fetching medical fields: ', error);
     }
@@ -42,7 +44,9 @@ export const useCases = () => {
   const getCaseById = async (id) => {
     try {
       const response = await getCaseByIdApi({ headers: { case_id: id } });
-      setCaseById(response);
+      if (response.status === 200) {
+        setCaseById(response.data);
+      }
     } catch (error) {
       console.error('Error fetching case by id: ', error);
     }
@@ -51,8 +55,8 @@ export const useCases = () => {
   const getIntroductionStep = async (id) => {
     try {
       const response = await getIntroductionStepApi({ headers: { id: id } });
-      if (response) {
-        setIntroductionStep(response);
+      if (response.status === 200) {
+        setIntroductionStep(response.data);
       }
     } catch (error) {
       console.error('Error fetch introduction step', error);
@@ -62,8 +66,8 @@ export const useCases = () => {
   const getSummaryStep = async (id) => {
     try {
       const response = await getSummaryStepApi({ headers: { id: id } });
-      if (response) {
-        setSummaryStep(response);
+      if (response.status === 200) {
+        setSummaryStep(response.data);
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);
@@ -73,7 +77,7 @@ export const useCases = () => {
   const publishCase = async (id, isPublished) => {
     try {
       const response = await publishCaseApi({ headers: { id: id, isPublished: isPublished } });
-      if (response) {
+      if (response.status === 200) {
         setNewPublishment(isPublished + id);
         return;
       }

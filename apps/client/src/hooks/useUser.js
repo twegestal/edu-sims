@@ -14,8 +14,10 @@ export const useUser = () => {
 
   const getAllUsers = async (user_id) => {
     try {
-      const result = await getAllUsersApi({ headers: { user_id: user_id } });
-      setAllUsers(result);
+      const response = await getAllUsersApi({ headers: { user_id: user_id } });
+      if (response.status === 200) {
+        setAllUsers(response.data);
+      }
     } catch (error) {
       console.error('error fetching all users: ', error);
     }
@@ -23,7 +25,7 @@ export const useUser = () => {
 
   const clearUserInfo = async (user_id) => {
     try {
-      const result = await clearUserInfoApi({ headers: { user_id: user_id } });
+      const response = await clearUserInfoApi({ headers: { user_id: user_id } });
     } catch (error) {
       console.error('error clearing user info: ', error);
     }
@@ -31,8 +33,10 @@ export const useUser = () => {
 
   const createUserGroup = async (name) => {
     try {
-      const result = await createUserGroupApi({ headers: { name: name } });
-      setCreatedUserGroup(result);
+      const response = await createUserGroupApi({ headers: { name: name } });
+      if (response.status === 200) {
+        setCreatedUserGroup(response.data);
+      }
     } catch (error) {
       console.error('error creating user group: ', error);
     }

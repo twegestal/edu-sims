@@ -14,9 +14,9 @@ export const useTreatment = () => {
 
   const getTreatmentStep = async (id) => {
     try {
-      const result = await getTreatmentStepApi({ headers: { id: id } });
-      if (result) {
-        setTreatmentStep(result);
+      const response = await getTreatmentStepApi({ headers: { id: id } });
+      if (response.status === 200) {
+        setTreatmentStep(response.data);
       }
     } catch (error) {
       console.error('error fetching treatment step: ', error);
@@ -25,9 +25,9 @@ export const useTreatment = () => {
 
   const getTreatmentSpecificValues = async (id) => {
     try {
-      const result = await getTreatmentSpecificValuesApi({ headers: { id: id } });
-      if (result) {
-        setTreatmentSpecificValues(result);
+      const response = await getTreatmentSpecificValuesApi({ headers: { id: id } });
+      if (response.status === 200) {
+        setTreatmentSpecificValues(response.data);
       }
     } catch (error) {
       console.error('error fetching treatment specific values: ', error);
@@ -36,9 +36,9 @@ export const useTreatment = () => {
 
   const getTreatmentTypes = async () => {
     try {
-      const result = await getTreatmentTypesApi();
-      if (result) {
-        setTreatmentTypes(result);
+      const response = await getTreatmentTypesApi();
+      if (response.status === 200) {
+        setTreatmentTypes(response.data);
       }
     } catch (error) {
       console.error('error fetching treatment types: ', error);
@@ -47,7 +47,10 @@ export const useTreatment = () => {
 
   const getTreatmentList = async (id) => {
     try {
-      return await getTreatmentListApi({ headers: { id: id } });
+      const response = await getTreatmentListApi({ headers: { id: id } });
+      if (response.status = 200) {
+        return response.data;
+      }
     } catch (error) {
       console.error('error fetching treatment list: ', error);
     }

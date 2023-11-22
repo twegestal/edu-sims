@@ -1,17 +1,13 @@
+import { packageResponse } from "../utils/apiUtils.js";
+
 export const authApi = (apiClient) => ({
-  login: async (body) => {
-    const response = await apiClient.post('auth/login', body);
-    return { status: response.status, headers: response.headers, data: await response.json() };
-  },
+  login: async (body) => packageResponse(apiClient.post('auth/login', body)),
 
-  logout: async (data) => apiClient.post('user/logout', data).json(),
+  logout: async (data) => packageResponse(apiClient.post('user/logout', data)),
 
-  register: async (body) => {
-    const response = await apiClient.post('auth/register', body);
-    return { status: response.status, headers: response.headers, data: await response.json() };
-  },
+  register: async (body) => packageResponse(apiClient.post('auth/register', body)),
 
-  resetPassword: async (body) => apiClient.post('auth/reset-password', body).json(),
+  resetPassword: async (body) => packageResponse(apiClient.post('auth/reset-password', body)),
 
-  refresh: async () => apiClient.post('auth/refresh').json(),
+  refresh: async () => packageResponse(apiClient.post('auth/refresh')),
 });

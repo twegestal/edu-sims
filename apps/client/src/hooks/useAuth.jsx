@@ -41,7 +41,6 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      console.log('response i useAuth', response);
       if (response.status === 201) {
         login(email, password);
       }
