@@ -164,6 +164,7 @@ export default function Treatment(props) {
     } else {
       setFeedbackText(treatmentStep.feedback_incorrect);
       setFeedbackWindow();
+      props.setFaultsCounter(props.faultsCounter + 1)
     }
 
     props.setDisplayFeedback(true);

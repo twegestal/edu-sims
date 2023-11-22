@@ -47,12 +47,14 @@ export default function Introduction(props) {
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
+          props.setFaultsCounter(props.faultsCounter + 1)
         }
         break;
       }
       case 'noButton': {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
+          props.setFaultsCounter(props.faultsCounter + 1)
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_correct);

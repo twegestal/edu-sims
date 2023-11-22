@@ -86,6 +86,7 @@ export default function Examination(props) {
   const checkExams = () => {
     for (const examination of Object.keys(stepValues)) {
       if (!stepValues[examination].userHasTested) {
+        props.setFaultsCounter(props.faultsCounter + 1)
         return false;
       }
     }

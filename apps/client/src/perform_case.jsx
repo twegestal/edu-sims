@@ -62,6 +62,8 @@ export default function PerformCase() {
   const [treatmentResults, setTreatmentResults] = useState([]);
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const [faultsCounter, setFaultsCounter] = useState(0);
+
 
 
   const { caseById, getCaseById, updateAttempt } = useCases();
@@ -92,7 +94,7 @@ export default function PerformCase() {
 
     //Variabels needed to update the attempt record
     const isFinished = false;
-    const faults = 0;
+    const faults = faultsCounter;
     const timestamp_finished = '2023-11-20 15:35:13.918+01';
     const correct_diagnosis = false;
     const nbr_of_tests_performed = 0;
@@ -329,6 +331,8 @@ export default function PerformCase() {
               setDisplayFeedback={setDisplayFeedback}
               setDescription={setDescription}
               updateFeedback={updateFeedback}
+              faultsCounter={faultsCounter}
+              setFaultsCounter={setFaultsCounter}
             ></Introduction>
           </div>
         )}
@@ -340,6 +344,8 @@ export default function PerformCase() {
               setDisplayFeedback={setDisplayFeedback}
               updateLabResultsList={updateLabResultsList}
               updateFeedback={updateFeedback}
+              faultsCounter={faultsCounter}
+              setFaultsCounter={setFaultsCounter}
             ></Examination>
           </div>
         )}
@@ -352,6 +358,8 @@ export default function PerformCase() {
               setDisplayFeedback={setDisplayFeedback}
               updateFeedback={updateFeedback}
               feedback={feedback}
+              faultsCounter={faultsCounter}
+              setFaultsCounter={setFaultsCounter}
             ></Diagnosis>
           </div>
         )}
@@ -362,6 +370,8 @@ export default function PerformCase() {
               displayFeedback={displayFeedback}
               setDisplayFeedback={setDisplayFeedback}
               updateFeedback={updateFeedback}
+              faultsCounter={faultsCounter}
+              setFaultsCounter={setFaultsCounter}
             ></Treatment>
           </div>
         )}

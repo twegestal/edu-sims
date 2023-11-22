@@ -70,6 +70,7 @@ export default function Diagnosis(props) {
 
     if (choosenDiagnosId != diagnosisStep.diagnosis_id) {
       setFeedbackToDisplay(diagnosisStep.feedback_incorrect);
+      props.setFaultsCounter(props.faultsCounter + 1)
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_incorrect))
     }
 
