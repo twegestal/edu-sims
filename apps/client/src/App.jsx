@@ -20,7 +20,6 @@ export default function App() {
   return (
     <>
       {showAlert && <AlertBanner />}
-
       {user ? (
         <>
           <Routes>

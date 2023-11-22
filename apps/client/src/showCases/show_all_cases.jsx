@@ -14,7 +14,8 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
 
 export default function ShowAllCases() {
-  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } = useCases();
+  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
+    useCases();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -86,22 +87,28 @@ export default function ShowAllCases() {
                       <StartCase caseId = {caseItem.id} />
                       <Button colorScheme='teal' marginBottom='5%'>Redigera fallet</Button>
                       {(caseItem.published == false || caseItem.published == null) && (
-                          <Button marginBottom='5%'
-                            onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
-                            colorScheme='teal'
-                          >
-                            Publicera fallet
-                          </Button>
-                        )}
+                        <Button
+                          marginBottom='5%'
+                          onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
+                          colorScheme='teal'
+                        >
+                          Publicera fallet
+                        </Button>
+                      )}
                       {caseItem.published && (
-                        <Button marginBottom='5%'
+                        <Button
+                          marginBottom='5%'
                           onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                           colorScheme='teal'
                         >
                           Avpublicera fallet
                         </Button>
                       )}
-                      <Button onClick={(e) => removeCase(caseItem.id)} colorScheme='teal' marginBottom='5%'>
+                      <Button
+                        onClick={(e) => removeCase(caseItem.id)}
+                        colorScheme='teal'
+                        marginBottom='5%'
+                      >
                         Ta bort fallet
                       </Button>
                     </Flex>

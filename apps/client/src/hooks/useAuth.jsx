@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      console.log('response i useAuth', response);
       if (response.status === 201) {
         login(email, password);
       }
@@ -57,8 +56,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateToken = (token) => {
+    const updatedUser = user;
+    updatedUser.token = token;
+    setUser(updatedUser);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, updateToken }}>
       {children}
     </AuthContext.Provider>
   );

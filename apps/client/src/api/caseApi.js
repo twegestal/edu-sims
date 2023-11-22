@@ -1,56 +1,106 @@
+import { packageResponse } from '../utils/apiUtils.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
   createCase: async (data) => apiClient.post(`${prefix}createCase`, { json: data }).json(),
 
-  getAllCases: async () => apiClient.get(`${prefix}getAllCases`).json(),
+  getAllCases: async () => {
+    const response = await apiClient.get(`${prefix}getAllCases`);
+    return packageResponse(response);
+  },
 
-  getCaseById: async (headers) => apiClient.get(`${prefix}getCaseById`, headers).json(),
+  getCaseById: async (headers) => {
+    const response = await apiClient.get(`${prefix}getCaseById`, headers);
+    return packageResponse(response);
+  },
 
-  getMedicalFields: async () => apiClient.get(`${prefix}getMedicalFields`).json(),
+  getMedicalFields: async () => {
+    const response = await apiClient.get(`${prefix}getMedicalFields`);
+    return packageResponse(response);
+  },
 
-  getIntroductionStep: async (headers) =>
-    apiClient.get(`${prefix}getIntroductionStep`, headers).json(),
+  getIntroductionStep: async (headers) => {
+    const response = await apiClient.get(`${prefix}getIntroductionStep`, headers);
+    return packageResponse(response);
+  },
 
-  getDiagnosisStep: async (headers) => apiClient.get(`${prefix}getDiagnosisStep`, headers).json(),
+  getDiagnosisStep: async (headers) => {
+    const response = await apiClient.get(`${prefix}getDiagnosisStep`, headers);
+    return packageResponse(response);
+  },
 
-  getDiagnosisList: async (headers) => apiClient.get(`${prefix}getDiagnosisList`, headers).json(),
+  getDiagnosisList: async (headers) => {
+    const response = await apiClient.get(`${prefix}getDiagnosisList`, headers);
+    return packageResponse(response);
+  },
 
-  getSummaryStep: async (headers) => apiClient.get(`${prefix}getSummaryStep`, headers).json(),
+  getSummaryStep: async (headers) => {
+    const response = await apiClient.get(`${prefix}getSummaryStep`, headers);
+    return packageResponse(response);
+  },
 
-  getExaminationSpecificValues: async (headers) =>
-    apiClient.get(`${prefix}getExaminationSpecificValues`, headers).json(),
+  getExaminationSpecificValues: async (headers) => {
+    const response = await apiClient.get(`${prefix}getExaminationSpecificValues`, headers);
+    return packageResponse(response);
+  },
 
-  getExaminationStep: async (headers) =>
-    apiClient.get(`${prefix}getExaminationStep`, headers).json(),
+  getExaminationStep: async (headers) => {
+    const response = await apiClient.get(`${prefix}getExaminationStep`, headers);
+    return packageResponse(response);
+  },
 
-  getExaminationTypes: async (headers) =>
-    apiClient.get(`${prefix}getExaminationTypes`, headers).json(),
+  getExaminationTypes: async (headers) => {
+    const response = await apiClient.get(`${prefix}getExaminationTypes`, headers);
+    return packageResponse(response);
+  },
 
-  getExaminationSubtypes: async (headers) =>
-    apiClient.get(`${prefix}getExaminationSubtypes`, headers).json(),
+  getExaminationSubtypes: async (headers) => {
+    const response = await apiClient.get(`${prefix}getExaminationSubtypes`, headers);
+    return packageResponse(response);
+  },
 
-  getExaminationList: async (headers) =>
-    apiClient.get(`${prefix}getExaminationList`, headers).json(),
+  getExaminationList: async (headers) => {
+    const response = await apiClient.get(`${prefix}getExaminationList`, headers);
+    return packageResponse(response);
+  },
 
-  getTreatmentStep: async (headers) => apiClient.get(`${prefix}getTreatmentStep`, headers).json(),
+  getTreatmentStep: async (headers) => {
+    const response = await apiClient.get(`${prefix}getTreatmentStep`, headers);
+    return packageResponse(response);
+  },
 
-  getTreatmentTypes: async () => apiClient.get(`${prefix}getTreatmentTypes`).json(),
+  getTreatmentTypes: async () => {
+    const response = await apiClient.get(`${prefix}getTreatmentTypes`);
+    return packageResponse(response);
+  },
 
-  getTreatmentSubtypes: async (headers) =>
-    apiClient.get(`${prefix}getTreatmentSubtypes`, headers).json(),
+  getTreatmentSubtypes: async (headers) => {
+    const response = await apiClient.get(`${prefix}getTreatmentSubtypes`, headers);
+    return packageResponse(response);
+  },
 
-  getTreatmentList: async (headers) => apiClient.get(`${prefix}getTreatmentList`, headers).json(),
+  getTreatmentList: async (headers) => {
+    const response = await apiClient.get(`${prefix}getTreatmentList`, headers);
+    return packageResponse(response);
+  },
 
-  getTreatmentSpecificValues: async (headers) =>
-    apiClient.get(`${prefix}getTreatmentSpecificValues`, headers).json(),
+  getTreatmentSpecificValues: async (headers) => {
+    const response = await apiClient.get(`${prefix}getTreatmentSpecificValues`, headers);
+    return packageResponse(response);
+  },
 
-  publishCase: async (headers) =>
-    apiClient.put(`${prefix}publishCase`, headers).json(),
+  createAttempt: async (headers) => {
+    const response = await apiClient.post(`${prefix}createAttempt`, headers);
+    return packageResponse(response);
+  },
 
-  createAttempt: async (headers) =>
-    apiClient.post(`${prefix}createAttempt`, headers).json(),
+  updateAttempt: async (headers) => {
+    const response = await  apiClient.put(`${prefix}updateAttempt`, headers);
+    return packageResponse(response);
+  },
 
-  updateAttempt: async (headers) =>
-    apiClient.put(`${prefix}updateAttempt`, headers).json(),
+  publishCase: async (headers) => {
+    const response = await apiClient.put(`${prefix}publishCase`, headers);
+    return packageResponse(response);
+  },
 });

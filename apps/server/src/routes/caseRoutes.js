@@ -6,9 +6,9 @@ export const getCaseRoutes = () => {
 
   router.post('/createCase', async (req, res, next) => {});
   //hämtar alla cases
-  router.get('/getAllCases', async (req, res, next) => {
-    const Cases = await object.medical_case.findAll();
-    res.status(200).json(Cases);
+  router.get('/getAllCases', async (_req, res, _next) => {
+    const cases = await object.medical_case.findAll();
+    res.status(200).send(cases);
   });
   // Hämtar ett specifict case beroende på dess id
   router.get('/getCaseById', async (req, res, next) => {
@@ -46,7 +46,7 @@ export const getCaseRoutes = () => {
         })
         */
 
-    res.status(201).json(caseSteps);
+    res.status(200).json(caseSteps);
   });
   //Hemta alla medical fields
   router.get('/getMedicalFields', async (req, res, next) => {
@@ -259,20 +259,21 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('Not Found');
     } else {
-      let publish = false
-      if ((req.header('isPublished') == 'false' || req.header('isPublished') == 'null')){
-        publish = true
+      let publish = false;
+      if (req.header('isPublished') == 'false' || req.header('isPublished') == 'null') {
+        publish = true;
       }
-      if (req.header('isPublished') == true){
-        publish = false
+      if (req.header('isPublished') == true) {
+        publish = false;
       }
       const result = await object.medical_case.update(
-      {published: publish},
-      {
-        where: {
-          id: req.header('id'),
+        { published: publish },
+        {
+          where: {
+            id: req.header('id'),
+          },
         },
-      });
+      );
       res.status(200).json(result);
     }
   });

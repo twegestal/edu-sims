@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 
 import { createServer } from '../server';
 import { validateLogin, validateRegistration } from 'api';
+import { getRegularUser, getAdmin } from './testUtils';
 
 const requestWithSupertest = supertest(createServer());
 
@@ -123,5 +124,57 @@ describe('registration validation', () => {
 
     const result = validateRegistration(user);
     expect(result.success).toEqual(true);
+  });
+});
+
+describe('testing jwt tokens', () => {
+  it('a valid token should be returned when logging in regular user', async () => {
+    const user = getRegularUser();
+
+    await requestWithSupertest
+      .post('/auth/login')
+      .send(user)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.token).toBeDefined();
+      });
+  });
+
+  it('logging in with a user that does not exist should return http status 404', async () => {
+    const user = {
+      email: 'apannnnnn@apan.se',
+      password: 'Aa1!Aa1!',
+    };
+
+    await requestWithSupertest
+      .post('/auth/login')
+      .send(user)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.token).toBeUndefined();
+      });
+  });
+  it('should return refresh cookie', async () => {
+    const user = getRegularUser();
+
+    await requestWithSupertest
+      .post('/auth/login')
+      .send(user)
+      .expect(200)
+      .then((res) => {
+        expect(res.headers['set-cookie']).toBeDefined();
+      });
+  });
+
+  it('should return valid token, when calling refresh endpoint', async () => {
+    const user = getRegularUser();
+
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.headers['set-cookie'][0].split('refreshToken=')[1].split(';')[0];
+    const refreshResponse = await requestWithSupertest
+      .post('/auth/refresh')
+      .set('Cookie', `refreshToken=${token}`);
+
+    expect(refreshResponse.body.token).toBeDefined();
   });
 });

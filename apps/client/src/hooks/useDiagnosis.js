@@ -11,7 +11,9 @@ export const useDiagnosis = () => {
   const getDiagnosisStep = async (id) => {
     try {
       const response = await getDiagnosisStepApi({ headers: { id: id } });
-      setDiagnosisStep(response);
+      if (response.status === 200) {
+        setDiagnosisStep(response.data);
+      }
     } catch (error) {
       console.error('error fetching diagnosis step: ', error);
     }
@@ -20,7 +22,9 @@ export const useDiagnosis = () => {
   const getDiagnosisList = async (id) => {
     try {
       const response = await getDiagnosisListApi({ headers: { id: id } });
-      setDiagnosisList(response);
+      if (response.status === 200) {
+        setDiagnosisList(response.data);
+      }
     } catch (error) {
       console.error('error fetching diagnosis list, ', error);
     }

@@ -19,83 +19,6 @@ export const getUserRoutes = () => {
     }
   });
 
-  router.post('/login', async (req, res, next) => {
-    const { email, password } = req.body;
-    const user = await object.end_user.findOne({
-      where: {
-        email: email,
-      },
-    });
-
-    if (user === null) {
-      res.status(404).json({
-        message: 'Username or password incorrect',
-      }); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-    } else {
-      if (await comparePasswords(password, user.password)) {
-        res.status(200).json({
-          id: user.id,
-          email: user.email,
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c', //FIXME: placeholder token
-          isAdmin: user.is_admin,
-        });
-      } else {
-        res.status(404).json({
-          message: 'Username or password incorrect',
-        }); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-      }
-    }
-  });
-
-  router.post('/register', async (req, res, _next) => {
-    const { email, password, group_id } = req.body;
-
-    const result = await object.end_user.findOne({
-      where: {
-        email: email,
-      },
-    });
-
-    const hashedPassword = await hashPassword(password);
-
-    if (result !== null) {
-      res.status(400).json('Email is already registered'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-    } else {
-      const user = await object.end_user.create({
-        group_id: group_id,
-        email: email,
-        password: hashedPassword,
-        is_admin: false,
-      });
-      res.status(201).json({
-        id: user.id,
-        message: 'Registration successful',
-      });
-    }
-  });
-
-  router.patch('/update-password', async (req, res, next) => {
-    /*
-        Query the database to see if the user exists:
-        */
-    const user = await object.end_user.findOne({
-      where: {
-        id: req.body.user_id,
-      },
-    });
-
-    if (user === null) {
-      res.status(400).json('User not registered'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-    } else {
-      await user.update({
-        password: req.body.new_password,
-      });
-
-      res.status(200).json('Password updated successfully');
-    }
-  });
-
   router.delete('', async (req, res, next) => {
     /*
         Query the database to see if the user exists:
@@ -123,56 +46,53 @@ export const getUserRoutes = () => {
     //await object.end_user.truncate();
     //metoden ovan funkar inte när det finns foreign key constraints, jag blev lite skraj och har inte fortsatt :)
     res.status(200).json('All users removed');
-    });
+  });
 
   router.get('/getAllUsers', async (req, res, next) => {
-
     const request_user = await object.end_user.findOne({
       where: {
         id: req.header('user_id'),
       },
     });
     //Checks if the user_id the request comes with belongs to an admin
-    if (request_user.is_admin == true){
+    if (request_user.is_admin == true) {
       const user = await object.end_user.findAll();
 
       if (user === null) {
         res.status(404).json('No users found');
       } else {
         res.status(200).json(user);
-      } 
+      }
     } else {
       res.status(404).json('Only admins can perform this request');
     }
   });
 
   router.put('/clearUserInfo', async (req, res, next) => {
-
     function generatePass() {
-        let pass = '';
-        let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-            'abcdefghijklmnopqrstuvwxyz0123456789@#$';
-    
-        for (let i = 1; i <= 8; i++) {
-            let char = Math.floor(Math.random()
-                * str.length + 1);
-    
-            pass += str.charAt(char)
-        }
-    
-        return pass;
+      let pass = '';
+      let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
+      for (let i = 1; i <= 8; i++) {
+        let char = Math.floor(Math.random() * str.length + 1);
+
+        pass += str.charAt(char);
+      }
+
+      return pass;
     }
 
     const result = await object.end_user.update(
-    {
-      email: 'DeletedUser',
-      password: generatePass(),
-    },
-    {
-      where: {
-        id: req.header('user_id'),
+      {
+        email: 'DeletedUser',
+        password: generatePass(),
       },
-    });
+      {
+        where: {
+          id: req.header('user_id'),
+        },
+      },
+    );
 
     if (result === null) {
       res.status(404).json('No users found');
@@ -181,20 +101,30 @@ export const getUserRoutes = () => {
     }
   });
 
-
-  router.post('/createUserGroup', async (req, res, next) => {
-
-    const result = await object.user_group.create(
-      {
-        name: req.header('name'),
-      },
-    );
+  router.post('/createUserGroup', async (req, res, _next) => {
+    const result = await object.user_group.create({
+      name: req.header('name'),
+    });
 
     if (result === null) {
       res.status(404).json('No group created');
     } else {
       res.status(200).json(result);
     }
+  });
+
+  router.patch('/logout', async (req, res, _next) => {
+    const user = await object.end_user.findOne({ where: { id: req.headers('id') } });
+    if (!user) {
+      return res.status(404).send('User does not exist');
+    }
+    user.refresh_token = null;
+    try {
+      await user.save();
+    } catch (error) {
+      console.error('error logging out user: ', error);
+    }
+    res.status(200).send('Logout successful');
   });
 
   return router;

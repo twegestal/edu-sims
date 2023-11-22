@@ -1,13 +1,24 @@
+import { packageResponse } from '../utils/apiUtils.js';
 const prefix = 'user/';
 
-
 export const userApi = (apiClient) => ({
-  getUser: async () => apiClient.get('/user').json(),
+  getUser: async () => {
+    const response = await apiClient.get('/user');
+    return packageResponse(response);
+  },
 
-  getAllUsers: async (headers) => apiClient.get(`${prefix}getAllUsers`, headers).json(),
+  getAllUsers: async (headers) => {
+    const response = await apiClient.get(`${prefix}getAllUsers`, headers);
+    return packageResponse(response);
+  },
 
-  clearUserInfo: async (headers) => apiClient.put(`${prefix}clearUserInfo`, headers).json(),
+  clearUserInfo: async (headers) => {
+    const response = await apiClient.put(`${prefix}clearUserInfo`, headers);
+    return packageResponse(response);
+  },
 
-  createUserGroup: async (headers) => apiClient.post(`${prefix}createUserGroup`, headers).json(),
-
+  createUserGroup: async (headers) => {
+    const response = await apiClient.post(`${prefix}createUserGroup`, headers);
+    return packageResponse(response);
+  },
 });
