@@ -20,9 +20,7 @@ export default function App() {
   return (
     <>
       {showAlert && <AlertBanner />}
-      <Routes>
-          <Route path='/register/:groupId' element={<Register />}></Route>
-      </Routes>
+
       {user ? (
         <>
           <Routes>
@@ -38,7 +36,12 @@ export default function App() {
           <Button onClick={logout}>Logout</Button>
         </>
       ) : (
+      <>
+        <Routes>
+            <Route path='/register/:groupId' element={<Register />}></Route>
+        </Routes>
         <Login />
+      </>
       )}
     </>
   );
