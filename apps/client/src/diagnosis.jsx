@@ -65,14 +65,14 @@ export default function Diagnosis(props) {
   const handleFeedback = (choosenDiagnosId) => {
     if (choosenDiagnosId == diagnosisStep.diagnosis_id) {
       setFeedbackToDisplay(diagnosisStep.feedback_correct);
-      props.setCorrectDiagnosis(true)
+      props.setCorrectDiagnosis(true);
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_correct))
     }
 
     if (choosenDiagnosId != diagnosisStep.diagnosis_id) {
       setFeedbackToDisplay(diagnosisStep.feedback_incorrect);
-      props.setFaultsCounter(props.faultsCounter + 1)
-      props.setCorrectDiagnosis(false)
+      props.setFaultsCounter(props.faultsCounter + 1);
+      props.setCorrectDiagnosis(false);
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_incorrect))
     }
 

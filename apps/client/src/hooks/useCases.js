@@ -12,8 +12,6 @@ export const useCases = () => {
   const createAttemptApi = useApi('createAttempt');
   const updateAttemptApi = useApi('updateAttempt');
 
-
-
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
   const [caseById, setCaseById] = useState([]);
@@ -88,20 +86,25 @@ export const useCases = () => {
     }
   };
 
-
   const createAttempt = async (user_id, case_id) => {
     try {
-      const result = await createAttemptApi({ headers: { user_id: user_id, case_id: case_id} });
-      if (result) {
-        return result
+      const result = await createAttemptApi({ headers: { user_id: user_id, case_id: case_id } });
+      if (result.status === 200) {
+        return result.data;
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);
     }
   };
 
-
-  const updateAttempt = async (attempt_id, is_finished, faults, timestamp_finished, correct_diagnosis, nbr_of_tests_performed) => {
+  const updateAttempt = async (
+    attempt_id,
+    is_finished,
+    faults,
+    timestamp_finished,
+    correct_diagnosis,
+    nbr_of_tests_performed,
+  ) => {
     try {
       const result = await updateAttemptApi({
         headers: {
@@ -110,11 +113,11 @@ export const useCases = () => {
           faults: faults,
           timestamp_finished: timestamp_finished,
           correct_diagnosis: correct_diagnosis,
-          nbr_of_tests_performed: nbr_of_tests_performed
-        }
+          nbr_of_tests_performed: nbr_of_tests_performed,
+        },
       });
-      if (result) {
-        return
+      if (result.status === 200) {
+        return;
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);

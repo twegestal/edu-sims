@@ -35,12 +35,12 @@ export default function App() {
           <Button onClick={logout}>Logout</Button>
         </>
       ) : (
-      <>
-        <Routes>
+        <>
+          <Routes>
             <Route path='/register/:groupId' element={<Register />}></Route>
-        </Routes>
-        <Login />
-      </>
+          </Routes>
+          <Login />
+        </>
       )}
     </>
   );

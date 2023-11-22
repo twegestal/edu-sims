@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     const updatedUser = user;
     updatedUser.token = token;
     setUser(updatedUser);
-  }
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout, register, updateToken }}>

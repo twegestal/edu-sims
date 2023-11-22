@@ -33,7 +33,7 @@ const authWithRefreshToken = async (req, res, next) => {
     res.setHeader('X-New-Token', token);
     next();
   }
-}
+};
 
 export const validateRefreshToken = async (refreshToken, res) => {
   try {

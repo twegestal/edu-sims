@@ -35,9 +35,8 @@ import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
 
-
 export default function PerformCase() {
-  let params  = useParams();
+  let params = useParams();
   let caseid = params['caseid'].split('caseid=')[1];
   let attemptId = params['attemptid'].split('attemptid=')[1];
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
@@ -69,16 +68,7 @@ export default function PerformCase() {
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
 
-
-
-
-
-
-
-
   const { caseById, getCaseById, updateAttempt } = useCases();
-
-
 
   useEffect(() => {
     const getCaseList = async () => {
@@ -96,25 +86,22 @@ export default function PerformCase() {
   }, [caseById]);
 
   useEffect(() => {
-  // When caseIsFinished variable is set to true, the attempt data will be updated
-  if(caseIsFinished == true) {
-    attemptUpdateFunction()
-    return navigate('/')
-  }
-
+    // When caseIsFinished variable is set to true, the attempt data will be updated
+    if (caseIsFinished == true) {
+      attemptUpdateFunction();
+      return navigate('/');
+    }
   }, [caseIsFinished]);
 
   useEffect(() => {
-  // When caseIsFinished variable is set to true, the attempt data will be updated
-  if(caseIsFinished == true) {
-    attemptUpdateFunction()
-    return navigate('/')
-  }
-
+    // When caseIsFinished variable is set to true, the attempt data will be updated
+    if (caseIsFinished == true) {
+      attemptUpdateFunction();
+      return navigate('/');
+    }
   }, [caseIsFinished]);
 
   const attemptUpdateFunction = () => {
-
     //Variabels needed to update the attempt record
     const isFinished = caseIsFinished;
     const faults = faultsCounter;
@@ -130,16 +117,14 @@ export default function PerformCase() {
       timestamp_finished,
       correct_diagnosis,
       nbr_of_tests_performed,
-    )
-  }
-
+    );
+  };
 
   const nextStep = async (event) => {
     let nextIndex = currentIndex + 1;
 
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
-    attemptUpdateFunction()
-
+    attemptUpdateFunction();
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
@@ -149,7 +134,7 @@ export default function PerformCase() {
     /*Saves text from the text editor to the notes variable */
     if (editorRef.current) {
       setNotes(editorRef.current.getContent());
-      onNotesClose()
+      onNotesClose();
     }
   };
   //FIXME: key is not unique
@@ -175,7 +160,7 @@ export default function PerformCase() {
         )}
       </Flex>,
     ]);
-    setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length) // saves the number of tests performed, for use in statistics
+    setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
   };
 
   const updateFeedback = (feedbackToDisplay) => {
@@ -198,13 +183,13 @@ export default function PerformCase() {
   };
 
   const finishCase = () => {
-    setCaseIsFinished(true)
-    setFinishCaseTimestamp(getCurrentTimestamp())
-  }
+    setCaseIsFinished(true);
+    setFinishCaseTimestamp(getCurrentTimestamp());
+  };
 
   const getCurrentTimestamp = () => {
     const currentDate = new Date();
-    
+
     // Get parts of the timestamp
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -213,19 +198,17 @@ export default function PerformCase() {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-    
+
     // Get the UTC offset
     const timezoneOffset = -currentDate.getTimezoneOffset() / 60;
     const offsetSign = timezoneOffset >= 0 ? '+' : '-';
     const timezoneOffsetString = String(Math.abs(timezoneOffset)).padStart(2, '0');
-    
+
     // Construct the timestamp string
     const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${timezoneOffsetString}`;
-    
+
     return timestamp;
-  }
-
-
+  };
 
   return (
     <>
@@ -445,7 +428,9 @@ export default function PerformCase() {
           </Button>
         )}
         {currentIndex + 1 > caseById.length - 1 && (
-            <Button onClick={finishCase} colorScheme='teal'>Avsluta</Button>
+          <Button onClick={finishCase} colorScheme='teal'>
+            Avsluta
+          </Button>
         )}
       </VStack>
     </>

@@ -40,8 +40,8 @@ export default function ManageUsers(props) {
 
   useEffect(() => {
     //Ändra URL till serverns domän
-    const url = 'https://localhost:5173'
-    setLink(url + '/register/groupId=' + createdUserGroup.id)
+    const url = 'https://localhost:5173';
+    setLink(url + '/register/groupId=' + createdUserGroup.id);
   }, [createdUserGroup]);
 
   useEffect(() => {

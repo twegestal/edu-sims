@@ -84,8 +84,10 @@ export default function ShowAllCases() {
                   {user.isAdmin && (
                     <Flex justify={'space-evenly'} direction={'column'}>
                       <p>Name: {caseItem.name}</p>
-                      <StartCase caseId = {caseItem.id} />
-                      <Button colorScheme='teal' marginBottom='5%'>Redigera fallet</Button>
+                      <StartCase caseId={caseItem.id} />
+                      <Button colorScheme='teal' marginBottom='5%'>
+                        Redigera fallet
+                      </Button>
                       {(caseItem.published == false || caseItem.published == null) && (
                         <Button
                           marginBottom='5%'
@@ -116,7 +118,7 @@ export default function ShowAllCases() {
                   {user.isAdmin == false && caseItem.published && (
                     <Flex direction={'column'}>
                       <p>{caseItem.name}</p>
-                      <StartCase caseId = {caseItem.id}/>
+                      <StartCase caseId={caseItem.id} />
                     </Flex>
                   )}
                 </Box>
