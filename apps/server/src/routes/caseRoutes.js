@@ -294,7 +294,7 @@ export const getCaseRoutes = () => {
 
 
   router.put('/updateAttempt', async (req, res, next) => {
-    if (req.header('case_id') == '') {
+    if (req.header('attempt_id') == '') {
       res.status(404).json('Not Found');
     } else {
       const result = await object.attempt.update(
@@ -307,8 +307,7 @@ export const getCaseRoutes = () => {
         },
         {
           where: {
-            user_id: req.header('user_id'),
-            case_id: req.header('case_id')
+            id: req.header('attempt_id'),
           },
         }
       );

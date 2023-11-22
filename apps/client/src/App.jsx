@@ -28,7 +28,7 @@ export default function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/case'>
-              <Route path=':caseid' element={<PerformCase />} />
+              <Route path=':caseid/:attemptid' element={<PerformCase />} />
             </Route>
             <Route path='/createCase' element={<CreateCase />}></Route>
             <Route path='/manageCases' element={<ManageCases />}></Route>

@@ -34,12 +34,12 @@ import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
-import { useAuth } from './hooks/useAuth.jsx';
 
 
 export default function PerformCase() {
-  let { caseid } = useParams();
-  caseid = caseid.split('caseid=')[1];
+  let params  = useParams();
+  let caseid = params['caseid'].split('caseid=')[1];
+  let attemptId = params['attemptid'].split('attemptid=')[1];
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
   const { isOpen: isHomeOpen, onOpen: onHomeOpen, onClose: onHomeClose } = useDisclosure();
   const { isOpen: isDescOpen, onOpen: onDescOpen, onClose: onDescClose } = useDisclosure();
@@ -63,8 +63,9 @@ export default function PerformCase() {
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
+
   const { caseById, getCaseById, updateAttempt } = useCases();
-  const { user } = useAuth();
+
 
 
   useEffect(() => {
@@ -82,6 +83,8 @@ export default function PerformCase() {
     }
   }, [caseById]);
 
+
+
   const nextStep = async (event) => {
     let nextIndex = currentIndex + 1;
 
@@ -96,8 +99,7 @@ export default function PerformCase() {
 
     //Updates the attempt record
     updateAttempt(
-      user.id,
-      caseid,
+      attemptId,
       isFinished,
       faults,
       timestamp_finished,

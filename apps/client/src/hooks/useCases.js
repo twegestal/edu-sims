@@ -88,7 +88,7 @@ export const useCases = () => {
     try {
       const result = await createAttemptApi({ headers: { user_id: user_id, case_id: case_id} });
       if (result) {
-        return
+        return result
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);
@@ -96,12 +96,11 @@ export const useCases = () => {
   };
 
 
-  const updateAttempt = async (user_id, case_id, is_finished, faults, timestamp_finished, correct_diagnosis, nbr_of_tests_performed) => {
+  const updateAttempt = async (attempt_id, is_finished, faults, timestamp_finished, correct_diagnosis, nbr_of_tests_performed) => {
     try {
       const result = await updateAttemptApi({
         headers: {
-          user_id: user_id,
-          case_id: case_id,
+          attempt_id: attempt_id,
           is_finished: is_finished,
           faults: faults,
           timestamp_finished: timestamp_finished,
