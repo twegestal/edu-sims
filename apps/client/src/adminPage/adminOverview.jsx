@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Flex } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
-export default function AdminOverview(props) {
+export default function AdminOverview() {
   return (
     <div>
       <Flex direction={'column'}>

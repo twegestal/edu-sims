@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { handleZodErrors } from '../utils';
 
-const loginSchema = z.object({
-  email: z.string().email('Email must me a valid email address'),
+const passwordSchema = z.object({
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
@@ -16,9 +15,25 @@ const loginSchema = z.object({
     ),
 });
 
+const loginSchema = passwordSchema.extend({
+  email: z.string().email('Email must me a valid email address'),
+});
+
 const registerSchema = loginSchema.extend({
   group_id: z.string().min(1, 'Group id can not be empty'),
 });
+
+export const validatePassword = (data) => {
+  try {
+    passwordSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
+};
 
 export const validateLogin = (data) => {
   try {

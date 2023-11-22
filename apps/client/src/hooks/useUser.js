@@ -8,6 +8,7 @@ export const useUser = () => {
   const getAllUsersApi = useApi('getAllUsers');
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
+  const updatePasswordApi = useApi('updatePassword');
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -26,9 +27,7 @@ export const useUser = () => {
   const clearUserInfo = async (user_id) => {
     try {
       const response = await clearUserInfoApi({ headers: { user_id: user_id } });
-      if (response === 200) {
-        //hantera detta?
-      }
+      return response.status === 200;
     } catch (error) {
       console.error('error clearing user info: ', error);
     }
@@ -45,11 +44,24 @@ export const useUser = () => {
     }
   };
 
+  const updatePassword = async (id, email, newPassword) => {
+    try {
+      const response = await updatePasswordApi({
+        headers: { id: id },
+        body: { email: email, newPassword: newPassword },
+      });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error changing password: ', error);
+    }
+  };
+
   return {
     getAllUsers,
     allUsers,
     clearUserInfo,
     createUserGroup,
     createdUserGroup,
+    updatePassword,
   };
 };

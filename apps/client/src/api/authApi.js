@@ -15,9 +15,4 @@ export const authApi = (apiClient) => ({
     const response = await apiClient.post('auth/register', body);
     return packageResponse(response);
   },
-
-  resetPassword: async (body) => {
-    const response = await apiClient.post('auth/reset-password', body);
-    return packageResponse(response);
-  },
 });

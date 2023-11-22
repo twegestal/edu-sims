@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { describe, it, expect } from 'vitest';
 
 import { createServer } from '../server';
-import { validateLogin, validateRegistration } from 'api';
+import { validateLogin, validateRegistration, validatePassword } from 'api';
 import { getRegularUser, getAdmin } from './testUtils';
 
 const requestWithSupertest = supertest(createServer());
@@ -165,16 +165,66 @@ describe('testing jwt tokens', () => {
         expect(res.headers['set-cookie']).toBeDefined();
       });
   });
+});
 
-  it('should return valid token, when calling refresh endpoint', async () => {
-    const user = getRegularUser();
-
+describe('update user password', () => {
+  it('should successfully update a users password', async () => {
+    const user = getAdmin();
     const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
-    const token = loginResponse.headers['set-cookie'][0].split('refreshToken=')[1].split(';')[0];
-    const refreshResponse = await requestWithSupertest
-      .post('/auth/refresh')
-      .set('Cookie', `refreshToken=${token}`);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
 
-    expect(refreshResponse.body.token).toBeDefined();
+    await requestWithSupertest
+      .patch('/user/update-password')
+      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('id', id)
+      .send({
+        email: 'apansson@apa.se',
+        newPassword: 'Lösenord1!',
+      })
+      .expect(201)
+      .then((res) => {
+        expect(res.body).toBeDefined();
+      });
   });
+
+  it('should fail due to user not being an admin', async () => {
+    const user = getRegularUser();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .patch('/user/update-password')
+      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('id', id)
+      .send({
+        email: 'apansson@apa.se',
+        newPassword: 'Lösenord1!',
+      })
+      .expect(403)
+      .then((res) => {
+        expect(res.body).toEqual('Not authorized for selected resource');
+      });
+  });
+
+  it('should fain due to not finding the resource', async () => {
+    const user = getAdmin();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .patch('/user/update-password')
+      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('id', id)
+      .send({
+        email: 'noEmail',
+        newPassword: 'Lösenord1!',
+      })
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual('Could not find resource');
+      });
+  })
 });

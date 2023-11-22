@@ -3,7 +3,7 @@ const prefix = 'user/';
 
 export const userApi = (apiClient) => ({
   getUser: async () => {
-    const response = await apiClient.get('/user');
+    const response = await apiClient.get(`${prefix}`);
     return packageResponse(response);
   },
 
@@ -19,6 +19,11 @@ export const userApi = (apiClient) => ({
 
   createUserGroup: async (headers) => {
     const response = await apiClient.post(`${prefix}createUserGroup`, headers);
+    return packageResponse(response);
+  },
+
+  updatePassword: async (headers, body) => {
+    const response = await apiClient.patch(`${prefix}update-password`, headers, body);
     return packageResponse(response);
   },
 });

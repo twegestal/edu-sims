@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const loginApi = useApi('login');
   const logoutApi = useApi('logout');
-  const resetPasswordApi = useApi('resetPassword');
   const registerApi = useApi('register');
 
   const login = async (email, password) => {
@@ -45,14 +44,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Registration failed', error);
-    }
-  };
-
-  const resetPassword = async (email) => {
-    try {
-      //await resetPassword(email);
-    } catch (error) {
-      console.error('Reset password error', error);
     }
   };
 

@@ -70,25 +70,5 @@ export const authRouter = () => {
     }
   });
 
-  router.patch('/reset-password', async (req, res, next) => {
-    const { user_id, new_password } = req.body;
-    const user = await object.end_user.findOne({
-      where: {
-        id: user_id,
-      },
-    });
-
-    if (user === null) {
-      res.status(400).send('User not registered');
-    } else {
-      const hash = await hashPassword(new_password);
-      await user.update({
-        password: hash,
-      });
-
-      res.status(200).send('Password updated successfully');
-    }
-  });
-
   return router;
 };

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
-import { hashPassword, comparePasswords } from '../utils/crypting.js';
+import { hashPassword } from '../utils/crypting.js';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -97,7 +97,7 @@ export const getUserRoutes = () => {
     if (result === null) {
       res.status(404).json('No users found');
     } else {
-      res.status(200).json();
+      res.status(200).json('User deleted');
     }
   });
 
@@ -125,6 +125,30 @@ export const getUserRoutes = () => {
       console.error('error logging out user: ', error);
     }
     res.status(200).send('Logout successful');
+  });
+
+  router.patch('/update-password', async (req, res, _next) => {
+    const id = req.header('id');
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+      if (!user.is_admin) {
+        return res.status(403).json('Not authorized for selected resource');
+      }
+
+      const { email, newPassword } = req.body;
+      const userToUpdate = await object.end_user.findOne({ where: { email: email } });
+
+      if (userToUpdate) {
+        const hash = await hashPassword(newPassword);
+        const result = await userToUpdate.update({ pasword: hash });
+        res.status(201).send(result);
+      } else {
+        res.status(404).json('Could not find resource');
+      }
+    } catch (error) {
+      console.error('error in update-password: ', error);
+      res.status(500).send('Internal Server Error');
+    }
   });
 
   return router;

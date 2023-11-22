@@ -2,14 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Button,
   Flex,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Input,
-  TableContainer,
   FormControl,
   Box,
   Card,
@@ -18,60 +11,20 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
 import { useAuth } from '../hooks/useAuth.jsx';
+import UserTable from './UserTable.jsx';
 
 export default function ManageUsers(props) {
-  const { getAllUsers, allUsers, clearUserInfo, createUserGroup, createdUserGroup } = useUser();
-  const { user } = useAuth();
-  const toast = useToast();
+  const { createUserGroup, createdUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [link, setLink] = useState('');
-  const [userRemoved, setUserRemoved] = useState('');
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      await getAllUsers(user.id);
-    };
-
-    fetchUsers();
-  }, []);
 
   useEffect(() => {
     //Ändra URL till serverns domän
     const url = 'https://localhost:5173';
     setLink(url + '/register/groupId=' + createdUserGroup.id);
   }, [createdUserGroup]);
-
-  useEffect(() => {
-    if (userRemoved != '') {
-      toast({
-        title: 'Information rensad',
-        description: 'Information kopplad till användaren ' + userRemoved + ' har tagits bort',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-
-    const fetchUsers = async () => {
-      await getAllUsers(user.id);
-    };
-
-    fetchUsers();
-  }, [userRemoved]);
-
-  async function removeUser(userId, userEmail) {
-    /*
-    Does not remove the user from the DB, only sets username to "DeletedUser", randomizes a password and sets group_id to "Deleted users".
-    This is done to be able to keep statistics consistent.
-    */
-    if (confirm('Är du säker på att du vill ta bort användaren?')) {
-      await clearUserInfo(userId);
-      setUserRemoved(userEmail);
-    }
-  }
 
   const handleInputUserGroupChange = (event) => {
     // Update the state with the value of the input field
@@ -126,38 +79,7 @@ export default function ManageUsers(props) {
 
       <Box>
         <h3>Ändra lösenord och ta bort användare</h3>
-        <TableContainer maxWidth='90%'>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Email</Th>
-                <Th>Byt lösenord</Th>
-                <Th isNumeric>Ta bort användare</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {allUsers.map(
-                (aUser, index) =>
-                  aUser.email !== 'DeletedUser' && (
-                    <Tr key={index}>
-                      <Td>{aUser.email}</Td>
-                      <Td>
-                        <FormControl display={'flex'} flexDirection={'column'}>
-                          <Input />
-                          <Button> Sätt nytt lösenord </Button>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <Button onClick={(e) => removeUser(aUser.id, aUser.email)}>
-                          <DeleteIcon />
-                        </Button>
-                      </Td>
-                    </Tr>
-                  ),
-              )}
-            </Tbody>
-          </Table>
-        </TableContainer>
+        <UserTable />
       </Box>
     </Flex>
   );

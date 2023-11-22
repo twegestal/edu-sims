@@ -15,7 +15,7 @@ import { validateRegistration, errorsToString } from 'api';
 import { useAlert } from './hooks/useAlert.jsx';
 import { useParams } from 'react-router-dom';
 
-export default function Register(props) {
+export default function Register() {
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
