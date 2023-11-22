@@ -176,7 +176,7 @@ describe('update user password', () => {
 
     await requestWithSupertest
       .patch('/user/update-password')
-      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('Authorization', `Bearer ${token}`)
       .set('id', id)
       .send({
         email: 'apansson@apa.se',
@@ -196,7 +196,7 @@ describe('update user password', () => {
 
     await requestWithSupertest
       .patch('/user/update-password')
-      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('Authorization', `Bearer ${token}`)
       .set('id', id)
       .send({
         email: 'apansson@apa.se',
@@ -216,7 +216,7 @@ describe('update user password', () => {
 
     await requestWithSupertest
       .patch('/user/update-password')
-      .set('Authorization', `Bearer ${token}`) // Removed the colon after 'Bearer'
+      .set('Authorization', `Bearer ${token}`)
       .set('id', id)
       .send({
         email: 'noEmail',
@@ -226,5 +226,5 @@ describe('update user password', () => {
       .then((res) => {
         expect(res.body).toEqual('Could not find resource');
       });
-  })
+  });
 });

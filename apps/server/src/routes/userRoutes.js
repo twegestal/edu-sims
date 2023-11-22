@@ -147,7 +147,7 @@ export const getUserRoutes = () => {
       }
     } catch (error) {
       console.error('error in update-password: ', error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).json('Internal Server Error');
     }
   });
 
