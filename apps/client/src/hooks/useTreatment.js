@@ -48,7 +48,7 @@ export const useTreatment = () => {
   const getTreatmentList = async (id) => {
     try {
       const response = await getTreatmentListApi({ headers: { id: id } });
-      if (response.status = 200) {
+      if ((response.status = 200)) {
         return response.data;
       }
     } catch (error) {

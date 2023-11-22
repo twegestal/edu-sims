@@ -6,9 +6,9 @@ export const getCaseRoutes = () => {
 
   router.post('/createCase', async (req, res, next) => {});
   //hämtar alla cases
-  router.get('/getAllCases', async (req, res, next) => {
-    const Cases = await object.medical_case.findAll();
-    res.status(200).json(Cases);
+  router.get('/getAllCases', async (_req, res, _next) => {
+    const cases = await object.medical_case.findAll();
+    res.status(200).send(cases);
   });
   // Hämtar ett specifict case beroende på dess id
   router.get('/getCaseById', async (req, res, next) => {

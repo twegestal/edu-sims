@@ -90,16 +90,5 @@ export const authRouter = () => {
     }
   });
 
-  router.post('/refresh', async (req, res, _next) => {
-    const token = req.cookies['refreshToken'];
-    const userId = await validateRefreshToken(token, res);
-    if (userId) {
-      const token = createToken(userId);
-      res.status(200).send({ token: token });
-    } else {
-      res.status(401).send('Invalid refresh token');
-    }
-  });
-
   return router;
 };

@@ -11,7 +11,7 @@ const getHeaders = (token) => ({
 });
 
 export const useApi = (method) => {
-  const { user } = useAuth() || {};
+  const { user, updateToken } = useAuth() || {};
   const token = user ? user.token : undefined;
 
   const apiClient = useMemo(
@@ -19,8 +19,18 @@ export const useApi = (method) => {
       ky.create({
         prefixUrl,
         headers: getHeaders(token),
+        hooks: {
+          afterResponse: [
+            async (_requst, _options, response) => {
+              const newToken = response.headers.get('X-New-Token');
+              if (newToken) {
+                updateToken(newToken);
+              }
+            },
+          ],
+        },
       }),
-    [token],
+    [token, updateToken],
   );
 
   return async (options = {}) => {

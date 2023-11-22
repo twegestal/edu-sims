@@ -22,8 +22,6 @@ export const useCases = () => {
       const response = await getAllCasesApi();
       if (response.status === 200) {
         setCases(response.data);
-      } else {
-        //refresh?
       }
     } catch (error) {
       console.error('Error fetching cases: ', error);

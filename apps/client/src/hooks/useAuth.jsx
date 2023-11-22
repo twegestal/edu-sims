@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const logoutApi = useApi('logout');
   const resetPasswordApi = useApi('resetPassword');
   const registerApi = useApi('register');
-  const refreshApi = useApi('refresh');
 
   const login = async (email, password) => {
     try {
@@ -49,19 +48,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const refresh = async () => {
-    try {
-      const respose = await refreshApi();
-      if (respose.data.token) {
-        const newUser = user;
-        newUser.token = respose.data.token;
-        setUser(newUser);
-      }
-    } catch (error) {
-      console.error('error refreshing', error);
-    }
-  }
-
   const resetPassword = async (email) => {
     try {
       //await resetPassword(email);
@@ -70,8 +56,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateToken = (token) => {
+    console.log('current user token: ', user.token);
+    const updatedUser = user;
+    updatedUser.token = token;
+    setUser(updatedUser);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, refresh, updateToken }}>
       {children}
     </AuthContext.Provider>
   );

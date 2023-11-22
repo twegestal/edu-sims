@@ -1,4 +1,4 @@
-import { useAuth } from "./useAuth.jsx"
+import { useAuth } from './useAuth.jsx';
 
 export const useErrors = () => {
   const { refresh } = useAuth();
@@ -9,7 +9,7 @@ export const useErrors = () => {
     } else if (response.status === 401 && response.data === 'Invalid refresh token') {
       //set user null
     }
-  }
+  };
 
   return { handleApiError };
-}
+};
