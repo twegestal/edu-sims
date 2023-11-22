@@ -57,14 +57,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateToken = (token) => {
-    console.log('current user token: ', user.token);
     const updatedUser = user;
     updatedUser.token = token;
     setUser(updatedUser);
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, refresh, updateToken }}>
+    <AuthContext.Provider value={{ user, login, logout, register, updateToken }}>
       {children}
     </AuthContext.Provider>
   );
