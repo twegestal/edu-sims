@@ -28,6 +28,7 @@ pnpm run dev-client #Starts only the client in development mode
 pnpm run dev-server #Starts only the server in development mode
 pnpm run lint #Linting for all workspaces
 pnpm format #Formatting for all workspaces
+pnpm test #Runs test suites for all workspaces
 ```
 
 ### Project Structure
