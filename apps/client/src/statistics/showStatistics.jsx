@@ -1,51 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Flex, Stat, StatLabel, StatNumber, StatGroup } from '@chakra-ui/react';
+import { useStatistics } from '../hooks/useStatistic.js';
+
 
 export default function ShowStatistics(props) {
-  const [statistics, setStatistics] = useState({});
+  const { getTotalAmountUsers, amountUser, getActiveUsers, activeUsers, allCasesStatistics,} = useStatistics();
 
   useEffect(() => {
     const getStatistics = async () => {
-      //Skall ersättas med API kall
 
-      const apiData = {
-        total_users: 80,
-        active_users_week: 10,
-      };
+      await getTotalAmountUsers();
 
-      setStatistics(apiData);
+      const previousDate = getPreviousDate(7)
+      getActiveUsers(previousDate);
     };
 
     getStatistics();
   }, []);
 
-  const jsonToCsv = (json) => {
+  const jsonToCsv = (data) => {
     const rows = [];
 
-    // Extract headers from the first object in the array
-    const headers = Object.keys(json[0]);
-    rows.push(headers.join(','));
+    // Extract headers from the object keys
+    const headers = Object.keys(data.data[0]);
+    rows.push(headers.join(';'));
 
     // Extract data for each object in the array
-    json.forEach((row) => {
-      const values = headers.map((header) => row[header]);
-      rows.push(values.join(','));
+    data.data.forEach((row) => {
+      const values = headers.map((header) => {
+        const value = row[header];
+
+        // Check if the value is a date and format accordingly
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+
+        return value;
+      });
+
+      rows.push(values.join(';'));
     });
 
     return rows.join('\n');
   };
 
   const handleDownloadReports = async () => {
-    const apiData = [
-      {
-        total_users: 80,
-        active_users_week: 10,
-      },
-    ];
+    
+    const fetchedData = await allCasesStatistics();
+    const csvData = jsonToCsv(fetchedData);
 
-    const csvData = jsonToCsv(apiData);
-
-    console.log('response', statistics);
     const url = window.URL.createObjectURL(new Blob([csvData], { type: 'text/csv' }));
     const link = document.createElement('a');
     link.href = url;
@@ -55,6 +58,29 @@ export default function ShowStatistics(props) {
     link.click();
     link.remove();
   };
+
+  const getPreviousDate = (daysAgo) => {
+    const currentDate = new Date(); 
+    const datePrevious = new Date(currentDate);
+    datePrevious.setUTCDate(currentDate.getUTCDate() - daysAgo);
+
+    const formattedDate = datePrevious.toLocaleString('sv-SE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'UTC',
+    });
+
+
+
+    return formattedDate
+  }
+
+
+
 
   return (
     <div>
@@ -66,11 +92,11 @@ export default function ShowStatistics(props) {
         <StatGroup>
           <Stat>
             <StatLabel>Totalt antal användare</StatLabel>
-            <StatNumber>{statistics.total_users}</StatNumber>
+            <StatNumber>{amountUser}</StatNumber>
           </Stat>
           <Stat>
             <StatLabel>Aktiva användare senaste veckan</StatLabel>
-            <StatNumber>{statistics.active_users_week}</StatNumber>
+            <StatNumber>{activeUsers}</StatNumber>
           </Stat>
         </StatGroup>
       </Flex>
