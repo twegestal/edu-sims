@@ -22,7 +22,7 @@ export default function UserTable() {
   const { setAlert } = useAlert();
   const { allUsers, getAllUsers, clearUserInfo } = useUser();
   const [loading, setLoading] = useState(false);
-  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
 
@@ -37,32 +37,36 @@ export default function UserTable() {
 
   const handleRemoveUser = async (userToRemove) => {
     setIsConfirmOpen(false);
-    const response = await clearUserInfo(userToRemove.id); 
+    const response = await clearUserInfo(userToRemove.id);
     if (response) {
       setAlert('success', 'Användare borttagen', `${userToRemove.email} har tagits bort`);
       await getAllUsers(user.id);
     } else {
-      setAlert('error', 'Användare kunde inte tas bort', `${userToRemove.email} kunde inte tas bort`);
+      setAlert(
+        'error',
+        'Användare kunde inte tas bort',
+        `${userToRemove.email} kunde inte tas bort`,
+      );
     }
   };
 
-  const openResetPasswordModal = (user) => {
+  const openResetPassword = (user) => {
     setSelectedUser(user);
-    setIsResetPasswordModalOpen(true);
+    setIsResetPasswordOpen(true);
   };
 
-  const closeResetPasswordModal = () => {
-    setIsResetPasswordModalOpen(false);
+  const closeResetPassword = () => {
+    setIsResetPasswordOpen(false);
   };
 
   const openConfirm = (user) => {
     setSelectedUser(user);
     setIsConfirmOpen(true);
-  }
+  };
 
   const closeConfirm = () => {
     setIsConfirmOpen(false);
-  }
+  };
 
   return (
     <>
@@ -84,14 +88,16 @@ export default function UserTable() {
                       <Td>{aUser.email}</Td>
                       <Td>
                         <FormControl display={'flex'} flexDirection={'column'}>
-                          <Button onClick={() => openResetPasswordModal({id: aUser.id, email: aUser.email})}>
+                          <Button
+                            onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
+                          >
                             {' '}
                             Sätt nytt lösenord{' '}
                           </Button>
                         </FormControl>
                       </Td>
                       <Td>
-                        <Button onClick={() => openConfirm({id: aUser.id, email: aUser.email})}>
+                        <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
                           <DeleteIcon />
                         </Button>
                       </Td>
@@ -104,11 +110,11 @@ export default function UserTable() {
       )}
 
       <ResetPassword
-        isOpen={isResetPasswordModalOpen}
-        onClose={closeResetPasswordModal}
+        isOpen={isResetPasswordOpen}
+        onClose={closeResetPassword}
         email={selectedUser.email}
       />
-      <Confirm 
+      <Confirm
         isOpen={isConfirmOpen}
         onClose={closeConfirm}
         header={'Ta bort användare'}

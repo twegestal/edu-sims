@@ -9,10 +9,8 @@ import {
   CardHeader,
   CardBody,
   Text,
-  useToast,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks/useUser.js';
-import { useAuth } from '../hooks/useAuth.jsx';
 import UserTable from './UserTable.jsx';
 
 export default function ManageUsers(props) {
