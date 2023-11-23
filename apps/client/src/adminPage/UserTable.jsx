@@ -8,7 +8,6 @@ import {
   Td,
   Tbody,
   FormControl,
-  Input,
   Button,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
@@ -16,6 +15,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
 import { useAlert } from '../hooks/useAlert';
 import ResetPassword from './ResetPassword';
+import Confirm from '../components/Confirm';
 
 export default function UserTable() {
   const { user } = useAuth();
@@ -23,7 +23,8 @@ export default function UserTable() {
   const { allUsers, getAllUsers, clearUserInfo } = useUser();
   const [loading, setLoading] = useState(false);
   const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
-  const [selectedUserEmail, setSelectedUserEmail] = useState('');
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,26 +35,34 @@ export default function UserTable() {
     fetchUsers();
   }, []);
 
-  const handleRemoveUser = async (id, email) => {
-    const response = await clearUserInfo(id);
-    console.log(response);
-
+  const handleRemoveUser = async (userToRemove) => {
+    setIsConfirmOpen(false);
+    const response = await clearUserInfo(userToRemove.id); 
     if (response) {
-      setAlert('success', 'Användare borttagen', `${email} har tagits bort`);
+      setAlert('success', 'Användare borttagen', `${userToRemove.email} har tagits bort`);
       await getAllUsers(user.id);
     } else {
-      setAlert('error', 'Användare kunde inte tas bort', `${email} kunde inte tas bort`);
+      setAlert('error', 'Användare kunde inte tas bort', `${userToRemove.email} kunde inte tas bort`);
     }
   };
 
-  const openResetPasswordModal = (email) => {
-    setSelectedUserEmail(email);
+  const openResetPasswordModal = (user) => {
+    setSelectedUser(user);
     setIsResetPasswordModalOpen(true);
   };
 
   const closeResetPasswordModal = () => {
     setIsResetPasswordModalOpen(false);
   };
+
+  const openConfirm = (user) => {
+    setSelectedUser(user);
+    setIsConfirmOpen(true);
+  }
+
+  const closeConfirm = () => {
+    setIsConfirmOpen(false);
+  }
 
   return (
     <>
@@ -75,14 +84,14 @@ export default function UserTable() {
                       <Td>{aUser.email}</Td>
                       <Td>
                         <FormControl display={'flex'} flexDirection={'column'}>
-                          <Button onClick={() => openResetPasswordModal(aUser.email)}>
+                          <Button onClick={() => openResetPasswordModal({id: aUser.id, email: aUser.email})}>
                             {' '}
                             Sätt nytt lösenord{' '}
                           </Button>
                         </FormControl>
                       </Td>
                       <Td>
-                        <Button onClick={() => handleRemoveUser(aUser.id, aUser.email)}>
+                        <Button onClick={() => openConfirm({id: aUser.id, email: aUser.email})}>
                           <DeleteIcon />
                         </Button>
                       </Td>
@@ -97,7 +106,14 @@ export default function UserTable() {
       <ResetPassword
         isOpen={isResetPasswordModalOpen}
         onClose={closeResetPasswordModal}
-        email={selectedUserEmail}
+        email={selectedUser.email}
+      />
+      <Confirm 
+        isOpen={isConfirmOpen}
+        onClose={closeConfirm}
+        header={'Ta bort användare'}
+        body={`Är du säker att du vill ta bort användare ${selectedUser.email}`}
+        handleConfirm={() => handleRemoveUser(selectedUser)}
       />
     </>
   );
