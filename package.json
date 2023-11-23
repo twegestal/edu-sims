@@ -7,7 +7,8 @@
     "dev-server": "pnpm --prefix apps/server run dev",
     "dev": "concurrently \"pnpm --prefix apps/client run dev\" \"pnpm --prefix apps/server run dev\"",
     "lint": "eslint './{apps,packages}/**/src/**/*.{js,jsx}'",
-    "format": "prettier --write '**/*.{js,jsx,json,css}'"
+    "format": "prettier --write '**/*.{js,jsx,json,css}'",
+    "test": "concurrently \"pnpm --prefix apps/client test\" \"pnpm --prefix apps/server test\""
   },
   "devDependencies": {
     "concurrently": "^8.2.1",

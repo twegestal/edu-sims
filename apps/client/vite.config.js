@@ -15,6 +15,10 @@ const options = {
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
   server: {
     https: options,
     proxy: {

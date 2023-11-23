@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
       const response = await loginApi({ body: { email, password } });
       if (response.data.token) {
         setUser(response.data);
+      } else {
+        return false;
       }
     } catch (error) {
       console.error('Login failed', error);
