@@ -23,7 +23,21 @@ export const getStatisticRoutes = () => {
 
   router.get('/allCasesStatistics', async (req, res, _next) => {
     const result = await db.query(
-      "SELECT * FROM attempt left outer join medical_case on attempt.case_id = medical_case.id",
+      `SELECT 
+      user_id,
+      is_finished,
+      faults,
+      CAST(timestamp_started AS DATE),
+      CAST(timestamp_finished AS DATE),
+      correct_diagnosis,
+      nbr_of_tests_performed,
+      medical_case.name as "Case name",
+      published,
+      medical_field.name as "medical field name"
+      FROM attempt
+      left outer join medical_case on attempt.case_id = medical_case.id
+      left outer join medical_field on medical_case.medical_field_id = medical_field.id
+      `,
       { type: QueryTypes.SELECT }
     );
     res.status(200).json(result);
