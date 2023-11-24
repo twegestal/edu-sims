@@ -2,7 +2,7 @@ import { packageResponse } from '../utils/apiUtils.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
-  createCase: async (data) => apiClient.post(`${prefix}createCase`, { json: data }).json(),
+  createCase: async (body) => apiClient.post(`${prefix}createCase`, body).json(),
 
   getAllCases: async () => {
     const response = await apiClient.get(`${prefix}getAllCases`);
@@ -101,6 +101,21 @@ export const caseApi = (apiClient) => ({
 
   publishCase: async (headers) => {
     const response = await apiClient.put(`${prefix}publishCase`, headers);
+    return packageResponse(response);
+  },
+  publishCase: async (headers) => {
+    const response = apiClient.put(`${prefix}publishCase`, headers);
+    return packageResponse(response);
+  },
+
+
+  getAllExaminationTypes: async (headers) => {
+    const response = apiClient.get(`${prefix}getExaminationTypes`, headers);
+    return packageResponse(response);
+  },
+
+  getAllExaminationSubtypes: async (headers) => {
+    const response = apiClient.get(`${prefix}getExaminationSubtypes`, headers);
     return packageResponse(response);
   },
 });

@@ -1,10 +1,38 @@
 import { Router } from 'express';
+import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
+import { insertSteps } from '../utils/databaseUtils.js'; 
 
 export const getCaseRoutes = () => {
   const router = Router();
 
-  router.post('/createCase', async (req, res, next) => {});
+  router.post('/createCase', async (req, res, next) => {
+    const caseObject = req.body;
+    console.log(caseObject);
+
+    const transaction = await getTransaction();
+    try {
+      const medicalCase = await object.medical_case.create({
+        name: caseObject.name,
+        medical_field_id: caseObject.medical_field_id,
+        creator_user_id: caseObject.creator_user_id,
+        published: false
+      }, {transaction: transaction});
+  
+      console.log('medical case:', medicalCase);
+      await insertSteps(caseObject.steps, medicalCase.id, transaction);
+  
+      await transaction.commit();
+      res.status(201).json('case created');
+    } catch (error) {
+      console.log('transaction did not work', error);
+      await transaction.rollback();
+      res.status(400).send(error);
+    }
+    
+    
+  });
+
   //hämtar alla cases
   router.get('/getAllCases', async (_req, res, _next) => {
     const cases = await object.medical_case.findAll();
@@ -220,7 +248,7 @@ export const getCaseRoutes = () => {
     if (req.header('id') == '') {
       res.status(404).json('NOT FOUND');
     } else {
-      const result = await object.treatment_type.findAll({
+      const result = await object.treatment_subtype.findAll({
         where: {
           treatment_type_id: req.header('id'),
         },
@@ -229,7 +257,15 @@ export const getCaseRoutes = () => {
     }
   });
   router.get('/getTreatmentList', async (req, res, next) => {
-    if (req.header('id') == '') {
+    if (req.header('treatment_subtype_id')) {
+      const response = await object.treatment_list.findAll({
+        where: {
+          treatment_subtype_id: req.header('treatment_subtype_id')
+        }
+      });
+      res.status(200).json(response);
+    }
+    else if (req.header('id') == '') {
       const Value = await object.treatment_list.findAll({});
       res.status(200).json(Value);
     } else {
