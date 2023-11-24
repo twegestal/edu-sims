@@ -14,7 +14,7 @@ export const useCreateCase = () => {
     try {
       const result = await getAllExaminationTypesApi({ headers: { id: id } });
       if (result) {
-        return result;
+        return result.data;
       }
     } catch (error) {
       console.error('Error fetching all examination types', error);
@@ -27,7 +27,7 @@ export const useCreateCase = () => {
         headers: { examination_type_id: examination_type_id },
       });
       if (result) {
-        return result;
+        return result.data;
       }
     } catch (error) {
       console.error('Error fetching examination subtypes', error);
@@ -43,7 +43,7 @@ export const useCreateCase = () => {
       });
 
       if (result) {
-        return result;
+        return result.data;
       }
     } catch (error) {
       console.error('error fetching examination list', error);
@@ -54,7 +54,7 @@ export const useCreateCase = () => {
     try {
       const result = await getTreatmentTypesApi();
       if (result) {
-        return result;
+        return result.data;
       }
     } catch (error) {
       console.error('error fetching treatment types: ', error);
@@ -65,7 +65,7 @@ export const useCreateCase = () => {
     try {
         const result = await getTreatmentSubtypesApi({ headers: { id: id } });
         if (result) {
-            return result;
+            return result.data;
         }
     } catch (error) {
         console.error('error fetching treatment subtypes: ', error); 
@@ -76,7 +76,7 @@ export const useCreateCase = () => {
     try {
         const result = await getTreatmentListApi({ headers: { treatment_subtype_id: treatmentSubtypeId } });
         if (result) {
-            return result;
+            return result.data;
         }
     } catch (error) {
         console.error('error fetching treatment list: ', error); 
