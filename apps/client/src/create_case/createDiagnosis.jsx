@@ -25,7 +25,7 @@ export default function CreateDiagnosis({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
     module_type_identifier: 2,
     prompt: 'default',
-    diagnosis: 'default',
+    diagnosis_id: 'default',
     feedback_correct: 'default',
     feedback_incorrect: 'default',
   });
@@ -82,7 +82,7 @@ export default function CreateDiagnosis({ updateCaseObject }) {
   const setDiagnosis = (diagnosis) => {
     setStepData({
       ...stepData,
-      diagnosis: diagnosisNames[diagnosis],
+      diagnosis_id: diagnosisNames[diagnosis],
     });
   };
   const setFeedbackCorrect = (feedback) => {
@@ -153,7 +153,7 @@ export default function CreateDiagnosis({ updateCaseObject }) {
                         <Radio value={element.id}>{element.name}</Radio>
                     ))}
                 </HStack>
-                    </RadioGroup>
+              </RadioGroup>
               
               <Input
                 id='inputField'

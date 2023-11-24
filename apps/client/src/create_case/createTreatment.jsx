@@ -22,7 +22,7 @@ import { useCreateCase } from '../hooks/useCreateCase';
 
 export default function CreateTreatment({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
-    module_type_identifer: 3,
+    module_type_identifier: 3,
     prompt: 'default',
     treatments_to_display: {},
     feedback_correct: 'default',
@@ -103,6 +103,15 @@ export default function CreateTreatment({ updateCaseObject }) {
     return response;
   };
 
+  useEffect(() => {
+    if (!loading) {
+      console.log('treatmentType: ', treatmentTypes);
+    console.log('treatmentSubtypes: ' , treatmentSubtypes);
+    console.log('treatmentList: ', treatmentList);
+    }
+    
+  },[treatmentList])
+
   const setPrompt = (prompt) => {
     setStepData({
       ...stepData,
@@ -114,7 +123,7 @@ export default function CreateTreatment({ updateCaseObject }) {
     const dose = document.getElementById('input' + treatmentId).value;
     let addedTreatments = stepData.step_specific_treatments;
     addedTreatments.push({
-      treatmentId: treatmentId,
+      treatment_id: treatmentId,
       value: dose,
     })
     setStepData({

@@ -1,11 +1,36 @@
 import { Router } from 'express';
+import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
+import { insertSteps } from '../utils/databaseUtils.js'; 
 
 export const getCaseRoutes = () => {
   const router = Router();
 
   router.post('/createCase', async (req, res, next) => {
-    console.log('request body: ', req.body.json);
+    const caseObject = req.body;
+    console.log(caseObject);
+
+    const transaction = await getTransaction();
+    try {
+      const medicalCase = await object.medical_case.create({
+        name: caseObject.name,
+        medical_field_id: caseObject.medical_field_id,
+        creator_user_id: caseObject.creator_user_id,
+        published: false
+      }, {transaction: transaction});
+  
+      console.log('medical case:', medicalCase);
+      await insertSteps(caseObject.steps, medicalCase.id, transaction);
+  
+      await transaction.commit();
+      res.status(201).json('case created');
+    } catch (error) {
+      console.log('transaction did not work', error);
+      await transaction.rollback();
+      res.status(400).send(error);
+    }
+    
+    
   });
 
   //hämtar alla cases

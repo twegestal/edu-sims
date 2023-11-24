@@ -11,23 +11,35 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Heading,
+  Card,
+  CardBody,
+  Text,
+  Input
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
 import { useCreateCase } from '../hooks/useCreateCase';
 
 export default function CreateExamination({ updateCaseObject }) {
   const [stepData, setStepData] = useState({
-    module_type_identifer: 1,
+    module_type_identifier: 1,
     prompt: 'default',
     examination_to_display: {},
+    step_specific_values: [],
     feedback_correct: 'default',
     feedback_incorrect: 'default',
     max_nbr_test: 0,
   });
   const [examinationCategories, setExaminationCategories] = useState();
   const [examinationSubcategories, setExaminationSubcategories] = useState();
+  const [examinationList, setExaminationList] = useState();
 
-  const { getAllExaminationTypes, getAllExaminationSubtypes } = useCreateCase();
+  const { getAllExaminationTypes, getAllExaminationSubtypes, getExaminationList } = useCreateCase();
 
   const [loading, setLoading] = useState(true);
 
@@ -37,24 +49,37 @@ export default function CreateExamination({ updateCaseObject }) {
       const categories = await getAllExaminationTypes(id);
       const categoryMap = {};
       const subCategoryMap = {};
+      const examinationsMap = {};
 
       for (let i = 0; i < categories.length; i++) {
         categoryMap[categories[i].id] = categories[i].name;
 
         const subcategories = await fetchSubcategories(categories[i].id);
-        let array = [];
+        let subcategoryArray = [];
         for (let j = 0; j < subcategories.length; j++) {
           let newEntry = {
             id: subcategories[j].id,
             name: subcategories[j].name,
           };
-          array.push(newEntry);
-        }
-        subCategoryMap[categories[i].id] = array;
-      }
+          subcategoryArray.push(newEntry);
 
+          const examinations = await fetchExaminations(subcategories[j].id);
+          let examinationsArray = [];
+          for (let k = 0; k < examinations.length; k++) {
+            let newEntry = {
+              id: examinations[k].id,
+              name: examinations[k].name,
+            };
+            examinationsArray.push(newEntry);
+            examinationsMap[subcategories[j].id] = examinationsArray;
+          }
+        }
+        subCategoryMap[categories[i].id] = subcategoryArray;
+      }
+      
       setExaminationCategories(categoryMap);
       setExaminationSubcategories(subCategoryMap);
+      setExaminationList(examinationsMap);
 
       setLoading(false);
     };
@@ -66,6 +91,12 @@ export default function CreateExamination({ updateCaseObject }) {
     const response = await getAllExaminationSubtypes(id);
     return response;
   };
+
+  const fetchExaminations = async (examinationSubtypeId) => {
+    const response = await getExaminationList(examinationSubtypeId);
+
+    return response;
+  }
 
   const updateExaminationsTypesToDisplay = (checkbox, examinationTypeId) => {
     if (checkbox.checked) {
@@ -136,6 +167,19 @@ export default function CreateExamination({ updateCaseObject }) {
     });
   };
 
+  const addExamination = (examinationId) => {
+    const value = document.getElementById('input' + examinationId).value;
+    const isNormal = document.getElementById('checkbox' + examinationId).checked;
+    let addedExaminations = stepData.step_specific_values;
+    addedExaminations.push({
+      examination_id: examinationId,
+      value: value,
+      is_normal: isNormal,
+    });
+
+    
+  }
+
   return (
     <>
       {loading ? (
@@ -162,6 +206,62 @@ export default function CreateExamination({ updateCaseObject }) {
               ))}
             </VStack>
           ))}
+
+            <Accordion allowToggle>  
+              <AccordionItem>
+                <AccordionButton>
+                  <FormLabel>Stegspecifika utredningar + värden</FormLabel>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel>
+                  {Object.entries(examinationCategories).map(([categoryId, name]) => (
+                    <>
+                      <Heading as='h2' size='lg'>{name}</Heading>
+                  
+                      {examinationSubcategories[categoryId].map((subcategory, index) => (
+                        <>
+                          <Heading as='h3' size='md'>{subcategory.name}</Heading>
+                          
+                          {examinationList[subcategory.id]?.length > 0 ? (
+          <VStack>
+            {examinationList[subcategory.id].map((examination) => (
+              <Card>
+                <CardBody>
+                  <Text id={examination.id}>{examination.name}</Text>
+                  <Input id={'input' + examination.id} placeholder='Värde'></Input>
+                  <Checkbox id={'checkbox' + examination.id}>Normalvärde</Checkbox>
+                  <Button onClick={() => {addExamination(examination.id)}}>Lägg till utredning + värde</Button>
+                </CardBody>
+              </Card>
+            ))}
+          </VStack>
+        ) : (
+          <Text>No examinations available for this subcategory.</Text>
+        )}
+
+
+
+                          {/* <VStack>
+                            {examinationList[subcategory.id].map((examination, index) => (
+                              <Card>
+                                <CardBody>
+                                  <Text id={examination.id}>{examination.name}</Text>
+                                  <Input id={'input' + examination.id} placeholder='Värde'></Input>
+                                  <Checkbox id={'checkbox' + examination.id}>Normalvärde</Checkbox>
+                                  <Button onClick={() => {addExamination(examination.id)}}>Lägg till utredning + värde</Button>
+                                </CardBody>
+                              </Card>
+                            ))}
+                          </VStack> */}
+                        </>
+                      ))}
+                    </>
+                  ))}
+                </AccordionPanel>       
+              </AccordionItem>
+
+                       
+                            </Accordion>
 
           <FormLabel>Korrekt feedback</FormLabel>
           <Textarea

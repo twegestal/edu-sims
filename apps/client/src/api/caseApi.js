@@ -1,7 +1,7 @@
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
-  createCase: async (data) => apiClient.post(`${prefix}createCase`, { json: data }).json(),
+  createCase: async (body) => apiClient.post(`${prefix}createCase`, body).json(),
 
   getAllCases: async () => apiClient.get(`${prefix}getAllCases`).json(),
 

@@ -8,6 +8,7 @@ export const useCreateCase = () => {
   const getTreatmentSubtypesApi = useApi('getTreatmentSubtypes');
   const getTreatmentListApi = useApi('getTreatmentList');
   const createCaseApi = useApi('createCase');
+  const getExaminationListApi = useApi('getExaminationList');
 
   const getAllExaminationTypes = async (id) => {
     try {
@@ -32,6 +33,22 @@ export const useCreateCase = () => {
       console.error('Error fetching examination subtypes', error);
     }
   };
+
+  const getExaminationList = async (examinationSubtypeId) => {
+    try {
+      const result = await getExaminationListApi({
+        headers: {
+          examination_subtype_id: examinationSubtypeId
+        }
+      });
+
+      if (result) {
+        return result;
+      }
+    } catch (error) {
+      console.error('error fetching examination list', error);
+    }
+  }
 
   const getTreatmentTypes = async () => {
     try {
@@ -77,6 +94,7 @@ export const useCreateCase = () => {
   return {
     getAllExaminationTypes,
     getAllExaminationSubtypes,
+    getExaminationList,
     getTreatmentTypes,
     getTreatmentSubtypes,
     getTreatmentList,

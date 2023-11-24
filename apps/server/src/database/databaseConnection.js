@@ -24,4 +24,10 @@ const connectToDatabase = async () => {
   return db;
 };
 
+export const getTransaction = async () => {
+  const transaction = await db.transaction();
+  
+  return transaction;
+}
+
 export const db = await connectToDatabase();
