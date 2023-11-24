@@ -4,6 +4,7 @@ import { getUserRoutes } from './routes/userRoutes.js';
 import { getCaseRoutes } from './routes/caseRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { validateToken } from './utils/jwtHandler.js';
+import { getStatisticRoutes } from './routes/statisticsRoutes.js';
 
 export const createServer = () => {
   const app = express();
@@ -17,6 +18,7 @@ export const createServer = () => {
   app.use(validateToken);
   app.use('/user', getUserRoutes());
   app.use('/case', getCaseRoutes());
+  app.use('/statistic', getStatisticRoutes());
 
   return app;
 };
