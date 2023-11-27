@@ -372,6 +372,16 @@ export const getCaseRoutes = () => {
     }
   });
 
+  router.get('/getModuleTypes', async (req, res, _next)  => {
+    try {
+      const response = await object.module_type.findAll();
+
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+
   return router;
 };
 

@@ -104,17 +104,22 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
   publishCase: async (headers) => {
-    const response = apiClient.put(`${prefix}publishCase`, headers);
+    const response = await apiClient.put(`${prefix}publishCase`, headers);
     return packageResponse(response);
   },
 
   getAllExaminationTypes: async (headers) => {
-    const response = apiClient.get(`${prefix}getExaminationTypes`, headers);
+    const response = await apiClient.get(`${prefix}getExaminationTypes`, headers);
     return packageResponse(response);
   },
 
   getAllExaminationSubtypes: async (headers) => {
-    const response = apiClient.get(`${prefix}getExaminationSubtypes`, headers);
+    const response = await apiClient.get(`${prefix}getExaminationSubtypes`, headers);
     return packageResponse(response);
   },
+
+  getModuleTypes: async () => {
+    const response = await apiClient.get(`${prefix}getModuleTypes`);
+    return packageResponse(response);
+  }
 });

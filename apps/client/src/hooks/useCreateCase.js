@@ -9,6 +9,9 @@ export const useCreateCase = () => {
   const getTreatmentListApi = useApi('getTreatmentList');
   const createCaseApi = useApi('createCase');
   const getExaminationListApi = useApi('getExaminationList');
+  const getModuleTypesApi = useApi('getModuleTypes');
+
+  const [moduleTypes, setModuleTypes] = useState();
 
   const getAllExaminationTypes = async (id) => {
     try {
@@ -93,6 +96,21 @@ export const useCreateCase = () => {
     }
   };
 
+  const getModuleTypes = async () => {
+    try {
+      const response = await getModuleTypesApi();
+
+      console.log('response innan if:en', response.data);
+      console.log('response.status: ', response.status);
+      if (response.status === 200) {
+        console.log('respone.dat: ', response.data);
+        setModuleTypes(response.data);
+      }
+    } catch (error) {
+      console.error('error fetching module types: ', error);
+    }
+  }
+
   return {
     getAllExaminationTypes,
     getAllExaminationSubtypes,
@@ -101,5 +119,7 @@ export const useCreateCase = () => {
     getTreatmentSubtypes,
     getTreatmentList,
     createCase,
+    getModuleTypes,
+    moduleTypes
   };
 };
