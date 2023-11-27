@@ -101,6 +101,47 @@ export const getUserRoutes = () => {
     }
   });
 
+  router.put('/assingAdminPrivilege', async (req, res, next) => {
+
+    const result = await object.end_user.update(
+      {
+        is_admin: true,
+      },
+      {
+        where: {
+          id: req.header('user_id'),
+        },
+      },
+    );
+
+    if (result === null) {
+      res.status(404).json('No user found');
+    } else {
+      res.status(200).json('User set as admin');
+    }
+  });
+
+  router.put('/revokeAdminPrivilege', async (req, res, next) => {
+
+    const result = await object.end_user.update(
+      {
+        is_admin: false,
+      },
+      {
+        where: {
+          id: req.header('user_id'),
+        },
+      },
+    );
+
+    if (result === null) {
+      res.status(404).json('No user found');
+    } else {
+      res.status(200).json('User set as not admin');
+    }
+  });
+
+
   router.post('/createUserGroup', async (req, res, _next) => {
     const result = await object.user_group.create({
       name: req.header('name'),

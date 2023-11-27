@@ -17,6 +17,16 @@ export const userApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  assingAdminPrivilege: async (headers) => {
+    const response = await apiClient.put(`${prefix}assingAdminPrivilege`, headers);
+    return packageResponse(response);
+  },
+
+  revokeAdminPrivilege: async (headers) => {
+    const response = await apiClient.put(`${prefix}revokeAdminPrivilege`, headers);
+    return packageResponse(response);
+  },
+
   createUserGroup: async (headers) => {
     const response = await apiClient.post(`${prefix}createUserGroup`, headers);
     return packageResponse(response);

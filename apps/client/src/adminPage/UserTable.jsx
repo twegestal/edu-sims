@@ -20,7 +20,7 @@ import Confirm from '../components/Confirm';
 export default function UserTable() {
   const { user } = useAuth();
   const { setAlert } = useAlert();
-  const { allUsers, getAllUsers, clearUserInfo } = useUser();
+  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege } = useUser();
   const [loading, setLoading] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -46,6 +46,36 @@ export default function UserTable() {
         'error',
         'Användare kunde inte tas bort',
         `${userToRemove.email} kunde inte tas bort`,
+      );
+    }
+  };
+
+  const assignAdminRights = async (userToAssing) => {
+  
+    const response = await assingAdminPrivilege(userToAssing.id);
+
+    if (response) {
+      setAlert('success', 'Användaren', `${userToAssing.email} har tilldelats administratörsrättigheter`);
+      await getAllUsers(user.id);
+    } else {
+      setAlert(
+        'error',
+        'Användaren kunde inte tilldelas administratörsrättigheter ',
+      );
+    }
+  };
+
+  const revokeAdminRights = async (userToRevoke) => {
+  
+    const response = await revokeAdminPrivilege(userToRevoke.id);
+
+    if (response) {
+      setAlert('success', 'Användarem', `${userToRevoke.email} har fråntagits administratörsrättigheter`);
+      await getAllUsers(user.id);
+    } else {
+      setAlert(
+        'error',
+        'Användaren kunde inte fråntas administratörsrättigheter ',
       );
     }
   };
@@ -78,12 +108,13 @@ export default function UserTable() {
                 <Th>Email</Th>
                 <Th>Byt lösenord</Th>
                 <Th isNumeric>Ta bort användare</Th>
+                <Th isNumeric>Tilldela/Ta bort administratörs rättigheter</Th>
               </Tr>
             </Thead>
             <Tbody>
               {allUsers.map(
                 (aUser, index) =>
-                  aUser.email !== 'DeletedUser' && (
+                  aUser.email !== 'DeletedUser' && aUser.id !== user.id  && (
                     <Tr key={index}>
                       <Td>{aUser.email}</Td>
                       <Td>
@@ -100,6 +131,19 @@ export default function UserTable() {
                         <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
                           <DeleteIcon />
                         </Button>
+                      </Td>
+                      <Td>
+                        {aUser.is_admin ?
+                        <Button onClick={() => revokeAdminRights(aUser)}>
+                          {' '}
+                          Ta bort adminrättigheter{' '}
+                        </Button>
+                        :
+                        <Button onClick={() => assignAdminRights(aUser)}>
+                          {' '}
+                          Tilldela adminrättigheter{' '}
+                        </Button>
+                        }
                       </Td>
                     </Tr>
                   ),

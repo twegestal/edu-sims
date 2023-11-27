@@ -9,6 +9,9 @@ export const useUser = () => {
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
   const updatePasswordApi = useApi('updatePassword');
+  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
+  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
+
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -30,6 +33,24 @@ export const useUser = () => {
       return response.status === 200;
     } catch (error) {
       console.error('error clearing user info: ', error);
+    }
+  };
+
+  const assingAdminPrivilege = async (user_id) => {
+    try {
+      const response = await assingAdminPrivilegeApi({ headers: { user_id: user_id } });
+      return response.status === 200;
+    } catch (error) {
+      console.error('error assingning admin priviliege: ', error);
+    }
+  };
+
+  const revokeAdminPrivilege = async (user_id) => {
+    try {
+      const response = await revokeAdminPrivilegeApi({ headers: { user_id: user_id } });
+      return response.status === 200;
+    } catch (error) {
+      console.error('error revoking admin priviliege: ', error);
     }
   };
 
@@ -60,6 +81,8 @@ export const useUser = () => {
     getAllUsers,
     allUsers,
     clearUserInfo,
+    assingAdminPrivilege,
+    revokeAdminPrivilege,
     createUserGroup,
     createdUserGroup,
     updatePassword,
