@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionPanel,
   AccordionIcon,
-  Text
+  Text,
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -36,10 +36,8 @@ export default function CreateTreatment({ updateCaseObject }) {
 
   const { getTreatmentTypes, getTreatmentSubtypes, getTreatmentList } = useCreateCase();
 
-
   useEffect(() => {
     const fetchTreatmentTypes = async () => {
-
       const treatmentTypes = await getTreatmentTypes();
 
       const treatmentTypeMap = {};
@@ -90,14 +88,12 @@ export default function CreateTreatment({ updateCaseObject }) {
   }, [treatmentList]);
 
   const fetchSubtypes = async (id) => {
-
     const response = await getTreatmentSubtypes(id);
 
     return response;
   };
 
   const fetchTreatments = async (treatmentSubtypeId) => {
-
     const response = await getTreatmentList(treatmentSubtypeId);
 
     return response;
@@ -106,11 +102,10 @@ export default function CreateTreatment({ updateCaseObject }) {
   useEffect(() => {
     if (!loading) {
       console.log('treatmentType: ', treatmentTypes);
-    console.log('treatmentSubtypes: ' , treatmentSubtypes);
-    console.log('treatmentList: ', treatmentList);
+      console.log('treatmentSubtypes: ', treatmentSubtypes);
+      console.log('treatmentList: ', treatmentList);
     }
-    
-  },[treatmentList])
+  }, [treatmentList]);
 
   const setPrompt = (prompt) => {
     setStepData({
@@ -125,12 +120,12 @@ export default function CreateTreatment({ updateCaseObject }) {
     addedTreatments.push({
       treatment_id: treatmentId,
       value: dose,
-    })
+    });
     setStepData({
       ...stepData,
       step_specific_treatments: addedTreatments,
-    })
-  }
+    });
+  };
 
   const setFeedbackCorrect = (feedback) => {
     setStepData({
@@ -154,10 +149,10 @@ export default function CreateTreatment({ updateCaseObject }) {
         <VStack>
           <FormControl align='stretch' spacing='10'>
             <FormLabel>Prompt</FormLabel>
-            
+
             <Textarea placeholder='Prompt' onChange={(e) => setPrompt(e.target.value)}></Textarea>
-            
-            <Accordion allowToggle>  
+
+            <Accordion allowToggle>
               <AccordionItem>
                 <AccordionButton>
                   <FormLabel>Stegspecifika behandlingar + dosering</FormLabel>
@@ -166,19 +161,29 @@ export default function CreateTreatment({ updateCaseObject }) {
                 <AccordionPanel>
                   {Object.entries(treatmentTypes).map(([id, name]) => (
                     <>
-                      <Heading as='h2' size='lg'>{name}</Heading>
-                  
+                      <Heading as='h2' size='lg'>
+                        {name}
+                      </Heading>
+
                       {treatmentSubtypes[id].map((treatmentSubtype, index) => (
                         <>
-                          <Heading as='h3' size='md'>{treatmentSubtype.name}</Heading>
-                          
+                          <Heading as='h3' size='md'>
+                            {treatmentSubtype.name}
+                          </Heading>
+
                           <VStack>
                             {treatmentList[treatmentSubtype.id].map((treatment, index) => (
                               <Card>
                                 <CardBody>
                                   <Checkbox id={treatment.id}>{treatment.name}</Checkbox>
                                   <Input id={'input' + treatment.id} placeholder='dosering'></Input>
-                                  <Button onClick={() => {addTreatment(treatment.id)}}>Lägg till behandling</Button>
+                                  <Button
+                                    onClick={() => {
+                                      addTreatment(treatment.id);
+                                    }}
+                                  >
+                                    Lägg till behandling
+                                  </Button>
                                 </CardBody>
                               </Card>
                             ))}
@@ -187,7 +192,7 @@ export default function CreateTreatment({ updateCaseObject }) {
                       ))}
                     </>
                   ))}
-                </AccordionPanel>       
+                </AccordionPanel>
               </AccordionItem>
 
               <AccordionItem>
@@ -196,10 +201,13 @@ export default function CreateTreatment({ updateCaseObject }) {
                   <AccordionIcon />
 
                   <AccordionPanel>
-                    <Text>Jag sket i detta så länge eftersom vi inte använder treatments_to_display i treatment.jsx //Viktor</Text>
+                    <Text>
+                      Jag sket i detta så länge eftersom vi inte använder treatments_to_display i
+                      treatment.jsx //Viktor
+                    </Text>
                   </AccordionPanel>
                 </AccordionButton>
-              </AccordionItem>         
+              </AccordionItem>
             </Accordion>
 
             <FormLabel>Korrekt feedback</FormLabel>
@@ -214,12 +222,9 @@ export default function CreateTreatment({ updateCaseObject }) {
               onChange={(e) => setFeedbackIncorrect(e.target.value)}
             ></Textarea>
 
-            
-            
             <Button onClick={() => updateCaseObject(stepData)}>Klar med steget</Button>
           </FormControl>
         </VStack>
-        
       )}
     </>
   );

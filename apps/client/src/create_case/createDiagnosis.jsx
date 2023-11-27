@@ -40,35 +40,31 @@ export default function CreateDiagnosis({ updateCaseObject }) {
   useEffect(() => {
     const fetchMedicalFields = async () => {
       await getMedicalFields();
-      
     };
 
     const arr = ['s1', 's2', 's3', 's4'];
     setResultDiagnosis(arr);
 
     fetchMedicalFields();
-    
-    
   }, []);
 
   const changeMedicalField = async (medicalFieldId) => {
     await getDiagnosisList(medicalFieldId);
-  }
+  };
 
   useEffect(() => {
     if (diagnosisList.length > 0) {
-        let arr = [];
-        const diagnosisMap = {};
-        diagnosisList.map((diagnosis, index) => (
-            arr[index] = diagnosis.name,
-            diagnosisMap[diagnosis.name] = diagnosis.id
-        ));
-        setDiagnosisNames(diagnosisMap);
-        setResultDiagnosis(arr);
-
-
+      let arr = [];
+      const diagnosisMap = {};
+      diagnosisList.map(
+        (diagnosis, index) => (
+          (arr[index] = diagnosis.name), (diagnosisMap[diagnosis.name] = diagnosis.id)
+        ),
+      );
+      setDiagnosisNames(diagnosisMap);
+      setResultDiagnosis(arr);
     }
-    
+
     console.log(diagnosisList);
   }, [diagnosisList]);
 
@@ -101,7 +97,7 @@ export default function CreateDiagnosis({ updateCaseObject }) {
 
   useEffect(() => {
     if (medicalFields.length > 0) {
-        setLoading(false);
+      setLoading(false);
     }
   }, [medicalFields]);
 
@@ -149,12 +145,12 @@ export default function CreateDiagnosis({ updateCaseObject }) {
               <FormLabel>Ange korrekt diagnos</FormLabel>
               <RadioGroup onChange={(e) => changeMedicalField(e)}>
                 <HStack>
-                    {medicalFields.map((element) => (
-                        <Radio value={element.id}>{element.name}</Radio>
-                    ))}
+                  {medicalFields.map((element) => (
+                    <Radio value={element.id}>{element.name}</Radio>
+                  ))}
                 </HStack>
               </RadioGroup>
-              
+
               <Input
                 id='inputField'
                 placeholder='Sök korrekt diagnos här'

@@ -7,7 +7,7 @@ import {
   Radio,
   HStack,
   VStack,
-  Button
+  Button,
 } from '@chakra-ui/react';
 import CreateIntroduction from './createIntro.jsx';
 import CreateExamination from './createExamination.jsx';
@@ -20,13 +20,13 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
 
 export default function CreateCase(props) {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const { medicalFields, getMedicalFields } = useCases();
   const [caseObject, setCaseObject] = useState({
     name: 'default name',
     steps: [],
     medical_field_id: 'default medical field',
-    creator_user_id: user.id
+    creator_user_id: user.id,
   });
   const [module, setModule] = useState('0');
   const { createCase } = useCreateCase();
@@ -35,11 +35,10 @@ export default function CreateCase(props) {
   useEffect(() => {
     const fetchMedicalFields = () => {
       getMedicalFields();
-      
-    }
-    
+    };
+
     fetchMedicalFields();
-  },[])
+  }, []);
 
   const updateCaseObject = (updatedState) => {
     setCaseObject({
@@ -62,9 +61,9 @@ export default function CreateCase(props) {
   const setMedicalField = (medicalFieldId) => {
     setCaseObject({
       ...caseObject,
-      medical_field_id: medicalFieldId
-    })
-  }
+      medical_field_id: medicalFieldId,
+    });
+  };
 
   useEffect(() => {
     console.log(caseObject);
@@ -75,7 +74,6 @@ export default function CreateCase(props) {
       console.log(medicalFields);
       setLoading(false);
     }
-    
   }, [medicalFields]);
 
   return (
@@ -83,65 +81,70 @@ export default function CreateCase(props) {
       {loading ? (
         <LoadingSkeleton />
       ) : (
-      <div>
-        <FormControl>
-          <VStack padding='5'>
-            <Input
-              placeholder='Case-namn'
-              id='caseNameInput'
-              onChange={(e) => setCaseName(e.target.value)}
-            ></Input>
+        <div>
+          <FormControl>
+            <VStack padding='5'>
+              <Input
+                placeholder='Case-namn'
+                id='caseNameInput'
+                onChange={(e) => setCaseName(e.target.value)}
+              ></Input>
 
-            <FormLabel>Medical Field</FormLabel>
+              <FormLabel>Medical Field</FormLabel>
               <RadioGroup onChange={(e) => setMedicalField(e)}>
                 <HStack key={'göran'}>
                   {medicalFields.length > 0 ? (
                     medicalFields.map((medicalField, index) => (
                       <>
-                        <Radio key={index} value={medicalField.id}>{medicalField.name}</Radio>
+                        <Radio key={index} value={medicalField.id}>
+                          {medicalField.name}
+                        </Radio>
                       </>
                     ))
-                  ):(
+                  ) : (
                     <p>det var tomt?</p>
                   )}
-
                 </HStack>
               </RadioGroup>
-              
-            
-            <FormLabel>Modul</FormLabel>
-            <RadioGroup defaultValue='0' onChange={(e) => changeModule(e)}>
-              <HStack>
-                <Radio value='0'>Introduction</Radio>
-                <Radio value='1'>Examination</Radio>
-                <Radio value='2'>Diagnosis</Radio>
-                <Radio value='3'>Treatment</Radio>
-                <Radio value='4'>Summary</Radio>
-              </HStack>
-            </RadioGroup>
 
-            <div>
-              {module === '0' && (
-                <CreateIntroduction updateCaseObject={updateCaseObject}></CreateIntroduction>
-              )}
+              <FormLabel>Modul</FormLabel>
+              <RadioGroup defaultValue='0' onChange={(e) => changeModule(e)}>
+                <HStack>
+                  <Radio value='0'>Introduction</Radio>
+                  <Radio value='1'>Examination</Radio>
+                  <Radio value='2'>Diagnosis</Radio>
+                  <Radio value='3'>Treatment</Radio>
+                  <Radio value='4'>Summary</Radio>
+                </HStack>
+              </RadioGroup>
 
-              {module === '1' && (
-                <CreateExamination updateCaseObject={updateCaseObject}></CreateExamination>
-              )}
+              <div>
+                {module === '0' && (
+                  <CreateIntroduction updateCaseObject={updateCaseObject}></CreateIntroduction>
+                )}
 
-              {module === '2' && <CreateDiagnosis updateCaseObject={updateCaseObject}></CreateDiagnosis>}
+                {module === '1' && (
+                  <CreateExamination updateCaseObject={updateCaseObject}></CreateExamination>
+                )}
 
-              {module === '3' && <CreateTreatment updateCaseObject={updateCaseObject}></CreateTreatment>}
+                {module === '2' && (
+                  <CreateDiagnosis updateCaseObject={updateCaseObject}></CreateDiagnosis>
+                )}
 
-              {module === '4' && <CreateSummary updateCaseObject={updateCaseObject}></CreateSummary>}
-            </div>
+                {module === '3' && (
+                  <CreateTreatment updateCaseObject={updateCaseObject}></CreateTreatment>
+                )}
 
-            <Button onClick={() => createCase(caseObject)}>Skapa fall!!!!!</Button>
-          </VStack>
-        </FormControl>
-      </div>
+                {module === '4' && (
+                  <CreateSummary updateCaseObject={updateCaseObject}></CreateSummary>
+                )}
+              </div>
+
+              <Button onClick={() => createCase(caseObject)}>Skapa fall!!!!!</Button>
+            </VStack>
+          </FormControl>
+        </div>
       )}
     </>
-    
   );
 }

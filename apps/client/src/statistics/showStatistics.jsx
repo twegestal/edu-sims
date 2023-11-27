@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Button, Flex, Stat, StatLabel, StatNumber, StatGroup } from '@chakra-ui/react';
 import { useStatistics } from '../hooks/useStatistic.js';
 
-
 export default function ShowStatistics(props) {
-  const { getTotalAmountUsers, amountUser, getActiveUsers, activeUsers, allCasesStatistics,} = useStatistics();
+  const { getTotalAmountUsers, amountUser, getActiveUsers, activeUsers, allCasesStatistics } =
+    useStatistics();
 
   useEffect(() => {
     const getStatistics = async () => {
-
       await getTotalAmountUsers();
 
-      const previousDate = getPreviousDate(7)
+      const previousDate = getPreviousDate(7);
       getActiveUsers(previousDate);
     };
 
@@ -45,7 +44,6 @@ export default function ShowStatistics(props) {
   };
 
   const handleDownloadReports = async () => {
-    
     const fetchedData = await allCasesStatistics();
     const csvData = jsonToCsv(fetchedData);
 
@@ -60,7 +58,7 @@ export default function ShowStatistics(props) {
   };
 
   const getPreviousDate = (daysAgo) => {
-    const currentDate = new Date(); 
+    const currentDate = new Date();
     const datePrevious = new Date(currentDate);
     datePrevious.setUTCDate(currentDate.getUTCDate() - daysAgo);
 
@@ -74,13 +72,8 @@ export default function ShowStatistics(props) {
       timeZone: 'UTC',
     });
 
-
-
-    return formattedDate
-  }
-
-
-
+    return formattedDate;
+  };
 
   return (
     <div>

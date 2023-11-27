@@ -25,9 +25,8 @@ export default function Register() {
   const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
   let { groupId } = useParams();
 
-
   const postToRegister = async () => {
-    groupId = groupId.split('groupId=')[1]
+    groupId = groupId.split('groupId=')[1];
     if (passwordInput === confirmPasswordInput) {
       const data = {
         email: emailInput,

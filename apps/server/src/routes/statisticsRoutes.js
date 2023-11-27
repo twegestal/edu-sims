@@ -3,7 +3,6 @@ import * as object from '../models/object_index.js';
 import { Op, QueryTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 
-
 export const getStatisticRoutes = () => {
   const router = Router();
 
@@ -13,11 +12,9 @@ export const getStatisticRoutes = () => {
   });
 
   router.get('/getActiveUsers', async (req, res, _next) => {
-    const amount = await object.end_user.count(
-    { 
-        where: { last_login: {[Op.gt]: req.header('startdate')} }
-    }
-    );
+    const amount = await object.end_user.count({
+      where: { last_login: { [Op.gt]: req.header('startdate') } },
+    });
     res.status(200).json(amount);
   });
 
@@ -38,7 +35,7 @@ export const getStatisticRoutes = () => {
       left outer join medical_case on attempt.case_id = medical_case.id
       left outer join medical_field on medical_case.medical_field_id = medical_field.id
       `,
-      { type: QueryTypes.SELECT }
+      { type: QueryTypes.SELECT },
     );
     res.status(200).json(result);
   });

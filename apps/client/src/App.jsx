@@ -12,9 +12,11 @@ import ShowStatistics from './statistics/showStatistics.jsx';
 import ManageUsers from './adminPage/manageUsers.jsx';
 import AlertBanner from './alertBanner.jsx';
 import { useAlert } from './hooks/useAlert.jsx';
+import CaseBuilder from './create_case/CaseBuilder.jsx';
 
 export default function App() {
   const { user, logout } = useAuth();
+
   const { showAlert } = useAlert();
 
   return (
@@ -31,6 +33,7 @@ export default function App() {
             <Route path='/manageCases' element={<ManageCases />}></Route>
             <Route path='/showStatistics' element={<ShowStatistics />} />
             <Route path='/manageUsers' element={<ManageUsers />}></Route>
+            <Route path='caseBuilder' element={<CaseBuilder />} />
           </Routes>
           <Button onClick={logout}>Logout</Button>
         </>

@@ -38,8 +38,8 @@ export const useCreateCase = () => {
     try {
       const result = await getExaminationListApi({
         headers: {
-          examination_subtype_id: examinationSubtypeId
-        }
+          examination_subtype_id: examinationSubtypeId,
+        },
       });
 
       if (result) {
@@ -48,7 +48,7 @@ export const useCreateCase = () => {
     } catch (error) {
       console.error('error fetching examination list', error);
     }
-  }
+  };
 
   const getTreatmentTypes = async () => {
     try {
@@ -63,25 +63,27 @@ export const useCreateCase = () => {
 
   const getTreatmentSubtypes = async (id) => {
     try {
-        const result = await getTreatmentSubtypesApi({ headers: { id: id } });
-        if (result) {
-            return result.data;
-        }
+      const result = await getTreatmentSubtypesApi({ headers: { id: id } });
+      if (result) {
+        return result.data;
+      }
     } catch (error) {
-        console.error('error fetching treatment subtypes: ', error); 
+      console.error('error fetching treatment subtypes: ', error);
     }
-  }
-  
+  };
+
   const getTreatmentList = async (treatmentSubtypeId) => {
     try {
-        const result = await getTreatmentListApi({ headers: { treatment_subtype_id: treatmentSubtypeId } });
-        if (result) {
-            return result.data;
-        }
+      const result = await getTreatmentListApi({
+        headers: { treatment_subtype_id: treatmentSubtypeId },
+      });
+      if (result) {
+        return result.data;
+      }
     } catch (error) {
-        console.error('error fetching treatment list: ', error); 
+      console.error('error fetching treatment list: ', error);
     }
-  }
+  };
 
   const createCase = async (caseData) => {
     try {
@@ -89,7 +91,7 @@ export const useCreateCase = () => {
     } catch (error) {
       console.error('error creating case: ', error);
     }
-  }
+  };
 
   return {
     getAllExaminationTypes,
@@ -98,6 +100,6 @@ export const useCreateCase = () => {
     getTreatmentTypes,
     getTreatmentSubtypes,
     getTreatmentList,
-    createCase
+    createCase,
   };
 };
