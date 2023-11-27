@@ -3,12 +3,11 @@ import { useApi } from './useApi';
 
 export const useStatistics = () => {
   const getTotalAmountUsersApi = useApi('getTotalAmountUsers');
-  const getActiveUsersApi = useApi('getActiveUsers')
-  const allCasesStatisticsApi = useApi('allCasesStatistics')
+  const getActiveUsersApi = useApi('getActiveUsers');
+  const allCasesStatisticsApi = useApi('allCasesStatistics');
 
   const [amountUser, setAmountUser] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
-
 
   const getTotalAmountUsers = async () => {
     try {
@@ -23,7 +22,7 @@ export const useStatistics = () => {
 
   const getActiveUsers = async (startdate) => {
     try {
-      const response = await getActiveUsersApi({headers: { startdate: startdate }});
+      const response = await getActiveUsersApi({ headers: { startdate: startdate } });
       if (response.status === 200) {
         setActiveUsers(response.data);
       }
@@ -32,17 +31,16 @@ export const useStatistics = () => {
     }
   };
 
-  const allCasesStatistics = async() => {
+  const allCasesStatistics = async () => {
     try {
       const response = await allCasesStatisticsApi();
       if (response.status === 200) {
-        return response
+        return response;
       }
     } catch (error) {
       console.error('Error fetching cases: ', error);
     }
-  }
-
+  };
 
   return {
     amountUser,

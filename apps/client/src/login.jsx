@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Input, Button } from '@chakra-ui/react';
 import { useAuth } from './hooks/useAuth';
-import { useAlert } from './hooks/useAlert.jsx'
+import { useAlert } from './hooks/useAlert.jsx';
 import { validateLogin, errorsToString } from 'api';
 
 export default function Login() {

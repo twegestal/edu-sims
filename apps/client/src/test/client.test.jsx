@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, beforeEach } from 'vitest'; 
+import { describe, beforeEach } from 'vitest';
 import Confirm from '../components/Confirm';
 
 describe('Confirm component tests', () => {

@@ -108,7 +108,6 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
-
   getAllExaminationTypes: async (headers) => {
     const response = apiClient.get(`${prefix}getExaminationTypes`, headers);
     return packageResponse(response);

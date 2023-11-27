@@ -6,17 +6,20 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth.jsx';
 import { AlertProvider } from './hooks/useAlert.jsx';
+import { MantineProvider } from '@mantine/core';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ChakraProvider>
-        <AuthProvider>
-          <AlertProvider>
-            <App />
-          </AlertProvider>
-        </AuthProvider>
-      </ChakraProvider>
+      <MantineProvider>
+        <ChakraProvider>
+          <AuthProvider>
+            <AlertProvider>
+              <App />
+            </AlertProvider>
+          </AuthProvider>
+        </ChakraProvider>
+      </MantineProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

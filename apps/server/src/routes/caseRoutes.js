@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
-import { insertSteps } from '../utils/databaseUtils.js'; 
+import { insertSteps } from '../utils/databaseUtils.js';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -12,16 +12,19 @@ export const getCaseRoutes = () => {
 
     const transaction = await getTransaction();
     try {
-      const medicalCase = await object.medical_case.create({
-        name: caseObject.name,
-        medical_field_id: caseObject.medical_field_id,
-        creator_user_id: caseObject.creator_user_id,
-        published: false
-      }, {transaction: transaction});
-  
+      const medicalCase = await object.medical_case.create(
+        {
+          name: caseObject.name,
+          medical_field_id: caseObject.medical_field_id,
+          creator_user_id: caseObject.creator_user_id,
+          published: false,
+        },
+        { transaction: transaction },
+      );
+
       console.log('medical case:', medicalCase);
       await insertSteps(caseObject.steps, medicalCase.id, transaction);
-  
+
       await transaction.commit();
       res.status(201).json('case created');
     } catch (error) {
@@ -29,8 +32,6 @@ export const getCaseRoutes = () => {
       await transaction.rollback();
       res.status(400).send(error);
     }
-    
-    
   });
 
   //hämtar alla cases
@@ -266,12 +267,11 @@ export const getCaseRoutes = () => {
     if (req.header('treatment_subtype_id')) {
       const response = await object.treatment_list.findAll({
         where: {
-          treatment_subtype_id: req.header('treatment_subtype_id')
-        }
+          treatment_subtype_id: req.header('treatment_subtype_id'),
+        },
       });
       res.status(200).json(response);
-    }
-    else if (req.header('id') == '') {
+    } else if (req.header('id') == '') {
       const Value = await object.treatment_list.findAll({});
       res.status(200).json(Value);
     } else {

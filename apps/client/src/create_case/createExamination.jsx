@@ -20,7 +20,7 @@ import {
   Card,
   CardBody,
   Text,
-  Input
+  Input,
 } from '@chakra-ui/react';
 import LoadingSkeleton from '../loadingSkeleton';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -76,7 +76,7 @@ export default function CreateExamination({ updateCaseObject }) {
         }
         subCategoryMap[categories[i].id] = subcategoryArray;
       }
-      
+
       setExaminationCategories(categoryMap);
       setExaminationSubcategories(subCategoryMap);
       setExaminationList(examinationsMap);
@@ -96,7 +96,7 @@ export default function CreateExamination({ updateCaseObject }) {
     const response = await getExaminationList(examinationSubtypeId);
 
     return response;
-  }
+  };
 
   const updateExaminationsTypesToDisplay = (checkbox, examinationTypeId) => {
     if (checkbox.checked) {
@@ -176,9 +176,7 @@ export default function CreateExamination({ updateCaseObject }) {
       value: value,
       is_normal: isNormal,
     });
-
-    
-  }
+  };
 
   return (
     <>
@@ -207,41 +205,49 @@ export default function CreateExamination({ updateCaseObject }) {
             </VStack>
           ))}
 
-            <Accordion allowToggle>  
-              <AccordionItem>
-                <AccordionButton>
-                  <FormLabel>Stegspecifika utredningar + värden</FormLabel>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel>
-                  {Object.entries(examinationCategories).map(([categoryId, name]) => (
-                    <>
-                      <Heading as='h2' size='lg'>{name}</Heading>
-                  
-                      {examinationSubcategories[categoryId].map((subcategory, index) => (
-                        <>
-                          <Heading as='h3' size='md'>{subcategory.name}</Heading>
-                          
-                          {examinationList[subcategory.id]?.length > 0 ? (
-          <VStack>
-            {examinationList[subcategory.id].map((examination) => (
-              <Card>
-                <CardBody>
-                  <Text id={examination.id}>{examination.name}</Text>
-                  <Input id={'input' + examination.id} placeholder='Värde'></Input>
-                  <Checkbox id={'checkbox' + examination.id}>Normalvärde</Checkbox>
-                  <Button onClick={() => {addExamination(examination.id)}}>Lägg till utredning + värde</Button>
-                </CardBody>
-              </Card>
-            ))}
-          </VStack>
-        ) : (
-          <Text>No examinations available for this subcategory.</Text>
-        )}
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionButton>
+                <FormLabel>Stegspecifika utredningar + värden</FormLabel>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                {Object.entries(examinationCategories).map(([categoryId, name]) => (
+                  <>
+                    <Heading as='h2' size='lg'>
+                      {name}
+                    </Heading>
 
+                    {examinationSubcategories[categoryId].map((subcategory, index) => (
+                      <>
+                        <Heading as='h3' size='md'>
+                          {subcategory.name}
+                        </Heading>
 
+                        {examinationList[subcategory.id]?.length > 0 ? (
+                          <VStack>
+                            {examinationList[subcategory.id].map((examination) => (
+                              <Card>
+                                <CardBody>
+                                  <Text id={examination.id}>{examination.name}</Text>
+                                  <Input id={'input' + examination.id} placeholder='Värde'></Input>
+                                  <Checkbox id={'checkbox' + examination.id}>Normalvärde</Checkbox>
+                                  <Button
+                                    onClick={() => {
+                                      addExamination(examination.id);
+                                    }}
+                                  >
+                                    Lägg till utredning + värde
+                                  </Button>
+                                </CardBody>
+                              </Card>
+                            ))}
+                          </VStack>
+                        ) : (
+                          <Text>No examinations available for this subcategory.</Text>
+                        )}
 
-                          {/* <VStack>
+                        {/* <VStack>
                             {examinationList[subcategory.id].map((examination, index) => (
                               <Card>
                                 <CardBody>
@@ -253,15 +259,13 @@ export default function CreateExamination({ updateCaseObject }) {
                               </Card>
                             ))}
                           </VStack> */}
-                        </>
-                      ))}
-                    </>
-                  ))}
-                </AccordionPanel>       
-              </AccordionItem>
-
-                       
-                            </Accordion>
+                      </>
+                    ))}
+                  </>
+                ))}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
 
           <FormLabel>Korrekt feedback</FormLabel>
           <Textarea
