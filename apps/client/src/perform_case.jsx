@@ -20,6 +20,7 @@ import {
   VStack,
   Flex,
   Card,
+  list,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -39,6 +40,8 @@ export default function PerformCase() {
   let params = useParams();
   let caseid = params['caseid'].split('caseid=')[1];
   let attemptId = params['attemptid'].split('attemptid=')[1];
+  let reload = params['reload'].split('reload=')[1];
+
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
   const { isOpen: isHomeOpen, onOpen: onHomeOpen, onClose: onHomeClose } = useDisclosure();
   const { isOpen: isDescOpen, onOpen: onDescOpen, onClose: onDescClose } = useDisclosure();
@@ -80,8 +83,40 @@ export default function PerformCase() {
 
   useEffect(() => {
     if (!loading) {
-      setCurrentStep(caseById[0]);
-      setCurrentIndex(caseById[0].index);
+      if (reload === 'true') {
+        const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
+        if (storedFeedback !== null) {
+          for (let index = 0; index < 3; index++) {
+            console.log(index);
+            const listan = [];
+            for (let index = 0; index < storedFeedback.length; index++) {
+              listan[index] = <Card key={index} variant='filled'>
+                <Accordion allowMultiple>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Box as='span' flex='1' textAlign='center'>
+                        Feedback från steg # {index + 1}
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              </Card>
+            }
+            setFeedback([listan]);
+           // setCurrentStep(caseById[1]);
+           // setCurrentIndex(caseById[1].index);
+          }
+        }
+      }
+      else {
+        localStorage.removeItem(caseid.toString());
+
+        setCurrentStep(caseById[0]);
+        setCurrentIndex(caseById[0].index);
+      }
+
     }
   }, [caseById]);
 
@@ -162,8 +197,30 @@ export default function PerformCase() {
     ]);
     setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
   };
+  const updateFeedbackFromReload = (feedbackToDisplay, index) => {
+    for (let index = 0; index < 2; index++) {
+
+      setFeedback([
+        ...feedback,
+        <Card key={index} variant='filled'>
+          <Accordion allowMultiple>
+            <AccordionItem>
+              <AccordionButton>
+                <Box as='span' flex='1' textAlign='center'>
+                  Feedback från steg # {index + 1}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>{"jfjf"}</AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </Card>,
+      ]);
+    }
+  };
 
   const updateFeedback = (feedbackToDisplay) => {
+    addFeedbackToStorage(feedbackToDisplay)
     setFeedback([
       ...feedback,
       <Card key={currentIndex} variant='filled'>
@@ -181,6 +238,32 @@ export default function PerformCase() {
       </Card>,
     ]);
   };
+  const addFeedbackToStorage = (feedbackToDisplay) => {
+    let feedbacks;
+    try {
+      feedbacks = JSON.parse(localStorage.getItem(caseid.toString()));
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(feedbacks);
+
+    if (feedbacks === null) {
+      let feedbacks = [];
+      feedbacks[0] = feedbackToDisplay;
+      localStorage.setItem(caseid.toString(), JSON.stringify(feedbacks));
+    } else {
+      feedbacks[feedbacks.length] = feedbackToDisplay;
+      localStorage.setItem(caseid.toString(), JSON.stringify(feedbacks));
+    }
+    //...
+    const storedNames = JSON.parse(localStorage.getItem(caseid.toString()));
+
+    console.log(storedNames)
+    //localStorage.removeItem(caseid.toString());
+    //localStorage.removeItem("feedbackArray");
+    const arr = JSON.parse(localStorage.getItem("feedbackArray"));
+    console.log(arr);
+  }
 
   const finishCase = () => {
     setCaseIsFinished(true);
