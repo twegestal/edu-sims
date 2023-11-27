@@ -157,6 +157,7 @@ export default function UserTable() {
         isOpen={isResetPasswordOpen}
         onClose={closeResetPassword}
         email={selectedUser.email}
+        userToEditId={selectedUser.id}
       />
       <Confirm
         isOpen={isConfirmOpen}

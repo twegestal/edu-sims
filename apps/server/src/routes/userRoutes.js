@@ -170,9 +170,11 @@ export const getUserRoutes = () => {
 
   router.patch('/update-password', async (req, res, _next) => {
     const id = req.header('id');
+    const userToEditId = req.header('userToEditId')
+
     try {
       const user = await object.end_user.findOne({ where: { id: id } });
-      if (!user.is_admin) {
+      if (!user.is_admin && id != userToEditId) {
         return res.status(403).json('Not authorized for selected resource');
       }
 

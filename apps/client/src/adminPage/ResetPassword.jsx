@@ -17,7 +17,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
 import { useAlert } from '../hooks/useAlert';
 
-export default function ResetPassword({ isOpen, onClose, email }) {
+export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const { user } = useAuth();
@@ -28,7 +28,7 @@ export default function ResetPassword({ isOpen, onClose, email }) {
     if (passwordInput === confirmPasswordInput) {
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
-        const result = await updatePassword(user.id, email, passwordInput);
+        const result = await updatePassword(user.id, email, passwordInput, userToEditId);
 
         if (result) {
           setAlert('success', 'Uppdatering av lösenord', `Lösenordet för ${email} har uppdaterats`);

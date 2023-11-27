@@ -65,11 +65,11 @@ export const useUser = () => {
     }
   };
 
-  const updatePassword = async (id, email, newPassword) => {
+  const updatePassword = async (id, email, newPassword, userToEditId) => {
     try {
       const response = await updatePasswordApi({
-        headers: { id: id },
-        body: { email: email, newPassword: newPassword },
+        headers: { id: id, userToEditId: userToEditId },
+        body: { email: email, newPassword: newPassword, },
       });
       return response.status === 201;
     } catch (error) {

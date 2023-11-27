@@ -10,6 +10,7 @@ import { useAuth } from './hooks/useAuth.jsx';
 import { Button } from '@chakra-ui/react';
 import ShowStatistics from './statistics/showStatistics.jsx';
 import ManageUsers from './adminPage/manageUsers.jsx';
+import ProfilePage from './profilePage/profilePage.jsx';
 import AlertBanner from './alertBanner.jsx';
 import { useAlert } from './hooks/useAlert.jsx';
 
@@ -31,6 +32,7 @@ export default function App() {
             <Route path='/manageCases' element={<ManageCases />}></Route>
             <Route path='/showStatistics' element={<ShowStatistics />} />
             <Route path='/manageUsers' element={<ManageUsers />}></Route>
+            <Route path='/profilePage' element={<ProfilePage />}></Route>
           </Routes>
           <Button onClick={logout}>Logout</Button>
         </>
