@@ -6,11 +6,13 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import Confirm from '../components/Confirm';
 import { useAlert } from '../hooks/useAlert';
 import { useUser } from '../hooks/useUser';
+import ChangeUsername from './changeUsername.jsx';
 
 
 export default function ProfilePage(props) {
 
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [isChangeUsernameOpen, setIsChangeUsernameOpen] = useState(false);
   const { user, logout } = useAuth();
   const { setAlert } = useAlert();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -32,6 +34,14 @@ export default function ProfilePage(props) {
     setIsResetPasswordOpen(false);
   };
 
+  const openChangeUsername = () => {
+    setIsChangeUsernameOpen(true);
+  };
+
+  const closeChangeUsername = () => {
+    setIsChangeUsernameOpen(false);
+  };
+
   const handleRemoveUser = async () => {
     setIsConfirmOpen(false);
     const response = await clearUserInfo(user.id);
@@ -51,7 +61,7 @@ export default function ProfilePage(props) {
         <Card maxW='md'>
         <CardHeader>
             <Flex spacing='4'>
-            <Flex flex='1' gap='4' justifyContent={'space-around'} alignItems='center' flexWrap='wrap'>
+            <Flex flex='1' gap='4'  alignItems='center' flexWrap='wrap'>
                 <Avatar size="md" bg='teal.500' />
                 <Box>
                     <Heading size='sm'>Min profil</Heading>
@@ -68,7 +78,7 @@ export default function ProfilePage(props) {
                     </Flex>
                 </Button>
                 <Button>
-                    <Flex verticalAlign={'center'}>
+                    <Flex verticalAlign={'center'} onClick={openChangeUsername}>
                         <Text marginRight={'5%'}>Uppdatera användarnamn</Text>
                         <EditIcon boxSize={6}/> 
                     </Flex>
@@ -95,6 +105,10 @@ export default function ProfilePage(props) {
         header={'Ta bort konto'}
         body={`Är du säker att du vill ta bort ditt konto?`}
         handleConfirm={() => handleRemoveUser(user)}
+      />
+      <ChangeUsername
+        isOpen={isChangeUsernameOpen}
+        onClose={closeChangeUsername}
       />
     </div>
   );

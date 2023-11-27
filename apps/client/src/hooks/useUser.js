@@ -11,6 +11,7 @@ export const useUser = () => {
   const updatePasswordApi = useApi('updatePassword');
   const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
   const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
+  const updateUsernameApi = useApi('updateUsername')
 
 
   const [allUsers, setAllUsers] = useState([]);
@@ -77,6 +78,19 @@ export const useUser = () => {
     }
   };
 
+  const updateUsername = async (id, newUsername,) => {
+    try {
+      const response = await updateUsernameApi({
+        headers: { id: id},
+        body: { newUsername: newUsername, },
+      });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error changing username: ', error);
+    }
+  };
+
+
   return {
     getAllUsers,
     allUsers,
@@ -86,5 +100,6 @@ export const useUser = () => {
     createUserGroup,
     createdUserGroup,
     updatePassword,
+    updateUsername
   };
 };

@@ -194,5 +194,24 @@ export const getUserRoutes = () => {
     }
   });
 
+  router.patch('/updateUsername', async (req, res, _next) => {
+    const id = req.header('id');
+    const { newUsername } = req.body;
+    const sameUsername = await object.end_user.findOne({ where: { email: newUsername } });
+
+    if (sameUsername !== null) {
+      res.status(400).json('Email is already registered');
+    } else{
+      const userToUpdate = await object.end_user.findOne({ where: { id: id } });
+
+      if (userToUpdate) {
+        const result = await userToUpdate.update({ email: newUsername });
+        res.status(201).send(result);
+      } else {
+        res.status(404).json('Could not find resource');
+      };
+    }
+  });
+
   return router;
 };
