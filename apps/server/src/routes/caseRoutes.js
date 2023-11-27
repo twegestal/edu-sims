@@ -35,7 +35,13 @@ export const getCaseRoutes = () => {
 
   //hämtar alla cases
   router.get('/getAllCases', async (_req, res, _next) => {
-    const cases = await object.medical_case.findAll();
+    const cases = await object.medical_case.findAll({
+      include: [
+        {
+          model: object.end_user,
+        },
+      ],
+  });
     res.status(200).send(cases);
   });
   // Hämtar ett specifict case beroende på dess id

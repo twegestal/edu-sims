@@ -84,6 +84,7 @@ export default function ShowAllCases() {
                   {user.isAdmin && (
                     <Flex justify={'space-evenly'} direction={'column'}>
                       <p>Name: {caseItem.name}</p>
+                      <p>Skapat av: {caseItem.end_user.email}</p>
                       <StartCase caseId={caseItem.id} />
                       <Button colorScheme='teal' marginBottom='5%'>
                         Redigera fallet
