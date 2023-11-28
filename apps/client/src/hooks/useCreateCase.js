@@ -100,10 +100,8 @@ export const useCreateCase = () => {
     try {
       const response = await getModuleTypesApi();
 
-      console.log('response innan if:en', response.data);
-      console.log('response.status: ', response.status);
+      
       if (response.status === 200) {
-        console.log('respone.dat: ', response.data);
         setModuleTypes(response.data);
       }
     } catch (error) {

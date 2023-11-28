@@ -7,20 +7,13 @@ import LoadingSkeleton from '../loadingSkeleton';
 import { useState, useEffect } from 'react';
 import IntroductionModal from './IntroductionModal';
 import { useAuth } from '../hooks/useAuth.jsx';
-
-//const availableModules = [
-//  { id: 'introduction', name: 'Introduktion' },
-//  { id: 'examination', name: 'Undersökning' },
-//  { id: 'diagnosis', name: 'Diagnos' },
-//  { id: 'treatment', name: 'Behandling' },
-//  { id: 'summary', name: 'Summering' },
-//];
+import CreateCaseModal from './CreateCaseModal.jsx';
 
 export default function CaseBuilder() {
   const [modules, moduleHandlers] = useListState([]);
   const { moduleTypes, getModuleTypes } = useCreateCase();
   const [activeModule, setActiveModule] = useState();
-  const [modalToRender, setModalToRender] = useState();
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
 
@@ -41,9 +34,13 @@ export default function CaseBuilder() {
     }
   }, []);
 
+  //useEffect(() => {
+  //  console.log(caseObject);
+  //},[caseObject, modules]);
+
   useEffect(() => {
-    console.log(caseObject);
-  },[caseObject, modules]);
+    console.log('modules: ', modules);
+  }, [modules])
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -76,26 +73,23 @@ export default function CaseBuilder() {
     );
   };
 
-  const handleOpenModuleModal = (module) => {
+  const handleOpenModal = (module) => {
     setActiveModule(module);
-
-    const moduleTypeIdentifier = module.module_type_identifier;
-    switch (moduleTypeIdentifier) {
-      case 0: {
-        setIsModalOpen(true);
-        setModalToRender(<IntroductionModal
-          isOpen = {isModalOpen}
-          //onClose = {() => handleCloseModal(module)}
-          handleCloseModal = {handleCloseModal}
-          module = {module}
-        />);
-        break;
-      }
-    }
+    setIsModalOpen(true);
   };
 
-  const handleCloseModal = (module, stepData) => {
-    modules[module]
+  const handleCloseModal = (stepData) => {
+    //console.log('module: ', module);
+    console.log('activeModule: ', activeModule);
+    console.log('stepData: ', stepData);
+
+    for (let i = 0; i < modules.length; i++) {
+      if (modules[i].uniqueId === activeModule.uniqueId) {
+        moduleHandlers.setItemProp(i, 'stepData', stepData);
+      }
+    }
+
+    setIsModalOpen(false);
   }
 
   return (
@@ -163,7 +157,7 @@ export default function CaseBuilder() {
                     >
                       <ModuleCard
                         heading={module.name}
-                        handleAccept={() => handleOpenModuleModal(module)}
+                        handleAccept={() => handleOpenModal(module)}
                         handleDelete={() => handleDeleteModule(module.uniqueId)}
                       />
                     </Box>
@@ -178,7 +172,13 @@ export default function CaseBuilder() {
     </DragDropContext>
     
     )}
-    {modalToRender}
+    {activeModule && (
+      <CreateCaseModal
+      isOpen={isModalOpen}
+      onClose={handleCloseModal}
+      module={activeModule}
+      />
+    )}
     </>
         
   );
