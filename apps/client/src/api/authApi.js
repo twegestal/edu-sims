@@ -15,4 +15,9 @@ export const authApi = (apiClient) => ({
     const response = await apiClient.post('auth/register', body);
     return packageResponse(response);
   },
+
+  refreshToken: async () => {
+    const response = await apiClient.get('auth/refreshToken');
+    return packageResponse(response);
+  },
 });

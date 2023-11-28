@@ -9,9 +9,8 @@ export const useUser = () => {
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
   const updatePasswordApi = useApi('updatePassword');
-  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
-  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
-
+  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege');
+  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege');
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);

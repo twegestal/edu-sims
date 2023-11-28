@@ -70,5 +70,38 @@ export const authRouter = () => {
     }
   });
 
+  router.get('/refreshToken', async (req, res, _next) => {
+    const refreshToken = req.cookies['refreshToken'];
+    if (!refreshToken) {
+      return res.status(400).json('Missing refreshToken');
+    }
+
+    const userId = await validateRefreshToken(refreshToken, res);
+    if (userId === null) {
+      return res.status(401).json('Invalid refresh token');
+    }
+
+    try {
+      const user = await object.end_user.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (user === null) {
+        return res.status(404).json('User does not exist');
+      }
+      const token = createToken(user.id);
+      res.status(200).send({
+        id: user.id,
+        email: user.email,
+        token: token,
+        isAdmin: user.is_admin,
+      });
+    } catch (error) {
+      res.status(500).json('Internal Server Error');
+    }
+  });
+
   return router;
 };

@@ -102,7 +102,6 @@ export const getUserRoutes = () => {
   });
 
   router.put('/assingAdminPrivilege', async (req, res, next) => {
-
     const result = await object.end_user.update(
       {
         is_admin: true,
@@ -122,7 +121,6 @@ export const getUserRoutes = () => {
   });
 
   router.put('/revokeAdminPrivilege', async (req, res, next) => {
-
     const result = await object.end_user.update(
       {
         is_admin: false,
@@ -140,7 +138,6 @@ export const getUserRoutes = () => {
       res.status(200).json('User set as not admin');
     }
   });
-
 
   router.post('/createUserGroup', async (req, res, _next) => {
     const result = await object.user_group.create({
