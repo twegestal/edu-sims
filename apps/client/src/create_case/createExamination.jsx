@@ -89,7 +89,7 @@ export default function CreateExamination({ updateCaseObject }) {
 
   useEffect(() => {
     console.log('stepData: ', stepData);
-  },[stepData])
+  }, [stepData]);
 
   const fetchSubcategories = async (id) => {
     const response = await getAllExaminationSubtypes(id);

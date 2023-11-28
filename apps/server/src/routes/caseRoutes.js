@@ -42,7 +42,7 @@ export const getCaseRoutes = () => {
           model: object.end_user,
         },
       ],
-  });
+    });
     res.status(200).send(cases);
   });
   // Hämtar ett specifict case beroende på dess id
@@ -372,7 +372,7 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.get('/getModuleTypes', async (req, res, _next)  => {
+  router.get('/getModuleTypes', async (req, res, _next) => {
     try {
       const response = await object.module_type.findAll();
 

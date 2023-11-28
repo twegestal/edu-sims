@@ -8,7 +8,7 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Textarea
+  Textarea,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import Confirm from '../components/Confirm';
@@ -39,11 +39,11 @@ export default function IntroductionModal({ isOpen, onClose }) {
       description: description,
       prompt: prompt,
       feedback_correct: feedbackCorrect,
-      feedback_incorrect: feedbackIncorrect
+      feedback_incorrect: feedbackIncorrect,
     };
 
     onClose(stepData);
-  }
+  };
 
   return (
     <>
@@ -55,7 +55,7 @@ export default function IntroductionModal({ isOpen, onClose }) {
           <ModalBody>
             <FormControl>
               <FormLabel>Beskrivning</FormLabel>
-              <Textarea 
+              <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Textarea>

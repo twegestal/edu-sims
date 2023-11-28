@@ -100,14 +100,13 @@ export const useCreateCase = () => {
     try {
       const response = await getModuleTypesApi();
 
-      
       if (response.status === 200) {
         setModuleTypes(response.data);
       }
     } catch (error) {
       console.error('error fetching module types: ', error);
     }
-  }
+  };
 
   return {
     getAllExaminationTypes,
@@ -118,6 +117,6 @@ export const useCreateCase = () => {
     getTreatmentList,
     createCase,
     getModuleTypes,
-    moduleTypes
+    moduleTypes,
   };
 };

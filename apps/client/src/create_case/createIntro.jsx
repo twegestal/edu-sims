@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  FormControl,
-  FormLabel,
-  Button,
-  Textarea,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Button, Textarea } from '@chakra-ui/react';
 
 export default function CreateIntro({ updateCaseObject }) {
   const [stepData, setStepData] = useState({

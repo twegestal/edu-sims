@@ -20,7 +20,8 @@ import Confirm from '../components/Confirm';
 export default function UserTable() {
   const { user } = useAuth();
   const { setAlert } = useAlert();
-  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege } = useUser();
+  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege } =
+    useUser();
   const [loading, setLoading] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -51,32 +52,32 @@ export default function UserTable() {
   };
 
   const assignAdminRights = async (userToAssing) => {
-  
     const response = await assingAdminPrivilege(userToAssing.id);
 
     if (response) {
-      setAlert('success', 'Användaren', `${userToAssing.email} har tilldelats administratörsrättigheter`);
+      setAlert(
+        'success',
+        'Användaren',
+        `${userToAssing.email} har tilldelats administratörsrättigheter`,
+      );
       await getAllUsers(user.id);
     } else {
-      setAlert(
-        'error',
-        'Användaren kunde inte tilldelas administratörsrättigheter ',
-      );
+      setAlert('error', 'Användaren kunde inte tilldelas administratörsrättigheter ');
     }
   };
 
   const revokeAdminRights = async (userToRevoke) => {
-  
     const response = await revokeAdminPrivilege(userToRevoke.id);
 
     if (response) {
-      setAlert('success', 'Användarem', `${userToRevoke.email} har fråntagits administratörsrättigheter`);
+      setAlert(
+        'success',
+        'Användarem',
+        `${userToRevoke.email} har fråntagits administratörsrättigheter`,
+      );
       await getAllUsers(user.id);
     } else {
-      setAlert(
-        'error',
-        'Användaren kunde inte fråntas administratörsrättigheter ',
-      );
+      setAlert('error', 'Användaren kunde inte fråntas administratörsrättigheter ');
     }
   };
 
@@ -114,7 +115,8 @@ export default function UserTable() {
             <Tbody>
               {allUsers.map(
                 (aUser, index) =>
-                  aUser.email !== 'DeletedUser' && aUser.id !== user.id  && (
+                  aUser.email !== 'DeletedUser' &&
+                  aUser.id !== user.id && (
                     <Tr key={index}>
                       <Td>{aUser.email}</Td>
                       <Td>
@@ -133,17 +135,17 @@ export default function UserTable() {
                         </Button>
                       </Td>
                       <Td>
-                        {aUser.is_admin ?
-                        <Button onClick={() => revokeAdminRights(aUser)}>
-                          {' '}
-                          Ta bort adminrättigheter{' '}
-                        </Button>
-                        :
-                        <Button onClick={() => assignAdminRights(aUser)}>
-                          {' '}
-                          Tilldela adminrättigheter{' '}
-                        </Button>
-                        }
+                        {aUser.is_admin ? (
+                          <Button onClick={() => revokeAdminRights(aUser)}>
+                            {' '}
+                            Ta bort adminrättigheter{' '}
+                          </Button>
+                        ) : (
+                          <Button onClick={() => assignAdminRights(aUser)}>
+                            {' '}
+                            Tilldela adminrättigheter{' '}
+                          </Button>
+                        )}
                       </Td>
                     </Tr>
                   ),

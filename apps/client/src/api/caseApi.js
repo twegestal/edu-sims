@@ -121,5 +121,5 @@ export const caseApi = (apiClient) => ({
   getModuleTypes: async () => {
     const response = await apiClient.get(`${prefix}getModuleTypes`);
     return packageResponse(response);
-  }
+  },
 });
