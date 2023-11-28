@@ -16,6 +16,7 @@ import UserTable from './UserTable.jsx';
 export default function ManageUsers(props) {
   const { createUserGroup, createdUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
+  const [createdUserGroups, setCreatedUserGroup] = useState([]);
   const [link, setLink] = useState('');
 
   useEffect(() => {
@@ -32,7 +33,19 @@ export default function ManageUsers(props) {
   const generateRegLink = () => {
     if (inputUserGroup.length > 0) {
       createUserGroup(inputUserGroup);
+      setCreatedUserGroup((oldValues) => [...oldValues, {inputUserGroup}]);
     }
+  };
+
+  const removeRegistrationLink = (id) => {
+    const newArr = [];
+    for (let index = 0; index < createdUserGroups.length; index++) {
+      if (id != createUserGroups[index].id) {
+        newArr.push(createdUserGroups[index]);
+      }
+    }
+    setCreatedUserGroup(newArr);
+    // Remove from DB by API call
   };
 
   return (
