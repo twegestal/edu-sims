@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
+import { where } from 'sequelize';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -145,6 +146,7 @@ export const getUserRoutes = () => {
   router.post('/createUserGroup', async (req, res, _next) => {
     const result = await object.user_group.create({
       name: req.header('name'),
+      is_active: true,
     });
 
     if (result === null) {
@@ -153,6 +155,16 @@ export const getUserRoutes = () => {
       res.status(200).json(result);
     }
   });
+
+  router.post('/deactivateUserGroup', async (req, res, _next) => {
+    const result = await object.user_group.update({
+      is_active: false,
+    }, 
+    {
+      where: {
+        id: req.header('name'),
+      },
+    });
 
   router.patch('/logout', async (req, res, _next) => {
     const user = await object.end_user.findOne({ where: { id: req.headers('id') } });
