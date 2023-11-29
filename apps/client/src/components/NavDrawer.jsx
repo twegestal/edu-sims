@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
+import DrawerBtn from './DrawerBtn.jsx';
 
 
 export default function NavDrawer(props) {
@@ -36,24 +37,37 @@ export default function NavDrawer(props) {
                 </DrawerHeader>
 
                 <DrawerBody>
-                    <Flex flexDirection={'column'} justifyContent={'space-between'} h={'25%'}>
-                        <Link to='/'>
-                            <Button w={'100%'} onClick={props.onClose}>
-                                Hem
-                            </Button>
+                    <Flex flexDirection={'column'} justifyContent={'space-between'}>
+                        <Link to='/' margin-bott>
+                            <DrawerBtn onClick={props.onClose}
+                               text='Hem'
+                            />
                         </Link>
                         <Link to='/profilePage'>
-                            <Button w={'100%'} onClick={props.onClose}>
-                                Min profil
-                            </Button>
+                            <DrawerBtn onClick={props.onClose}
+                               text='Min profil'
+                            />
                         </Link>
-                        <Button onClick={logout}>Logout</Button>
+                        {user.isAdmin && (
+                        <>
+                            <Link to='/manageUsers'>
+                                <DrawerBtn onClick={props.onClose}
+                                    text='Hantera användare'
+                                />
+                            </Link>
+                            <Link to='/manageCases'>
+                                <DrawerBtn onClick={props.onClose}
+                                    text='Hantera fall'
+                                />
+                            </Link>
+                        </>
+                        )}
                     </Flex>
                 </DrawerBody>
 
                 <DrawerFooter>
-                    <Button variant='outline' w={'100%'} onClick={props.onClose}>
-                        Stäng
+                    <Button onClick={logout} w={'100%'}>
+                        Logout
                     </Button>
                 </DrawerFooter>
             </DrawerContent>

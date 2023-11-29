@@ -10,34 +10,42 @@ import {
 import {
     HamburgerIcon, 
 } from '@chakra-ui/icons'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from '../images/EDU-SIMS_logo_transparent.png';
 import NavDrawer from './NavDrawer';
+import { useAuth } from '../hooks/useAuth.jsx';
 
 export default function NavBar() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { user } = useAuth();
     const btnRef = useRef()
+    const navigate = useNavigate();
+
+    const linkToIndex = () => {
+        return navigate('/');
+    } 
+
     return (
         <>
-            <Flex bg='teal' minW='100%' p={4} color='white' textAlign={'center'} justifyContent={'space-around'} >
-                <Flex justify-content={'space-around'} maxW={'50%'}>
-                    <Image width='20%' src={logo} alt='EDU-SIMS logo'/>
-                    <Box margin={'auto'}>
-                        <p>EDU-SIMS</p>
-                    </Box>
-                </Flex>
-                <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
-                    <Avatar size="sm" margin={'auto'} marginRight={'30%'}/>
+            <Flex bg='teal' color='white' textAlign={'center'} justifyContent={'space-around'}>
+                <Image width='20%' src={logo} alt='EDU-SIMS logo' onClick={linkToIndex} id='imageLink' minW={'90px'} maxW={'130px'} maxH={'115px'}/>
+                <Box margin={'auto'}>
+                    <p>EDU-SIMS</p>
+                </Box>
+                {user && (
+                <Button ref={btnRef} onClick={onOpen} marginTop={'auto'} marginBottom={'auto'} bg={'none'} height={'100%'}>
+                    <Avatar size="sm" marginRight={'30%'}/>
                 </Button>
+                )}
             </Flex>
-            <NavDrawer             
-            isOpen={isOpen}
-            onClose={onClose}
-            btnRef={btnRef}
-            />
+            {user && (
+                <NavDrawer             
+                isOpen={isOpen}
+                onClose={onClose}
+                btnRef={btnRef}
+                />
+            )}
         </>
   );
 }
 
-
-//./components/NavBar.jsx

@@ -16,15 +16,15 @@ import NavBar from './components/NavBar.jsx';
 import { useAlert } from './hooks/useAlert.jsx';
 
 export default function App() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { showAlert } = useAlert();
 
   return (
     <>
       {showAlert && <AlertBanner />}
+      <NavBar/>
       {user ? (
         <>
-          <NavBar/>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/case'>
