@@ -22,8 +22,10 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Box,
+  HStack,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCreateCase } from '../hooks/useCreateCase';
 import LoadingSkeleton from '../loadingSkeleton';
 import Confirm from '../components/Confirm';
@@ -43,6 +45,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [examinationCategories, setExaminationCategories] = useState();
   const [examinationSubcategories, setExaminationSubcategories] = useState();
   const [examinationList, setExaminationList] = useState();
+  const [checkboxesChecked, setCheckboxesChecked] = useState({}); //belongs to the checkboxes for examinations to display
+  const [examinationCheckboxesChecked, setExaminationCheckboxesChecked] = useState({}); //belongs to the checkboxes for step specific examinations
+
   const { getAllExaminationTypes, getAllExaminationSubtypes, getExaminationList } = useCreateCase();
 
   const clearContent = () => {
@@ -52,6 +57,82 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setFeedbackCorrect('');
     setFeedbackIncorrect('');
     setMaxNbrTests(0);
+  };
+
+  useEffect(() => {
+    if (examinationSubcategories) {
+      resetCheckBoxState();
+    }
+    if (stepSpecificValues.length > 0) {
+      resetExaminationCheckboxState();
+    }
+
+    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
+    setExaminationToDisplay(moduleData?.stepData?.examination_to_display || {});
+    setStepSpecificValues(moduleData?.stepData?.step_specific_values || []);
+    setFeedbackCorrect(
+      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
+    );
+    setFeedbackIncorrect(
+      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
+    );
+    setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
+
+    const examinations = moduleData?.stepData?.examination_to_display;
+    if (examinations) {
+      Object.keys(examinations).forEach((categoryId) => {
+        examinations[categoryId].forEach((subCategoryId) => {
+          handleCheckboxChange(subCategoryId);
+        });
+      });
+    }
+
+    const stepValues = moduleData?.stepData?.step_specific_values;
+    if (stepValues) {
+      stepValues.forEach((element) => {
+        handleExaminationCheckboxChange(element.examination_id);
+      });
+    }
+  }, [moduleData]);
+
+  useEffect(() => {
+    if (examinationSubcategories) {
+      resetCheckBoxState();
+    }
+  }, [examinationSubcategories]);
+
+  useEffect(() => {
+    
+      console.log('stepVal:' ,stepSpecificValues)
+    
+  }, [stepSpecificValues]);
+
+  useEffect(() => {
+    if (!loading) {
+      resetExaminationCheckboxState();
+    }
+  }, [loading]);
+
+  const resetCheckBoxState = () => {
+    const initialCheckboxesState = {};
+
+    Object.keys(examinationSubcategories).forEach((categoryId) => {
+      Object.keys(examinationSubcategories[categoryId]).forEach((subCategoryId) => {
+        initialCheckboxesState[subCategoryId] = false;
+      });
+    });
+
+    setCheckboxesChecked(initialCheckboxesState);
+  };
+
+  const resetExaminationCheckboxState = () => {
+    const initialCheckboxesState = {};
+
+    stepSpecificValues.forEach((element) => {
+      initialCheckboxesState[element.examination_id] = false;
+    });
+
+    setExaminationCheckboxesChecked(initialCheckboxesState);
   };
 
   useEffect(() => {
@@ -94,6 +175,10 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    console.log('examinationsToDisplay: ', examinationToDisplay);
+  }, [examinationToDisplay]);
+
   const fetchSubcategories = async (id) => {
     const response = await getAllExaminationSubtypes(id);
     return response;
@@ -123,36 +208,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     onClose(stepData);
   };
 
-  const updateExaminationTypesToDisplayGammel = (checkBox, examinationTypeId) => {
-    if (checkBox.checked) {
-      const examinationsMap = examinationToDisplay;
-
-      if (examinationsMap[examinationTypeId] instanceof Array) {
-        examinationsMap[examinationTypeId] = [...examinationsMap[examinationTypeId], checkBox.id];
-
-        setExaminationToDisplay(examinationsMap);
-      } else {
-        examinationsMap[examinationTypeId] = [checkBox.id];
-
-        setExaminationToDisplay(examinationsMap);
-      }
-    } else {
-      const examinationsMap = examinationToDisplay;
-      let subTypesArray = examinationsMap[examinationTypeId];
-      subTypesArray = subTypesArray.filter((id) => id !== checkBox.id);
-
-      examinationsMap[examinationTypeId] = subTypesArray;
-
-      if (subTypesArray.length > 0) {
-        setExaminationToDisplay({ ...examinationToDisplay, examinationsMap });
-      } else {
-        delete examinationsMap[examinationTypeId];
-
-        setExaminationToDisplay({ ...examinationToDisplay, examinationsMap });
-      }
-    }
-  };
-
   const updateExaminationTypesToDisplay = (checkBox, examinationTypeId) => {
     setExaminationToDisplay((prevExaminationToDisplay) => {
       const newExaminationToDisplay = { ...prevExaminationToDisplay };
@@ -174,6 +229,33 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
       return newExaminationToDisplay;
     });
+  };
+
+  const updateStepSpecificValues = (isChecked, examinationId) => {
+    
+    if (isChecked) {
+      const newEntry = {
+        examination_id: examinationId,
+      }
+      setStepSpecificValues([...stepSpecificValues, newEntry]);
+    } else {
+      const newValues = stepSpecificValues.filter((value) => value.examination_id !== examinationId);
+      setStepSpecificValues(newValues);
+    }
+  };
+
+  const handleCheckboxChange = (subCategoryId) => {
+    setCheckboxesChecked((prev) => ({
+      ...prev,
+      [subCategoryId]: !prev[subCategoryId],
+    }));
+  };
+
+  const handleExaminationCheckboxChange = (examinationId) => {
+    setExaminationCheckboxesChecked((prev) => ({
+      ...prev,
+      [examinationId]: !prev[examinationId],
+    }));
   };
 
   return (
@@ -205,9 +287,11 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                             <Checkbox
                               key={'checkbox' + subcategoryId}
                               id={subcategoryId}
-                              onChange={(e) =>
-                                updateExaminationTypesToDisplay(e.target, categoryId)
-                              }
+                              isChecked={checkboxesChecked[subcategoryId]}
+                              onChange={(e) => {
+                                handleCheckboxChange(subcategoryId);
+                                updateExaminationTypesToDisplay(e.target, categoryId);
+                              }}
                             >
                               {subcategoryName}
                             </Checkbox>
@@ -217,30 +301,54 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                     </div>
                   ))}
 
-                  <FormLabel>Utredningar som ska köras av användaren</FormLabel>
+                  <FormLabel>Bocka i korrekta undersökningar för det här steget</FormLabel>
                   {Object.entries(examinationToDisplay).map(([categoryId]) => (
                     <div key={'div' + categoryId}>
                       {/* byt ut mot accordionItem för huvudkategori eller behåll det som en heading/label? */}
                       <Heading key={categoryId} as='h3' size='md'>
                         {examinationCategories[categoryId]}
                       </Heading>
+                      <Accordion allowToggle key={`accordion-${Date.now()}`}>
+                        {examinationToDisplay[categoryId].map((subCategoryId) => (
+                          <div key={'div' + subCategoryId}>
+                            <AccordionItem>
+                              <Heading key={subCategoryId} as='h4' size='sm'>
+                                <AccordionButton>
+                                  <Box as='span' flex='1' textAlign='left'>
+                                    {examinationSubcategories[categoryId][subCategoryId]}
+                                  </Box>
+                                  <AccordionIcon />
+                                </AccordionButton>
+                              </Heading>
 
-                      {examinationToDisplay[categoryId].map((subCategoryId) => (
-                        <div key={'denna div är här just nu pga kommentarer :)' + subCategoryId}>
-                          {/* byt ut mot accordionItem för underkategori eller behåll det som en heading/label? */}
-                          <Heading key={subCategoryId} as='h4' size='sm'>
-                            {examinationSubcategories[categoryId][subCategoryId]}
-                          </Heading>
-
-                          {/* Här nere behöver vi göra en mappning av examinationList[subCategoryId] för att få ut faktiska utredningar.
-                              Varje element kommer vara ett objekt som har .id och .name så vi kan knyta id till ngt smart och skriva ut namnet*/}
-                          {examinationList[subCategoryId].map((examination) => (
-                            <Heading key={examination.id} as='h5' size='xs'>
-                              {examination.name}
-                            </Heading>
-                          ))}
-                        </div>
-                      ))}
+                              <AccordionPanel>
+                                {examinationList[subCategoryId]?.length > 0 && (
+                                  <VStack key={`vstack-${Date.now()}`} alignItems='flex-start'>
+                                    {examinationList[subCategoryId].map((examination) => (
+                                      <HStack key={'hstack' + examination.id}>
+                                        <Checkbox
+                                          key={examination.id}
+                                          isChecked={examinationCheckboxesChecked[examination.id]}
+                                          onChange={(e) => {
+                                            updateStepSpecificValues(
+                                              e.target.checked,
+                                              examination.id,
+                                            );
+                                            handleExaminationCheckboxChange(examination.id);
+                                          }}
+                                        >
+                                          {examination.name}
+                                        </Checkbox>
+                                        {examinationCheckboxesChecked[examination.id] && <Button>Lägg till värden</Button>}
+                                      </HStack>
+                                    ))}
+                                  </VStack>
+                                )}
+                              </AccordionPanel>
+                            </AccordionItem>
+                          </div>
+                        ))}
+                      </Accordion>
                     </div>
                   ))}
 
