@@ -12,6 +12,7 @@ import ShowStatistics from './statistics/showStatistics.jsx';
 import ManageUsers from './adminPage/manageUsers.jsx';
 import ProfilePage from './profilePage/profilePage.jsx';
 import AlertBanner from './alertBanner.jsx';
+import NavBar from './components/NavBar.jsx';
 import { useAlert } from './hooks/useAlert.jsx';
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
       {showAlert && <AlertBanner />}
       {user ? (
         <>
+          <NavBar/>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/case'>
@@ -34,7 +36,6 @@ export default function App() {
             <Route path='/manageUsers' element={<ManageUsers />}></Route>
             <Route path='/profilePage' element={<ProfilePage />}></Route>
           </Routes>
-          <Button onClick={logout}>Logout</Button>
         </>
       ) : (
         <>
