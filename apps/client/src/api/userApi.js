@@ -35,6 +35,12 @@ export const userApi = (apiClient) => ({
     const response = await apiClient.post(`${prefix}createUserGroup`, headers);
   },
   
+
+  getUserGoups: async (headers) => {
+    const response = await apiClient.get(`${prefix}getUserGroups`, headers);
+    return packageResponse(response);
+  },
+
   updatePassword: async (headers, body) => {
     const response = await apiClient.patch(`${prefix}update-password`, headers, body);
     return packageResponse(response);

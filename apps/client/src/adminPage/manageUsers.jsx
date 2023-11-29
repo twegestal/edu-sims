@@ -13,7 +13,7 @@ import {
 import { useUser } from '../hooks/useUser.js';
 import UserTable from './UserTable.jsx';
 
-export default function ManageUsers(props) {
+export default function ManageUsers() {
   const { createUserGroup, createdUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [createdUserGroups, setCreatedUserGroup] = useState([]);

@@ -208,7 +208,7 @@ describe('update user password', () => {
       });
   });
 
-  it('should fain due to not finding the resource', async () => {
+  it('should fail due to not finding the resource', async () => {
     const user = getAdmin();
     const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
     const token = loginResponse.body.token;
@@ -225,6 +225,24 @@ describe('update user password', () => {
       .expect(404)
       .then((res) => {
         expect(res.body).toEqual('Could not find resource');
+      });
+  });
+});
+
+describe.only('handle user groups', () => {
+  it('should return a list of user groups', async () => {
+    const user = getAdmin();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .get('/user/getUserGroups')
+      .set('Authorization', `Bearer ${token}`)
+      .set('id', id)
+      .expect(200)
+      .then((res) => {
+        expect(Object.keys(res.body)).not.toHaveLength(0);
       });
   });
 });

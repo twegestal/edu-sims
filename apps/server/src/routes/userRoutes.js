@@ -49,7 +49,7 @@ export const getUserRoutes = () => {
     res.status(200).json('All users removed');
   });
 
-  router.get('/getAllUsers', async (req, res, next) => {
+  router.get('/getAllUsers', async (req, res, _next) => {
     const request_user = await object.end_user.findOne({
       where: {
         id: req.header('user_id'),
@@ -165,6 +165,24 @@ export const getUserRoutes = () => {
         id: req.header('name'),
       },
     });
+  router.get('/getUserGroups', async (req, res, _next) => {
+    const id = req.header('id');
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+      if (!user.is_admin) {
+        return res.status(403).json('Not authorized for selected resource');
+      }
+      
+      const userGroups = await object.user_group.findAll();
+      console.log(userGroups)
+      if (!userGroups) {
+        return res.status(404).json('Resource not found');
+      }
+      res.status(200).send(userGroups);
+    } catch (error) {
+      res.status(500).json('Internal Server Error');
+    }
+  });
 
   router.patch('/logout', async (req, res, _next) => {
     const user = await object.end_user.findOne({ where: { id: req.headers('id') } });
