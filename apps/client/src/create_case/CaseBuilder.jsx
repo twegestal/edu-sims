@@ -33,9 +33,9 @@ export default function CaseBuilder() {
     }
   }, []);
 
-  useEffect(() => { //FÖRLÅT TEO2 :(
-    console.log('modules: ', modules)
-  },[modules])
+  // useEffect(() => { //FÖRLÅT TEO2 :(
+  //   console.log('modules: ', modules)
+  // },[modules])
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -70,16 +70,14 @@ export default function CaseBuilder() {
   };
 
   const handleOpenModal = (module) => {
-    //FIXME: gammel skräpdata öppnas i modulen, faen osså...
     setActiveModule(module);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = (stepData) => {
-    for (let i = 0; i < modules.length; i++) {
-      if (modules[i].uniqueId === activeModule.uniqueId) {
-        moduleHandlers.setItemProp(i, 'stepData', stepData);
-      }
+    const index = modules.findIndex((module) => module.uniqueId === activeModule.uniqueId);
+    if (index !== -1) {
+      moduleHandlers.setItemProp(index, 'stepData', stepData);
     }
 
     setIsModalOpen(false);
@@ -165,7 +163,12 @@ export default function CaseBuilder() {
         </DragDropContext>
       )}
       {activeModule && (
-        <CreateCaseModal isOpen={isModalOpen} onClose={handleCloseModal} module={activeModule} />
+        <CreateCaseModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          module={activeModule}
+          moduleData={activeModule}
+        />
       )}
     </>
   );

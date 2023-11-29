@@ -14,10 +14,10 @@ import { useDiagnosis } from '../hooks/useDiagnosis';
 import LoadingSkeleton from '../loadingSkeleton';
 import Confirm from '../components/Confirm';
 
-export default function DiagnosisModal({ isOpen, onClose }) {
+export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [prompt, setPrompt] = useState('Ange en uppmaning till användaren');
-  const [feedbackCorrect, setFeedbackCorrect] = useState('Ange korrekt feedback')
+  const [feedbackCorrect, setFeedbackCorrect] = useState('Ange korrekt feedback');
   const [feedbackIncorrect, setFeedbackIncorrect] = useState('Ange inkorrekt feedback');
   const [loading, setLoading] = useState(true);
 
@@ -95,18 +95,17 @@ export default function DiagnosisModal({ isOpen, onClose }) {
 
   const handleCloseConfirm = () => {
     setIsConfirmOpen(false);
-  }
+  };
 
   const buildStep = () => {
     onClose();
-
-  }
+  };
 
   const clearContent = () => {
     setPrompt('');
     setFeedbackCorrect('');
     setFeedbackIncorrect('');
-  }
+  };
 
   return (
     <>
@@ -120,10 +119,7 @@ export default function DiagnosisModal({ isOpen, onClose }) {
             ) : (
               <FormControl>
                 <FormLabel>Uppmaning till användaren</FormLabel>
-                <Textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                ></Textarea>
+                <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}></Textarea>
                 <Card>
                   <FormLabel>Ange korrekt diagnos</FormLabel>
                   <RadioGroup onChange={(e) => changeMedicalField(e)}>

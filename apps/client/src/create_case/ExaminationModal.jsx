@@ -21,14 +21,14 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon
+  AccordionIcon,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCreateCase } from '../hooks/useCreateCase';
 import LoadingSkeleton from '../loadingSkeleton';
 import Confirm from '../components/Confirm';
 
-export default function ExaminationModal({ isOpen, onClose }) {
+export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [loading, setLoading] = useState(true);
   const moduleTypeIdentifier = 1;
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -124,7 +124,6 @@ export default function ExaminationModal({ isOpen, onClose }) {
   };
 
   const updateExaminationTypesToDisplayGammel = (checkBox, examinationTypeId) => {
-
     if (checkBox.checked) {
       const examinationsMap = examinationToDisplay;
 
@@ -145,11 +144,11 @@ export default function ExaminationModal({ isOpen, onClose }) {
       examinationsMap[examinationTypeId] = subTypesArray;
 
       if (subTypesArray.length > 0) {
-        setExaminationToDisplay({...examinationToDisplay, examinationsMap});
+        setExaminationToDisplay({ ...examinationToDisplay, examinationsMap });
       } else {
         delete examinationsMap[examinationTypeId];
 
-        setExaminationToDisplay({...examinationToDisplay, examinationsMap});
+        setExaminationToDisplay({ ...examinationToDisplay, examinationsMap });
       }
     }
   };
@@ -157,7 +156,7 @@ export default function ExaminationModal({ isOpen, onClose }) {
   const updateExaminationTypesToDisplay = (checkBox, examinationTypeId) => {
     setExaminationToDisplay((prevExaminationToDisplay) => {
       const newExaminationToDisplay = { ...prevExaminationToDisplay };
-  
+
       if (checkBox.checked) {
         newExaminationToDisplay[examinationTypeId] = [
           ...(newExaminationToDisplay[examinationTypeId] || []),
@@ -167,16 +166,15 @@ export default function ExaminationModal({ isOpen, onClose }) {
         newExaminationToDisplay[examinationTypeId] = (
           newExaminationToDisplay[examinationTypeId] || []
         ).filter((id) => id !== checkBox.id);
-  
+
         if (newExaminationToDisplay[examinationTypeId].length === 0) {
           delete newExaminationToDisplay[examinationTypeId];
         }
       }
-  
+
       return newExaminationToDisplay;
     });
   };
-  
 
   return (
     <>
@@ -201,17 +199,21 @@ export default function ExaminationModal({ isOpen, onClose }) {
                         {name}
                       </Heading>
 
-                      {Object.entries(examinationSubcategories[categoryId]).map(([subcategoryId, subcategoryName]) => (
-                        <VStack alignItems='flex-start' key={subcategoryId}>
-                        <Checkbox
-                          key={'checkbox' + subcategoryId}
-                          id={subcategoryId}
-                          onChange={(e) => updateExaminationTypesToDisplay(e.target, categoryId)}
-                        >
-                          {subcategoryName}
-                        </Checkbox>
-                      </VStack>
-                      ))}
+                      {Object.entries(examinationSubcategories[categoryId]).map(
+                        ([subcategoryId, subcategoryName]) => (
+                          <VStack alignItems='flex-start' key={subcategoryId}>
+                            <Checkbox
+                              key={'checkbox' + subcategoryId}
+                              id={subcategoryId}
+                              onChange={(e) =>
+                                updateExaminationTypesToDisplay(e.target, categoryId)
+                              }
+                            >
+                              {subcategoryName}
+                            </Checkbox>
+                          </VStack>
+                        ),
+                      )}
                     </div>
                   ))}
 
@@ -219,17 +221,23 @@ export default function ExaminationModal({ isOpen, onClose }) {
                   {Object.entries(examinationToDisplay).map(([categoryId]) => (
                     <div key={'div' + categoryId}>
                       {/* byt ut mot accordionItem för huvudkategori eller behåll det som en heading/label? */}
-                      <Heading key={categoryId} as='h3' size='md'>{examinationCategories[categoryId]}</Heading>
-                      
+                      <Heading key={categoryId} as='h3' size='md'>
+                        {examinationCategories[categoryId]}
+                      </Heading>
+
                       {examinationToDisplay[categoryId].map((subCategoryId) => (
                         <div key={'denna div är här just nu pga kommentarer :)' + subCategoryId}>
                           {/* byt ut mot accordionItem för underkategori eller behåll det som en heading/label? */}
-                          <Heading key={subCategoryId} as='h4' size='sm'>{examinationSubcategories[categoryId][subCategoryId]}</Heading>
+                          <Heading key={subCategoryId} as='h4' size='sm'>
+                            {examinationSubcategories[categoryId][subCategoryId]}
+                          </Heading>
 
                           {/* Här nere behöver vi göra en mappning av examinationList[subCategoryId] för att få ut faktiska utredningar.
                               Varje element kommer vara ett objekt som har .id och .name så vi kan knyta id till ngt smart och skriva ut namnet*/}
                           {examinationList[subCategoryId].map((examination) => (
-                            <Heading key={examination.id} as='h5' size='xs'>{examination.name}</Heading>
+                            <Heading key={examination.id} as='h5' size='xs'>
+                              {examination.name}
+                            </Heading>
                           ))}
                         </div>
                       ))}

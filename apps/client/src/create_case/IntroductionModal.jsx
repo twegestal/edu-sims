@@ -10,10 +10,10 @@ import {
   FormLabel,
   Textarea,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Confirm from '../components/Confirm';
 
-export default function IntroductionModal({ isOpen, onClose }) {
+export default function IntroductionModal({ isOpen, onClose, moduleData }) {
   const moduleTypeIdentifier = 0;
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -21,6 +21,21 @@ export default function IntroductionModal({ isOpen, onClose }) {
   const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
   const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
   const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
+
+  useEffect(() => {
+    setDescription(
+      moduleData?.stepData?.description || 'Fyll i din beskrivning av ett patientmöte',
+    );
+    setPrompt(
+      moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren som en Ja/Nej-fråga',
+    );
+    setFeedbackCorrect(
+      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
+    );
+    setFeedbackIncorrect(
+      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
+    );
+  }, [moduleData]);
 
   const clearContent = () => {
     setDescription('');
@@ -31,16 +46,17 @@ export default function IntroductionModal({ isOpen, onClose }) {
     setIsConfirmOpen(false);
   };
 
-  const resetContent = () => { //TODO: kan detta vara en lösning, tror inte det??
+  const resetContent = () => {
+    //TODO: kan detta vara en lösning, tror inte det??
     setDescription('Fyll i din beskrivning av ett patientmöte');
     setPrompt('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
     setFeedbackCorrect('Fyll i feedback för korrekt svar');
     setFeedbackIncorrect('Fyll i feedback för inkorrekt svar');
-  }
+  };
 
   const handleOpenConfirm = () => {
     setIsConfirmOpen(true);
-  }
+  };
 
   const handleCloseConfirm = () => {
     setIsConfirmOpen(false);
@@ -54,7 +70,7 @@ export default function IntroductionModal({ isOpen, onClose }) {
       feedback_correct: feedbackCorrect,
       feedback_incorrect: feedbackIncorrect,
     };
-    resetContent();
+    //resetContent();
     onClose(stepData);
   };
 
