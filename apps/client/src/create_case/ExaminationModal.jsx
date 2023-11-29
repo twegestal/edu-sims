@@ -66,13 +66,9 @@ export default function ExaminationModal({ isOpen, onClose }) {
         categoryMap[categories[i].id] = categories[i].name;
 
         const subcategories = await fetchSubcategories(categories[i].id);
-        let subcategoryArray = [];
+        let subcategoryObject = {};
         for (let j = 0; j < subcategories.length; j++) {
-          let newEntry = {
-            id: subcategories[j].id,
-            name: subcategories[j].name,
-          };
-          subcategoryArray.push(newEntry);
+          subcategoryObject[subcategories[j].id] = subcategories[j].name;
 
           const examinations = await fetchExaminations(subcategories[j].id);
           let examinationsArray = [];
@@ -85,7 +81,7 @@ export default function ExaminationModal({ isOpen, onClose }) {
             examinationsMap[subcategories[j].id] = examinationsArray;
           }
         }
-        subCategoryMap[categories[i].id] = subcategoryArray;
+        subCategoryMap[categories[i].id] = subcategoryObject;
       }
 
       setExaminationCategories(categoryMap);
@@ -205,28 +201,39 @@ export default function ExaminationModal({ isOpen, onClose }) {
                         {name}
                       </Heading>
 
-                      {examinationSubcategories[categoryId].map((subCategory) => (
-                        <VStack alignItems='flex-start' key={subCategory.id}>
-                          <Checkbox
-                            key={'checkbox' + subCategory.id}
-                            id={subCategory.id}
-                            onChange={(e) => updateExaminationTypesToDisplay(e.target, categoryId)}
-                          >
-                            {subCategory.name}
-                          </Checkbox>
-                        </VStack>
+                      {Object.entries(examinationSubcategories[categoryId]).map(([subcategoryId, subcategoryName]) => (
+                        <VStack alignItems='flex-start' key={subcategoryId}>
+                        <Checkbox
+                          key={'checkbox' + subcategoryId}
+                          id={subcategoryId}
+                          onChange={(e) => updateExaminationTypesToDisplay(e.target, categoryId)}
+                        >
+                          {subcategoryName}
+                        </Checkbox>
+                      </VStack>
                       ))}
                     </div>
                   ))}
 
                   <FormLabel>Utredningar som ska köras av användaren</FormLabel>
-                  {Object.entries(examinationToDisplay).map(([categoryId, subCategoryArray]) => (
+                  {Object.entries(examinationToDisplay).map(([categoryId]) => (
                     <div key={'div' + categoryId}>
-                      <Heading key={categoryId} as='h3' size='sm'>{examinationCategories[categoryId]}</Heading>
+                      {/* byt ut mot accordionItem för huvudkategori eller behåll det som en heading/label? */}
+                      <Heading key={categoryId} as='h3' size='md'>{examinationCategories[categoryId]}</Heading>
                       
-                      
+                      {examinationToDisplay[categoryId].map((subCategoryId) => (
+                        <div key={'denna div är här just nu pga kommentarer :)' + subCategoryId}>
+                          {/* byt ut mot accordionItem för underkategori eller behåll det som en heading/label? */}
+                          <Heading key={subCategoryId} as='h4' size='sm'>{examinationSubcategories[categoryId][subCategoryId]}</Heading>
+
+                          {/* Här nere behöver vi göra en mappning av examinationList[subCategoryId] för att få ut faktiska utredningar.
+                              Varje element kommer vara ett objekt som har .id och .name så vi kan knyta id till ngt smart och skriva ut namnet*/}
+                          {examinationList[subCategoryId].map((examination) => (
+                            <Heading key={examination.id} as='h5' size='xs'>{examination.name}</Heading>
+                          ))}
+                        </div>
+                      ))}
                     </div>
-                    
                   ))}
 
                   <FormLabel>Max antal test</FormLabel>

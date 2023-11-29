@@ -27,6 +27,8 @@ export default function IntroductionModal({ isOpen, onClose }) {
     setPrompt('');
     setFeedbackCorrect('');
     setFeedbackIncorrect('');
+
+    setIsConfirmOpen(false);
   };
 
   const resetContent = () => { //TODO: kan detta vara en lösning, tror inte det??
@@ -34,6 +36,10 @@ export default function IntroductionModal({ isOpen, onClose }) {
     setPrompt('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
     setFeedbackCorrect('Fyll i feedback för korrekt svar');
     setFeedbackIncorrect('Fyll i feedback för inkorrekt svar');
+  }
+
+  const handleOpenConfirm = () => {
+    setIsConfirmOpen(true);
   }
 
   const handleCloseConfirm = () => {
@@ -48,7 +54,7 @@ export default function IntroductionModal({ isOpen, onClose }) {
       feedback_correct: feedbackCorrect,
       feedback_incorrect: feedbackIncorrect,
     };
-    //resetContent();
+    resetContent();
     onClose(stepData);
   };
 
@@ -87,7 +93,7 @@ export default function IntroductionModal({ isOpen, onClose }) {
           <ModalFooter>
             <Button onClick={buildStep}>Spara ändringar</Button>
 
-            <Button onClick={clearContent}>Rensa</Button>
+            <Button onClick={handleOpenConfirm}>Rensa</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
