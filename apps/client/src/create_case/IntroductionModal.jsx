@@ -29,6 +29,13 @@ export default function IntroductionModal({ isOpen, onClose }) {
     setFeedbackIncorrect('');
   };
 
+  const resetContent = () => { //TODO: kan detta vara en lösning, tror inte det??
+    setDescription('Fyll i din beskrivning av ett patientmöte');
+    setPrompt('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
+    setFeedbackCorrect('Fyll i feedback för korrekt svar');
+    setFeedbackIncorrect('Fyll i feedback för inkorrekt svar');
+  }
+
   const handleCloseConfirm = () => {
     setIsConfirmOpen(false);
   };
@@ -41,7 +48,7 @@ export default function IntroductionModal({ isOpen, onClose }) {
       feedback_correct: feedbackCorrect,
       feedback_incorrect: feedbackIncorrect,
     };
-
+    //resetContent();
     onClose(stepData);
   };
 

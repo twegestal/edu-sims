@@ -17,6 +17,11 @@ import {
   Heading,
   Checkbox,
   VStack,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -122,10 +127,60 @@ export default function ExaminationModal({ isOpen, onClose }) {
     onClose(stepData);
   };
 
-  const updateExaminationTypesToDisplay = (checkBox, examinationTypeId) => {
-    console.log('checkbox: ', checkBox.checked);
-    console.log('examinationTypeId: ', examinationTypeId);
+  const updateExaminationTypesToDisplayGammel = (checkBox, examinationTypeId) => {
+
+    if (checkBox.checked) {
+      const examinationsMap = examinationToDisplay;
+
+      if (examinationsMap[examinationTypeId] instanceof Array) {
+        examinationsMap[examinationTypeId] = [...examinationsMap[examinationTypeId], checkBox.id];
+
+        setExaminationToDisplay(examinationsMap);
+      } else {
+        examinationsMap[examinationTypeId] = [checkBox.id];
+
+        setExaminationToDisplay(examinationsMap);
+      }
+    } else {
+      const examinationsMap = examinationToDisplay;
+      let subTypesArray = examinationsMap[examinationTypeId];
+      subTypesArray = subTypesArray.filter((id) => id !== checkBox.id);
+
+      examinationsMap[examinationTypeId] = subTypesArray;
+
+      if (subTypesArray.length > 0) {
+        setExaminationToDisplay({...examinationToDisplay, examinationsMap});
+      } else {
+        delete examinationsMap[examinationTypeId];
+
+        setExaminationToDisplay({...examinationToDisplay, examinationsMap});
+      }
+    }
   };
+
+  const updateExaminationTypesToDisplay = (checkBox, examinationTypeId) => {
+    setExaminationToDisplay((prevExaminationToDisplay) => {
+      const newExaminationToDisplay = { ...prevExaminationToDisplay };
+  
+      if (checkBox.checked) {
+        newExaminationToDisplay[examinationTypeId] = [
+          ...(newExaminationToDisplay[examinationTypeId] || []),
+          checkBox.id,
+        ];
+      } else {
+        newExaminationToDisplay[examinationTypeId] = (
+          newExaminationToDisplay[examinationTypeId] || []
+        ).filter((id) => id !== checkBox.id);
+  
+        if (newExaminationToDisplay[examinationTypeId].length === 0) {
+          delete newExaminationToDisplay[examinationTypeId];
+        }
+      }
+  
+      return newExaminationToDisplay;
+    });
+  };
+  
 
   return (
     <>
@@ -145,15 +200,15 @@ export default function ExaminationModal({ isOpen, onClose }) {
 
                   <FormLabel>Utredningar att visa för användare</FormLabel>
                   {Object.entries(examinationCategories).map(([categoryId, name]) => (
-                    <>
-                      <Heading as='h3' size='sm'>
+                    <div key={'div' + categoryId}>
+                      <Heading as='h3' size='sm' key={categoryId}>
                         {name}
                       </Heading>
 
                       {examinationSubcategories[categoryId].map((subCategory) => (
-                        <VStack alignItems='flex-start'>
+                        <VStack alignItems='flex-start' key={subCategory.id}>
                           <Checkbox
-                            key={subCategory.id}
+                            key={'checkbox' + subCategory.id}
                             id={subCategory.id}
                             onChange={(e) => updateExaminationTypesToDisplay(e.target, categoryId)}
                           >
@@ -161,7 +216,17 @@ export default function ExaminationModal({ isOpen, onClose }) {
                           </Checkbox>
                         </VStack>
                       ))}
-                    </>
+                    </div>
+                  ))}
+
+                  <FormLabel>Utredningar som ska köras av användaren</FormLabel>
+                  {Object.entries(examinationToDisplay).map(([categoryId, subCategoryArray]) => (
+                    <div key={'div' + categoryId}>
+                      <Heading key={categoryId} as='h3' size='sm'>{examinationCategories[categoryId]}</Heading>
+                      
+                      
+                    </div>
+                    
                   ))}
 
                   <FormLabel>Max antal test</FormLabel>

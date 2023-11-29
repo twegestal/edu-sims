@@ -33,6 +33,10 @@ export default function CaseBuilder() {
     }
   }, []);
 
+  useEffect(() => { //FÖRLÅT TEO2 :(
+    console.log('modules: ', modules)
+  },[modules])
+
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -59,21 +63,19 @@ export default function CaseBuilder() {
   };
 
   const handleDeleteModule = (uniqueId) => {
+    //TODO: vi måste tömma allt i modulen när den slängs...
     moduleHandlers.setState((currentModules) =>
       currentModules.filter((module) => module.uniqueId !== uniqueId),
     );
   };
 
   const handleOpenModal = (module) => {
+    //FIXME: gammel skräpdata öppnas i modulen, faen osså...
     setActiveModule(module);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = (stepData) => {
-    //console.log('module: ', module);
-    console.log('activeModule: ', activeModule);
-    console.log('stepData: ', stepData);
-
     for (let i = 0; i < modules.length; i++) {
       if (modules[i].uniqueId === activeModule.uniqueId) {
         moduleHandlers.setItemProp(i, 'stepData', stepData);
