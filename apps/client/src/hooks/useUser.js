@@ -8,6 +8,7 @@ export const useUser = () => {
   const getAllUsersApi = useApi('getAllUsers');
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
+  const getUserGroupsApi = useApi('getUserGroups');
   const updatePasswordApi = useApi('updatePassword');
   const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
   const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
@@ -15,6 +16,7 @@ export const useUser = () => {
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
+  const [userGroups, setUserGroups] = useState();
 
   const getAllUsers = async (user_id) => {
     try {
@@ -64,6 +66,17 @@ export const useUser = () => {
       console.error('error creating user group: ', error);
     }
   };
+
+  const getUserGroups = async () => {
+    try {
+      const response = await getUserGroupsApi({ headers: { id: user.id }});
+      if (response.status == 200) {
+        setUserGroups(response.data);
+      }
+    } catch (error) {
+      console.error('error fetching user groups: ', error);
+    }
+  }
 
   const updatePassword = async (id, email, newPassword) => {
     try {

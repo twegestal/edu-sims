@@ -14,6 +14,10 @@ export const user_group = db.define(
     name: {
       type: DataTypes.TEXT,
     },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
   },
   {
     // Other model are go here
