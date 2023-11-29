@@ -36,9 +36,10 @@ export default function CaseBuilder() {
     }
   }, []);
 
-   useEffect(() => { //FÖRLÅT TEO2 :(
-     console.log('modules: ', modules)
-   },[modules])
+  useEffect(() => {
+    //FÖRLÅT TEO2 :(
+    console.log('modules: ', modules);
+  }, [modules]);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -89,12 +90,12 @@ export default function CaseBuilder() {
   const handleOpenConfirm = (moduleId) => {
     setModuleToDelete(moduleId);
     setIsConfirmOpen(true);
-  }
+  };
 
   const handleCloseConfirm = () => {
     setModuleToDelete(null);
     setIsConfirmOpen(false);
-  }
+  };
 
   return (
     <>
@@ -184,11 +185,11 @@ export default function CaseBuilder() {
         />
       )}
       <Confirm
-      isOpen={isConfirmOpen}
-      onClose={handleCloseConfirm}
-      header={'Ta bort modul'}
-      body={'Är du säker på att du vill ta bort denna modul?'}
-      handleConfirm={handleDeleteModule}
+        isOpen={isConfirmOpen}
+        onClose={handleCloseConfirm}
+        header={'Ta bort modul'}
+        body={'Är du säker på att du vill ta bort denna modul?'}
+        handleConfirm={handleDeleteModule}
       ></Confirm>
     </>
   );

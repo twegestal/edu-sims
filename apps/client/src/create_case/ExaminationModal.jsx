@@ -24,6 +24,7 @@ import {
   AccordionIcon,
   Box,
   HStack,
+  Flex,
 } from '@chakra-ui/react';
 import { useState, useEffect, useRef } from 'react';
 import { useCreateCase } from '../hooks/useCreateCase';
@@ -47,6 +48,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [examinationList, setExaminationList] = useState();
   const [checkboxesChecked, setCheckboxesChecked] = useState({}); //belongs to the checkboxes for examinations to display
   const [examinationCheckboxesChecked, setExaminationCheckboxesChecked] = useState({}); //belongs to the checkboxes for step specific examinations
+  const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
   const { getAllExaminationTypes, getAllExaminationSubtypes, getExaminationList } = useCreateCase();
 
@@ -102,9 +104,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   }, [examinationSubcategories]);
 
   useEffect(() => {
-    
-      console.log('stepVal:' ,stepSpecificValues)
-    
+    console.log('stepVal:', stepSpecificValues);
   }, [stepSpecificValues]);
 
   useEffect(() => {
@@ -232,14 +232,15 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   };
 
   const updateStepSpecificValues = (isChecked, examinationId) => {
-    
     if (isChecked) {
       const newEntry = {
         examination_id: examinationId,
-      }
+      };
       setStepSpecificValues([...stepSpecificValues, newEntry]);
     } else {
-      const newValues = stepSpecificValues.filter((value) => value.examination_id !== examinationId);
+      const newValues = stepSpecificValues.filter(
+        (value) => value.examination_id !== examinationId,
+      );
       setStepSpecificValues(newValues);
     }
   };
@@ -256,6 +257,10 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       ...prev,
       [examinationId]: !prev[examinationId],
     }));
+  };
+
+  const handleAccordionChange = (index) => {
+    setOpenAccordionIndex(openAccordionIndex === index ? null : index);
   };
 
   return (
@@ -308,7 +313,12 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                       <Heading key={categoryId} as='h3' size='md'>
                         {examinationCategories[categoryId]}
                       </Heading>
-                      <Accordion allowToggle key={`accordion-${Date.now()}`}>
+                      <Accordion
+                        allowToggle
+                        index={openAccordionIndex}
+                        onChange={handleAccordionChange}
+                        key={`accordion-${categoryId}`}
+                      >
                         {examinationToDisplay[categoryId].map((subCategoryId) => (
                           <div key={'div' + subCategoryId}>
                             <AccordionItem>
@@ -325,9 +335,13 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                                 {examinationList[subCategoryId]?.length > 0 && (
                                   <VStack key={`vstack-${Date.now()}`} alignItems='flex-start'>
                                     {examinationList[subCategoryId].map((examination) => (
-                                      <HStack key={'hstack' + examination.id}>
+                                      <Flex
+                                        key={'flex' + examination.id}
+                                        justify='space-between'
+                                        align='center'
+                                        w='full'
+                                      >
                                         <Checkbox
-                                          key={examination.id}
                                           isChecked={examinationCheckboxesChecked[examination.id]}
                                           onChange={(e) => {
                                             updateStepSpecificValues(
@@ -339,8 +353,12 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                                         >
                                           {examination.name}
                                         </Checkbox>
-                                        {examinationCheckboxesChecked[examination.id] && <Button>Lägg till värden</Button>}
-                                      </HStack>
+                                        {examinationCheckboxesChecked[examination.id] && (
+                                          <Button variant='solid' size='sm'>
+                                            Lägg till värden
+                                          </Button>
+                                        )}
+                                      </Flex>
                                     ))}
                                   </VStack>
                                 )}
