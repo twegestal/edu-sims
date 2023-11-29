@@ -56,7 +56,6 @@ const insertIntroductionStep = async (stepData, index, caseId, transaction) => {
 };
 
 const insertExaminationStep = async (stepData, index, caseId, transaction) => {
-  console.log('kommer vi hit?');
   const examinationStep = await object.examination.create(
     {
       prompt: stepData.prompt,

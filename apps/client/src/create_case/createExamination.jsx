@@ -33,7 +33,7 @@ export default function CreateExamination({ updateCaseObject }) {
     step_specific_values: [],
     feedback_correct: 'default',
     feedback_incorrect: 'default',
-    max_nbr_test: 0,
+    max_nbr_tests: 0,
   });
   const [examinationCategories, setExaminationCategories] = useState();
   const [examinationSubcategories, setExaminationSubcategories] = useState();
@@ -86,6 +86,10 @@ export default function CreateExamination({ updateCaseObject }) {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    console.log('stepData: ', stepData);
+  }, [stepData]);
 
   const fetchSubcategories = async (id) => {
     const response = await getAllExaminationSubtypes(id);
