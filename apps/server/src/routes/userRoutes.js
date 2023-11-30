@@ -157,14 +157,29 @@ export const getUserRoutes = () => {
   });
 
   router.post('/deactivateUserGroup', async (req, res, _next) => {
-    const result = await object.user_group.update({
-      is_active: false,
-    }, 
-    {
-      where: {
-        id: req.header('name'),
-      },
-    });
+    const id = req.header('id');
+    try {
+      const user = await object.end_user.findOne({where: {id: id}});
+      if (!user.is_admin){
+        return res.status(403).json('Not authorized for selected module');
+      }
+      const userGroup = await object.user_group.update({
+          is_active: false,
+        },
+        {
+          where: { 
+            id: req.header.user_group_id,
+          },
+        })
+        if(userGroup === null){
+          return res.status(404).json('Resource not found');
+        }
+        return res.status(200).json('Resource deactivated');
+    } catch (error){ 
+      res.status(500).json('Internal Server Error');
+    }
+  })
+
   router.get('/getUserGroups', async (req, res, _next) => {
     const id = req.header('id');
     try {

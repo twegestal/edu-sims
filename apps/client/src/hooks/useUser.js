@@ -1,3 +1,5 @@
+import { responseTypes } from 'ky/distribution/core/constants.js';
+import { user_group } from '../../../server/src/models/user_group.js';
 import { useApi } from './useApi.js';
 import { useAuth } from './useAuth.jsx';
 import { useState } from 'react';
@@ -8,6 +10,7 @@ export const useUser = () => {
   const getAllUsersApi = useApi('getAllUsers');
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
+  const deactivateUserGroupApi = useApi('deactivateUserGroup');
   const getUserGroupsApi = useApi('getUserGroups');
   const updatePasswordApi = useApi('updatePassword');
   const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
@@ -67,6 +70,17 @@ export const useUser = () => {
     }
   };
 
+  const deactivateUserGroup = async () => {
+    try{
+      const response = await deactivateUserGroupApi({headers: {id: user.id, user_group_id: user_group.id}});
+      if (response.status == 200){
+       // setCreatedUserGroup(response.data);
+      }
+    } catch (error) {
+      console.error('error deactivating user group:', error);
+    }
+  };
+
   const getUserGroups = async () => {
     try {
       const response = await getUserGroupsApi({ headers: { id: user.id }});
@@ -98,6 +112,7 @@ export const useUser = () => {
     revokeAdminPrivilege,
     createUserGroup,
     createdUserGroup,
+    deactivateUserGroup,
     updatePassword,
   };
 };
