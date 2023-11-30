@@ -26,15 +26,19 @@ import {
   HStack,
   Flex,
 } from '@chakra-ui/react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useCreateCase } from '../hooks/useCreateCase';
 import LoadingSkeleton from '../loadingSkeleton';
 import Confirm from '../components/Confirm';
+import ConfirmValues from './ConfirmValues';
 
 export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [loading, setLoading] = useState(true);
   const moduleTypeIdentifier = 1;
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isConfirmValuesOpen, setIsConfirmValuesOpen] = useState(false);
+  const [examinationToConfirm, setExaminationToConfirm] = useState();
+  const [previousExaminationValues, setPreviousExaminationValues] = useState();
 
   const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
   const [examinationToDisplay, setExaminationToDisplay] = useState({});
@@ -48,7 +52,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [examinationList, setExaminationList] = useState();
   const [checkboxesChecked, setCheckboxesChecked] = useState({}); //belongs to the checkboxes for examinations to display
   const [examinationCheckboxesChecked, setExaminationCheckboxesChecked] = useState({}); //belongs to the checkboxes for step specific examinations
-  const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
   const { getAllExaminationTypes, getAllExaminationSubtypes, getExaminationList } = useCreateCase();
 
@@ -59,6 +62,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setFeedbackCorrect('');
     setFeedbackIncorrect('');
     setMaxNbrTests(0);
+
+    resetCheckBoxState();
+    resetExaminationCheckboxState();
   };
 
   useEffect(() => {
@@ -102,10 +108,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       resetCheckBoxState();
     }
   }, [examinationSubcategories]);
-
-  useEffect(() => {
-    console.log('stepVal:', stepSpecificValues);
-  }, [stepSpecificValues]);
 
   useEffect(() => {
     if (!loading) {
@@ -175,10 +177,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    console.log('examinationsToDisplay: ', examinationToDisplay);
-  }, [examinationToDisplay]);
-
   const fetchSubcategories = async (id) => {
     const response = await getAllExaminationSubtypes(id);
     return response;
@@ -192,6 +190,43 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
   const handleCloseConfirm = () => {
     setIsConfirmOpen(false);
+  };
+
+  const handleOpenConfirmValues = (examinationName, examinationId) => {
+    stepSpecificValues.forEach((element) => {
+      if (element.examination_id === examinationId && element.value) {
+        setPreviousExaminationValues({
+          examinationValue: element.value,
+          isNormal: element.is_normal
+        });
+      };
+    });
+
+    setExaminationToConfirm({
+      id: examinationId,
+      name: examinationName,
+    });
+    setIsConfirmValuesOpen(true);
+  };
+
+  const handleCloseConfirmValues = () => {
+    setExaminationToConfirm(null);
+    setPreviousExaminationValues(null);
+    setIsConfirmValuesOpen(false);
+  };
+
+  const handleConfirmValues = (examinationValue, isNormal) => {
+    setIsConfirmValuesOpen(false);
+    setPreviousExaminationValues(null);
+    let mutableStepSpecificValues = stepSpecificValues;
+    mutableStepSpecificValues.forEach((element) => {
+      if (element.examination_id === examinationToConfirm.id) {
+        element.value = examinationValue;
+        element.is_normal = isNormal;
+      }
+    });
+
+    setStepSpecificValues(mutableStepSpecificValues);
   };
 
   const buildStep = () => {
@@ -259,10 +294,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     }));
   };
 
-  const handleAccordionChange = (index) => {
-    setOpenAccordionIndex(openAccordionIndex === index ? null : index);
-  };
-
   return (
     <>
       {loading ? (
@@ -307,18 +338,13 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                   ))}
 
                   <FormLabel>Bocka i korrekta undersökningar för det här steget</FormLabel>
-                  {Object.entries(examinationToDisplay).map(([categoryId]) => (
+                  {Object.entries(examinationToDisplay).map(([categoryId], index) => (
                     <div key={'div' + categoryId}>
                       {/* byt ut mot accordionItem för huvudkategori eller behåll det som en heading/label? */}
                       <Heading key={categoryId} as='h3' size='md'>
                         {examinationCategories[categoryId]}
                       </Heading>
-                      <Accordion
-                        allowToggle
-                        index={openAccordionIndex}
-                        onChange={handleAccordionChange}
-                        key={`accordion-${categoryId}`}
-                      >
+                      <Accordion allowMultiple key={`accordion-${categoryId}`}>
                         {examinationToDisplay[categoryId].map((subCategoryId) => (
                           <div key={'div' + subCategoryId}>
                             <AccordionItem>
@@ -354,7 +380,16 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                                           {examination.name}
                                         </Checkbox>
                                         {examinationCheckboxesChecked[examination.id] && (
-                                          <Button variant='solid' size='sm'>
+                                          <Button
+                                            variant='solid'
+                                            size='sm'
+                                            onClick={() =>
+                                              handleOpenConfirmValues(
+                                                examination.name,
+                                                examination.id,
+                                              )
+                                            }
+                                          >
                                             Lägg till värden
                                           </Button>
                                         )}
@@ -411,6 +446,16 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
             body={'Är du säker på att du vill rensa informationen?'}
             handleConfirm={clearContent}
           />
+
+          {examinationToConfirm && (
+            <ConfirmValues
+              isOpen={isConfirmValuesOpen}
+              onClose={handleCloseConfirmValues}
+              handleConfirm={handleConfirmValues}
+              examinationName={examinationToConfirm.name}
+              previousData={previousExaminationValues}
+            />
+          )}
         </>
       )}
     </>
