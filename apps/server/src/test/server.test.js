@@ -229,7 +229,7 @@ describe('update user password', () => {
   });
 });
 
-describe.only('handle user groups', () => {
+describe('user group tests', () => {
   it('should return a list of user groups', async () => {
     const user = getAdmin();
     const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
@@ -245,4 +245,55 @@ describe.only('handle user groups', () => {
         expect(Object.keys(res.body)).not.toHaveLength(0);
       });
   });
-});
+
+  it('should return information about deactivated user group', async () => {
+    const user = getAdmin();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .post('/user/deactivateUserGroup')
+      .set('Authorization', `Bearer ${token}`)
+      .set('id', id)
+      .set('user_group_id', '04ca9240-d148-4c4e-8f05-3532f7344eeb')
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual('Resource deactivated');
+      });
+  });
+
+  it('should return 403 due to user not being admin', async () => {
+    const user = getRegularUser();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .post('/user/deactivateUserGroup')
+      .set('Authorization', `Bearer ${token}`)
+      .set('id', id)
+      .set('user_group_id', '04ca9240-d148-4c4e-8f05-3532f7344eeb')
+      .expect(403)
+      .then((res) => {
+        expect(res.body).toEqual('Not authorized for selected resource');
+      });
+  });
+
+  it('should return 404 due to not finding the resource', async () => {
+    const user = getAdmin();
+    const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
+    const token = loginResponse.body.token;
+    const id = loginResponse.body.id;
+
+    await requestWithSupertest
+      .post('/user/deactivateUserGroup')
+      .set('Authorization', `Bearer ${token}`)
+      .set('id', id)
+      .set('user_group_id', '')
+      .expect(500)
+      .then((res) => {
+        expect(res.body).toEqual('Internal Server Error');
+      });
+  });
+})

@@ -1,5 +1,3 @@
-import { responseTypes } from 'ky/distribution/core/constants.js';
-import { user_group } from '../../../server/src/models/user_group.js';
 import { useApi } from './useApi.js';
 import { useAuth } from './useAuth.jsx';
 import { useState } from 'react';
@@ -70,11 +68,13 @@ export const useUser = () => {
     }
   };
 
-  const deactivateUserGroup = async () => {
+  const deactivateUserGroup = async (id) => {
     try{
-      const response = await deactivateUserGroupApi({headers: {id: user.id, user_group_id: user_group.id}});
+      const response = await deactivateUserGroupApi({headers: {id: user.id, user_group_id: id}});
       if (response.status == 200){
-       // setCreatedUserGroup(response.data);
+       return true;
+      } else {
+        return false;
       }
     } catch (error) {
       console.error('error deactivating user group:', error);
@@ -114,5 +114,7 @@ export const useUser = () => {
     createdUserGroup,
     deactivateUserGroup,
     updatePassword,
+    userGroups,
+    getUserGroups
   };
 };

@@ -14,7 +14,7 @@ import { useUser } from '../hooks/useUser.js';
 import UserTable from './UserTable.jsx';
 
 export default function ManageUsers() {
-  const { createUserGroup, createdUserGroup } = useUser();
+  const { createUserGroup, createdUserGroup, userGroups, getUserGroups, deactivateUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [createdUserGroups, setCreatedUserGroup] = useState([]);
   const [link, setLink] = useState('');
@@ -33,20 +33,31 @@ export default function ManageUsers() {
   const generateRegLink = () => {
     if (inputUserGroup.length > 0) {
       createUserGroup(inputUserGroup);
-      setCreatedUserGroup((oldValues) => [...oldValues, {inputUserGroup}]);
     }
   };
 
   const removeRegistrationLink = (id) => {
-    const newArr = [];
-    for (let index = 0; index < createdUserGroups.length; index++) {
-      if (id != createUserGroups[index].id) {
-        newArr.push(createdUserGroups[index]);
-      }
-    }
-    setCreatedUserGroup(newArr);
+    // const newArr = [];
+    // for (let index = 0; index < createdUserGroups.length; index++) {
+    //   if (id != createUserGroups[index].id) {
+    //     newArr.push(createdUserGroups[index]);
+    //   }
+    // }
+    // setCreatedUserGroup(newArr);
     // Remove from DB by API call
   };
+
+  const showActiveRegistrationLinks = async () => {
+    await getUserGroups();
+  }
+
+  const handleDeactivateRegistrationLink = async (groupId) => {
+    const result = await deactivateUserGroup(groupId);
+
+    if (result) {
+      await getUserGroups();
+    }
+  }
 
   return (
     <Flex direction={'column'} justifyContent={'space-between'}>
@@ -64,9 +75,10 @@ export default function ManageUsers() {
               onChange={handleInputUserGroupChange}
             />
             <Button onClick={generateRegLink}>Generera länk</Button>
+            <Button onClick={() => showActiveRegistrationLinks()}>Se alla aktiva länkar</Button>
           </Flex>
         </FormControl>
-        {createdUserGroup.length != 0 && (
+        {createdUserGroup.length !== 0 && (
           <Card>
             <CardHeader>
               <Text>Registeringslänk för användargruppen {createdUserGroup.name}</Text>
@@ -87,6 +99,7 @@ export default function ManageUsers() {
           </Card>
         )}
       </Box>
+      {userGroups && <Card userGroups={userGroups} handleDeactivate={handleDeactivateRegistrationLink}></Card>}
 
       <Box>
         <h3>Ändra lösenord och ta bort användare</h3>

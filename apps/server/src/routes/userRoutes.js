@@ -161,20 +161,28 @@ export const getUserRoutes = () => {
     try {
       const user = await object.end_user.findOne({where: {id: id}});
       if (!user.is_admin){
-        return res.status(403).json('Not authorized for selected module');
+        return res.status(403).json('Not authorized for selected resource');
       }
-      const userGroup = await object.user_group.update({
+      const userGroupId = req.header('user_group_id');
+      const userGroup = await object.user_group.findOne({ where: { id: userGroupId }});
+      
+      if (userGroup === null) {
+        return res.status(404).json('Resource not found');
+      }
+
+       const result = await object.user_group.update({
           is_active: false,
         },
         {
           where: { 
-            id: req.header.user_group_id,
+            id: userGroupId,
           },
-        })
-        if(userGroup === null){
-          return res.status(404).json('Resource not found');
+        });
+
+        if (result > 0) {
+          return res.status(200).json('Resource deactivated');
         }
-        return res.status(200).json('Resource deactivated');
+        res.status(400).json('Could not parse the request');
     } catch (error){ 
       res.status(500).json('Internal Server Error');
     }
@@ -189,7 +197,6 @@ export const getUserRoutes = () => {
       }
       
       const userGroups = await object.user_group.findAll();
-      console.log(userGroups)
       if (!userGroups) {
         return res.status(404).json('Resource not found');
       }
