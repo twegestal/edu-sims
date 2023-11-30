@@ -178,7 +178,7 @@ export const getUserRoutes = () => {
 
       if (userToUpdate) {
         const hash = await hashPassword(newPassword);
-        const result = await userToUpdate.update({ pasword: hash });
+        const result = await userToUpdate.update({ password: hash });
         res.status(201).send(result);
       } else {
         res.status(404).json('Could not find resource');
