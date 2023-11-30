@@ -38,7 +38,7 @@ export default function NavDrawer(props) {
 
                 <DrawerBody>
                     <Flex flexDirection={'column'} justifyContent={'space-between'}>
-                        <Link to='/' margin-bott>
+                        <Link to='/'>
                             <DrawerBtn onClick={props.onClose}
                                text='Hem'
                             />

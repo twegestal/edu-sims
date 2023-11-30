@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import {
     Box,
     Image,
@@ -23,11 +23,15 @@ export default function NavBar() {
 
     const linkToIndex = () => {
         return navigate('/');
-    } 
+    }
+
+    useEffect(() => {
+        onClose()
+    },[]);
 
     return (
         <>
-            <Flex bg='teal' color='white' textAlign={'center'} justifyContent={'space-around'} id="navBar">
+            <Flex bg='teal' color='white' textAlign={'center'} justifyContent={'space-around'} marginBottom={'30px'} id="navBar">
                 <Image width='20%' src={logo} alt='EDU-SIMS logo' onClick={linkToIndex} id='imageLink' minW={'90px'} maxW={'130px'} maxH={'115px'}/>
                 <Box margin={'auto'}>
                     <p>EDU-SIMS</p>

@@ -57,8 +57,8 @@ export default function ProfilePage(props) {
   };
 
   return (
-    <div>
-        <Card maxW='md'>
+    <Box>
+        <Card maxW='md' margin={'auto'}>
         <CardHeader>
             <Flex spacing='4'>
             <Flex flex='1' gap='4'  alignItems='center' flexWrap='wrap'>
@@ -110,6 +110,6 @@ export default function ProfilePage(props) {
         isOpen={isChangeUsernameOpen}
         onClose={closeChangeUsername}
       />
-    </div>
+    </Box>
   );
 }
