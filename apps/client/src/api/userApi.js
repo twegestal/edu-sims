@@ -32,12 +32,11 @@ export const userApi = (apiClient) => ({
     return packageResponse(response);
   },
   deactivateUserGroup: async (headers) => {
-    const response = await apiClient.post(`${prefix}createUserGroup`, headers);
+    const response = await apiClient.post(`${prefix}deactivateUserGroup`, headers);
     return packageResponse(response);
   },
   
-
-  getUserGoups: async (headers) => {
+  getUserGroups: async (headers) => {
     const response = await apiClient.get(`${prefix}getUserGroups`, headers);
     return packageResponse(response);
   },

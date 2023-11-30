@@ -69,9 +69,12 @@ export const useUser = () => {
   };
 
   const deactivateUserGroup = async (id) => {
+    console.log("?HÄR");
     try{
       const response = await deactivateUserGroupApi({headers: {id: user.id, user_group_id: id}});
-      if (response.status == 200){
+      console.log(response);
+      if (response.status === 200){
+        console.log("GIllar kuk");
        return true;
       } else {
         return false;
