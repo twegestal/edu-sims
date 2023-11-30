@@ -10,6 +10,7 @@ import {
   CardBody,
   Text,
   Accordion,
+  chakra,
 } from '@chakra-ui/react';
 import { useUser } from '../hooks/useUser.js';
 import UserTable from './UserTable.jsx';
@@ -21,6 +22,8 @@ export default function ManageUsers() {
   const [createdUserGroups, setCreatedUserGroup] = useState([]);
   const [link, setLink] = useState('');
   const [showUserGroupCard, setShowUserGroupCard] = useState(false);
+  const [pressed, setPressed] = useState("unpressed");
+
 
   useEffect(() => {
     //Ändra URL till serverns domän
@@ -53,14 +56,37 @@ export default function ManageUsers() {
     setTimeout(() => {
       console.log(userGroups);
     }, 1000);
-  }
+  };
 
   const handleDeactivateRegistrationLink = async (groupId) => {
     const result = await deactivateUserGroup(groupId);
     if (result) {
       await getUserGroups();
     }
-  }
+  };
+  const pressedShowActiveRegistrationLinks = (e) => {
+    console.log(e.target.name)
+    if (pressed === "unpressed") {
+      setPressed = "pressed";
+      return (
+        Button = chakra('button', {
+          baseStyle: {
+            name: 'Dölj aktiva länkar'
+          }
+        })
+      )
+    } else {
+      setPressed = "pressed";
+      return (
+        Button = chakra('button', {
+          baseStyle: {
+            name: 'Visa aktiva länkar'
+          }
+        })
+      )
+    }
+
+  };
 
   return (
     <Flex direction={'column'} justifyContent={'space-between'}>
@@ -78,13 +104,16 @@ export default function ManageUsers() {
               onChange={handleInputUserGroupChange}
             />
             <Button onClick={generateRegLink}>Generera länk</Button>
-            <Button onClick={() => showActiveRegistrationLinks()}>Se alla aktiva länkar</Button>
+            <Button onClick={(e) => {
+              showActiveRegistrationLinks()
+              pressedShowActiveRegistrationLinks(e)
+            }}>Visa aktiva länkar</Button>
           </Flex>
           {
-              showUserGroupCard && (
-                <UserGroupsCard userGroups={userGroups} removeRegistrationLink={removeRegistrationLink}></UserGroupsCard>
-              )
-            }
+            showUserGroupCard && (
+              <UserGroupsCard userGroups={userGroups} removeRegistrationLink={removeRegistrationLink}></UserGroupsCard>
+            )
+          }
         </FormControl>
         {createdUserGroup.length !== 0 && (
           <Card>
