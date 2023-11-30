@@ -71,7 +71,7 @@ export default function ShowAllCases() {
   }
 
   return (
-    <div>
+    <Box maxW={'90%'} margin={'auto'}>
       <Accordion allowToggle>
         {Object.keys(groupedCases).map((medicalFieldId) => (
           <AccordionItem key={medicalFieldId}>
@@ -128,6 +128,6 @@ export default function ShowAllCases() {
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+    </Box>
   );
 }

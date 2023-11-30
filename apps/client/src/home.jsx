@@ -8,7 +8,6 @@ export default function Home() {
     <>
       {!user.isAdmin ? (
         <div>
-          <h2>{user.email}</h2>
           <ShowAllCases />
         </div>
       ) : (

@@ -9,8 +9,10 @@ export const useUser = () => {
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
   const updatePasswordApi = useApi('updatePassword');
-  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege');
-  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege');
+  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
+  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
+  const updateUsernameApi = useApi('updateUsername')
+
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -64,17 +66,30 @@ export const useUser = () => {
     }
   };
 
-  const updatePassword = async (id, email, newPassword) => {
+  const updatePassword = async (id, email, newPassword, userToEditId) => {
     try {
       const response = await updatePasswordApi({
-        headers: { id: id },
-        body: { email: email, newPassword: newPassword },
+        headers: { id: id, userToEditId: userToEditId },
+        body: { email: email, newPassword: newPassword, },
       });
       return response.status === 201;
     } catch (error) {
       console.error('error changing password: ', error);
     }
   };
+
+  const updateUsername = async (id, newUsername,) => {
+    try {
+      const response = await updateUsernameApi({
+        headers: { id: id},
+        body: { newUsername: newUsername, },
+      });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error changing username: ', error);
+    }
+  };
+
 
   return {
     getAllUsers,
@@ -85,5 +100,6 @@ export const useUser = () => {
     createUserGroup,
     createdUserGroup,
     updatePassword,
+    updateUsername
   };
 };
