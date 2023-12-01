@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
-import { where } from 'sequelize';
+import { generateRegistrationLink } from '../utils/userUtils.js'
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -141,15 +141,36 @@ export const getUserRoutes = () => {
   });
 
   router.post('/createUserGroup', async (req, res, _next) => {
-    const result = await object.user_group.create({
-      name: req.header('name'),
-      is_active: true,
-    });
+    const { groupName } = req.body;
 
-    if (result === null) {
-      res.status(404).json('No group created');
-    } else {
-      res.status(200).json(result);
+    try {
+      const exists = await object.user_group.findOne({ where: { name: groupName } });
+      console.log('här här ->', exists);
+      if (exists !== null) {
+        return res.status(400).json(`Can't create group with the selected name: ${groupName}`);
+      }
+  
+      const result = await object.user_group.create({
+        name: groupName,
+        is_active: true,
+      });
+  
+      if (result === null) {
+        return res.status(404).json('No group created');
+      }
+  
+      const id = result.id;
+      const link = generateRegistrationLink(id);
+  
+      const group = await result.update({ registration_link: link });
+  
+      if (group === null) {
+        res.status(500).json('Internal Server Error')
+      }
+      res.status(201).send(group);   
+    } catch (error) {
+      console.error('error creating group ', error);
+      res.status(500).json('Internal Server Error');
     }
   });
 
@@ -233,6 +254,6 @@ export const getUserRoutes = () => {
       res.status(500).json('Internal Server Error');
     }
   });
-
+  
   return router;
 };

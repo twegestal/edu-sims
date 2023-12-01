@@ -58,8 +58,8 @@ export const useUser = () => {
 
   const createUserGroup = async (name) => {
     try {
-      const response = await createUserGroupApi({ headers: { name: name } });
-      if (response.status === 200) {
+      const response = await createUserGroupApi({ body: { groupName: name } });
+      if (response.status === 201) {
         setCreatedUserGroup(response.data);
       }
     } catch (error) {

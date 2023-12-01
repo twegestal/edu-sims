@@ -9,7 +9,9 @@ import {
   Th,
   Td,
   Tbody,
+  IconButton,
 } from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
 
 export default function UserGroupsCard() {
@@ -30,25 +32,32 @@ export default function UserGroupsCard() {
     }
   };
 
+  const handleCopyLink = (link) => {
+    console.log(userGroups);
+    navigator.clipboard.writeText(link);
+  }
+  
   return (
     <TableContainer maxWidth='90%'>
       <Table>
         <Thead>
           <Tr>
             <Th>Användargrupp</Th>
+            <Th>Kopiera länk</Th>
             <Th>Inaktivera användargrupp</Th>
           </Tr>
         </Thead>
         <Tbody>
           {userGroups &&
             userGroups.map(
-              (userGroups, _index) =>
-                userGroups.is_active !== false && (
-                  <Tr key={userGroups.id}>
-                    <Td>{userGroups.name}</Td>
+              (group, _index) =>
+                group.is_active !== false && (
+                  <Tr key={group.id}>
+                    <Td>{group.name}</Td>
+                    <Td><IconButton onClick={() => handleCopyLink(group.registration_link)} icon={<CopyIcon />} /></Td>
                     <Td>
                       <FormControl display={'flex'} flexDirection={'column'}>
-                        <Button onClick={() => removeRegistrationLink(userGroups.id)}>
+                        <Button onClick={() => removeRegistrationLink(group.id)}>
                           Inaktivera
                         </Button>
                       </FormControl>

@@ -280,7 +280,7 @@ describe('user group tests', () => {
       });
   });
 
-  it('should return 404 due to not finding the resource', async () => {
+  it('should return 500 due to not finding the resource', async () => {
     const user = getAdmin();
     const loginResponse = await requestWithSupertest.post('/auth/login').send(user);
     const token = loginResponse.body.token;

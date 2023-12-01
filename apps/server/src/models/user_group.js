@@ -18,6 +18,9 @@ export const user_group = db.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    registration_link: {
+      type: DataTypes.TEXT,
+    },
   },
   {
     // Other model are go here
