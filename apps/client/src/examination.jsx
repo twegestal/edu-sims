@@ -78,6 +78,7 @@ export default function Examination(props) {
 
     if (checkExams()) {
       setFeedbackToDisplay(examinationStep.feedback_correct);
+      props.setWasCorrect(true)
     } else {
       setFeedbackToDisplay(examinationStep.feedback_incorrect);
     }

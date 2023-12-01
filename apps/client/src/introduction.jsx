@@ -44,6 +44,7 @@ export default function Introduction(props) {
       case 'yesButton': {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_correct);
+          props.setWasCorrect(true)
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
@@ -58,6 +59,7 @@ export default function Introduction(props) {
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_correct);
+          props.setWasCorrect(true)
         }
         break;
       }
@@ -87,12 +89,12 @@ export default function Introduction(props) {
             </CardBody>
           </Card>
 
-          <Card variant='filled'>
+          <Card>
             {props.displayFeedback ? (
               <Card variant='filled'>
-                <Button onClick={onToggle}>Feedback</Button>
+                <Button onClick={onToggle} bg={props.wasCorrect ? 'success.bg' : 'fail.bg'}>Feedback</Button>
                 <Collapse in={isOpen}>
-                  <CardBody>
+                  <CardBody variant='filled'bg={props.wasCorrect ? 'success.bg' : 'fail.bg'}>
                     <Text align='left'>{feedbackToDisplay}</Text>
                   </CardBody>
                 </Collapse>

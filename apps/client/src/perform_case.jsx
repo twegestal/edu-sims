@@ -67,6 +67,7 @@ export default function PerformCase() {
   const [caseIsFinished, setCaseIsFinished] = useState(false);
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
+  const [wasCorrect, setWasCorrect] = useState(false)
 
   const { caseById, getCaseById, updateAttempt } = useCases();
 
@@ -217,7 +218,7 @@ export default function PerformCase() {
           <div className='Notes'>
             <IconButton
               onClick={onNotesOpen}
-              variant='solid'
+              variant='caseNav'
               colorScheme='blue'
               aria-label='Notes'
               fontSize='20px'
@@ -251,38 +252,10 @@ export default function PerformCase() {
               </ModalContent>
             </Modal>
           </div>
-          <div className='Home'>
-            <IconButton
-              onClick={onHomeOpen}
-              variant='solid'
-              colorScheme='blue'
-              aria-label='Home'
-              fontSize='20px'
-              icon={<AiFillHome />}
-            />
-            <Modal isOpen={isHomeOpen} onClose={onHomeClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Är du säker på att du vill avsluta</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Link to='/'>
-                    <Button>Avsluta</Button>
-                  </Link>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onHomeClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
           <div className='Desc'>
             <IconButton
               onClick={onDescOpen}
-              variant='solid'
+              variant='caseNav'
               colorScheme='blue'
               aria-label='Description'
               fontSize='20px'
@@ -306,7 +279,7 @@ export default function PerformCase() {
           <div className='Feedback'>
             <IconButton
               onClick={onFeedbackOpen}
-              variant='solid'
+              variant='caseNav'
               colorScheme='blue'
               aria-label='Feedback'
               fontSize='20px'
@@ -334,7 +307,7 @@ export default function PerformCase() {
           <div className='TreatmentResults'>
             <IconButton
               onClick={onTreatmentResultsOpen}
-              variant='solid'
+              variant='caseNav'
               colorScheme='blue'
               aria-label='Results'
               fontSize='20px'
@@ -349,6 +322,34 @@ export default function PerformCase() {
 
                 <ModalFooter>
                   <Button colorScheme='blue' mr={3} onClick={onTreatmentResultsClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </div>
+          <div className='Home'>
+            <IconButton
+              onClick={onHomeOpen}
+              variant='caseNav'
+              colorScheme='blue'
+              aria-label='Home'
+              fontSize='20px'
+              icon={<AiFillHome />}
+            />
+            <Modal isOpen={isHomeOpen} onClose={onHomeClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Är du säker på att du vill avsluta</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Link to='/'>
+                    <Button>Avsluta</Button>
+                  </Link>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button colorScheme='blue' mr={3} onClick={onHomeClose}>
                     Close
                   </Button>
                 </ModalFooter>
@@ -370,6 +371,8 @@ export default function PerformCase() {
               updateFeedback={updateFeedback}
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
+              setWasCorrect={setWasCorrect}
+              wasCorrect={wasCorrect}
             ></Introduction>
           </div>
         )}
@@ -384,6 +387,8 @@ export default function PerformCase() {
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
               setNbrTestPerformed={setNbrTestPerformed}
+              setWasCorrect={setWasCorrect}
+              wasCorrect={wasCorrect}
             ></Examination>
           </div>
         )}
@@ -423,7 +428,7 @@ export default function PerformCase() {
           </div>
         )}
         {currentIndex + 1 <= caseById.length - 1 && displayFeedback && (
-          <Button onClick={nextStep} colorScheme='teal'>
+          <Button onClick={nextStep} variant={'caseNav'}>
             Nästa
           </Button>
         )}

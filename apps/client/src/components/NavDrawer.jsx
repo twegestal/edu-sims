@@ -23,14 +23,14 @@ export default function NavDrawer(props) {
   const { user, logout } = useAuth();
     return (
         <>
-            <Drawer
+            <Drawer 
             isOpen={props.isOpen}
             placement='right'
             onClose={props.onClose}
             finalFocusRef={props.btnRef} 
             >
             <DrawerOverlay />
-            <DrawerContent>
+            <DrawerContent bg={'brand.bg'}>
                 <DrawerCloseButton />
                 <DrawerHeader>
                     <p>{user.email}</p>
