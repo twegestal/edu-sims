@@ -24,6 +24,7 @@ import {
 } from '@chakra-ui/react';
 import { SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { useTreatment } from './hooks/useTreatment';
+import Feedback from './performCaseComponents/Feedback';
 
 export default function Treatment(props) {
   const [treatmentList, setTreatmentList] = useState({});
@@ -161,10 +162,12 @@ export default function Treatment(props) {
     if (ok) {
       setFeedbackText(treatmentStep.feedback_correct);
       setFeedbackWindow();
+      props.setWasCorrect(true)
     } else {
       setFeedbackText(treatmentStep.feedback_incorrect);
       setFeedbackWindow();
       props.setFaultsCounter(props.faultsCounter + 1);
+      props.setWasCorrect(false)
     }
 
     props.setDisplayFeedback(true);
@@ -233,14 +236,14 @@ export default function Treatment(props) {
           </AccordionItem>
         </Accordion>
         {props.displayFeedback ? (
-          <Card variant='filled' margin='0.5%'>
-            <Button onClick={onToggle}>Feedback</Button>
-            <Collapse in={isOpen}>
-              <CardBody>
-                <Text align='left'>{feedbackText}</Text>
-              </CardBody>
-            </Collapse>
-          </Card>
+          <>
+            <Feedback
+            onToggle={onToggle}
+            wasCorrect={props.wasCorrect}
+            isOpen={isOpen}
+            feedbackToDisplay={feedbackText}
+            />
+          </>
         ) : (
           //{feedbackWindow}
           <Button colorScheme='teal' margin='0.5%' onClick={() => ValuateFeedback()}>

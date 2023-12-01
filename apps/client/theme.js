@@ -45,7 +45,6 @@ const theme = extendTheme({
                 variant: 'base'
             }
         },
-        Accordion
     },
 })
 

@@ -14,6 +14,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import LoadingSkeleton from './loadingSkeleton.jsx';
+import Feedback from './performCaseComponents/Feedback.jsx';
 
 export default function Introduction(props) {
   //const [stepData, setStep] = useState({});
@@ -56,6 +57,7 @@ export default function Introduction(props) {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
           props.setFaultsCounter(props.faultsCounter + 1);
+          props.setWasCorrect(false)
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_correct);
@@ -91,14 +93,14 @@ export default function Introduction(props) {
 
           <Card>
             {props.displayFeedback ? (
-              <Card variant='filled'>
-                <Button onClick={onToggle} bg={props.wasCorrect ? 'success.bg' : 'fail.bg'}>Feedback</Button>
-                <Collapse in={isOpen}>
-                  <CardBody variant='filled'bg={props.wasCorrect ? 'success.bg' : 'fail.bg'}>
-                    <Text align='left'>{feedbackToDisplay}</Text>
-                  </CardBody>
-                </Collapse>
-              </Card>
+              <>
+                <Feedback
+                onToggle={onToggle}
+                wasCorrect={props.wasCorrect}
+                isOpen={isOpen}
+                feedbackToDisplay={feedbackToDisplay}
+                />
+              </>
             ) : (
               <Card align='center' variant='filled'>
                 <CardHeader>

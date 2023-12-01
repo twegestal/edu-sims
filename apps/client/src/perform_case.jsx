@@ -404,6 +404,8 @@ export default function PerformCase() {
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
               setCorrectDiagnosis={setCorrectDiagnosis}
+              setWasCorrect={setWasCorrect}
+              wasCorrect={wasCorrect}
             ></Diagnosis>
           </div>
         )}
@@ -416,6 +418,8 @@ export default function PerformCase() {
               updateFeedback={updateFeedback}
               faultsCounter={faultsCounter}
               setFaultsCounter={setFaultsCounter}
+              setWasCorrect={setWasCorrect}
+              wasCorrect={wasCorrect}
             ></Treatment>
           </div>
         )}
