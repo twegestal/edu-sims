@@ -162,16 +162,12 @@ export const getUserRoutes = () => {
       }
       const userGroupId = req.header('user_group_id');
       const userGroup = await object.user_group.findOne({ where: { id: userGroupId } });
-      console.log('userG av detta:', userGroup);
 
       if (userGroup === null) {
         return res.status(404).json('Resource not found');
       }
 
-      const result = await userGroup.update({
-        is_active: false,
-      });
-      console.log('resultatet av detta:', result);
+      const result = await userGroup.update({ is_active: false });
 
       if (result !== null) {
         return res.status(200).json('Resource deactivated');
