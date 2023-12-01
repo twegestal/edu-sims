@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
+import { generateRegistrationLink } from '../utils/userUtils.js'
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -48,7 +49,7 @@ export const getUserRoutes = () => {
     res.status(200).json('All users removed');
   });
 
-  router.get('/getAllUsers', async (req, res, next) => {
+  router.get('/getAllUsers', async (req, res, _next) => {
     const request_user = await object.end_user.findOne({
       where: {
         id: req.header('user_id'),
@@ -140,14 +141,79 @@ export const getUserRoutes = () => {
   });
 
   router.post('/createUserGroup', async (req, res, _next) => {
-    const result = await object.user_group.create({
-      name: req.header('name'),
-    });
+    const { groupName } = req.body;
 
-    if (result === null) {
-      res.status(404).json('No group created');
-    } else {
-      res.status(200).json(result);
+    try {
+      const exists = await object.user_group.findOne({ where: { name: groupName } });
+      console.log('här här ->', exists);
+      if (exists !== null) {
+        return res.status(400).json(`Can't create group with the selected name: ${groupName}`);
+      }
+  
+      const result = await object.user_group.create({
+        name: groupName,
+        is_active: true,
+      });
+  
+      if (result === null) {
+        return res.status(404).json('No group created');
+      }
+  
+      const id = result.id;
+      const link = generateRegistrationLink(id);
+  
+      const group = await result.update({ registration_link: link });
+  
+      if (group === null) {
+        res.status(500).json('Internal Server Error')
+      }
+      res.status(201).send(group);   
+    } catch (error) {
+      console.error('error creating group ', error);
+      res.status(500).json('Internal Server Error');
+    }
+  });
+
+  router.post('/deactivateUserGroup', async (req, res, _next) => {
+    const id = req.header('id');
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+      if (!user.is_admin) {
+        return res.status(403).json('Not authorized for selected resource');
+      }
+      const userGroupId = req.header('user_group_id');
+      const userGroup = await object.user_group.findOne({ where: { id: userGroupId } });
+
+      if (userGroup === null) {
+        return res.status(404).json('Resource not found');
+      }
+
+      const result = await userGroup.update({ is_active: false });
+
+      if (result !== null) {
+        return res.status(200).json('Resource deactivated');
+      }
+      res.status(400).json('Could not parse the request');
+    } catch (error) {
+      res.status(500).json('Internal Server Error');
+    }
+  });
+
+  router.get('/getUserGroups', async (req, res, _next) => {
+    const id = req.header('id');
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+      if (!user.is_admin) {
+        return res.status(403).json('Not authorized for selected resource');
+      }
+
+      const userGroups = await object.user_group.findAll();
+      if (!userGroups) {
+        return res.status(404).json('Resource not found');
+      }
+      res.status(200).send(userGroups);
+    } catch (error) {
+      res.status(500).json('Internal Server Error');
     }
   });
 

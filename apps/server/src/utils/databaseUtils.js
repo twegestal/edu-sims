@@ -4,7 +4,6 @@ export const insertSteps = async (steps, caseId, transaction) => {
   for (let i = 0; i < steps.length; i++) {
     const stepData = steps[i];
     const moduleTypeIdentifier = stepData.module_type_identifier;
-    console.log('moduleTypeId: ', moduleTypeIdentifier);
 
     switch (moduleTypeIdentifier) {
       case 0: {
@@ -42,7 +41,6 @@ const insertIntroductionStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  console.log('introstep: ', introductionStep);
   const step = await object.step.create(
     {
       case_id: caseId,
@@ -52,7 +50,6 @@ const insertIntroductionStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-  console.log('step i intro: ', step);
 };
 
 const insertExaminationStep = async (stepData, index, caseId, transaction) => {
@@ -67,8 +64,6 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  console.log('examstep', examinationStep);
-
   for (let i = 0; i < stepData.step_specific_values.length; i++) {
     const stepSpecificValue = await object.step_specific_values.create(
       {
@@ -79,8 +74,6 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
       },
       { transaction: transaction },
     );
-
-    console.log('stepSpecificValue: ', stepSpecificValue);
   }
 
   const step = await object.step.create(
@@ -92,7 +85,6 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-  console.log('step i exam: ', step);
 };
 
 const insertDiagnosisStep = async (stepData, index, caseId, transaction) => {
@@ -106,7 +98,6 @@ const insertDiagnosisStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  console.log('diagnosstep: ', diagnosisStep);
   const step = await object.step.create(
     {
       case_id: caseId,
@@ -116,8 +107,6 @@ const insertDiagnosisStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-
-  console.log('step i diag: ', step);
 };
 
 const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
@@ -131,8 +120,6 @@ const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  console.log('treatmentstep: ', treatmentStep);
-
   for (let i = 0; i < stepData.step_specific_treatments.length; i++) {
     const stepSpecificTreatment = await object.step_specific_treatment.create(
       {
@@ -142,8 +129,6 @@ const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
       },
       { transaction: transaction },
     );
-
-    console.log('stepSpecificTreatment: ', stepSpecificTreatment);
   }
 
   const step = await object.step.create(
@@ -155,8 +140,6 @@ const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-
-  console.log('step i treat: ', step);
 };
 
 const insertSummaryStep = async (stepData, index, caseId, transaction) => {
@@ -169,8 +152,6 @@ const insertSummaryStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  console.log('summarystep: ', summaryStep);
-
   const step = await object.step.create(
     {
       case_id: caseId,
@@ -180,6 +161,4 @@ const insertSummaryStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-
-  console.log('step i summary: ', step);
 };

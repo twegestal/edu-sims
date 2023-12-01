@@ -9,29 +9,26 @@ import {
   CardHeader,
   CardBody,
   Text,
+  IconButton,
 } from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
 import UserTable from './UserTable.jsx';
+import UserGroupsCard from './UserGroupsCard.jsx';
 
-export default function ManageUsers(props) {
-  const { createUserGroup, createdUserGroup } = useUser();
+export default function ManageUsers() {
+  const { createdUserGroup, createUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
-  const [link, setLink] = useState('');
-
-  useEffect(() => {
-    //Ändra URL till serverns domän
-    const url = 'https://localhost:5173';
-    setLink(url + '/register/groupId=' + createdUserGroup.id);
-  }, [createdUserGroup]);
+  const [showUserGroupCard, setShowUserGroupCard] = useState(false);
+  const [showUserTable, setShowUserTable] = useState(false);
 
   const handleInputUserGroupChange = (event) => {
-    // Update the state with the value of the input field
     setInputUserGroup(event.target.value);
   };
 
-  const generateRegLink = () => {
+  const generateRegLink = async () => {
     if (inputUserGroup.length > 0) {
-      createUserGroup(inputUserGroup);
+      await createUserGroup(inputUserGroup);
     }
   };
 
@@ -53,22 +50,22 @@ export default function ManageUsers(props) {
             <Button onClick={generateRegLink}>Generera länk</Button>
           </Flex>
         </FormControl>
-        {createdUserGroup.length != 0 && (
+        {createdUserGroup.length !== 0 && (
           <Card>
             <CardHeader>
               <Text>Registeringslänk för användargruppen {createdUserGroup.name}</Text>
             </CardHeader>
             <CardBody>
               <Flex direction={'row'}>
-                <Text>{link}</Text>
-                <Button
+                <Text>{createdUserGroup.registration_link}</Text>
+                <IconButton icon={<CopyIcon />}
                   onClick={() => {
-                    navigator.clipboard.writeText(link);
+                    navigator.clipboard.writeText(createdUserGroup.registration_link);
                   }}
                   marginLeft='1%'
                 >
                   Kopiera
-                </Button>
+                </IconButton>
               </Flex>
             </CardBody>
           </Card>
@@ -76,9 +73,12 @@ export default function ManageUsers(props) {
       </Box>
 
       <Box>
-        <h3>Ändra lösenord och ta bort användare</h3>
-        <UserTable />
+        <Button onClick={() => setShowUserGroupCard(!showUserGroupCard)}>{showUserGroupCard ? 'Dölj aktiva grupper' : 'Visa aktiva grupper'}</Button>
+        <Button onClick={() => setShowUserTable(!showUserTable)}>{showUserTable ? 'Dölj användare' : 'Visa användare'}</Button>
       </Box>
+
+      {showUserGroupCard && <UserGroupsCard />}
+      {showUserTable && <UserTable />}
     </Flex>
   );
 }

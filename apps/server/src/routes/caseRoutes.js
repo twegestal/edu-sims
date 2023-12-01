@@ -8,7 +8,6 @@ export const getCaseRoutes = () => {
 
   router.post('/createCase', async (req, res, next) => {
     const caseObject = req.body;
-    console.log(caseObject);
 
     const transaction = await getTransaction();
     try {
@@ -22,13 +21,12 @@ export const getCaseRoutes = () => {
         { transaction: transaction },
       );
 
-      console.log('medical case:', medicalCase);
       await insertSteps(caseObject.steps, medicalCase.id, transaction);
 
       await transaction.commit();
       res.status(201).json('case created');
     } catch (error) {
-      console.log('transaction did not work', error);
+      console.error('transaction did not work', error);
       await transaction.rollback();
       res.status(400).send(error);
     }
