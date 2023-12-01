@@ -1,7 +1,7 @@
 import Register from './register.jsx';
 import PerformCase from './perform_case.jsx';
 import Home from './home.jsx';
-import { Routes, Route, useLocation, } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import CreateCase from './create_case/createCase.jsx';
 import ManageCases from './adminPage/manageCases.jsx';

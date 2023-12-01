@@ -11,9 +11,9 @@ export const useUser = () => {
   const deactivateUserGroupApi = useApi('deactivateUserGroup');
   const getUserGroupsApi = useApi('getUserGroups');
   const updatePasswordApi = useApi('updatePassword');
-  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
-  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
-  const updateUsernameApi = useApi('updateUsername')
+  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege');
+  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege');
+  const updateUsernameApi = useApi('updateUsername');
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -67,7 +67,7 @@ export const useUser = () => {
       console.error('error creating user group: ', error);
     }
   };
-  
+
   const deactivateUserGroup = async (id) => {
     try {
       const response = await deactivateUserGroupApi({
@@ -98,7 +98,7 @@ export const useUser = () => {
     try {
       const response = await updatePasswordApi({
         headers: { id: id, userToEditId: userToEditId },
-        body: { email: email, newPassword: newPassword, },
+        body: { email: email, newPassword: newPassword },
       });
       return response.status === 201;
     } catch (error) {
@@ -106,18 +106,17 @@ export const useUser = () => {
     }
   };
 
-  const updateUsername = async (id, newUsername,) => {
+  const updateUsername = async (id, newUsername) => {
     try {
       const response = await updateUsernameApi({
-        headers: { id: id},
-        body: { newUsername: newUsername, },
+        headers: { id: id },
+        body: { newUsername: newUsername },
       });
       return response.status === 201;
     } catch (error) {
       console.error('error changing username: ', error);
     }
   };
-
 
   return {
     getAllUsers,

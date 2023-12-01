@@ -35,8 +35,8 @@ export default function UserGroupsCard() {
   const handleCopyLink = (link) => {
     console.log(userGroups);
     navigator.clipboard.writeText(link);
-  }
-  
+  };
+
   return (
     <TableContainer maxWidth='90%'>
       <Table>
@@ -54,12 +54,15 @@ export default function UserGroupsCard() {
                 group.is_active !== false && (
                   <Tr key={group.id}>
                     <Td>{group.name}</Td>
-                    <Td><IconButton onClick={() => handleCopyLink(group.registration_link)} icon={<CopyIcon />} /></Td>
+                    <Td>
+                      <IconButton
+                        onClick={() => handleCopyLink(group.registration_link)}
+                        icon={<CopyIcon />}
+                      />
+                    </Td>
                     <Td>
                       <FormControl display={'flex'} flexDirection={'column'}>
-                        <Button onClick={() => removeRegistrationLink(group.id)}>
-                          Inaktivera
-                        </Button>
+                        <Button onClick={() => removeRegistrationLink(group.id)}>Inaktivera</Button>
                       </FormControl>
                     </Td>
                   </Tr>

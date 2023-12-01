@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
-import { generateRegistrationLink } from '../utils/userUtils.js'
+import { generateRegistrationLink } from '../utils/userUtils.js';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -149,25 +149,25 @@ export const getUserRoutes = () => {
       if (exists !== null) {
         return res.status(400).json(`Can't create group with the selected name: ${groupName}`);
       }
-  
+
       const result = await object.user_group.create({
         name: groupName,
         is_active: true,
       });
-  
+
       if (result === null) {
         return res.status(404).json('No group created');
       }
-  
+
       const id = result.id;
       const link = generateRegistrationLink(id);
-  
+
       const group = await result.update({ registration_link: link });
-  
+
       if (group === null) {
-        res.status(500).json('Internal Server Error')
+        res.status(500).json('Internal Server Error');
       }
-      res.status(201).send(group);   
+      res.status(201).send(group);
     } catch (error) {
       console.error('error creating group ', error);
       res.status(500).json('Internal Server Error');
@@ -233,7 +233,7 @@ export const getUserRoutes = () => {
 
   router.patch('/update-password', async (req, res, _next) => {
     const id = req.header('id');
-    const userToEditId = req.header('userToEditId')
+    const userToEditId = req.header('userToEditId');
 
     try {
       const user = await object.end_user.findOne({ where: { id: id } });
@@ -264,7 +264,7 @@ export const getUserRoutes = () => {
 
     if (sameUsername !== null) {
       res.status(400).json('Email is already registered');
-    } else{
+    } else {
       const userToUpdate = await object.end_user.findOne({ where: { id: id } });
 
       if (userToUpdate) {
@@ -272,7 +272,7 @@ export const getUserRoutes = () => {
         res.status(201).send(result);
       } else {
         res.status(404).json('Could not find resource');
-      };
+      }
     }
   });
 

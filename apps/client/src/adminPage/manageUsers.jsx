@@ -58,7 +58,8 @@ export default function ManageUsers() {
             <CardBody>
               <Flex direction={'row'}>
                 <Text>{createdUserGroup.registration_link}</Text>
-                <IconButton icon={<CopyIcon />}
+                <IconButton
+                  icon={<CopyIcon />}
                   onClick={() => {
                     navigator.clipboard.writeText(createdUserGroup.registration_link);
                   }}
@@ -73,8 +74,12 @@ export default function ManageUsers() {
       </Box>
 
       <Box>
-        <Button onClick={() => setShowUserGroupCard(!showUserGroupCard)}>{showUserGroupCard ? 'Dölj aktiva grupper' : 'Visa aktiva grupper'}</Button>
-        <Button onClick={() => setShowUserTable(!showUserTable)}>{showUserTable ? 'Dölj användare' : 'Visa användare'}</Button>
+        <Button onClick={() => setShowUserGroupCard(!showUserGroupCard)}>
+          {showUserGroupCard ? 'Dölj aktiva grupper' : 'Visa aktiva grupper'}
+        </Button>
+        <Button onClick={() => setShowUserTable(!showUserTable)}>
+          {showUserTable ? 'Dölj användare' : 'Visa användare'}
+        </Button>
       </Box>
 
       {showUserGroupCard && <UserGroupsCard />}

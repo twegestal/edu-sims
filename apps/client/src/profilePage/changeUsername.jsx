@@ -16,26 +16,22 @@ import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
 import { useAlert } from '../hooks/useAlert';
 
-export default function ChangeUsername({ isOpen, onClose, }) {
+export default function ChangeUsername({ isOpen, onClose }) {
   const [usernameInput, setUsernameInput] = useState('');
   const { user } = useAuth();
   const { updateUsername } = useUser();
   const { setAlert } = useAlert();
 
   const handleUsernameChange = async () => {
-      const result = await updateUsername(user.id, usernameInput,);
+    const result = await updateUsername(user.id, usernameInput);
 
-      if (result) {
-        setAlert('success', 'Ditt användarnamn har uppdaterats');
-        onClose();
-      } else {
-        setAlert(
-          'error',
-          'Uppdatering av användarnamn',
-          `Användarnamnet kunde inte uppdateras`,
-        );
-      }
-    };
+    if (result) {
+      setAlert('success', 'Ditt användarnamn har uppdaterats');
+      onClose();
+    } else {
+      setAlert('error', 'Uppdatering av användarnamn', `Användarnamnet kunde inte uppdateras`);
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
