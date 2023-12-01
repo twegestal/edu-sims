@@ -17,13 +17,13 @@ import UserTable from './UserTable.jsx';
 import UserGroupsCard from './UserGroupsCard.jsx';
 
 export default function ManageUsers() {
-  const { createUserGroup, createdUserGroup, userGroups, getUserGroups, deactivateUserGroup } = useUser();
+  const { createUserGroup, createdUserGroup, userGroups, getUserGroups, deactivateUserGroup } =
+    useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [createdUserGroups, setCreatedUserGroup] = useState([]);
   const [link, setLink] = useState('');
   const [showUserGroupCard, setShowUserGroupCard] = useState(false);
-  const [pressed, setPressed] = useState("unpressed");
-
+  const [pressed, setPressed] = useState('unpressed');
 
   useEffect(() => {
     //Ändra URL till serverns domän
@@ -45,7 +45,7 @@ export default function ManageUsers() {
   const removeRegistrationLink = async (id) => {
     const result = await deactivateUserGroup(id);
     if (result === true) {
-      console.log("tog vi bort länken?");
+      console.log('tog vi bort länken?');
       showActiveRegistrationLinks();
     }
   };
@@ -65,27 +65,22 @@ export default function ManageUsers() {
     }
   };
   const pressedShowActiveRegistrationLinks = (e) => {
-    console.log(e.target.name)
-    if (pressed === "unpressed") {
-      setPressed = "pressed";
-      return (
-        Button = chakra('button', {
-          baseStyle: {
-            name: 'Dölj aktiva länkar'
-          }
-        })
-      )
+    console.log(e.target.name);
+    if (pressed === 'unpressed') {
+      setPressed = 'pressed';
+      return (Button = chakra('button', {
+        baseStyle: {
+          name: 'Dölj aktiva länkar',
+        },
+      }));
     } else {
-      setPressed = "pressed";
-      return (
-        Button = chakra('button', {
-          baseStyle: {
-            name: 'Visa aktiva länkar'
-          }
-        })
-      )
+      setPressed = 'pressed';
+      return (Button = chakra('button', {
+        baseStyle: {
+          name: 'Visa aktiva länkar',
+        },
+      }));
     }
-
   };
 
   return (
@@ -104,16 +99,21 @@ export default function ManageUsers() {
               onChange={handleInputUserGroupChange}
             />
             <Button onClick={generateRegLink}>Generera länk</Button>
-            <Button onClick={(e) => {
-              showActiveRegistrationLinks()
-              pressedShowActiveRegistrationLinks(e)
-            }}>Visa aktiva länkar</Button>
+            <Button
+              onClick={(e) => {
+                showActiveRegistrationLinks();
+                pressedShowActiveRegistrationLinks(e);
+              }}
+            >
+              Visa aktiva länkar
+            </Button>
           </Flex>
-          {
-            showUserGroupCard && (
-              <UserGroupsCard userGroups={userGroups} removeRegistrationLink={removeRegistrationLink}></UserGroupsCard>
-            )
-          }
+          {showUserGroupCard && (
+            <UserGroupsCard
+              userGroups={userGroups}
+              removeRegistrationLink={removeRegistrationLink}
+            ></UserGroupsCard>
+          )}
         </FormControl>
         {createdUserGroup.length !== 0 && (
           <Card>

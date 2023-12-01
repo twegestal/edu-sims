@@ -11,9 +11,8 @@ export const useUser = () => {
   const deactivateUserGroupApi = useApi('deactivateUserGroup');
   const getUserGroupsApi = useApi('getUserGroups');
   const updatePasswordApi = useApi('updatePassword');
-  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege')
-  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege')
-
+  const assingAdminPrivilegeApi = useApi('assingAdminPrivilege');
+  const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege');
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -69,13 +68,15 @@ export const useUser = () => {
   };
 
   const deactivateUserGroup = async (id) => {
-    console.log("?HÄR");
-    try{
-      const response = await deactivateUserGroupApi({headers: {id: user.id, user_group_id: id}});
+    console.log('?HÄR');
+    try {
+      const response = await deactivateUserGroupApi({
+        headers: { id: user.id, user_group_id: id },
+      });
       console.log(response);
-      if (response.status === 200){
-        console.log("GIllar kuk");
-       return true;
+      if (response.status === 200) {
+        console.log('GIllar kuk');
+        return true;
       } else {
         return false;
       }
@@ -86,14 +87,14 @@ export const useUser = () => {
 
   const getUserGroups = async () => {
     try {
-      const response = await getUserGroupsApi({ headers: { id: user.id }});
+      const response = await getUserGroupsApi({ headers: { id: user.id } });
       if (response.status == 200) {
         setUserGroups(response.data);
       }
     } catch (error) {
       console.error('error fetching user groups: ', error);
     }
-  }
+  };
 
   const updatePassword = async (id, email, newPassword) => {
     try {
@@ -118,6 +119,6 @@ export const useUser = () => {
     deactivateUserGroup,
     updatePassword,
     userGroups,
-    getUserGroups
+    getUserGroups,
   };
 };

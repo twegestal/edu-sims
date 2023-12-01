@@ -42,7 +42,7 @@ export const getCaseRoutes = () => {
           model: object.end_user,
         },
       ],
-  });
+    });
     res.status(200).send(cases);
   });
   // Hämtar ett specifict case beroende på dess id

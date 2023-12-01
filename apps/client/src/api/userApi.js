@@ -35,7 +35,7 @@ export const userApi = (apiClient) => ({
     const response = await apiClient.post(`${prefix}deactivateUserGroup`, headers);
     return packageResponse(response);
   },
-  
+
   getUserGroups: async (headers) => {
     const response = await apiClient.get(`${prefix}getUserGroups`, headers);
     return packageResponse(response);

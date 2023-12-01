@@ -103,7 +103,6 @@ export const getUserRoutes = () => {
   });
 
   router.put('/assingAdminPrivilege', async (req, res, next) => {
-
     const result = await object.end_user.update(
       {
         is_admin: true,
@@ -123,7 +122,6 @@ export const getUserRoutes = () => {
   });
 
   router.put('/revokeAdminPrivilege', async (req, res, next) => {
-
     const result = await object.end_user.update(
       {
         is_admin: false,
@@ -141,7 +139,6 @@ export const getUserRoutes = () => {
       res.status(200).json('User set as not admin');
     }
   });
-
 
   router.post('/createUserGroup', async (req, res, _next) => {
     const result = await object.user_group.create({
@@ -165,7 +162,7 @@ export const getUserRoutes = () => {
       }
       const userGroupId = req.header('user_group_id');
       const userGroup = await object.user_group.findOne({ where: { id: userGroupId } });
-      console.log("userG av detta:", userGroup);
+      console.log('userG av detta:', userGroup);
 
       if (userGroup === null) {
         return res.status(404).json('Resource not found');
@@ -174,7 +171,7 @@ export const getUserRoutes = () => {
       const result = await userGroup.update({
         is_active: false,
       });
-      console.log("resultatet av detta:", result);
+      console.log('resultatet av detta:', result);
 
       if (result !== null) {
         return res.status(200).json('Resource deactivated');
@@ -183,7 +180,7 @@ export const getUserRoutes = () => {
     } catch (error) {
       res.status(500).json('Internal Server Error');
     }
-  })
+  });
 
   router.get('/getUserGroups', async (req, res, _next) => {
     const id = req.header('id');

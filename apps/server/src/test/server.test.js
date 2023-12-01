@@ -296,4 +296,4 @@ describe('user group tests', () => {
         expect(res.body).toEqual('Internal Server Error');
       });
   });
-})
+});

@@ -16,7 +16,7 @@ export const user_group = db.define(
     },
     is_active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
