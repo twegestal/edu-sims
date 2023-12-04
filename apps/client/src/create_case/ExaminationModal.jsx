@@ -23,7 +23,6 @@ import {
   AccordionPanel,
   AccordionIcon,
   Box,
-  HStack,
   Flex,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
