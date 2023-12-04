@@ -8,10 +8,15 @@ export default function StartCase(props) {
   const { createAttempt } = useCases();
   const navigate = useNavigate();
 
-  const postToAttempt = async () => {
+  const postToAttemptNoReload = async () => {
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, props.caseId);
-    return navigate('/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id);
+    return navigate('/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + false);
+  };
+  const postToAttemptReload = async () => {
+    let createdAttempt = [];
+    createdAttempt = await createAttempt(user.id, props.caseId);
+    return navigate('/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + true);
   };
 
   /*
@@ -23,8 +28,13 @@ return (
 */
 
   return (
-    <Button onClick={postToAttempt} colorScheme='teal' marginBottom='5%'>
-      Starta fallet
-    </Button>
+    <>
+      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='5%'>
+        Starta fallet
+      </Button>
+      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%'>
+        Fortsätt fallet
+      </Button>
+    </>
   );
 }
