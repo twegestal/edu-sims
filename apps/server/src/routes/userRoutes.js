@@ -174,7 +174,7 @@ export const getUserRoutes = () => {
       }
 
       const { email, newPassword } = req.body;
-      console.log('nytt lösen: ', newPassword)
+      console.log('nytt lösen: ', newPassword);
       const userToUpdate = await object.end_user.findOne({ where: { email: email } });
 
       if (userToUpdate) {

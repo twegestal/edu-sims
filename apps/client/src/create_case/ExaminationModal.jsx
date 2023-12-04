@@ -220,7 +220,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setExaminationToConfirm(null);
     setStepSpecificValues(mutableStepSpecificValues);
     setIsConfirmValuesOpen(false);
-
   };
 
   const buildStep = () => {
@@ -451,7 +450,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               stepSpecificValues={stepSpecificValues}
             />
           )}
-          
         </>
       )}
     </>

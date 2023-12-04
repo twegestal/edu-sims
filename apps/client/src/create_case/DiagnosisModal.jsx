@@ -11,6 +11,7 @@ import {
   Textarea,
   Heading,
   Checkbox,
+  VStack,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Confirm from '../components/Confirm';
@@ -26,7 +27,7 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
   const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
   const [diagnosisId, setDiagnosisId] = useState();
   const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
-  const [feedbackInCorrect, setFeedbackInCorrect] = useState('Fyll i feedback för inkorrekt svar');
+  const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
 
   const { medicalFields, getMedicalFields } = useCases();
   const { diagnosisList, getDiagnosisList } = useDiagnosis();
@@ -43,19 +44,21 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
   }, []);
 
   useEffect(() => {
-    console.log('medicalFields: ', medicalFields);
-    console.log('diagnosisList: ', diagnosisList);
-
     if (medicalFields && diagnosisList) {
       generateDiagnosisMap();
     }
   }, [medicalFields, diagnosisList]);
 
   useEffect(() => {
-    if (diagnosisMap) {
-      console.log('diagnosisStateVAriable:', diagnosisMap);
-    }
-  }, [diagnosisMap]);
+    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
+    setDiagnosisId(moduleData?.stepData?.diagnosis_id || null);
+    setFeedbackCorrect(
+      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
+    );
+    setFeedbackIncorrect(
+      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
+    );
+  }, [moduleData]);
 
   const generateDiagnosisMap = () => {
     const diagnosisMap = new Map();
@@ -66,11 +69,17 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
       diagnosisMap.set(medicalField.name, newArr);
     });
 
-    console.log('daignosisMap innan setMetod:', diagnosisMap);
     setDiagnosisMap(diagnosisMap);
   };
 
-  const clearContent = () => {};
+  const clearContent = () => {
+    setPrompt('');
+    setDiagnosisId(null);
+    setFeedbackCorrect('');
+    setFeedbackIncorrect('');
+
+    setIsConfirmOpen(false);
+  };
 
   const handleOpenConfirm = () => {
     setIsConfirmOpen(true);
@@ -80,7 +89,21 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
     setIsConfirmOpen(false);
   };
 
-  const buildStep = () => {};
+  const handleCheckboxChange = (id) => {
+    setDiagnosisId(diagnosisId === id ? null : id);
+  };
+
+  const buildStep = () => {
+    const stepData = {
+      module_type_identifier: moduleTypeIdentifier,
+      prompt: prompt,
+      diagnosis_id: diagnosisId,
+      feedback_correct: feedbackCorrect,
+      feedback_incorrect: feedbackIncorrect,
+    };
+
+    onClose(stepData);
+  };
 
   return (
     <>
@@ -104,34 +127,34 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
                   />
 
                   <FormLabel>Ange korrekt diagnos från listan</FormLabel>
-                  {/* { diagnosisMap && 
-                    Object.keys(diagnosisMap).map((key) => (
-                      <>
-                      <Heading>{key}</Heading>
-                      <p>hallå</p>
-                      
-                      {diagnosisMap[key].map((diagnosis) => (
-                        <Checkbox id={diagnosis.id}>{diagnosis.name}</Checkbox>
-                      ))}
-
-                      </>
-                      
-                      
-                      
-                    ))
-                  } */}
-
                   {diagnosisMap.size > 0 &&
-                    Array.from(diagnosisMap).forEach(([key, values]) => (
-                      <>
-                        <Heading>{key}</Heading>
-                        <p>hallå</p>
-
+                    Array.from(diagnosisMap).map(([key, values]) => (
+                      <VStack key={key} alignItems={'flex-start'}>
+                        <Heading as={'h3'} size={'md'}>
+                          {key}
+                        </Heading>
                         {values.map((diagnosis) => (
-                          <Checkbox id={diagnosis.id}>{diagnosis.name}</Checkbox>
+                          <Checkbox
+                            key={diagnosis.id}
+                            id={diagnosis.id}
+                            isChecked={diagnosis.id === diagnosisId}
+                            onChange={() => handleCheckboxChange(diagnosis.id)}
+                          >
+                            {diagnosis.name}
+                          </Checkbox>
                         ))}
-                      </>
+                      </VStack>
                     ))}
+                  <FormLabel>Korrekt feedback</FormLabel>
+                  <Textarea
+                    value={feedbackCorrect}
+                    onChange={(e) => setFeedbackCorrect(e.target.value)}
+                  />
+                  <FormLabel>Inkorrekt feedback</FormLabel>
+                  <Textarea
+                    value={feedbackIncorrect}
+                    onChange={(e) => setFeedbackIncorrect(e.target.value)}
+                  />
                 </FormControl>
               </ModalBody>
 

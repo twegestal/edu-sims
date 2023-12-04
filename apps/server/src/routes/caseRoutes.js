@@ -134,8 +134,8 @@ export const getCaseRoutes = () => {
       try {
         const result = await object.diagnosis_list.findAll({
           where: {
-            medical_field_id: id
-          }
+            medical_field_id: id,
+          },
         });
 
         if (result.length > 0) {
