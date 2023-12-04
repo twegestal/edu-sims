@@ -64,6 +64,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
     resetCheckBoxState();
     resetExaminationCheckboxState();
+    setIsConfirmOpen(false);
   };
 
   useEffect(() => {
@@ -185,6 +186,10 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     const response = await getExaminationList(examinationSubtypeId);
 
     return response;
+  };
+
+  const handleOpenConfirm = () => {
+    setIsConfirmOpen(true);
   };
 
   const handleCloseConfirm = () => {
@@ -424,7 +429,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               <ModalFooter>
                 <Button onClick={buildStep}>Spara ändringar</Button>
 
-                <Button onClick={clearContent}>Rensa</Button>
+                <Button onClick={handleOpenConfirm}>Rensa</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
@@ -447,6 +452,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               stepSpecificValues={stepSpecificValues}
             />
           )}
+          
         </>
       )}
     </>

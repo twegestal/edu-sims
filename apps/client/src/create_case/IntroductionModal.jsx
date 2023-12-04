@@ -35,7 +35,6 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
     setFeedbackIncorrect(
       moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
     );
-    console.log('hur många?');
   }, [moduleData]);
 
   const clearContent = () => {
