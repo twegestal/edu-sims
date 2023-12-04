@@ -84,26 +84,28 @@ export default function PerformCase() {
   useEffect(() => {
     if (!loading) {
       if (reload === 'true') {
-        const storedIndex = JSON.parse(localStorage.getItem(caseid.toString()+"index"));
+        const storedIndex = JSON.parse(localStorage.getItem(caseid.toString() + 'index'));
         const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
         if (storedFeedback !== null) {
           for (let index = 0; index < 3; index++) {
             console.log(index);
             const listan = [];
             for (let index = 0; index < storedFeedback.length; index++) {
-              listan[index] = <Card key={index} variant='filled'>
-                <Accordion allowMultiple>
-                  <AccordionItem>
-                    <AccordionButton>
-                      <Box as='span' flex='1' textAlign='center'>
-                        Feedback från steg # {index + 1}
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Card>
+              listan[index] = (
+                <Card key={index} variant='filled'>
+                  <Accordion allowMultiple>
+                    <AccordionItem>
+                      <AccordionButton>
+                        <Box as='span' flex='1' textAlign='center'>
+                          Feedback från steg # {index + 1}
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                      <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
+                    </AccordionItem>
+                  </Accordion>
+                </Card>
+              );
             }
             setFeedback([listan]);
             console.log(storedIndex);
@@ -111,14 +113,12 @@ export default function PerformCase() {
             setCurrentIndex(caseById[storedIndex].index);
           }
         }
-      }
-      else {
+      } else {
         localStorage.removeItem(caseid.toString());
 
         setCurrentStep(caseById[0]);
         setCurrentIndex(caseById[0].index);
       }
-
     }
   }, [caseById]);
 
@@ -163,7 +163,7 @@ export default function PerformCase() {
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
     attemptUpdateFunction();
 
-    localStorage.setItem(caseid.toString()+"index", JSON.stringify(nextIndex));
+    localStorage.setItem(caseid.toString() + 'index', JSON.stringify(nextIndex));
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
@@ -203,7 +203,7 @@ export default function PerformCase() {
   };
 
   const updateFeedback = (feedbackToDisplay) => {
-    addFeedbackToStorage(feedbackToDisplay)
+    addFeedbackToStorage(feedbackToDisplay);
     setFeedback([
       ...feedback,
       <Card key={currentIndex} variant='filled'>
@@ -241,12 +241,12 @@ export default function PerformCase() {
     //...
     const storedNames = JSON.parse(localStorage.getItem(caseid.toString()));
 
-    console.log(storedNames)
+    console.log(storedNames);
     //localStorage.removeItem(caseid.toString());
     //localStorage.removeItem("feedbackArray");
-    const arr = JSON.parse(localStorage.getItem("feedbackArray"));
+    const arr = JSON.parse(localStorage.getItem('feedbackArray'));
     console.log(arr);
-  }
+  };
 
   const finishCase = () => {
     setCaseIsFinished(true);

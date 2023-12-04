@@ -11,12 +11,16 @@ export default function StartCase(props) {
   const postToAttemptNoReload = async () => {
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, props.caseId);
-    return navigate('/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + false);
+    return navigate(
+      '/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + false,
+    );
   };
   const postToAttemptReload = async () => {
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, props.caseId);
-    return navigate('/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + true);
+    return navigate(
+      '/case/caseid=' + props.caseId + '/attemptid=' + createdAttempt.id + '/reload=' + true,
+    );
   };
 
   /*
