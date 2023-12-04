@@ -29,7 +29,7 @@ return (
 
   return (
     <>
-      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='5%'>
+      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='2%'>
         Starta fallet
       </Button>
       <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%'>
