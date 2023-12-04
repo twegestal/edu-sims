@@ -38,7 +38,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isConfirmValuesOpen, setIsConfirmValuesOpen] = useState(false);
   const [examinationToConfirm, setExaminationToConfirm] = useState();
-  const [previousExaminationValues, setPreviousExaminationValues] = useState();
 
   const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
   const [examinationToDisplay, setExaminationToDisplay] = useState({});
@@ -193,15 +192,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   };
 
   const handleOpenConfirmValues = (examinationName, examinationId) => {
-    stepSpecificValues.forEach((element) => {
-      if (element.examination_id === examinationId && element.value) {
-        setPreviousExaminationValues({
-          examinationValue: element.value,
-          isNormal: element.is_normal
-        });
-      };
-    });
-
     setExaminationToConfirm({
       id: examinationId,
       name: examinationName,
@@ -211,13 +201,10 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
   const handleCloseConfirmValues = () => {
     setExaminationToConfirm(null);
-    setPreviousExaminationValues(null);
     setIsConfirmValuesOpen(false);
   };
 
   const handleConfirmValues = (examinationValue, isNormal) => {
-    setIsConfirmValuesOpen(false);
-    setPreviousExaminationValues(null);
     let mutableStepSpecificValues = stepSpecificValues;
     mutableStepSpecificValues.forEach((element) => {
       if (element.examination_id === examinationToConfirm.id) {
@@ -226,7 +213,10 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       }
     });
 
+    setExaminationToConfirm(null);
     setStepSpecificValues(mutableStepSpecificValues);
+    setIsConfirmValuesOpen(false);
+
   };
 
   const buildStep = () => {
@@ -453,7 +443,8 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               onClose={handleCloseConfirmValues}
               handleConfirm={handleConfirmValues}
               examinationName={examinationToConfirm.name}
-              previousData={previousExaminationValues}
+              examinationId={examinationToConfirm.id}
+              stepSpecificValues={stepSpecificValues}
             />
           )}
         </>

@@ -16,15 +16,27 @@ export default function ConfirmValues({
   onClose,
   handleConfirm,
   examinationName,
-  previousData,
+  examinationId,
+  stepSpecificValues,
 }) {
   const [examinationValue, setExaminationValue] = useState('Fyll i värde här');
   const [isNormal, setIsNormal] = useState(false);
 
   useEffect(() => {
-    setExaminationValue(previousData?.examinationValue || 'Fyll i värde här');
-    setIsNormal(previousData?.isNormal || false); //TODO: denna funkar typ icke....
-  }, [previousData]);
+    if (isOpen) {
+      stepSpecificValues.forEach((element) => {
+        if (element.examination_id === examinationId) {
+          if (element.value) {
+            setExaminationValue(element.value);
+            setIsNormal(element.is_normal);
+          } else {
+            setExaminationValue('Fyll i värde här');
+            setIsNormal(false);
+          }
+        }
+      });
+    }
+  }, [isOpen]);
   return (
     <AlertDialog motionPreset='slideInBottom' isOpen={isOpen} onClose={onClose}>
       <AlertDialogOverlay>
