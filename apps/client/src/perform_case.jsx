@@ -84,6 +84,7 @@ export default function PerformCase() {
   useEffect(() => {
     if (!loading) {
       if (reload === 'true') {
+        const storedIndex = JSON.parse(localStorage.getItem(caseid.toString()+"index"));
         const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
         if (storedFeedback !== null) {
           for (let index = 0; index < 3; index++) {
@@ -105,8 +106,9 @@ export default function PerformCase() {
               </Card>
             }
             setFeedback([listan]);
-           // setCurrentStep(caseById[1]);
-           // setCurrentIndex(caseById[1].index);
+            console.log(storedIndex);
+            setCurrentStep(caseById[storedIndex]);
+            setCurrentIndex(caseById[storedIndex].index);
           }
         }
       }
@@ -161,6 +163,8 @@ export default function PerformCase() {
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
     attemptUpdateFunction();
 
+    localStorage.setItem(caseid.toString()+"index", JSON.stringify(nextIndex));
+
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
   };
@@ -196,27 +200,6 @@ export default function PerformCase() {
       </Flex>,
     ]);
     setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
-  };
-  const updateFeedbackFromReload = (feedbackToDisplay, index) => {
-    for (let index = 0; index < 2; index++) {
-
-      setFeedback([
-        ...feedback,
-        <Card key={index} variant='filled'>
-          <Accordion allowMultiple>
-            <AccordionItem>
-              <AccordionButton>
-                <Box as='span' flex='1' textAlign='center'>
-                  Feedback från steg # {index + 1}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>{"jfjf"}</AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Card>,
-      ]);
-    }
   };
 
   const updateFeedback = (feedbackToDisplay) => {
