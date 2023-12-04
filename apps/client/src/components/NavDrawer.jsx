@@ -20,49 +20,49 @@ import DrawerBtn from './DrawerBtn.jsx';
 
 export default function NavDrawer(props) {
   const { user, logout } = useAuth();
-  return (
-    <>
-      <Drawer
-        isOpen={props.isOpen}
-        placement='right'
-        onClose={props.onClose}
-        finalFocusRef={props.btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>
-            <p>{user.email}</p>
-          </DrawerHeader>
+    return (
+        <>
+          <Drawer 
+          isOpen={props.isOpen}
+          placement='right'
+          onClose={props.onClose}
+          finalFocusRef={props.btnRef} 
+          >
+            <DrawerOverlay />
+            <DrawerContent bg={'brand.bg'}>
+              <DrawerCloseButton />
+              <DrawerHeader>
+                  <p>{user.email}</p>
+              </DrawerHeader>
 
-          <DrawerBody>
-            <Flex flexDirection={'column'} justifyContent={'space-between'}>
-              <Link to='/'>
-                <DrawerBtn onClick={props.onClose} text='Hem' />
-              </Link>
-              <Link to='/profilePage'>
-                <DrawerBtn onClick={props.onClose} text='Min profil' />
-              </Link>
-              {user.isAdmin && (
-                <>
-                  <Link to='/manageUsers'>
-                    <DrawerBtn onClick={props.onClose} text='Hantera användare' />
+              <DrawerBody>
+                <Flex flexDirection={'column'} justifyContent={'space-between'}>
+                  <Link to='/'>
+                    <DrawerBtn onClick={props.onClose} text='Hem' />
                   </Link>
-                  <Link to='/manageCases'>
-                    <DrawerBtn onClick={props.onClose} text='Hantera fall' />
+                  <Link to='/profilePage'>
+                    <DrawerBtn onClick={props.onClose} text='Min profil' />
                   </Link>
-                </>
-              )}
-            </Flex>
-          </DrawerBody>
+                  {user.isAdmin && (
+                    <>
+                      <Link to='/manageUsers'>
+                        <DrawerBtn onClick={props.onClose} text='Hantera användare' />
+                      </Link>
+                      <Link to='/manageCases'>
+                        <DrawerBtn onClick={props.onClose} text='Hantera fall' />
+                      </Link>
+                    </>
+                  )}
+                </Flex>
+              </DrawerBody>
 
-          <DrawerFooter>
-            <Button onClick={logout} w={'100%'}>
-              Logout
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+              <DrawerFooter>
+                <Button onClick={logout} w={'100%'}>
+                  Logout
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
     </>
   );
 }

@@ -14,6 +14,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import LoadingSkeleton from './loadingSkeleton.jsx';
+import Feedback from './performCaseComponents/Feedback.jsx';
 
 export default function Introduction(props) {
   //const [stepData, setStep] = useState({});
@@ -44,6 +45,7 @@ export default function Introduction(props) {
       case 'yesButton': {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_correct);
+          props.setWasCorrect(true)
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
@@ -55,9 +57,11 @@ export default function Introduction(props) {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
           props.setFaultsCounter(props.faultsCounter + 1);
+          props.setWasCorrect(false)
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_correct);
+          props.setWasCorrect(true)
         }
         break;
       }
@@ -87,16 +91,16 @@ export default function Introduction(props) {
             </CardBody>
           </Card>
 
-          <Card variant='filled'>
+          <Card>
             {props.displayFeedback ? (
-              <Card variant='filled'>
-                <Button onClick={onToggle}>Feedback</Button>
-                <Collapse in={isOpen}>
-                  <CardBody>
-                    <Text align='left'>{feedbackToDisplay}</Text>
-                  </CardBody>
-                </Collapse>
-              </Card>
+              <>
+                <Feedback
+                onToggle={onToggle}
+                wasCorrect={props.wasCorrect}
+                isOpen={isOpen}
+                feedbackToDisplay={feedbackToDisplay}
+                />
+              </>
             ) : (
               <Card align='center' variant='filled'>
                 <CardHeader>

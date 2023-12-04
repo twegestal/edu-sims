@@ -23,6 +23,7 @@ import { WarningIcon } from '@chakra-ui/icons';
 import { useExamination } from './hooks/useExamination';
 import { useExaminationUtils } from './hooks/useExaminationUtils';
 import LoadingSkeleton from './loadingSkeleton';
+import Feedback from './performCaseComponents/Feedback';
 
 export default function Examination(props) {
   const [loading, setLoading] = useState(true);
@@ -78,8 +79,10 @@ export default function Examination(props) {
 
     if (checkExams()) {
       setFeedbackToDisplay(examinationStep.feedback_correct);
+      props.setWasCorrect(true)
     } else {
       setFeedbackToDisplay(examinationStep.feedback_incorrect);
+      props.setWasCorrect(false)
     }
   };
 
@@ -205,14 +208,14 @@ export default function Examination(props) {
           </Card>
 
           {props.displayFeedback ? (
-            <Card variant='filled'>
-              <Button onClick={onToggle}>Feedback</Button>
-              <Collapse in={isOpen}>
-                <CardBody id='feedback'>
-                  <Text align='left'>{feedbackToDisplay}</Text>
-                </CardBody>
-              </Collapse>
-            </Card>
+              <>
+                <Feedback
+                onToggle={onToggle}
+                wasCorrect={props.wasCorrect}
+                isOpen={isOpen}
+                feedbackToDisplay={feedbackToDisplay}
+                />
+              </>
           ) : (
             <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>
               Klar med utredningar

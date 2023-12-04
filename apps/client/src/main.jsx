@@ -7,12 +7,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth.jsx';
 import { AlertProvider } from './hooks/useAlert.jsx';
 import { MantineProvider } from '@mantine/core';
+import theme from '../theme.js'
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <MantineProvider>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <AuthProvider>
             <AlertProvider>
               <App />

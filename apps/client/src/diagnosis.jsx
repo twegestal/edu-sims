@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import LoadingSkeleton from './loadingSkeleton.jsx';
 import { useDiagnosis } from './hooks/useDiagnosis.js';
+import Feedback from './performCaseComponents/Feedback.jsx';
 
 export default function Diagnosis(props) {
   const [diagnosisListHtml, setDiagnosisListHtml] = useState('');
@@ -66,6 +67,7 @@ export default function Diagnosis(props) {
     if (choosenDiagnosId == diagnosisStep.diagnosis_id) {
       setFeedbackToDisplay(diagnosisStep.feedback_correct);
       props.setCorrectDiagnosis(true);
+      props.setWasCorrect(true)
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_correct))
     }
 
@@ -73,6 +75,7 @@ export default function Diagnosis(props) {
       setFeedbackToDisplay(diagnosisStep.feedback_incorrect);
       props.setFaultsCounter(props.faultsCounter + 1);
       props.setCorrectDiagnosis(false);
+      props.setWasCorrect(false)
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_incorrect))
     }
 
@@ -99,14 +102,14 @@ export default function Diagnosis(props) {
             {diagnosisStep.prompt}
           </Card>
           {props.displayFeedback ? (
-            <Card variant='filled'>
-              <Button onClick={onToggle}>Feedback</Button>
-              <Collapse in={isOpen}>
-                <CardBody id='feedback'>
-                  <Text align='left'>{feedbackToDisplay}</Text>
-                </CardBody>
-              </Collapse>
-            </Card>
+              <>
+                <Feedback
+                onToggle={onToggle}
+                wasCorrect={props.wasCorrect}
+                isOpen={isOpen}
+                feedbackToDisplay={feedbackToDisplay}
+                />
+              </>
           ) : (
             <Card>
               <Input
