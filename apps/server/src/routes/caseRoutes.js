@@ -128,13 +128,38 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.get('/getDiagnosisList', async (req, res, next) => {
-    const result = await object.diagnosis_list.findAll({
-      where: {
-        medical_field_id: req.header('id'),
-      },
-    });
-    res.status(200).json(result);
+  router.get('/getDiagnosisList', async (req, res, _next) => {
+    const id = req.header('id');
+    if (id) {
+      try {
+        const result = await object.diagnosis_list.findAll({
+          where: {
+            medical_field_id: id
+          }
+        });
+
+        if (result.length > 0) {
+          res.status(200).send(result);
+        } else {
+          res.status(404).json('Resource not found');
+        }
+      } catch (error) {
+        console.error('Error getting diagnosis list from database', error);
+        res.status(500).json('Internal server error');
+      }
+    } else {
+      try {
+        const result = await object.diagnosis_list.findAll();
+        if (result.length > 0) {
+          res.status(200).send(result);
+        } else {
+          res.status(404).json('Resource not found');
+        }
+      } catch (error) {
+        console.error('Error getting diagnosis list from database', error);
+        res.status(500).json('Internal server error');
+      }
+    }
   });
 
   //Hämta specifict Treatment step

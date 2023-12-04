@@ -9,7 +9,6 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  StepDescription,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Confirm from '../components/Confirm';
