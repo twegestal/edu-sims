@@ -426,7 +426,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               <ModalFooter>
                 <Button onClick={buildStep}>Spara ändringar</Button>
 
-                <Button onClick={handleOpenConfirm} colorScheme='red' ml={3}>Rensa</Button>
+                <Button onClick={handleOpenConfirm} colorScheme='red' ml={3}>
+                  Rensa
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

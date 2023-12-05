@@ -82,7 +82,7 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
           handleCheckboxChange(treatmentSubtypeId);
         });
       });
-    };
+    }
 
     const stepValues = moduleData?.stepData?.step_specific_treatments;
     if (stepValues) {

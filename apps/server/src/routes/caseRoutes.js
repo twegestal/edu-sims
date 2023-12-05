@@ -273,7 +273,7 @@ export const getCaseRoutes = () => {
   });
   // hämta treatments
   router.get('/getTreatmentTypes', async (req, res, next) => {
-    const result = await object.treatment_type.findAll({order: [['name', 'ASC']]});
+    const result = await object.treatment_type.findAll({ order: [['name', 'ASC']] });
     res.status(200).json(result);
   });
   router.get('/getTreatmentSubtypes', async (req, res, next) => {

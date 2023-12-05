@@ -53,6 +53,6 @@ export const useCreateCaseUtils = () => {
     fetchTreatmentTypes,
     treatmentTypes,
     treatmentSubtypes,
-    treatmentList
+    treatmentList,
   };
 };
