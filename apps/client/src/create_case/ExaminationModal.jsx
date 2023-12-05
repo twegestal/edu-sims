@@ -333,7 +333,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                   <FormLabel>Bocka i korrekta undersökningar för det här steget</FormLabel>
                   {Object.entries(examinationToDisplay).map(([categoryId], index) => (
                     <div key={'div' + categoryId}>
-                      {/* byt ut mot accordionItem för huvudkategori eller behåll det som en heading/label? */}
                       <Heading key={categoryId} as='h3' size='md'>
                         {examinationCategories[categoryId]}
                       </Heading>
@@ -427,7 +426,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               <ModalFooter>
                 <Button onClick={buildStep}>Spara ändringar</Button>
 
-                <Button onClick={handleOpenConfirm}>Rensa</Button>
+                <Button onClick={handleOpenConfirm} colorScheme='red' ml={3}>Rensa</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

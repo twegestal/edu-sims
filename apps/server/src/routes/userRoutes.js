@@ -174,13 +174,11 @@ export const getUserRoutes = () => {
       }
 
       const { email, newPassword } = req.body;
-      console.log('nytt lösen: ', newPassword);
       const userToUpdate = await object.end_user.findOne({ where: { email: email } });
 
       if (userToUpdate) {
         const hash = await hashPassword(newPassword);
         const result = await userToUpdate.update({ password: hash });
-        console.log('användare: ', result);
         res.status(201).send(result);
       } else {
         res.status(404).json('Could not find resource');

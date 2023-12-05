@@ -97,7 +97,7 @@ export default function SummaryModal({ isOpen, onClose, moduleData }) {
 
           <ModalFooter>
             <Button onClick={buildStep}>Spara ändringar</Button>
-            <Button onClick={handleOpenConfirm}>Rensa</Button>
+            <Button onClick={handleOpenConfirm} colorScheme='red' ml={3}>Rensa</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

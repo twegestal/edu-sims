@@ -28,7 +28,7 @@ export const getCaseRoutes = () => {
       await transaction.commit();
       res.status(201).json('case created');
     } catch (error) {
-      console.log('transaction did not work', error);
+      console.error('transaction did not work', error);
       await transaction.rollback();
       res.status(400).send(error);
     }
@@ -273,7 +273,7 @@ export const getCaseRoutes = () => {
   });
   // hämta treatments
   router.get('/getTreatmentTypes', async (req, res, next) => {
-    const result = await object.treatment_type.findAll({});
+    const result = await object.treatment_type.findAll({order: [['name', 'ASC']]});
     res.status(200).json(result);
   });
   router.get('/getTreatmentSubtypes', async (req, res, next) => {

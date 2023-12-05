@@ -36,11 +36,6 @@ export default function CaseBuilder() {
     }
   }, []);
 
-  useEffect(() => {
-    //FÖRLÅT TEO2 :(
-    console.log('modules: ', modules);
-  }, [modules]);
-
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
