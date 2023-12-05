@@ -65,7 +65,7 @@ export default function ShowAllCases() {
 
   function removeCase(caseId) {
     if (confirm('Är du säker på att du vill ta bort fallet?')) {
-      //API call
+      //TODO: API call
       console.log('Ta bort');
     }
   }

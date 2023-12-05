@@ -7,11 +7,14 @@ import LoadingSkeleton from '../loadingSkeleton';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import CreateCaseModal from './CreateCaseModal.jsx';
+import Confirm from '../components/Confirm.jsx';
 
 export default function CaseBuilder() {
   const [modules, moduleHandlers] = useListState([]);
   const { moduleTypes, getModuleTypes } = useCreateCase();
   const [activeModule, setActiveModule] = useState();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [moduleToDelete, setModuleToDelete] = useState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
@@ -32,10 +35,6 @@ export default function CaseBuilder() {
       fetchModuleTypes();
     }
   }, []);
-
-  // useEffect(() => { //FÖRLÅT TEO2 :(
-  //   console.log('modules: ', modules)
-  // },[modules])
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -62,11 +61,11 @@ export default function CaseBuilder() {
     }
   };
 
-  const handleDeleteModule = (uniqueId) => {
-    //TODO: vi måste tömma allt i modulen när den slängs...
+  const handleDeleteModule = () => {
     moduleHandlers.setState((currentModules) =>
-      currentModules.filter((module) => module.uniqueId !== uniqueId),
+      currentModules.filter((module) => module.uniqueId !== moduleToDelete),
     );
+    setIsConfirmOpen(false);
   };
 
   const handleOpenModal = (module) => {
@@ -81,6 +80,16 @@ export default function CaseBuilder() {
     }
 
     setIsModalOpen(false);
+  };
+
+  const handleOpenConfirm = (moduleId) => {
+    setModuleToDelete(moduleId);
+    setIsConfirmOpen(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setModuleToDelete(null);
+    setIsConfirmOpen(false);
   };
 
   return (
@@ -149,7 +158,7 @@ export default function CaseBuilder() {
                           <ModuleCard
                             heading={module.name}
                             handleAccept={() => handleOpenModal(module)}
-                            handleDelete={() => handleDeleteModule(module.uniqueId)}
+                            handleDelete={() => handleOpenConfirm(module.uniqueId)}
                           />
                         </Box>
                       )}
@@ -170,6 +179,13 @@ export default function CaseBuilder() {
           moduleData={activeModule}
         />
       )}
+      <Confirm
+        isOpen={isConfirmOpen}
+        onClose={handleCloseConfirm}
+        header={'Ta bort modul'}
+        body={'Är du säker på att du vill ta bort denna modul?'}
+        handleConfirm={handleDeleteModule}
+      ></Confirm>
     </>
   );
 }
