@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { Input, Button } from '@chakra-ui/react';
+import {
+  Input, 
+  Button,
+  Box,
+} from '@chakra-ui/react';
 import { useAuth } from './hooks/useAuth';
 import { useAlert } from './hooks/useAlert.jsx';
 import { validateLogin, errorsToString } from 'api';
@@ -27,15 +31,17 @@ export default function Login() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <Input placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
-        <Input
-          type='password'
-          placeholder='Password'
-          onChange={(e) => setPasswordInput(e.target.value)}
-        />
-        <Button type='submit'>Logga in</Button>
-      </form>
+      <Box marginTop={'10%'} width={'90%'} margin={'auto'}>
+        <form onSubmit={handleSubmit}>
+          <Input placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} marginBottom={'2%'}/>
+          <Input
+            type='password'
+            placeholder='Password'
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
+          <Button type='submit'>Logga in</Button>
+        </form>
+      </Box>
     </>
   );
 }

@@ -57,7 +57,7 @@ export default function NavDrawer(props) {
               </DrawerBody>
 
               <DrawerFooter>
-                <Button onClick={logout} w={'100%'}>
+                <Button onClick={() => {{logout()}; {props.onClose()}}} w={'100%'}>
                   Logout
                 </Button>
               </DrawerFooter>
