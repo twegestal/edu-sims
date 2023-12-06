@@ -7,6 +7,7 @@ import {
   Button,
   Flex,
   Box,
+  Heading,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useCases } from '../hooks/useCases.js';
@@ -72,11 +73,11 @@ export default function ShowAllCases() {
 
   return (
     <Box maxW={'90%'} margin={'auto'}>
-      <Accordion allowToggle>
+      <Accordion allowToggle defaultIndex={[0]}>
         {Object.keys(groupedCases).map((medicalFieldId) => (
           <AccordionItem key={medicalFieldId}>
-            <AccordionButton>
-              <h2>{getMedicalFieldName(medicalFieldId)} </h2>
+            <AccordionButton >
+              <Heading margin={'auto'} size='sm' >{getMedicalFieldName(medicalFieldId)} </Heading>
             </AccordionButton>
             <AccordionPanel pb={4}>
               {groupedCases[medicalFieldId].map((caseItem) => (
