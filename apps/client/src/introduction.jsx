@@ -45,7 +45,7 @@ export default function Introduction(props) {
       case 'yesButton': {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_correct);
-          props.setWasCorrect(true)
+          props.setWasCorrect(true);
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
@@ -57,11 +57,11 @@ export default function Introduction(props) {
         if (props.caseData.length > 2) {
           setFeedbackToDisplay(introductionStep.feedback_incorrect);
           props.setFaultsCounter(props.faultsCounter + 1);
-          props.setWasCorrect(false)
+          props.setWasCorrect(false);
         } else {
           //dvs att det bara finns ett introsteg och ett summarysteg
           setFeedbackToDisplay(introductionStep.feedback_correct);
-          props.setWasCorrect(true)
+          props.setWasCorrect(true);
         }
         break;
       }
@@ -95,10 +95,10 @@ export default function Introduction(props) {
             {props.displayFeedback ? (
               <>
                 <Feedback
-                onToggle={onToggle}
-                wasCorrect={props.wasCorrect}
-                isOpen={isOpen}
-                feedbackToDisplay={feedbackToDisplay}
+                  onToggle={onToggle}
+                  wasCorrect={props.wasCorrect}
+                  isOpen={isOpen}
+                  feedbackToDisplay={feedbackToDisplay}
                 />
               </>
             ) : (

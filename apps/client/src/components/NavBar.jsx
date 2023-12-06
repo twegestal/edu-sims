@@ -20,26 +20,43 @@ export default function NavBar() {
     onClose();
   }, []);
 
-    return (
-        <>
-            <Flex bg='gu.bg' color='white' textAlign={'center'} justifyContent={'space-around'} marginBottom={'30px'} id="navBar">
-                <Image width='20%' src={logo} alt='EDU-SIMS logo' onClick={linkToIndex} id='imageLink' minW={'90px'} maxW={'130px'} maxH={'115px'}/>
-                <Box margin={'auto'}>
-                    <p>EDU-SIMS</p>
-                </Box>
-                {user && (
-                <Button ref={btnRef} onClick={onOpen} marginTop={'auto'} marginBottom={'auto'} bg={'none'} height={'100%'}>
-                    <Avatar size="sm" marginRight={'30%'}/>
-                </Button>
-                )}
-            </Flex>
-            {user && (
-                <NavDrawer             
-                isOpen={isOpen}
-                onClose={onClose}
-                btnRef={btnRef}
-                />
-            )}
-        </>
+  return (
+    <>
+      <Flex
+        bg='gu.bg'
+        color='white'
+        textAlign={'center'}
+        justifyContent={'space-around'}
+        marginBottom={'30px'}
+        id='navBar'
+      >
+        <Image
+          width='20%'
+          src={logo}
+          alt='EDU-SIMS logo'
+          onClick={linkToIndex}
+          id='imageLink'
+          minW={'90px'}
+          maxW={'130px'}
+          maxH={'115px'}
+        />
+        <Box margin={'auto'}>
+          <p>EDU-SIMS</p>
+        </Box>
+        {user && (
+          <Button
+            ref={btnRef}
+            onClick={onOpen}
+            marginTop={'auto'}
+            marginBottom={'auto'}
+            bg={'none'}
+            height={'100%'}
+          >
+            <Avatar size='sm' marginRight={'30%'} />
+          </Button>
+        )}
+      </Flex>
+      {user && <NavDrawer isOpen={isOpen} onClose={onClose} btnRef={btnRef} />}
+    </>
   );
 }

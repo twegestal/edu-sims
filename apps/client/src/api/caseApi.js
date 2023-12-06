@@ -2,7 +2,10 @@ import { packageResponse } from '../utils/apiUtils.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
-  createCase: async (body) => apiClient.post(`${prefix}createCase`, body).json(),
+  createCase: async (body) => {
+    const response = apiClient.post(`${prefix}createCase`, body);
+    return packageResponse(response);
+  },
 
   getAllCases: async () => {
     const response = await apiClient.get(`${prefix}getAllCases`);

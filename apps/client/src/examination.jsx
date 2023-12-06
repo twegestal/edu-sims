@@ -79,10 +79,10 @@ export default function Examination(props) {
 
     if (checkExams()) {
       setFeedbackToDisplay(examinationStep.feedback_correct);
-      props.setWasCorrect(true)
+      props.setWasCorrect(true);
     } else {
       setFeedbackToDisplay(examinationStep.feedback_incorrect);
-      props.setWasCorrect(false)
+      props.setWasCorrect(false);
     }
   };
 
@@ -208,14 +208,14 @@ export default function Examination(props) {
           </Card>
 
           {props.displayFeedback ? (
-              <>
-                <Feedback
+            <>
+              <Feedback
                 onToggle={onToggle}
                 wasCorrect={props.wasCorrect}
                 isOpen={isOpen}
                 feedbackToDisplay={feedbackToDisplay}
-                />
-              </>
+              />
+            </>
           ) : (
             <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>
               Klar med utredningar

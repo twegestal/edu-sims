@@ -1,13 +1,13 @@
-#root{
-    min-width: 100%;
-    padding: 0rem !important;
-    min-height: 100vh;
+#root {
+  min-width: 100%;
+  padding: 0rem !important;
+  min-height: 100vh;
 }
 
-#imageLink{
-    cursor: pointer;
+#imageLink {
+  cursor: pointer;
 }
 
-#container{
-    min-height: 100vh;
+#container {
+  min-height: 100vh;
 }

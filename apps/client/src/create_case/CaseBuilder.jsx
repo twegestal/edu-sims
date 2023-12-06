@@ -21,13 +21,6 @@ export default function CaseBuilder() {
   const { user } = useAuth();
   const { createCase } = useCreateCase();
 
-  /* const [caseObject, setCaseObject] = useState({
-    name: 'default name',
-    steps: [],
-    medical_field_id: 'default medical field',
-    creator_user_id: user.id,
-  }); */
-
   useEffect(() => {
     const fetchModuleTypes = async () => {
       await getModuleTypes();
@@ -38,10 +31,6 @@ export default function CaseBuilder() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('modules: ', modules);
-  }, [modules]);
-
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -51,10 +40,6 @@ export default function CaseBuilder() {
 
     if (source.droppableId === destination.droppableId && source.droppableId === 'sandbox') {
       moduleHandlers.reorder({ from: source.index, to: destination.index });
-      setCaseObject({
-        ...caseObject,
-        steps: modules,
-      });
     } else if (source.droppableId === 'availableModules' && destination.droppableId === 'sandbox') {
       const moduleToAdd = moduleTypes[source.index];
       const uniqueId = `${moduleToAdd.id}-${Date.now()}`;
@@ -103,12 +88,11 @@ export default function CaseBuilder() {
       name: caseName,
       steps: modules,
       medical_field_id: medicalFieldId,
-      creator_user_id: user.id
-    }
+      creator_user_id: user.id,
+    };
 
-    console.log('caseObject: ', caseObject);
     createCase(caseObject);
-  }
+  };
 
   return (
     <>
@@ -190,7 +174,7 @@ export default function CaseBuilder() {
             </Flex>
           </DragDropContext>
 
-          <CaseDetails onSave={saveCase}/>
+          <CaseDetails onSave={saveCase} />
         </HStack>
       )}
       {activeModule && (

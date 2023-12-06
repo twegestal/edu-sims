@@ -63,7 +63,7 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-  
+
   for (let i = 0; i < stepData.step_specific_values.length; i++) {
     const stepSpecificValue = await object.step_specific_values.create(
       {

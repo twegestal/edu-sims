@@ -1,6 +1,4 @@
-import {
-  Box,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import Register from './register.jsx';
 import PerformCase from './perform_case.jsx';
 import Home from './home.jsx';
@@ -28,7 +26,7 @@ export default function App() {
 
   return (
     <>
-      <Box id='container' bg="brand.bg">
+      <Box id='container' bg='brand.bg'>
         {showAlert && <AlertBanner />}
         {!isPerformCaseRoute && <NavBar />}
         {user ? (
@@ -38,11 +36,10 @@ export default function App() {
               <Route path='/case'>
                 <Route path=':caseid/:attemptid/:reload' element={<PerformCase />} />
               </Route>
-              <Route path='/createCase' element={<CreateCase />}></Route>
               <Route path='/manageCases' element={<ManageCases />}></Route>
               <Route path='/showStatistics' element={<ShowStatistics />} />
               <Route path='/manageUsers' element={<ManageUsers />}></Route>
-              <Route path='caseBuilder' element={<CaseBuilder />} />
+              <Route path='/caseBuilder' element={<CaseBuilder />} />
               <Route path='/profilePage' element={<ProfilePage />}></Route>
             </Routes>
           </>

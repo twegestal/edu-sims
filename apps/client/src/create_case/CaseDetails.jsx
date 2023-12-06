@@ -78,7 +78,9 @@ export default function CaseDetails({ onSave }) {
         <Select placeholder='Välj ett område' onChange={(e) => setMedicalFieldId(e.target.value)}>
           {medicalFields &&
             medicalFields.map((medicalField) => (
-              <option key={medicalField.id} value={medicalField.id}>{medicalField.name}</option>
+              <option key={medicalField.id} value={medicalField.id}>
+                {medicalField.name}
+              </option>
             ))}
         </Select>
       </FormControl>

@@ -67,7 +67,7 @@ export default function Diagnosis(props) {
     if (choosenDiagnosId == diagnosisStep.diagnosis_id) {
       setFeedbackToDisplay(diagnosisStep.feedback_correct);
       props.setCorrectDiagnosis(true);
-      props.setWasCorrect(true)
+      props.setWasCorrect(true);
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_correct))
     }
 
@@ -75,7 +75,7 @@ export default function Diagnosis(props) {
       setFeedbackToDisplay(diagnosisStep.feedback_incorrect);
       props.setFaultsCounter(props.faultsCounter + 1);
       props.setCorrectDiagnosis(false);
-      props.setWasCorrect(false)
+      props.setWasCorrect(false);
       //props.setFeedback(props.feedback.concat("Diagnossteg: " + diagnosisStep.feedback_incorrect))
     }
 
@@ -102,14 +102,14 @@ export default function Diagnosis(props) {
             {diagnosisStep.prompt}
           </Card>
           {props.displayFeedback ? (
-              <>
-                <Feedback
+            <>
+              <Feedback
                 onToggle={onToggle}
                 wasCorrect={props.wasCorrect}
                 isOpen={isOpen}
                 feedbackToDisplay={feedbackToDisplay}
-                />
-              </>
+              />
+            </>
           ) : (
             <Card>
               <Input

@@ -24,7 +24,7 @@ export const getCaseRoutes = () => {
       await insertSteps(caseObject.steps, medicalCase.id, transaction);
 
       await transaction.commit();
-      res.status(201).json('case created');
+      res.status(201).json('Case created');
     } catch (error) {
       console.error('transaction did not work', error);
       await transaction.rollback();
