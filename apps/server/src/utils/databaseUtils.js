@@ -2,7 +2,7 @@ import * as object from '../models/object_index.js';
 
 export const insertSteps = async (steps, caseId, transaction) => {
   for (let i = 0; i < steps.length; i++) {
-    const stepData = steps[i];
+    const stepData = steps[i].stepData;
     const moduleTypeIdentifier = stepData.module_type_identifier;
 
     switch (moduleTypeIdentifier) {
@@ -63,7 +63,7 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
     },
     { transaction: transaction },
   );
-
+  
   for (let i = 0; i < stepData.step_specific_values.length; i++) {
     const stepSpecificValue = await object.step_specific_values.create(
       {

@@ -6,7 +6,7 @@ import { insertSteps } from '../utils/databaseUtils.js';
 export const getCaseRoutes = () => {
   const router = Router();
 
-  router.post('/createCase', async (req, res, next) => {
+  router.post('/createCase', async (req, res, _next) => {
     const caseObject = req.body;
 
     const transaction = await getTransaction();

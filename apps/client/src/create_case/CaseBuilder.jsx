@@ -1,4 +1,4 @@
-import { Box, VStack, Flex } from '@chakra-ui/react';
+import { Box, VStack, Flex, HStack } from '@chakra-ui/react';
 import ModuleCard from './ModuleCard';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import CreateCaseModal from './CreateCaseModal.jsx';
 import Confirm from '../components/Confirm.jsx';
+import CaseDetails from './CaseDetails.jsx';
 
 export default function CaseBuilder() {
   const [modules, moduleHandlers] = useListState([]);
@@ -18,13 +19,14 @@ export default function CaseBuilder() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
+  const { createCase } = useCreateCase();
 
-  const [caseObject, setCaseObject] = useState({
+  /* const [caseObject, setCaseObject] = useState({
     name: 'default name',
     steps: [],
     medical_field_id: 'default medical field',
     creator_user_id: user.id,
-  });
+  }); */
 
   useEffect(() => {
     const fetchModuleTypes = async () => {
@@ -35,6 +37,10 @@ export default function CaseBuilder() {
       fetchModuleTypes();
     }
   }, []);
+
+  useEffect(() => {
+    console.log('modules: ', modules);
+  }, [modules]);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -92,84 +98,100 @@ export default function CaseBuilder() {
     setIsConfirmOpen(false);
   };
 
+  const saveCase = (caseName, medicalFieldId) => {
+    const caseObject = {
+      name: caseName,
+      steps: modules,
+      medical_field_id: medicalFieldId,
+      creator_user_id: user.id
+    }
+
+    console.log('caseObject: ', caseObject);
+    createCase(caseObject);
+  }
+
   return (
     <>
       {!moduleTypes ? (
         <LoadingSkeleton />
       ) : (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Flex h='100vh' w='70vw'>
-            <Droppable droppableId='availableModules'>
-              {(provided) => (
-                <VStack
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  w='50%'
-                  bg='gray.100'
-                  p={4}
-                  boxShadow='md'
-                  spacing={4}
-                  align='stretch'
-                  overflowY='auto'
-                  borderRadius={4}
-                  marginRight={'1%'}
-                >
-                  {moduleTypes.map((module, index) => (
-                    <Draggable key={module.id} draggableId={module.id} index={index}>
-                      {(provided) => (
-                        <Box
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ModuleCard heading={module.name} />
-                        </Box>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </VStack>
-              )}
-            </Droppable>
+        <HStack spacing={4}>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Flex h='100vh' w='70vw'>
+              <Droppable droppableId='availableModules'>
+                {(provided) => (
+                  <VStack
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    w='50%'
+                    bg='gray.100'
+                    p={4}
+                    boxShadow='md'
+                    spacing={4}
+                    align='stretch'
+                    overflowY='auto'
+                    borderRadius={4}
+                    marginRight={'1%'}
+                  >
+                    {moduleTypes.map((module, index) => (
+                      <Draggable key={module.id} draggableId={module.id} index={index}>
+                        {(provided) => (
+                          <Box
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <ModuleCard heading={module.name} />
+                          </Box>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </VStack>
+                )}
+              </Droppable>
 
-            <Droppable droppableId='sandbox'>
-              {(provided) => (
-                <VStack
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  w='50%'
-                  flex='1'
-                  bg='gray.100'
-                  p={4}
-                  spacing={4}
-                  align='stretch'
-                  overflowY='auto'
-                  borderRadius={4}
-                  marginLeft={'1%'}
-                >
-                  {modules.map((module, index) => (
-                    <Draggable key={module.uniqueId} draggableId={module.uniqueId} index={index}>
-                      {(provided) => (
-                        <Box
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ModuleCard
-                            heading={module.name}
-                            handleAccept={() => handleOpenModal(module)}
-                            handleDelete={() => handleOpenConfirm(module.uniqueId)}
-                          />
-                        </Box>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </VStack>
-              )}
-            </Droppable>
-          </Flex>
-        </DragDropContext>
+              <Droppable droppableId='sandbox'>
+                {(provided) => (
+                  <VStack
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    w='50%'
+                    flex='1'
+                    bg='gray.100'
+                    p={4}
+                    spacing={4}
+                    align='stretch'
+                    overflowY='auto'
+                    borderRadius={4}
+                    marginLeft={'1%'}
+                  >
+                    {modules.map((module, index) => (
+                      <Draggable key={module.uniqueId} draggableId={module.uniqueId} index={index}>
+                        {(provided) => (
+                          <Box
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <ModuleCard
+                              heading={module.name}
+                              handleAccept={() => handleOpenModal(module)}
+                              handleDelete={() => handleOpenConfirm(module.uniqueId)}
+                            />
+                          </Box>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </VStack>
+                )}
+              </Droppable>
+            </Flex>
+          </DragDropContext>
+
+          <CaseDetails onSave={saveCase}/>
+        </HStack>
       )}
       {activeModule && (
         <CreateCaseModal
