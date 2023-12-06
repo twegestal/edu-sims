@@ -30,6 +30,9 @@ export default function CaseBuilder() {
       fetchModuleTypes();
     }
   }, []);
+  useEffect(() => {
+    console.log(modules);
+  }, [modules]);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
