@@ -76,12 +76,12 @@ export const authRouter = () => {
       return res.status(400).json('Missing refreshToken');
     }
 
-    const userId = await validateRefreshToken(refreshToken, res);
-    if (userId === null) {
-      return res.status(401).json('Invalid refresh token');
-    }
-
     try {
+      const userId = await validateRefreshToken(refreshToken);
+      if (userId === null) {
+        return res.status(401).json('Invalid refresh token');
+      }
+
       const user = await object.end_user.findOne({
         where: {
           id: userId,
@@ -99,7 +99,11 @@ export const authRouter = () => {
         isAdmin: user.is_admin,
       });
     } catch (error) {
-      res.status(500).json('Internal Server Error');
+      if (error.message === 'Invalid refresh token') {
+        res.status(401).json('Token expired');
+      } else {
+        res.status(500).json('Internal Server Error');
+      }
     }
   });
 

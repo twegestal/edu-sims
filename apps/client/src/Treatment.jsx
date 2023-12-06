@@ -162,12 +162,12 @@ export default function Treatment(props) {
     if (ok) {
       setFeedbackText(treatmentStep.feedback_correct);
       setFeedbackWindow();
-      props.setWasCorrect(true)
+      props.setWasCorrect(true);
     } else {
       setFeedbackText(treatmentStep.feedback_incorrect);
       setFeedbackWindow();
       props.setFaultsCounter(props.faultsCounter + 1);
-      props.setWasCorrect(false)
+      props.setWasCorrect(false);
     }
 
     props.setDisplayFeedback(true);
@@ -238,10 +238,10 @@ export default function Treatment(props) {
         {props.displayFeedback ? (
           <>
             <Feedback
-            onToggle={onToggle}
-            wasCorrect={props.wasCorrect}
-            isOpen={isOpen}
-            feedbackToDisplay={feedbackText}
+              onToggle={onToggle}
+              wasCorrect={props.wasCorrect}
+              isOpen={isOpen}
+              feedbackToDisplay={feedbackText}
             />
           </>
         ) : (

@@ -1,6 +1,4 @@
-import {
-  Box,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import Register from './register.jsx';
 import PerformCase from './perform_case.jsx';
 import Home from './home.jsx';
@@ -28,7 +26,7 @@ export default function App() {
 
   return (
     <>
-      <Box id='container' bg="brand.bg">
+      <Box id='container' bg='brand.bg'>
         {showAlert && <AlertBanner />}
         {!isPerformCaseRoute && <NavBar />}
         {user ? (

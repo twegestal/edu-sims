@@ -70,7 +70,7 @@ export default function PerformCase() {
   const [caseIsFinished, setCaseIsFinished] = useState(false);
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
-  const [wasCorrect, setWasCorrect] = useState(false)
+  const [wasCorrect, setWasCorrect] = useState(false);
 
   const { caseById, getCaseById, updateAttempt } = useCases();
 
