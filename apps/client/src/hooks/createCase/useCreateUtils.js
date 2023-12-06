@@ -20,15 +20,9 @@ export const useCreateCaseUtils = () => {
 
       const treatmentSubtypes = await getTreatmentSubtypes(treatmentTypes[i].id);
 
-      //let treatmentSubtypeArray = [];
       let subtypeObject = {};
       for (let j = 0; j < treatmentSubtypes.length; j++) {
-        /* let newEntry = {
-          id: treatmentSubtypes[j].id,
-          name: treatmentSubtypes[j].name,
-        }; */
         subtypeObject[treatmentSubtypes[j].id] = treatmentSubtypes[j].name;
-        //treatmentSubtypeArray.push(newEntry);
 
         const treatments = await getTreatmentList(treatmentSubtypes[j].id);
         let treatmentsArray = [];
