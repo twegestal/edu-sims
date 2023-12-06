@@ -99,6 +99,7 @@ export const authRouter = () => {
         isAdmin: user.is_admin,
       });
     } catch (error) {
+      //TODO Change this to better error handling with custom error class or something
       if (error.message === 'Invalid refresh token') {
         res.status(401).json('Token expired');
       } else {

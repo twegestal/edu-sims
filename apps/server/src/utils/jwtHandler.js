@@ -37,6 +37,7 @@ const authWithRefreshToken = async (req, res, next) => {
     }
   } catch (error) {
     console.error('Error authorizing with refresh token', error);
+    res.status(401).json('Invalid token');
   }
 };
 
