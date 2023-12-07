@@ -51,6 +51,9 @@ export default function NavDrawer(props) {
                   <Link to='/manageCases'>
                     <DrawerBtn onClick={props.onClose} text='Hantera fall' />
                   </Link>
+                  <Link to='/manageLists'>
+                    <DrawerBtn onClick={props.onClose} text='Hantera listor' />
+                  </Link>
                 </>
               )}
             </Flex>

@@ -16,6 +16,7 @@ import AlertBanner from './alertBanner.jsx';
 import NavBar from './components/NavBar.jsx';
 import { useAlert } from './hooks/useAlert.jsx';
 import CaseBuilder from './create_case/CaseBuilder.jsx';
+import ManageLists from './adminPage/ManageLists.jsx';
 
 export default function App() {
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export default function App() {
               <Route path='/manageUsers' element={<ManageUsers />}></Route>
               <Route path='/caseBuilder' element={<CaseBuilder />} />
               <Route path='/profilePage' element={<ProfilePage />}></Route>
+              <Route path='/manageLists' element={<ManageLists />} />
             </Routes>
           </>
         ) : (
