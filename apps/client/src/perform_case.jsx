@@ -35,6 +35,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
+import './performCaseComponents/PerformCase.css'
 
 export default function PerformCase() {
   let params = useParams();
@@ -279,8 +280,8 @@ export default function PerformCase() {
 
   return (
     <>
-      <nav>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
+      <nav id='caseNav'>
+        <Box display='flex' alignItems='center' justifyContent='space-between' bg="brand.bg" padding={'7px'}>
           <div className='Notes'>
             <IconButton
               onClick={onNotesOpen}
@@ -424,8 +425,7 @@ export default function PerformCase() {
           </div>
         </Box>
       </nav>
-      <div>{loading ? <p></p> : <p>{caseById[0].medical_case.name}</p>}</div>
-      <VStack alignItems='stretch'>
+      <VStack alignItems='stretch' marginTop={'60px'}>
         {currentStep.module_type_identifier === 0 && (
           <div>
             <Introduction
