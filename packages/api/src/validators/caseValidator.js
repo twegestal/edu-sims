@@ -7,7 +7,7 @@ const caseInProgressSchema = z.object({
 });
 
 const caseToPublishSchema = caseInProgressSchema.extend({
-  steps: z.array().nonempty({message: 'Fallet måste innehålla steg'}),
+  steps: z.array(z.object({})).nonempty({ message: 'Fallet måste innehålla steg' }),
   medical_field_id: z.string().uuid(),
 });
 
@@ -60,7 +60,7 @@ const introductionSchema = z.object({
 });
 
 const examinationSchema = baseModuleSchema.extend({
-  examination_to_display: z.record(z.string().uuid(), z.array()),
+  examination_to_display: z.record(z.string().uuid(), z.array(z.string().uuid())),
   step_specific_values: z
     .array(
       z.object({
@@ -79,7 +79,7 @@ const examinationSchema = baseModuleSchema.extend({
 });
 
 const diagnosisSchema = baseModuleSchema.extend({
-  diagnosis_id: z.string({ message: 'Rätt diagnos måste vara vald' }).uuid(),
+  diagnosis_id: z.string().uuid({ message: 'Rätt diagnos måste vara vald' }),
 });
 
 const treatmentSchema = baseModuleSchema.extend({
@@ -87,11 +87,11 @@ const treatmentSchema = baseModuleSchema.extend({
     .array(
       z.object({
         treatment_id: z.string().uuid(),
-        //value: z.string ska vi inte zod:a value kanske?
+        //value: z.string TODO: ska vi inte zod:a value kanske eller kan den sättas till optional?
       }),
     )
     .nonempty({ message: 'Korrekta behandlingar är inte ifyllda' }),
-  treatments_to_display: z.record(z.string().uuid(), z.array()),
+  treatments_to_display: z.record(z.string().uuid(), z.array(z.string().uuid())),
 });
 
 const summarySchema = z.object({
@@ -100,95 +100,102 @@ const summarySchema = z.object({
     .refine((val) => !val.includes('Fyll i övrig information om sjukdomen till studenten'), {
       message: 'Övrig information om sjukdomen är inte ifyllt',
     }),
+  //TODO: fixa nedanstående så den regex:ar efter en faktisk länk:
   additional_links: z
     .string()
     .refine((val) => !val.includes('Fyll i länkar till övrig information om sjukdomen'), {
       message: 'Övriga länkar om sjukdomen är inte ifyllda',
     }),
-    process: z.string().min(1, 'Processen får inte vara mindre än ett tecken').refine((val) => !val.includes('Hur hade den korrekta processen sett ut om en läkare tagit sig an fallet?'),
-        {message: 'Korrekt procedur är inte ifylld'}),
+  process: z
+    .string()
+    .min(1, 'Processen får inte vara mindre än ett tecken')
+    .refine(
+      (val) =>
+        !val.includes('Hur hade den korrekta processen sett ut om en läkare tagit sig an fallet?'),
+      { message: 'Korrekt procedur är inte ifylld' },
+    ),
 });
 
-const validateCaseInProgress = (data) => {
-    try {
-        caseInProgressSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateCaseInProgress = (data) => {
+  try {
+    caseInProgressSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
 
-const validateCaseToPublish = (data) => {
-    try {
-        caseToPublishSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateCaseToPublish = (data) => {
+  try {
+    caseToPublishSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
 
-const validateIntroductionModule = (data) => {
-    try {
-        introductionSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateIntroductionModule = (data) => {
+  try {
+    introductionSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
 
-const validateExaminationModule = (data) => {
-    try {
-        examinationSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
-}
-
-const validateDiagnosisModule = (data) => {
-    try {
-        diagnosisSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateExaminationModule = (data) => {
+  try {
+    examinationSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
 
-const validateTreatmentModule = (data) => {
-    try {
-        treatmentSchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateDiagnosisModule = (data) => {
+  try {
+    diagnosisSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
 
-const validateSummaryModule = (data) => {
-    try {
-        summarySchema.parse(data);
-        return {
-            success: true,
-            errors: null,
-        };
-    } catch (error) {
-        return handleZodErrors(error);
-    }
+export const validateTreatmentModule = (data) => {
+  try {
+    treatmentSchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
+};
+
+export const validateSummaryModule = (data) => {
+  try {
+    summarySchema.parse(data);
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (error) {
+    return handleZodErrors(error);
+  }
 };
