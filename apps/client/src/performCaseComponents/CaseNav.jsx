@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link, } from 'react-router-dom';
 import {
   IconButton,
@@ -12,6 +12,7 @@ import {
   ModalCloseButton,
   Button,
   Flex,
+  Text,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -24,12 +25,35 @@ import './PerformCase.css'
 
 export default function CaseNav(props) {
 
-  const editorRef = useRef(null);
+    const editorRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+    window.addEventListener("scroll", listenToScroll);
+    return () =>
+        window.removeEventListener("scroll", listenToScroll);
+    }, [])
+
+    const listenToScroll = () => {
+    let heightToHideFrom = 10;
+    const winScroll = document.body.scrollTop ||
+        document.documentElement.scrollTop;
+
+    if (winScroll > heightToHideFrom) {
+        isVisible &&      // to limit setting state only the first time
+        setIsVisible(false);
+    } else {
+        setIsVisible(true);
+    }
+    };
 
     return (
         <nav id='caseNav'>
             <Box display='flex' alignItems='center' justifyContent='space-between' bg="brand.bg" padding={'7px'}>
                 <div className='Notes'>
+                    {isVisible && (
+                        <Text fontSize={'xs'}>Anteckningar</Text>
+                    )}
                     <IconButton
                     onClick={props.onNotesOpen}
                     variant='caseNav'
@@ -67,6 +91,9 @@ export default function CaseNav(props) {
                     </Modal>
                 </div>
                 <div className='Desc'>
+                    {isVisible && (
+                        <Text fontSize={'xs'}>Fallbeskrivning</Text>
+                    )}
                     <IconButton
                     onClick={props.onDescOpen}
                     variant='caseNav'
@@ -91,6 +118,9 @@ export default function CaseNav(props) {
                     </Modal>
                 </div>
                 <div className='Feedback'>
+                    {isVisible && (
+                        <Text fontSize={'xs'}>Feedback</Text>
+                    )}
                     <IconButton
                     onClick={props.onFeedbackOpen}
                     variant='caseNav'
@@ -119,6 +149,9 @@ export default function CaseNav(props) {
                     </Modal>
                 </div>
                 <div className='TreatmentResults'>
+                    {isVisible && (
+                       <Text fontSize={'xs'}>Labbresultat</Text>
+                    )}
                     <IconButton
                     onClick={props.onTreatmentResultsOpen}
                     variant='caseNav'
@@ -143,6 +176,9 @@ export default function CaseNav(props) {
                     </Modal>
                 </div>
                 <div className='Home'>
+                    {isVisible && (
+                        <Text fontSize={'xs'}>Hem</Text>
+                    )}
                     <IconButton
                     onClick={props.onHomeOpen}
                     variant='caseNav'
