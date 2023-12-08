@@ -248,7 +248,13 @@ export default function ManageDiagnosis() {
               </Box>
             ))}
         </Box>
-        <Box gridColumn={'span 1'} position={'sticky'} top={'0'} height={'fit-content'}>
+        <Box
+          gridColumn={'span 1'}
+          position={'sticky'}
+          top={'0'}
+          height={'fit-content'}
+          width={'fit-content'}
+        >
           <ManageMedicalFields onAdd={handleAddMedicalField} />
         </Box>
       </Grid>

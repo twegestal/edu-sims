@@ -10,7 +10,9 @@ export const useTreatment = () => {
 
   const [treatmentStep, setTreatmentStep] = useState({});
   const [treatmentTypes, setTreatmentTypes] = useState([]);
+  const [treatmentSubtypes, setTreatmentSubtypes] = useState();
   const [treatmentSpecificValues, setTreatmentSpecificValues] = useState([]);
+  const [treatmentList, setTreatmentList] = useState();
 
   const getTreatmentStep = async (id) => {
     try {
@@ -45,10 +47,22 @@ export const useTreatment = () => {
     }
   };
 
+  const getTreatmentSubTypes = async () => {
+    try {
+      const response = await getTreatmentSubtypesApi();
+      if (response.status === 200) {
+        setTreatmentSubtypes(response.data);
+      }
+    } catch (error) {
+      console.error('error fetching treatment subtypes ', error);
+    }
+  }
+
   const getTreatmentList = async (id) => {
     try {
       const response = await getTreatmentListApi({ headers: { id: id } });
       if ((response.status = 200)) {
+        setTreatmentList(response.data);
         return response.data;
       }
     } catch (error) {
@@ -57,12 +71,15 @@ export const useTreatment = () => {
   };
 
   return {
-    getTreatmentStep,
     treatmentStep,
-    getTreatmentSpecificValues,
+    getTreatmentStep,
     treatmentSpecificValues,
-    getTreatmentTypes,
+    getTreatmentSpecificValues,
     treatmentTypes,
+    getTreatmentTypes,
+    treatmentList,
     getTreatmentList,
+    treatmentSubtypes,
+    getTreatmentSubTypes,
   };
 };

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
-import { ForeignKeyConstraintError } from 'sequelize';
+import { ForeignKeyConstraintError, where } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -245,20 +245,6 @@ export const getCaseRoutes = () => {
       
     }
   });
-
-  //Hämta specifict Treatment step
-  router.get('/getTreatmentStep', async (req, res, next) => {
-    if (req.header('id') == '') {
-      res.status(404).json('not found');
-    } else {
-      const result = await object.treatment.findOne({
-        where: {
-          id: req.header('id'),
-        },
-      });
-      res.status(200).json(result);
-    }
-  });
   //Hämta specifict Summary step
   router.get('/getSummaryStep', async (req, res, next) => {
     if (req.header('id') == '') {
@@ -365,46 +351,68 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
-  router.get('/getTreatmentSubtypes', async (req, res, next) => {
-    if (req.header('id') == '') {
-      res.status(404).json('NOT FOUND');
-    } else {
-      const result = await object.treatment_subtype.findAll({
-        where: {
-          treatment_type_id: req.header('id'),
-        },
-      });
-      res.status(200).json(result);
+  router.get('/getTreatmentSubtypes', async (req, res, _next) => {
+    try {
+        const id = req.header('id');
+        const whereClause = id ? { where: { treatment_subtype_id: id }} : {};
+        const response = await object.treatment_subtype.findAll(whereClause);
+
+        if (response.length > 0) {
+            return res.status(200).send(response);
+        } else {
+            return res.status(404).json('No resources found');
+        }
+    } catch (error) {
+        console.error('error fetching treatment types ', error);
+        return res.status(500).json('Something went wrong');
     }
-  });
-  router.get('/getTreatmentList', async (req, res, next) => {
-    if (req.header('treatment_subtype_id')) {
-      const response = await object.treatment_list.findAll({
-        where: {
-          treatment_subtype_id: req.header('treatment_subtype_id'),
-        },
-      });
-      res.status(200).json(response);
-    } else if (req.header('id') == '') {
-      const Value = await object.treatment_list.findAll({});
-      res.status(200).json(Value);
-    } else {
-      const Value = await object.treatment_list.findAll({
-        where: {
-          treatment_type_id: req.header('id'),
-        },
-      });
-      res.status(200).json(Value);
+});
+
+router.get('/getTreatmentList', async (req, res, _next) => {
+  try {
+  let whereClause = {};
+  const treatmentSubtypeId = req.header('treatment_subtype_id');
+  const treatmentTypeId = req.header('id');
+  
+  if (treatmentSubtypeId) {
+    whereClause = { where: { treatment_subtype_id: treatmentSubtypeId }};
+  } else if (treatmentTypeId) {
+    whereClause = { where: { treatment_type_id: treatmentTypeId }};
+  }
+  
+      const treatments = await object.treatment_list.findAll(whereClause);
+      res.status(200).json(treatments);
+  } catch (error) {
+      console.error('Error fetching treatment list: ', error);
+      res.status(500).json('Something went wrong');
+  }
+});
+
+
+  router.get('/getTreatmentSpecificValues', async (req, res, next) => {
+    try {
+      const id = req.header('id');
+      let whereClause = id ? { where: { treatment_step_id: id }} : {};
+
+      const result = await object.step_specific_treatment.findAll(whereClause);
+      if (result.length > 0) {
+        res.status(200).send(result);
+      } else {
+        res.status(404).json('Resource not found');
+      }
+    } catch (error) {
+      console.error('error fetching treatment specific values', error);
     }
   });
 
-  router.get('/getTreatmentSpecificValues', async (req, res, next) => {
+  //Hämta specifict Treatment step
+  router.get('/getTreatmentStep', async (req, res, next) => {
     if (req.header('id') == '') {
-      res.status(404).json('Not Found');
+      res.status(404).json('not found');
     } else {
-      const result = await object.step_specific_treatment.findAll({
+      const result = await object.treatment.findOne({
         where: {
-          treatment_step_id: req.header('id'),
+          id: req.header('id'),
         },
       });
       res.status(200).json(result);
@@ -498,26 +506,3 @@ export const getCaseRoutes = () => {
 
   return router;
 };
-
-/*
-        Hämta specific case
-        const result = await medical_case.findOne({
-            where: {
-            id: req.query.id
-            }
-        });
-        */
-//detta är bara en reminder på hur det funkar
-/*const plan = await examination.findOne({
-           where:{
-               id: test[3].step_id
-            }
-        })
-        res.status(201).json(plan.examination_to_display)
-        
-        const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        */
