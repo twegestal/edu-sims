@@ -56,7 +56,7 @@ export const useTreatment = () => {
     } catch (error) {
       console.error('error fetching treatment subtypes ', error);
     }
-  }
+  };
 
   const getTreatmentList = async (id) => {
     try {

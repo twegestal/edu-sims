@@ -29,7 +29,7 @@ const authWithRefreshToken = async (req, res, next) => {
 
   try {
     const userId = await validateRefreshToken(refreshToken);
-  
+
     if (userId) {
       const token = createToken(userId);
       res.setHeader('X-New-Token', token);

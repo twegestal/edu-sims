@@ -52,7 +52,7 @@ export const caseApi = (apiClient) => ({
     const response = await apiClient.patch(`${prefix}diagnosis`, body);
     return packageResponse(response);
   },
-  
+
   deleteDiagnosis: async (body) => {
     const response = await apiClient.delete(`${prefix}diagnosis`, body);
     return packageResponse(response);
