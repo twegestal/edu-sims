@@ -187,7 +187,6 @@ export const getCaseRoutes = () => {
 
     try {
       const resourceExists = await object.diagnosis_list.findOne({ where: { name: name } });
-      console.log(resourceExists);
       if (resourceExists) {
         return res.status(400).json(`${name} is already a resource`);
       }
