@@ -96,8 +96,6 @@ export default function Diagnosis(props) {
         <LoadingSkeleton />
       ) : (
         <VStack alignItems='stretch'>
-          <h2>Diagnos</h2>
-
           <Card variant='filled' padding='5'>
             {diagnosisStep.prompt}
           </Card>

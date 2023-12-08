@@ -284,7 +284,7 @@ export default function PerformCase() {
       isHomeOpen={isHomeOpen}
       onHomeClose={onHomeClose}
       ></CaseNav>
-      <VStack alignItems='stretch' marginTop={'60px'}>
+      <VStack alignItems='stretch' marginTop={'80px'}>
         {currentStep.module_type_identifier === 0 && (
           <div>
             <Introduction
