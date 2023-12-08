@@ -54,9 +54,10 @@ export const useDiagnosis = () => {
   const deleteDiagnosis = async (id) => {
     try {
       const response = await deleteDiagnosisApi({ body: { id: id }});
-      return response.status === 200;
+      return response.status;
     } catch (error) {
-      console.error('error deleting diagnosis ', error);
+      console.log('error deleting diagnosis', error)
+      return error.response.status;
     }
   }
   return { diagnosisStep, getDiagnosisStep, diagnosisList, getDiagnosisList, addNewDiagnosis, updateDiagnosis, deleteDiagnosis };

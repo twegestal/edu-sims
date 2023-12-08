@@ -101,9 +101,16 @@ export default function ManageDiagnosis() {
 
   const handleDeleteDiagnosis = async () => {
     const response = await deleteDiagnosis(diagnosisToDelete.id);
-    if (response) {
+    console.log(response);
+    if (response === 200) {
       showToast('Diagnos borttagen', `${diagnosisToDelete.name} har tagits bort`, 'success');
       await getDiagnosisList();
+    } else if (response === 400) {
+      showToast(
+        'Diagnos kan inte tas bort',
+        `${diagnosisToDelete.name} kan inte tas bort, eftersom den är del av ett fall`,
+        'warning',
+      );
     } else {
       showToast('Någonting gick fel', `${diagnosisToDelete.name} kunde inte tas bort`, 'warning');
     }

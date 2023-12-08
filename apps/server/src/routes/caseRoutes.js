@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
-import { where } from 'sequelize';
+import { ForeignKeyConstraintError } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -236,8 +236,13 @@ export const getCaseRoutes = () => {
         return res.status(400).json('Could not delete resouce');
       }
     } catch (error) {
-      console.error('error deleting diagnosis ', error);
-      res.status(500).json('Something went wrong');
+      if (error instanceof ForeignKeyConstraintError) {
+        res.status(400).json('Resource cannot be deleted');
+      } else {
+        console.error('error deleting diagnosis ', error);
+        res.status(500).json('Something went wrong');
+      }
+      
     }
   });
 
