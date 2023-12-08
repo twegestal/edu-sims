@@ -58,7 +58,6 @@ export default function PerformCase() {
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
   const [wasCorrect, setWasCorrect] = useState(false)
-
   const { caseById, getCaseById, updateAttempt } = useCases();
 
   useEffect(() => {
@@ -123,6 +122,20 @@ export default function PerformCase() {
       return navigate('/');
     }
   }, [caseIsFinished]);
+
+  useEffect(() => {
+    if (displayFeedback==true){
+      setTimeout(() => {
+        scrollToElement("feedback");
+      }, 100);
+    }
+  }, [displayFeedback]);
+
+  const scrollToElement = (element) => {
+    const elementToScrollTo = document.getElementById(element);
+    console.log(elementToScrollTo)
+    elementToScrollTo.scrollIntoView({ behavior: 'smooth', block: "center" });
+  };
 
   const attemptUpdateFunction = () => {
     //Variabels needed to update the attempt record

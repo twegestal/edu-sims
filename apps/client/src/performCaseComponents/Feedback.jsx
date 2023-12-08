@@ -14,7 +14,7 @@ import {
 
 export default function Feedback(props) {
     return (
-        <Accordion allowToggle defaultIndex={[0]}>
+        <Accordion allowToggle defaultIndex={[0]} id="feedback">
             <AccordionItem>
                 <AccordionButton>
                     <Box as='span' flex='1' textAlign='center'>
