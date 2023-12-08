@@ -133,7 +133,6 @@ export default function PerformCase() {
 
   const scrollToElement = (element) => {
     const elementToScrollTo = document.getElementById(element);
-    console.log(elementToScrollTo)
     elementToScrollTo.scrollIntoView({ behavior: 'smooth', block: "center" });
   };
 
@@ -326,6 +325,7 @@ export default function PerformCase() {
               setNbrTestPerformed={setNbrTestPerformed}
               setWasCorrect={setWasCorrect}
               wasCorrect={wasCorrect}
+              scrollToElement={scrollToElement}
             ></Examination>
           </div>
         )}

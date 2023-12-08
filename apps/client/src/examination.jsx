@@ -51,7 +51,12 @@ export default function Examination(props) {
   }, []);
 
   useEffect(() => {
-    setResultsReady(true);
+    if (Object.keys(results).length != 0){
+      setResultsReady(true);
+      setTimeout(() => {
+        props.scrollToElement("resultsAccordion");
+      }, 100);
+    }
   }, [results]);
 
   const runExams = () => {
@@ -174,13 +179,15 @@ export default function Examination(props) {
               </AccordionItem>
             </Accordion>
           </Card>
-
-          <Button onClick={runExams} colorScheme='teal'>
-            Kör utredningar
-          </Button>
-
+          { props.displayFeedback == false &&(
+            <Button onClick={runExams} colorScheme='teal'>
+              Kör utredningar
+            </Button>
+          )}
+          {resultsReady == true &&(
+          <>
           <Card variant='filled'>
-            <Accordion>
+            <Accordion allowToggle defaultIndex={[0]} id="resultsAccordion">
               <AccordionItem>
                 <AccordionButton>
                   <Box as='span' flex='1' textAlign='center'>
@@ -206,7 +213,8 @@ export default function Examination(props) {
               </AccordionItem>
             </Accordion>
           </Card>
-
+          </>
+          )}
           {props.displayFeedback ? (
               <>
                 <Feedback
