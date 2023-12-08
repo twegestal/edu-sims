@@ -9,6 +9,7 @@ import {
   Tbody,
   FormControl,
   Button,
+  Select,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useAuth } from '../hooks/useAuth';
@@ -20,20 +21,21 @@ import Confirm from '../components/Confirm';
 export default function UserTable() {
   const { user } = useAuth();
   const { setAlert } = useAlert();
-  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege } =
+  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege, userGroups, getUserGroups } =
     useUser();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
+  const [filteredUserGroups, setFilteredUsergroups] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       await getAllUsers(user.id);
+      await getUserGroups();
       setLoading(false);
     };
-
-    fetchUsers();
+    fetchData();
   }, []);
 
   const handleRemoveUser = async (userToRemove) => {
@@ -97,12 +99,43 @@ export default function UserTable() {
 
   const closeConfirm = () => {
     setIsConfirmOpen(false);
+
   };
+
+  const filterOnUserGroup = async (groupId) => {
+    console.log("hjar");
+    let searchResults = [];
+    if (searchString.length > 0) {
+      console.log("hjar1");
+      searchResults = userGroups.filter((obj) => {
+        return obj.name.toLowerCase().includes(searchString.toLowerCase());
+      });
+      console.log(searchResults);
+      setFilteredUsergroups(searchResults);
+    }
+  };
+
+  /*
+  
+  userGroups &&
+            (filteredUserGroups.lenght > 0 ? filteredUserGroups: userGroups).map(
+  */
 
   return (
     <>
       {!loading && (
         <TableContainer maxWidth='90%'>
+          {userGroups.map((group) => 
+            group.is_active !== false && (
+              <Select 
+              id='selectField'
+              placeholder='Välj användare för användargrupp.'
+              onClick={filterOnUserGroup(group.id)}>
+            <option key={group.id}>
+              {group.name}
+            </option>
+          </Select>
+          ))}
           <Table>
             <Thead>
               <Tr>
