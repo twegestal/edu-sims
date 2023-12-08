@@ -1,4 +1,7 @@
-import { Button } from '@chakra-ui/react';
+import { 
+  Button,
+  Progress
+} from '@chakra-ui/react';
 import { Link, useNavigate, redirect } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
@@ -36,9 +39,10 @@ return (
       <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='2%'>
         Starta fallet
       </Button>
-      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%'>
+      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='2%'>
         Fortsätt fallet
       </Button>
+      <Progress hasStripe value={80} marginBottom='5%'/>
     </>
   );
 }

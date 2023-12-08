@@ -88,27 +88,24 @@ export default function PerformCase() {
         const storedIndex = JSON.parse(localStorage.getItem(caseid.toString() + 'index'));
         const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
         if (storedFeedback !== null) {
-          for (let index = 0; index < 3; index++) {
-            console.log(index);
-            const listan = [];
-            for (let index = 0; index < storedFeedback.length; index++) {
-              listan[index] = (
-                <Card key={index} variant='filled'>
-                  <Accordion allowMultiple>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <Box as='span' flex='1' textAlign='center'>
-                          Feedback från steg # {index + 1}
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
-                    </AccordionItem>
-                  </Accordion>
-                </Card>
-              );
-            }
-            setFeedback([listan]);
+          const feedbackList = [];
+          for (let index = 0; index < storedFeedback.length; index++) {
+            feedbackList[index] = (
+              <Card key={index} variant='filled'>
+                <Accordion allowMultiple>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Box as='span' flex='1' textAlign='center'>
+                        Feedback från steg # {index + 1}
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              </Card>
+            );
+            setFeedback([feedbackList]);
             console.log(storedIndex);
             setCurrentStep(caseById[storedIndex]);
             setCurrentIndex(caseById[storedIndex].index);
@@ -179,6 +176,7 @@ export default function PerformCase() {
   };
   //FIXME: key is not unique
   const updateLabResultsList = (resultsObject) => {
+    addLabTestsToStorage(resultsObject);
     setTreatmentResults([
       ...treatmentResults,
       <Flex key={'1'} alignItems='center' flexDirection='column'>
@@ -202,6 +200,42 @@ export default function PerformCase() {
     ]);
     setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
   };
+
+  const addLabTestsToStorage = (runnedTestList) => {
+    let tests;
+    try {
+      tests = JSON.parse(localStorage.getItem(caseid.toString() + 'labTests'));
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (tests === null) {
+      tests = [];
+      let tempArray = [];
+      {
+        Object.keys(runnedTestList).map((index) =>
+          console.log(index),
+          tempArray[index] = 0
+        )
+      }
+
+    } else {
+      const tempArray = [];
+      {
+        Object.keys(runnedTestList).map((index) =>
+          tempArray[index] = runnedTestList[index].name, " : ", runnedTestList[index].value
+        )
+      }
+
+    }
+    console.log();
+    //...
+    const storedNames = JSON.parse(localStorage.getItem(caseid.toString() + 'labTests'));
+
+    //console.log("LABSTESTS: ", storedNames);
+    //localStorage.removeItem(caseid.toString());
+    //localStorage.removeItem("feedbackArray");
+  }
 
   const updateFeedback = (feedbackToDisplay) => {
     addFeedbackToStorage(feedbackToDisplay);

@@ -43,16 +43,9 @@ export const getCaseRoutes = () => {
     });
     res.status(200).send(cases);
   });
+  
   // Hämtar ett specifict case beroende på dess id
   router.get('/getCaseById', async (req, res, next) => {
-    /*
-        Hämta specific case
-        const result = await medical_case.findOne({
-            where: {
-            id: req.query.id
-            }
-        });
-        */
     const caseSteps = await object.step.findAll({
       where: {
         case_id: req.header('case_id'),
@@ -64,23 +57,9 @@ export const getCaseRoutes = () => {
         },
       ],
     });
-    //detta är bara en reminder på hur det funkar
-    /*const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        res.status(201).json(plan.examination_to_display)
-        
-        const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        */
-
     res.status(200).json(caseSteps);
   });
+
   //Hemta alla medical fields
   router.get('/getMedicalFields', async (req, res, next) => {
     const result = await object.medical_field.findAll({});
