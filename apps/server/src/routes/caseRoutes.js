@@ -186,13 +186,13 @@ export const getCaseRoutes = () => {
     const { name, medical_field_id } = req.body;
 
     try {
-      const resourceExists = await object.diagnosis_list.findOne({where: { name: name}});
+      const resourceExists = await object.diagnosis_list.findOne({ where: { name: name } });
       console.log(resourceExists);
       if (resourceExists) {
         return res.status(400).json(`${name} is already a resource`);
       }
 
-      const fieldExists = await object.medical_field.findOne({ where: { id: medical_field_id }});
+      const fieldExists = await object.medical_field.findOne({ where: { id: medical_field_id } });
       if (!fieldExists) {
         return res.status(400).json('Medical field does not exist');
       }
@@ -213,7 +213,7 @@ export const getCaseRoutes = () => {
     const { newName, id } = req.body;
 
     try {
-      const response = await object.diagnosis_list.update({ name: newName }, { where: { id: id }});
+      const response = await object.diagnosis_list.update({ name: newName }, { where: { id: id } });
       if (response > 0) {
         res.status(200).json('Resource updated');
       } else {
@@ -229,7 +229,7 @@ export const getCaseRoutes = () => {
     const { id } = req.body;
 
     try {
-      const result = await object.diagnosis_list.destroy({ where: { id: id }});
+      const result = await object.diagnosis_list.destroy({ where: { id: id } });
       if (result) {
         return res.status(200).json('Resource deleted');
       } else {
@@ -242,7 +242,6 @@ export const getCaseRoutes = () => {
         console.error('error deleting diagnosis ', error);
         res.status(500).json('Something went wrong');
       }
-      
     }
   });
 

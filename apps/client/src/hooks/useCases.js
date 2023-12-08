@@ -44,12 +44,12 @@ export const useCases = () => {
 
   const addMedicalField = async (name) => {
     try {
-      const response = await addMedicalFieldApi({ body: { name: name }});
+      const response = await addMedicalFieldApi({ body: { name: name } });
       return response.status === 201;
     } catch (error) {
       console.error('error adding new medical field ', error);
     }
-  }
+  };
 
   const getCaseById = async (id) => {
     try {

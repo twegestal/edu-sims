@@ -13,7 +13,7 @@ export default function ManageTreatment() {
     };
     fetchTreatments();
   }, []);
-  
+
   return (
     <TableContainer>
       <Table variant={'simple'}>
