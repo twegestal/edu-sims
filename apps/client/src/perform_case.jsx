@@ -17,7 +17,6 @@ import Introduction from './introduction.jsx';
 import Examination from './examination.jsx';
 import Summary from './summary.jsx';
 import Diagnosis from './diagnosis.jsx';
-import { Editor } from '@tinymce/tinymce-react';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
@@ -284,7 +283,7 @@ export default function PerformCase() {
       isHomeOpen={isHomeOpen}
       onHomeClose={onHomeClose}
       ></CaseNav>
-      <VStack alignItems='stretch' marginTop={'80px'}>
+      <VStack alignItems='stretch' marginTop={'80px'} minW='80vw' id='caseContainer'>
         {currentStep.module_type_identifier === 0 && (
           <div>
             <Introduction
