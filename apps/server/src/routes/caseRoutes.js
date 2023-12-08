@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
-import { ForeignKeyConstraintError, where } from 'sequelize';
+import { ForeignKeyConstraintError } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
