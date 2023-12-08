@@ -1,4 +1,5 @@
 import { packageResponse } from '../utils/apiUtils.js';
+import { api } from './index.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
@@ -22,6 +23,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  addMedicalField: async (body) => {
+    const response = await apiClient.post(`${prefix}medicalField`, body);
+    return packageResponse(response);
+  },
+
   getIntroductionStep: async (headers) => {
     const response = await apiClient.get(`${prefix}getIntroductionStep`, headers);
     return packageResponse(response);
@@ -34,6 +40,21 @@ export const caseApi = (apiClient) => ({
 
   getDiagnosisList: async (headers) => {
     const response = await apiClient.get(`${prefix}getDiagnosisList`, headers);
+    return packageResponse(response);
+  },
+
+  addNewDiagnosis: async (body) => {
+    const response = await apiClient.post(`${prefix}diagnosis`, body);
+    return packageResponse(response);
+  },
+
+  updateDiagnosis: async (body) => {
+    const response = await apiClient.patch(`${prefix}diagnosis`, body);
+    return packageResponse(response);
+  },
+  
+  deleteDiagnosis: async (body) => {
+    const response = await apiClient.delete(`${prefix}diagnosis`, body);
     return packageResponse(response);
   },
 

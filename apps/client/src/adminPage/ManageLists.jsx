@@ -1,5 +1,6 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import ManageDiagnosis from './ManageDiagnosis';
+import ManageTreatment from './ManageTreatment';
 
 export default function ManageLists() {
   return (
@@ -17,7 +18,7 @@ export default function ManageLists() {
           <ManageDiagnosis />
         </TabPanel>
         <TabPanel>
-          <p>Behandlingar</p>
+          <ManageTreatment />
         </TabPanel>
       </TabPanels>
     </Tabs>

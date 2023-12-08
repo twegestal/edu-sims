@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
+import { where } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -81,10 +82,31 @@ export const getCaseRoutes = () => {
 
     res.status(200).json(caseSteps);
   });
-  //Hemta alla medical fields
-  router.get('/getMedicalFields', async (req, res, next) => {
-    const result = await object.medical_field.findAll({});
-    res.status(200).json(result);
+
+  router.get('/getMedicalFields', async (_req, res, _next) => {
+    try {
+      const result = await object.medical_field.findAll({});
+      res.status(200).send(result);
+    } catch (error) {
+      console.log('error fetching medical fields', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.post('/medicalField', async (req, res, _next) => {
+    const { name } = req.body;
+
+    try {
+      const response = await object.medical_field.create({ name: name });
+      if (response) {
+        return res.status(201).send(response);
+      } else {
+        return res.status(400).json(`Could not create resource ${name}`);
+      }
+    } catch (error) {
+      console.error('error adding new medical field ', error);
+      res.status(500).json('Something went wrong');
+    }
   });
 
   //Hämta specifict Introduction step
@@ -157,6 +179,65 @@ export const getCaseRoutes = () => {
         console.error('Error getting diagnosis list from database', error);
         res.status(500).json('Internal server error');
       }
+    }
+  });
+
+  router.post('/diagnosis', async (req, res, _next) => {
+    const { name, medical_field_id } = req.body;
+
+    try {
+      const resourceExists = await object.diagnosis_list.findOne({where: { name: name}});
+      console.log(resourceExists);
+      if (resourceExists) {
+        return res.status(400).json(`${name} is already a resource`);
+      }
+
+      const fieldExists = await object.medical_field.findOne({ where: { id: medical_field_id }});
+      if (!fieldExists) {
+        return res.status(400).json('Medical field does not exist');
+      }
+
+      const result = await object.diagnosis_list.create({
+        name: name,
+        medical_field_id: medical_field_id,
+      });
+
+      res.status(201).send(result);
+    } catch (error) {
+      console.error('error adding new diagnosis ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.patch('/diagnosis', async (req, res, _next) => {
+    const { newName, id } = req.body;
+
+    try {
+      const response = await object.diagnosis_list.update({ name: newName }, { where: { id: id }});
+      if (response > 0) {
+        res.status(200).json('Resource updated');
+      } else {
+        res.status(400).json('Could not update resource');
+      }
+    } catch (error) {
+      console.error('error updating diagnosis ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.delete('/diagnosis', async (req, res, _next) => {
+    const { id } = req.body;
+
+    try {
+      const result = await object.diagnosis_list.destroy({ where: { id: id }});
+      if (result) {
+        return res.status(200).json('Resource deleted');
+      } else {
+        return res.status(400).json('Could not delete resouce');
+      }
+    } catch (error) {
+      console.error('error deleting diagnosis ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -270,9 +351,14 @@ export const getCaseRoutes = () => {
     }
   });
   // hämta treatments
-  router.get('/getTreatmentTypes', async (req, res, next) => {
-    const result = await object.treatment_type.findAll({ order: [['name', 'ASC']] });
-    res.status(200).json(result);
+  router.get('/getTreatmentTypes', async (_req, res, _next) => {
+    try {
+      const result = await object.treatment_type.findAll({ order: [['name', 'ASC']] });
+      res.status(200).send(result);
+    } catch (error) {
+      console.error('error fetching treatment types ', error);
+      res.status(500).json('Something went wrong');
+    }
   });
   router.get('/getTreatmentSubtypes', async (req, res, next) => {
     if (req.header('id') == '') {

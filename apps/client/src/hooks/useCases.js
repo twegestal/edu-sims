@@ -11,6 +11,7 @@ export const useCases = () => {
   const publishCaseApi = useApi('publishCase');
   const createAttemptApi = useApi('createAttempt');
   const updateAttemptApi = useApi('updateAttempt');
+  const addMedicalFieldApi = useApi('addMedicalField');
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
@@ -40,6 +41,15 @@ export const useCases = () => {
       console.error('error fetching medical fields: ', error);
     }
   };
+
+  const addMedicalField = async (name) => {
+    try {
+      const response = await addMedicalFieldApi({ body: { name: name }});
+      return response.status === 201;
+    } catch (error) {
+      console.error('error adding new medical field ', error);
+    }
+  }
 
   const getCaseById = async (id) => {
     try {
@@ -129,6 +139,7 @@ export const useCases = () => {
     getAllCases,
     medicalFields,
     getMedicalFields,
+    addMedicalField,
     caseById,
     getCaseById,
     introductionStep,
