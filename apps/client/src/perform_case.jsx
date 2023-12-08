@@ -1,15 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
-  IconButton,
   Box,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Button,
   Accordion,
@@ -20,13 +12,7 @@ import {
   VStack,
   Flex,
   Card,
-  list,
 } from '@chakra-ui/react';
-import { FaNotesMedical } from 'react-icons/fa';
-import { AiFillHome } from 'react-icons/ai';
-import { BsFileEarmarkPerson } from 'react-icons/bs';
-import { MdFeedback } from 'react-icons/md';
-import { BiTestTube } from 'react-icons/bi';
 import Introduction from './introduction.jsx';
 import Examination from './examination.jsx';
 import Summary from './summary.jsx';
@@ -36,6 +22,7 @@ import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
 import './performCaseComponents/PerformCase.css'
+import CaseNav from './performCaseComponents/CaseNav.jsx';
 
 export default function PerformCase() {
   let params = useParams();
@@ -280,151 +267,28 @@ export default function PerformCase() {
 
   return (
     <>
-      <nav id='caseNav'>
-        <Box display='flex' alignItems='center' justifyContent='space-between' bg="brand.bg" padding={'7px'}>
-          <div className='Notes'>
-            <IconButton
-              onClick={onNotesOpen}
-              variant='caseNav'
-              colorScheme='blue'
-              aria-label='Notes'
-              fontSize='20px'
-              icon={<FaNotesMedical />}
-            />
-            <Modal isOpen={isNotesOpen} onClose={onNotesClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Anteckningar</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Editor
-                    apiKey='f20f7hhnsnotsjt5l3nxit8s7mxfmgoncdx2smt22tl5k8es'
-                    onInit={(evt, editor) => (editorRef.current = editor)}
-                    init={{
-                      plugins:
-                        'autolink  emoticons image link lists table  wordcount  tableofcontents ',
-                      toolbar:
-                        'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-                    }}
-                    initialValue={notes}
-                  />
-                  <Button onClick={saveNotes}>Spara anteckningar</Button>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onNotesClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
-          <div className='Desc'>
-            <IconButton
-              onClick={onDescOpen}
-              variant='caseNav'
-              colorScheme='blue'
-              aria-label='Description'
-              fontSize='20px'
-              icon={<BsFileEarmarkPerson />}
-            />
-            <Modal isOpen={isDescOpen} onClose={onDescClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Beskrivning</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>{description}</ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onDescClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
-          <div className='Feedback'>
-            <IconButton
-              onClick={onFeedbackOpen}
-              variant='caseNav'
-              colorScheme='blue'
-              aria-label='Feedback'
-              fontSize='20px'
-              icon={<MdFeedback />}
-            />
-            <Modal isOpen={isFeedbackOpen} onClose={onFeedbackClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Feedback</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Flex direction='column' rowGap='2'>
-                    {feedback}
-                  </Flex>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onFeedbackClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
-          <div className='TreatmentResults'>
-            <IconButton
-              onClick={onTreatmentResultsOpen}
-              variant='caseNav'
-              colorScheme='blue'
-              aria-label='Results'
-              fontSize='20px'
-              icon={<BiTestTube />}
-            />
-            <Modal isOpen={isTreatmentResultsOpen} onClose={onTreatmentResultsClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Labbtester</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>{treatmentResults}</ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onTreatmentResultsClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
-          <div className='Home'>
-            <IconButton
-              onClick={onHomeOpen}
-              variant='caseNav'
-              colorScheme='blue'
-              aria-label='Home'
-              fontSize='20px'
-              icon={<AiFillHome />}
-            />
-            <Modal isOpen={isHomeOpen} onClose={onHomeClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Är du säker på att du vill avsluta</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Link to='/'>
-                    <Button>Avsluta</Button>
-                  </Link>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3} onClick={onHomeClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
-        </Box>
-      </nav>
+      <CaseNav
+      isNotesOpen={isNotesOpen}
+      onNotesOpen={onNotesOpen}
+      onNotesClose={onNotesClose}
+      saveNotes={saveNotes}
+      notes={notes}
+      onDescOpen={onDescOpen}
+      isDescOpen={isDescOpen}
+      onDescClose={onDescClose}
+      description={description}
+      onFeedbackOpen={onFeedbackOpen}
+      isFeedbackOpen={isFeedbackOpen}
+      onFeedbackClose={onFeedbackClose}
+      feedback={feedback}
+      onTreatmentResultsOpen={onTreatmentResultsOpen}
+      isTreatmentResultsOpen={isTreatmentResultsOpen}
+      onTreatmentResultsClose={onTreatmentResultsClose}
+      treatmentResults={treatmentResults}
+      onHomeOpen={onHomeOpen}
+      isHomeOpen={isHomeOpen}
+      onHomeClose={onHomeClose}
+      ></CaseNav>
       <VStack alignItems='stretch' marginTop={'60px'}>
         {currentStep.module_type_identifier === 0 && (
           <div>
