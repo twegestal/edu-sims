@@ -14,8 +14,9 @@ import {
 import { useState, useEffect } from 'react';
 import { useTreatment } from '../hooks/useTreatment';
 
-export default function ManageTreatmentTypes({ onAdd }) {
+export default function ManageTreatmentSubtypes({ onAdd, update }) {
   const [value, setValue] = useState('');
+  const [treatmentType, setTreatmentType] = useState();
   const { treatmentTypes, getTreatmentTypes } = useTreatment();
 
   const fetchTreatmentTypes = async () => {
@@ -23,12 +24,12 @@ export default function ManageTreatmentTypes({ onAdd }) {
   };
   useEffect(() => {
     fetchTreatmentTypes();
-  }, []);
+  }, [update]);
 
   const handleAddTreatmentSubtype = () => {
-    if (value) {
+    if (value && treatmentType) {
       setValue('');
-      onAdd(value);
+      onAdd(value, treatmentType);
     }
   };
   return (
@@ -53,9 +54,16 @@ export default function ManageTreatmentTypes({ onAdd }) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
-          <Select placeholder='Välj huvudkategori...'>
+          <Select
+            placeholder='Välj huvudkategori...'
+            onChange={(e) => setTreatmentType(e.target.value)}
+          >
             {treatmentTypes &&
-              treatmentTypes.map((type) => <option value={type.id}>{type.name}</option>)}
+              treatmentTypes.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
           </Select>
         </Stack>
       </CardBody>

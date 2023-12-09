@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
-import { ForeignKeyConstraintError } from 'sequelize';
+import { ForeignKeyConstraintError, where } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -44,16 +44,8 @@ export const getCaseRoutes = () => {
     });
     res.status(200).send(cases);
   });
-  // Hämtar ett specifict case beroende på dess id
-  router.get('/getCaseById', async (req, res, next) => {
-    /*
-        Hämta specific case
-        const result = await medical_case.findOne({
-            where: {
-            id: req.query.id
-            }
-        });
-        */
+
+  router.get('/getCaseById', async (req, res, _next) => {
     const caseSteps = await object.step.findAll({
       where: {
         case_id: req.header('case_id'),
@@ -65,21 +57,6 @@ export const getCaseRoutes = () => {
         },
       ],
     });
-    //detta är bara en reminder på hur det funkar
-    /*const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        res.status(201).json(plan.examination_to_display)
-        
-        const plan = await examination.findOne({
-            where:{
-                id: test[3].step_id
-            }
-        })
-        */
-
     res.status(200).json(caseSteps);
   });
 
@@ -315,7 +292,7 @@ export const getCaseRoutes = () => {
     }
   });
   // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
-  router.get('/getExaminationList', async (req, res, next) => {
+  router.get('/getExaminationList', async (req, res, _next) => {
     if (req.header('examination_subtype_id')) {
       const response = await object.examination_list.findAll({
         where: {
@@ -386,7 +363,7 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.get('/getTreatmentSpecificValues', async (req, res, next) => {
+  router.get('/getTreatmentSpecificValues', async (req, res, _next) => {
     try {
       const id = req.header('id');
       let whereClause = id ? { where: { treatment_step_id: id } } : {};
@@ -399,6 +376,7 @@ export const getCaseRoutes = () => {
       }
     } catch (error) {
       console.error('error fetching treatment specific values', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -413,6 +391,112 @@ export const getCaseRoutes = () => {
         },
       });
       res.status(200).json(result);
+    }
+  });
+
+  router.post('/treatment', async (req, res, _next) => {
+    const { name, subtypeId, treatmentId } = req.body;
+
+    try {
+      if (subtypeId && treatmentId && name) {
+        const response = await object.treatment_list.create({
+          name: name,
+          treatment_type_id: treatmentId,
+          treatment_subtype_id: subtypeId,
+        });
+
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new treatment type ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.patch('/treatment', async (req, res, _next) => {
+    const { id, newName } = req.body;
+
+    try {
+      if (id && newName) {
+        const result = await object.treatment_list.update({ name: newName }, { where: { id: id } });
+        if (result > 0) {
+          return res.status(200).json('Resource updated');
+        }
+        return res.status(400).json('Could not update resource');
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error updating treatment list ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.delete('/treatment', async (req, res, _next) => {
+    const { id } = req.body;
+
+    try {
+      const result = await object.treatment_list.destroy({ where: { id: id } });
+      if (result) {
+        return res.status(200).json('Resource deleted');
+      } else {
+        return res.status(400).json('Could not delete resouce');
+      }
+    } catch (error) {
+      if (error instanceof ForeignKeyConstraintError) {
+        res.status(400).json('Resource cannot be deleted');
+      } else {
+        console.error('error deleting diagnosis ', error);
+        res.status(500).json('Something went wrong');
+      }
+    }
+  });
+
+  router.post('/treatmentSubtype', async (req, res, _next) => {
+    const { name, treatmentId } = req.body;
+
+    try {
+      if (name && treatmentId) {
+        const response = await object.treatment_subtype.create({
+          name: name,
+          treatment_type_id: treatmentId,
+        });
+
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new treatment subtype ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.post('/treatmentTypes', async (req, res, _next) => {
+    const { name } = req.body;
+
+    try {
+      if (name) {
+        const response = object.treatment_type.create({ name: name });
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new treatment type ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -439,7 +523,7 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.post('/createAttempt', async (req, res, next) => {
+  router.post('/createAttempt', async (req, res, _next) => {
     if (req.header('case_id') == '') {
       res.status(404).json('Not Found');
     } else {
@@ -491,7 +575,7 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.get('/getModuleTypes', async (req, res, _next) => {
+  router.get('/getModuleTypes', async (_req, res, _next) => {
     try {
       const response = await object.module_type.findAll();
 

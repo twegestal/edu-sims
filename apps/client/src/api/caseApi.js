@@ -1,5 +1,4 @@
 import { packageResponse } from '../utils/apiUtils.js';
-import { api } from './index.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
@@ -98,6 +97,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  addNewTreatmentType: async (body) => {
+    const response = await apiClient.post(`${prefix}treatmentTypes`, body);
+    return packageResponse(response);
+  },
+
   getTreatmentSubtypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getTreatmentSubtypes`, headers);
     return packageResponse(response);
@@ -110,6 +114,21 @@ export const caseApi = (apiClient) => ({
 
   getTreatmentSpecificValues: async (headers) => {
     const response = await apiClient.get(`${prefix}getTreatmentSpecificValues`, headers);
+    return packageResponse(response);
+  },
+
+  addNewTreatment: async (body) => {
+    const response = await apiClient.post(`${prefix}treatment`, body);
+    return packageResponse(response);
+  },
+
+  updateTreatment: async (body) => {
+    const response = await apiClient.patch(`${prefix}treatment`, body);
+    return packageResponse(response);
+  },
+
+  deleteTreatment: async (body) => {
+    const response = await apiClient.delete(`${prefix}treatment`, body);
     return packageResponse(response);
   },
 

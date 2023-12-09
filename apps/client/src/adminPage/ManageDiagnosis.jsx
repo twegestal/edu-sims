@@ -101,7 +101,6 @@ export default function ManageDiagnosis() {
 
   const handleDeleteDiagnosis = async () => {
     const response = await deleteDiagnosis(diagnosisToDelete.id);
-    console.log(response);
     if (response === 200) {
       showToast('Diagnos borttagen', `${diagnosisToDelete.name} har tagits bort`, 'success');
       await getDiagnosisList();
@@ -272,7 +271,7 @@ export default function ManageDiagnosis() {
           isOpen={isConfirmDeleteOpen}
           onClose={handleCloseConfirmDelete}
           header={'Ta bort diagnos'}
-          body={`Är du säker på att du vill ta bort ${diagnosisToDelete.name}? Det kan betyda att alla fall kopplade till diagnosen inte går att fullfölja`}
+          body={`Är du säker på att du vill ta bort ${diagnosisToDelete.name}?`}
           handleConfirm={handleDeleteDiagnosis}
         />
       )}

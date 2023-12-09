@@ -13,15 +13,24 @@ import {
   Heading,
   IconButton,
   Input,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import { useTreatment } from '../hooks/useTreatment';
 import ManageTreatmentTypes from './ManageTreatmentTypes';
 import ManageTreatmentSubtypes from './ManageTreatmentSubtypes';
+import ConfirmInput from '../components/ConfirmInput';
+import Confirm from '../components/Confirm';
 
-export default function ManageTreatment({}) {
+export default function ManageTreatment() {
   const [newTreatment, setNewTreatment] = useState({});
+  const [treatmentToEdit, setTreatmentToEdit] = useState();
+  const [treatmentToDelete, setTreatmentToDelete] = useState();
+  const [isConfirmInputOpen, setIsConfirmInputOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const toast = useToast();
   const {
     treatmentTypes,
     getTreatmentTypes,
@@ -29,6 +38,10 @@ export default function ManageTreatment({}) {
     getTreatmentSubTypes,
     treatmentList,
     getTreatmentList,
+    addTreatment,
+    updateTreatment,
+    deleteTreatment,
+    addNewTreatmentType,
   } = useTreatment();
 
   const fetchTreatments = async () => {
@@ -45,9 +58,131 @@ export default function ManageTreatment({}) {
     setNewTreatment({ ...newTreatment, [subtypeId]: value });
   };
 
-  const handleAddTreatment = (subtypeId) => {};
+  const handleAddTreatment = async (subtypeId, treatmentId) => {
+    const newValue = newTreatment[subtypeId]?.trim();
+    if (!newValue) {
+      showToast('Information saknas', 'Inget värde angavs', 'warning');
+      return;
+    }
 
-  const handleAddTreatmentType = (treatmentType) => {};
+    const newTreatmentName = newValue.toLowerCase();
+    const treatmentSubtype = treatmentExists(newTreatmentName);
+
+    if (treatmentSubtype) {
+      showToast(
+        'Behandlingen finns redan',
+        `${newValue} är redan tillagd under ${treatmentSubtype}`,
+        'warning',
+      );
+    } else {
+      const result = await addTreatment(newValue, subtypeId, treatmentId);
+      if (result) {
+        await fetchTreatments();
+        showToast('Behandling tillagd', `${newValue} har lagts till`, 'success');
+        setNewDiagnosis({ ...newTreatment, [subtypeId]: '' });
+      } else {
+        showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
+      }
+    }
+  };
+
+  const treatmentExists = (value) => {
+    const existingTreatment = treatmentList.find(
+      (treatment) => treatment.name.toLowerCase() === value,
+    );
+
+    if (existingTreatment) {
+      const subtype = treatmentSubtypes.find(
+        (type) => type.id === existingTreatment.treatment_subtype_id,
+      );
+      return subtype ? subtype.name : false;
+    }
+    return false;
+  };
+
+  const handleAddTreatmentType = async (newValue) => {
+    const treatmentType = newValue.toLowerCase().trim();
+    const exists = treatmentTypes.some((type) => type.name.toLowerCase().trim() === treatmentType);
+    if (exists) {
+      showToast(
+        'Kategori finns redan',
+        `Kategorin ${newValue} finns redan och kan därför inte läggas till`,
+        'warning',
+      );
+    } else {
+      const response = await addNewTreatmentType(newValue);
+      if (response) {
+        showToast('Kategori tillagd', `Kategorin ${newValue} har lagts till`, 'success');
+        await fetchTreatments();
+        setUpdate((prev) => !prev);
+      } else {
+        showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
+      }
+    }
+  };
+
+  const handleAddTreatmentSubtype = (name, treatmentType) => {};
+
+  const handleCloseConfirmInput = () => {
+    setTreatmentToEdit(null);
+    setIsConfirmInputOpen(false);
+  };
+
+  const handleCloseConfirmDelete = () => {
+    setTreatmentToDelete(null);
+    setIsConfirmDeleteOpen(false);
+  };
+
+  const handleValueToEdit = async (newValue) => {
+    const treatment = newValue.trim().toLowerCase();
+    const treatmentSubtype = treatmentExists(treatment);
+
+    if (treatmentSubtype) {
+      showToast(
+        'Behandlingen finns redan',
+        `${newValue} är redan tillagd under ${treatmentSubtype}`,
+        'warning',
+      );
+    } else {
+      const response = await updateTreatment(newValue, treatmentToEdit.id);
+      if (response) {
+        showToast('Behandling ändrad', `${newValue} har lagts till`, 'success');
+        await fetchTreatments();
+      } else {
+        showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
+      }
+    }
+    setTreatmentToEdit(null);
+  };
+
+  const handleDeleteTreatment = async () => {
+    const response = await deleteTreatment(treatmentToDelete.id);
+    if (response === 200) {
+      showToast('Behandling borttagen', `${treatmentToDelete.name} har tagits bort`, 'success');
+      await fetchTreatments();
+    } else if (response === 400) {
+      showToast(
+        'Behandling kan inte tas bort',
+        `${treatmentToDelete.name} kan inte tas bort, eftersom den är del av ett fall`,
+        'warning',
+      );
+    } else {
+      showToast('Någonting gick fel', `${treatmentToDelete.name} kunde inte tas bort`, 'warning');
+    }
+    setTreatmentToDelete(null);
+    setIsConfirmDeleteOpen(false);
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
+  };
 
   return (
     <>
@@ -86,7 +221,7 @@ export default function ManageTreatment({}) {
                             <IconButton
                               icon={<AddIcon />}
                               colorScheme='green'
-                              onClick={() => handleAddTreatment(field.id)}
+                              onClick={() => handleAddTreatment(subtype.id, treatment.id)}
                             />
                           </HStack>
                           <TableContainer>
@@ -102,14 +237,26 @@ export default function ManageTreatment({}) {
                                 {treatmentList &&
                                   treatmentList
                                     .filter((item) => item.treatment_subtype_id === subtype.id)
-                                    .map((subtype) => (
-                                      <Tr key={subtype.id}>
-                                        <Td>{subtype.name}</Td>
+                                    .map((treatment) => (
+                                      <Tr key={treatment.id}>
+                                        <Td>{treatment.name}</Td>
                                         <Td>
-                                          <IconButton icon={<EditIcon />} />
+                                          <IconButton
+                                            onClick={() => {
+                                              setTreatmentToEdit(treatment);
+                                              setIsConfirmInputOpen(true);
+                                            }}
+                                            icon={<EditIcon />}
+                                          />
                                         </Td>
                                         <Td>
-                                          <IconButton icon={<DeleteIcon />} />
+                                          <IconButton
+                                            onClick={() => {
+                                              setTreatmentToDelete(treatment);
+                                              setIsConfirmDeleteOpen(true);
+                                            }}
+                                            icon={<DeleteIcon />}
+                                          />
                                         </Td>
                                       </Tr>
                                     ))}
@@ -130,12 +277,26 @@ export default function ManageTreatment({}) {
           width={'fit-content'}
         >
           <ManageTreatmentTypes onAdd={handleAddTreatmentType} />
-          <ManageTreatmentSubtypes />
+          <ManageTreatmentSubtypes onAdd={handleAddTreatmentSubtype} update={update} />
         </VStack>
-        {/* <Box gridColumn={'span 1'} position={'sticky'} top={'0'} height={'fit-content'}>
-          <ManageTreatmentTypes onAdd={handleAddTreatmentType} />
-        </Box> */}
       </Grid>
+      {treatmentToEdit && (
+        <ConfirmInput
+          isOpen={isConfirmInputOpen}
+          onClose={handleCloseConfirmInput}
+          onConfirm={handleValueToEdit}
+          valueToConfirm={treatmentToEdit.name}
+        />
+      )}
+      {treatmentToDelete && (
+        <Confirm
+          isOpen={isConfirmDeleteOpen}
+          onClose={handleCloseConfirmDelete}
+          header={'Ta bort behandling'}
+          body={`Är du säker på att du vill ta bort ${treatmentToDelete.name}?`}
+          handleConfirm={handleDeleteTreatment}
+        />
+      )}
     </>
   );
 }
