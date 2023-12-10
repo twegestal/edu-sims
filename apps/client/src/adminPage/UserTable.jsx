@@ -105,10 +105,10 @@ export default function UserTable() {
   const filterOnUserGroup = async (groupId) => {
     console.log("hjar");
     let searchResults = [];
-    if (searchString.length > 0) {
+    if (groupId.length > 0) {
       console.log("hjar1");
       searchResults = userGroups.filter((obj) => {
-        return obj.name.toLowerCase().includes(searchString.toLowerCase());
+        return obj.name.toLowerCase().includes(groupId.toLowerCase());
       });
       console.log(searchResults);
       setFilteredUsergroups(searchResults);
@@ -125,17 +125,17 @@ export default function UserTable() {
     <>
       {!loading && (
         <TableContainer maxWidth='90%'>
-          {userGroups.map((group) => 
-            group.is_active !== false && (
-              <Select 
-              id='selectField'
-              placeholder='Välj användare för användargrupp.'
-              onClick={filterOnUserGroup(group.id)}>
-            <option key={group.id}>
-              {group.name}
-            </option>
+          <Select
+            id='selectField'
+            placeholder='Välj användare för användargrupp.'
+            onChange={(e) => filterOnUserGroup(e.target.value)}>
+            {userGroups.map((group) =>
+              group.is_active !== false && (
+                <option key={group.id} value={group.name}>
+                  {group.name}
+                </option>
+              ))}
           </Select>
-          ))}
           <Table>
             <Thead>
               <Tr>
