@@ -42,6 +42,7 @@ export default function ManageTreatment() {
     updateTreatment,
     deleteTreatment,
     addNewTreatmentType,
+    addNewTreatmentSubtype,
   } = useTreatment();
 
   const fetchTreatments = async () => {
@@ -121,7 +122,22 @@ export default function ManageTreatment() {
     }
   };
 
-  const handleAddTreatmentSubtype = (name, treatmentType) => {};
+  const handleAddTreatmentSubtype = async (name, treatmentType) => {
+    const subtype = name.toLowerCase().trim();
+    const exists = treatmentSubtypes.some((sub) => sub.name === subtype);
+
+    if (exists) {
+      showToast('Underkategori finns redan', `Underkategorin ${name} är redan tillagd`, 'warning');
+    } else {
+      const response = await addNewTreatmentSubtype(name, treatmentType);
+      if (response) {
+        showToast('Underkategori tillagd', `Underkategorin ${name} har blivit tillagd`, 'success');
+        await fetchTreatments();
+      } else {
+        showToast('Någonting gick fel', `Underkategorin ${name} kunde inte läggas till`, 'warning');
+      }
+    }
+  };
 
   const handleCloseConfirmInput = () => {
     setTreatmentToEdit(null);

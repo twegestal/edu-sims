@@ -9,16 +9,27 @@ import {
   Button,
   Box,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function ManageTreatmentTypes({ onAdd }) {
   const [value, setValue] = useState('');
+  const toast = useToast();
 
   const handleAddTreatmentType = () => {
     if (value) {
       setValue('');
       onAdd(value);
+    } else {
+      toast({
+        title: 'Värde saknas',
+        description: 'Fyll i namn för ny kategori',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
   return (

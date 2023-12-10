@@ -5,6 +5,7 @@ export const useTreatment = () => {
   const getTreatmentStepApi = useApi('getTreatmentStep');
   const getTreatmentTypesApi = useApi('getTreatmentTypes');
   const getTreatmentSubtypesApi = useApi('getTreatmentSubtypes');
+  const addNewTreatmentSubtypeApi = useApi('addNewTreatmentSubtype');
   const getTreatmentListApi = useApi('getTreatmentList');
   const getTreatmentSpecificValuesApi = useApi('getTreatmentSpecificValues');
   const addNewTreatmentApi = useApi('addNewTreatment');
@@ -61,6 +62,15 @@ export const useTreatment = () => {
       console.error('error fetching treatment subtypes ', error);
     }
   };
+
+  const addNewTreatmentSubtype = async (name, id) => {
+    try {
+      const response = await addNewTreatmentSubtypeApi({ body: { name: name, id: id }});
+      return response.status === 201;
+    } catch (error) {
+      console.error('error adding new treatment subtype ', error);
+    }
+  }
 
   const addNewTreatmentType = async (name) => {
     try {
@@ -128,5 +138,6 @@ export const useTreatment = () => {
     updateTreatment,
     deleteTreatment,
     addNewTreatmentType,
+    addNewTreatmentSubtype
   };
 };

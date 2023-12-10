@@ -457,14 +457,14 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.post('/treatmentSubtype', async (req, res, _next) => {
-    const { name, treatmentId } = req.body;
+  router.post('/treatmentSubtypes', async (req, res, _next) => {
+    const { name, id } = req.body;
 
     try {
-      if (name && treatmentId) {
+      if (name && id) {
         const response = await object.treatment_subtype.create({
           name: name,
-          treatment_type_id: treatmentId,
+          treatment_type_id: id,
         });
 
         if (!response) {

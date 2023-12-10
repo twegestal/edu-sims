@@ -107,6 +107,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  addNewTreatmentSubtype: async (body) => {
+    const response = await apiClient.post(`${prefix}treatmentSubtypes`, body);
+    return packageResponse(response);
+  },
+
   getTreatmentList: async (headers) => {
     const response = await apiClient.get(`${prefix}getTreatmentList`, headers);
     return packageResponse(response);

@@ -10,6 +10,7 @@ import {
   Box,
   Text,
   Select,
+  useToast,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useTreatment } from '../hooks/useTreatment';
@@ -18,6 +19,7 @@ export default function ManageTreatmentSubtypes({ onAdd, update }) {
   const [value, setValue] = useState('');
   const [treatmentType, setTreatmentType] = useState();
   const { treatmentTypes, getTreatmentTypes } = useTreatment();
+  const toast = useToast();
 
   const fetchTreatmentTypes = async () => {
     await getTreatmentTypes();
@@ -29,7 +31,17 @@ export default function ManageTreatmentSubtypes({ onAdd, update }) {
   const handleAddTreatmentSubtype = () => {
     if (value && treatmentType) {
       setValue('');
+      setTreatmentType('');
       onAdd(value, treatmentType);
+    } else {
+      toast({
+        title: 'Värde saknas',
+        description: 'Fyll i namn och kategori',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
   return (
