@@ -14,6 +14,7 @@ import {
 import LoadingSkeleton from './loadingSkeleton.jsx';
 import { useDiagnosis } from './hooks/useDiagnosis.js';
 import Feedback from './performCaseComponents/Feedback.jsx';
+import { AddIcon } from '@chakra-ui/icons';
 
 export default function Diagnosis(props) {
   const [diagnosisListHtml, setDiagnosisListHtml] = useState('');
@@ -48,15 +49,19 @@ export default function Diagnosis(props) {
 
     setDiagnosisListHtml(
       filterdList.map((caseItem) => (
-        <Box key={caseItem.id} borderWidth='2px'>
-          <p key={'p_' + caseItem.id}>{caseItem.name}</p>
+        <Box key={caseItem.id} padding={'10px'}>
           <Button
-            colorScheme='teal'
             className='diagnosis_button'
             key={'set_diagnosis_' + caseItem.id}
             onClick={(e) => handleFeedback(caseItem.id)}
+            size={"md"} 
+            minW={'90%'}
+            colorScheme='blue'
+            variant={'outline'}
+            boxShadow='lg'
+            leftIcon={<AddIcon />}
           >
-            Ställ diagnos
+            {caseItem.name}
           </Button>
         </Box>
       )),
