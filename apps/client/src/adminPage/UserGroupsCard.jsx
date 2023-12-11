@@ -39,18 +39,6 @@ export default function UserGroupsCard() {
     console.log(userGroups);
     navigator.clipboard.writeText(link);
   };
-  const findActiveUsers = async (searchString) => {
-    console.log("hjar");
-    let searchResults = [];
-    if (searchString.length > 0) {
-      console.log("hjar1");
-      searchResults = userGroups.filter((obj) => {
-        return obj.name.toLowerCase().includes(searchString.toLowerCase());
-      });
-      console.log(searchResults);
-      setFilteredUsergroups(searchResults);
-    }
-  };
 
   return (
     <TableContainer maxWidth='90%'>

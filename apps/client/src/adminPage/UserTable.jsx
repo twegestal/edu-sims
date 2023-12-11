@@ -27,7 +27,7 @@ export default function UserTable() {
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
-  const [filteredUserGroups, setFilteredUsergroups] = useState([]);
+  const [groupToRender, setGroupToRender] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +37,8 @@ export default function UserTable() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => { console.log(allUsers) }, [allUsers])
 
   const handleRemoveUser = async (userToRemove) => {
     setIsConfirmOpen(false);
@@ -102,25 +104,6 @@ export default function UserTable() {
 
   };
 
-  const filterOnUserGroup = async (groupId) => {
-    console.log("hjar");
-    let searchResults = [];
-    if (groupId.length > 0) {
-      console.log("hjar1");
-      searchResults = userGroups.filter((obj) => {
-        return obj.name.toLowerCase().includes(groupId.toLowerCase());
-      });
-      console.log(searchResults);
-      setFilteredUsergroups(searchResults);
-    }
-  };
-
-  /*
-  
-  userGroups &&
-            (filteredUserGroups.lenght > 0 ? filteredUserGroups: userGroups).map(
-  */
-
   return (
     <>
       {!loading && (
@@ -128,10 +111,13 @@ export default function UserTable() {
           <Select
             id='selectField'
             placeholder='Välj användare för användargrupp.'
-            onChange={(e) => filterOnUserGroup(e.target.value)}>
+            onChange={(e) => {
+              console.log(e.target.value)
+              setGroupToRender(e.target.value)
+            }}>
             {userGroups.map((group) =>
               group.is_active !== false && (
-                <option key={group.id} value={group.name}>
+                <option key={group.id} value={group.id}>
                   {group.name}
                 </option>
               ))}
@@ -146,7 +132,7 @@ export default function UserTable() {
               </Tr>
             </Thead>
             <Tbody>
-              {allUsers.map(
+              {groupToRender ? (allUsers.filter((user) => user.group_id === groupToRender).map(
                 (aUser, index) =>
                   aUser.email !== 'DeletedUser' &&
                   aUser.id !== user.id && (
@@ -182,7 +168,43 @@ export default function UserTable() {
                       </Td>
                     </Tr>
                   ),
-              )}
+              )) : (allUsers.map(
+                (aUser, index) =>
+                  aUser.email !== 'DeletedUser' &&
+                  aUser.id !== user.id && (
+                    <Tr key={index}>
+                      <Td>{aUser.email}</Td>
+                      <Td>
+                        <FormControl display={'flex'} flexDirection={'column'}>
+                          <Button
+                            onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
+                          >
+                            {' '}
+                            Sätt nytt lösenord{' '}
+                          </Button>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
+                          <DeleteIcon />
+                        </Button>
+                      </Td>
+                      <Td>
+                        {aUser.is_admin ? (
+                          <Button onClick={() => revokeAdminRights(aUser)}>
+                            {' '}
+                            Ta bort adminrättigheter{' '}
+                          </Button>
+                        ) : (
+                          <Button onClick={() => assignAdminRights(aUser)}>
+                            {' '}
+                            Tilldela adminrättigheter{' '}
+                          </Button>
+                        )}
+                      </Td>
+                    </Tr>
+                  ),
+              ))}
             </Tbody>
           </Table>
         </TableContainer>
