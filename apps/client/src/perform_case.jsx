@@ -89,7 +89,6 @@ export default function PerformCase() {
         const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
         if (storedFeedback !== null) {
           for (let index = 0; index < 3; index++) {
-            console.log(index);
             const listan = [];
             for (let index = 0; index < storedFeedback.length; index++) {
               listan[index] = (
@@ -109,7 +108,6 @@ export default function PerformCase() {
               );
             }
             setFeedback([listan]);
-            console.log(storedIndex);
             setCurrentStep(caseById[storedIndex]);
             setCurrentIndex(caseById[storedIndex].index);
           }

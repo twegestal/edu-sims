@@ -55,7 +55,6 @@ export const useExamination = () => {
   const getExaminationSubtypes = async (id) => {
     try {
       const response = await getExaminationSubtypesApi({ headers: { id: id } });
-      //console.log('subbies: ', response.data);
       if (response.status === 200) {
         setExaminationSubtypes(response.data);
         return response.data.name;

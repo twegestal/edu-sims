@@ -58,7 +58,7 @@ export const useDiagnosis = () => {
       const response = await deleteDiagnosisApi({ body: { id: id } });
       return response.status;
     } catch (error) {
-      console.log('error deleting diagnosis', error);
+      console.error('error deleting diagnosis', error);
       return error.response.status;
     }
   };

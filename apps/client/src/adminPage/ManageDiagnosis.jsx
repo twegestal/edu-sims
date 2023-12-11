@@ -145,7 +145,6 @@ export default function ManageDiagnosis() {
         showToast('Medicinskt område tillagt', `${value} har lagts till`, 'success');
         fetchData();
       }
-      console.log('cool');
     } else {
       showToast('Medicinskt fält finns redan', `${value} är redan tillagt`, 'warning');
     }

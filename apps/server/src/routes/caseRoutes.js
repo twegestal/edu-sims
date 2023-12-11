@@ -65,7 +65,7 @@ export const getCaseRoutes = () => {
       const result = await object.medical_field.findAll({});
       res.status(200).send(result);
     } catch (error) {
-      console.log('error fetching medical fields', error);
+      console.error('error fetching medical fields', error);
       res.status(500).json('Something went wrong');
     }
   });
