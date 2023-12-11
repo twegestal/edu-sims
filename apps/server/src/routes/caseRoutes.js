@@ -278,19 +278,19 @@ export const getCaseRoutes = () => {
   router.get('/getExaminationSubtypes', async (req, res, _next) => {
     try {
       const examinationTypeId = req.header('examination_type_id');
+      const id = req.header('id');
       let whereClause = {};
 
       if (examinationTypeId) {
-        whereClause = { where: { examination_type_id: examinationTypeId }};
-      }
-
-      const response = await object.examination_subtype.findAll(whereClause);
-
-      if (response.length > 0) {
+        const response = await object.examination_subtype.findAll({ where: { examination_type_id: examinationTypeId }});
+        return res.status(200).send(response);
+      } else if (id) {
+        const response = await object.examination_subtype.findOne({ where: { id: id }});
+        res.status(200).send(response);
+      } else {
+        const response = await object.examination_subtype.findAll();
         return res.status(200).send(response);
       }
-      
-      res.status(400).json('Could not find examination subtype resource');
     } catch (error) {
       console.error('Error fetching examination subtypes: ', error);
       res.status(500).json('Internal Server Error');
