@@ -109,16 +109,6 @@ export default function Treatment(props) {
 
   useEffect(() => {}, [checkedTreatments]);
 
-  const checkForId = (id) => {
-    let ok = true;
-    for (let index = 0; index < checkedTreatments.length; index++) {
-      if (checkedTreatments[index].treatmentId == id) {
-        ok = true;
-      }
-    }
-    return ok;
-  };
-
   const findTreatment = (searchString, treatmentTypeId) => {
     let searchResults = []
     if (searchString.length > 0) {
@@ -127,33 +117,6 @@ export default function Treatment(props) {
       });
     }
     setFilteredList(searchResults)
-/*       filteredList.map((treatmentItem, index) => (
-        <ListItem key={treatmentItem.id}>
-          <HStack>
-            <IconButton
-              id={treatmentItem.id}
-              margin={0.5}
-              size='xs'
-              colorScheme='teal'
-              icon={<SmallAddIcon/>}
-              onClick={() => {checkTreatmentBox(treatmentItem.id, treatmentItem.name); findTreatment(searchString, treatmentTypeId)}} 
-            ></IconButton>
-            <Checkbox
-              isChecked={checkboxesChecked[treatmentItem.id]}
-              onChange={(e) => {
-              handleCheckboxChange(treatmentItem.id)
-              if(e.target.checked){
-                checkTreatmentBox(treatmentItem.id,  treatmentItem.name)
-              } else{
-                removeAddedTreatment(treatmentItem.id)
-              }
-              }}
-            ></Checkbox>
-            <Text>{treatmentItem.name}</Text>
-          </HStack>
-        </ListItem>
-      )), */
-    //);
   };
 
   const ValuateFeedback = () => {
@@ -238,33 +201,29 @@ export default function Treatment(props) {
                     id='inputField'
                     onChange={(e) => findTreatment(e.target.value, treatmentType.id)}
                     placeholder='Välj behandling genom att söka'
+                    marginBottom={'10px'}
                   />
                   <List id={treatmentType.id}>
                     {filteredList.map((treatmentItem, index) => (
-                      <ListItem key={treatmentItem.id}>
-                        <HStack>
-                          <IconButton
-                            id={treatmentItem.id}
-                            margin={0.5}
-                            size='xs'
-                            colorScheme='teal'
-                            icon={<SmallAddIcon/>}
-                            onClick={() => {checkTreatmentBox(treatmentItem.id, treatmentItem.name); findTreatment(searchString, treatmentTypeId)}} 
-                          ></IconButton>
-                          <Checkbox
-                            isChecked={checkboxesChecked[treatmentItem.id]}
-                            onChange={(e) => {
-                            handleCheckboxChange(treatmentItem.id)
-                            if(e.target.checked){
-                              checkTreatmentBox(treatmentItem.id,  treatmentItem.name)
-                            } else{
-                              removeAddedTreatment(treatmentItem.id)
-                            }
-                            }}
-                          ></Checkbox>
-                          <Text>{treatmentItem.name}</Text>
-                        </HStack>
-                      </ListItem>
+                      index < 10 && (
+                        <ListItem key={treatmentItem.id}>
+                          <HStack marginBottom={'5px'}>
+                            <Checkbox
+                              id={treatmentItem.id}
+                              isChecked={checkboxesChecked[treatmentItem.id]}
+                              onChange={(e) => {
+                              handleCheckboxChange(treatmentItem.id)
+                              if(e.target.checked){
+                                checkTreatmentBox(treatmentItem.id,  treatmentItem.name)
+                              } else{
+                                removeAddedTreatment(treatmentItem.id)
+                              }
+                              }}
+                            ></Checkbox>
+                              <label for={treatmentItem.id}><Text>{treatmentItem.name}</Text></label>
+                          </HStack>
+                        </ListItem>
+                      )
                       ))
                     }
                   </List>
