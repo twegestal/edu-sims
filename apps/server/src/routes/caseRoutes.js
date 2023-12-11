@@ -282,10 +282,12 @@ export const getCaseRoutes = () => {
       let whereClause = {};
 
       if (examinationTypeId) {
-        const response = await object.examination_subtype.findAll({ where: { examination_type_id: examinationTypeId }});
+        const response = await object.examination_subtype.findAll({
+          where: { examination_type_id: examinationTypeId },
+        });
         return res.status(200).send(response);
       } else if (id) {
-        const response = await object.examination_subtype.findOne({ where: { id: id }});
+        const response = await object.examination_subtype.findOne({ where: { id: id } });
         res.status(200).send(response);
       } else {
         const response = await object.examination_subtype.findAll();
@@ -304,9 +306,12 @@ export const getCaseRoutes = () => {
 
       if (examinationSubtypeId) {
         whereClause = { where: { examination_subtype_id: examinationSubtypeId } };
-      } 
+      }
 
-      const response = await object.examination_list.findAll({ whereClause, order : [['name', 'ASC']]});
+      const response = await object.examination_list.findAll({
+        whereClause,
+        order: [['name', 'ASC']],
+      });
 
       if (response) {
         return res.status(200).send(response);
