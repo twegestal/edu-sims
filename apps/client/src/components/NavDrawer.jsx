@@ -59,13 +59,13 @@ export default function NavDrawer(props) {
             </Flex>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button onClick={logout} w={'100%'}>
-              Logout
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+              <DrawerFooter>
+                <Button onClick={() => {{logout()}; {props.onClose()}}} w={'100%'}>
+                  Logout
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
     </>
   );
 }
