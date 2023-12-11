@@ -7,6 +7,7 @@ export const useExamination = () => {
   const getExaminationTypesApi = useApi('getExaminationTypes');
   const getExaminationSubtypesApi = useApi('getExaminationSubtypes');
   const getExaminationListApi = useApi('getExaminationList');
+  const addNewExaminationApi = useApi('addNewExamination');
 
   const [examinationStep, setExaminationStep] = useState([]);
   const [examinationTypes, setExaminationTypes] = useState();
@@ -72,6 +73,15 @@ export const useExamination = () => {
     }
   };
 
+  const addNewExamination = async (name, subtypeId, examinationTypeId) => {
+    console.log('Adding new examination values: ', name, subtypeId, examinationTypeId);
+    return true;
+  }
+
+  const updateExamination = async (newName, id) => {
+    console.log('updating ')
+  }
+
   return {
     examinationStep,
     getExaminationSpecificValues,
@@ -82,5 +92,6 @@ export const useExamination = () => {
     getExaminationSubtypes,
     examinationList,
     getExaminationList,
+    addNewExamination
   };
 };

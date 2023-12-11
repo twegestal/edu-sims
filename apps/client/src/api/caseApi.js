@@ -161,6 +161,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  addNewExamination: async (body) => {
+    const response = await apiClient.post(`${prefix}examination`, body);
+    return packageResponse(response);
+  },
+
   getAllExaminationSubtypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getExaminationSubtypes`, headers);
     return packageResponse(response);

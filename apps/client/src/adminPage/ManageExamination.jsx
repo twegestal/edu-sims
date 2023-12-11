@@ -25,6 +25,7 @@ export default function ManageExamination() {
   const [examinationToDelete, setExaminationToDelete] = useState();
   const [isConfirmInputOpen, setIsConfirmInputOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const toast = useToast();
 
   const {
     examinationTypes,
@@ -33,6 +34,7 @@ export default function ManageExamination() {
     getExaminationSubtypes,
     examinationList,
     getExaminationList,
+    addNewExamination,
   } = useExamination();
 
   const fetchExaminations = async () => {
@@ -53,7 +55,47 @@ export default function ManageExamination() {
     setNewExaminationToEdit({});
   };
 
-  const handleAddExamination = (subtypeId, examinationTypeId) => {};
+  const handleAddExamination = async (subtypeId, examinationTypeId) => {
+    const newValue = newExamination[subtypeId]?.trim();
+    if (!newValue) {
+      showToast('Information saknas', 'Inget värde angavs', 'warning');
+      return;
+    }
+
+    const newExaminationName = newValue.toLowerCase();
+    const examinationSubtype = examinationExists(newExaminationName);
+
+    if (examinationSubtype) {
+      showToast(
+        'Utredningen finns redan',
+        `${newValue} är redan tillagd under ${examinationSubtype}`,
+        'warning',
+      );
+    } else {
+      const result = await addNewExamination(newValue, subtypeId, examinationTypeId);
+      if (result) {
+        await fetchExaminations();
+        showToast('Utredning tillagd', `${newValue} har lagts till`, 'success');
+        setNewExamination({ ...newExamination, [subtypeId]: ''});
+      } else {
+        showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
+      }
+    }
+  };
+
+  const examinationExists = (value) => {
+    const existingExamination = examinationList.find(
+      (examination) => examination.name.toLowerCase() === value,
+    );
+
+    if (existingExamination) {
+      const subtype = examinationSubtypes.find(
+        (type) => type.id === existingExamination.examination_subtype_id,
+      );
+      return subtype ? subtype.name : false;
+    }
+    return false;
+  };
 
   const handleExaminationToEdit = (newValue) => {};
 
@@ -63,6 +105,17 @@ export default function ManageExamination() {
   };
 
   const handleDeleteExamination = () => {};
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
+  };
   return (
     <>
       <Grid templateColumns='repeat(4, 1fr)' gap={6}>
