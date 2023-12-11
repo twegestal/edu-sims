@@ -9,6 +9,9 @@ export const useExamination = () => {
   const getExaminationListApi = useApi('getExaminationList');
 
   const [examinationStep, setExaminationStep] = useState([]);
+  const [examinationTypes, setExaminationTypes] = useState();
+  const [examinationSubtypes, setExaminationSubtypes] = useState();
+  const [examinationList, setExaminationList] = useState();
 
   const getExaminationSpecificValues = async (id) => {
     try {
@@ -36,6 +39,7 @@ export const useExamination = () => {
     try {
       const response = await getExaminationTypesApi({ headers: { id: id } });
       if (response.status === 200) {
+        setExaminationTypes(response.data);
         return response.data.name;
       }
     } catch (error) {
@@ -46,7 +50,9 @@ export const useExamination = () => {
   const getExaminationSubtypes = async (id) => {
     try {
       const response = await getExaminationSubtypesApi({ headers: { id: id } });
+      //console.log('subbies: ', response.data);
       if (response.status === 200) {
+        setExaminationSubtypes(response.data);
         return response.data.name;
       }
     } catch (error) {
@@ -58,6 +64,7 @@ export const useExamination = () => {
     try {
       const response = await getExaminationListApi({ headers: { examination_subtype_id: id } });
       if (response.status === 200) {
+        setExaminationList(response.data);
         return response.data;
       }
     } catch (error) {
@@ -69,8 +76,11 @@ export const useExamination = () => {
     examinationStep,
     getExaminationSpecificValues,
     getExaminationStep,
+    examinationTypes,
     getExaminationTypes,
+    examinationSubtypes,
     getExaminationSubtypes,
+    examinationList,
     getExaminationList,
   };
 };

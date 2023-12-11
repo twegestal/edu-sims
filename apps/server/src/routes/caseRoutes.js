@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, response } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
@@ -257,63 +257,73 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.get('/getExaminationTypes', async (req, res, next) => {
-    if (req.header('id') === '') {
-      const Value = await object.examination_type.findAll({});
-      res.status(200).json(Value);
-    } else {
-      const Value = await object.examination_type.findOne({
-        where: {
-          id: req.header('id'),
-        },
-      });
-      res.status(200).json(Value);
+  router.get('/getExaminationTypes', async (req, res, _next) => {
+    try {
+      const id = req.header('id');
+      const result = id
+        ? await object.examination_type.findOne({ where: { id: id } })
+        : await object.examination_type.findAll();
+
+        if (result) {
+          res.status(200).send(result);
+        } else {
+          res.status(400).json('Could not find resource');
+        }
+    } catch (error) {
+      console.error('error feting examination types ', error);
+      res.status(500).json('Something went wrong');
     }
   });
   // Tar emot en examination types id och hämtar alla subtyper för det id
-  router.get('/getExaminationSubtypes', async (req, res, next) => {
-    if (req.header('examination_type_id')) {
-      const response = await object.examination_subtype.findAll({
-        where: {
-          examination_type_id: req.header('examination_type_id'),
-        },
-      });
-      res.status(200).json(response);
-    } else if (req.header('id') == '') {
-      const Value = await object.examination_subtype.findAll({});
-      res.status(200).json(Value);
-    } else {
-      const result = await object.examination_subtype.findOne({
-        where: {
-          id: req.header('id'),
-        },
-      });
-      res.status(200).json(result);
+  router.get('/getExaminationSubtypes', async (req, res, _next) => {
+    try {
+      const examinationTypeId = req.header('examination_type_id');
+      const id = req.header('id');
+      let whereClause = {};
+
+      if (examinationTypeId) {
+        whereClause = { where: { examination_type_id: examinationTypeId}}
+      } else if (id) {
+        whereClause = { where: { id: id }};
+      }
+
+      const response = Object.keys(whereClause).length > 0
+        ? await object.examination_subtype.findOne(whereClause)
+        : await object.examination_subtype.findAll();
+
+      if (!response) {
+        return res.status(400).json('Could not find examination subtype resource');
+      }
+
+      res.status(200).send(response);
+    } catch (error) {
+      console.error('Error fetching examination subtypes: ', error);
+      res.status(500).json('Internal Server Error');
     }
   });
   // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
   router.get('/getExaminationList', async (req, res, _next) => {
-    if (req.header('examination_subtype_id')) {
-      const response = await object.examination_list.findAll({
-        where: {
-          examination_subtype_id: req.header('examination_subtype_id'),
-        },
-        order: [['name', 'ASC']],
-      });
+    try {
+      const examinationSubtypeId = req.header('examination_subtype_id');
+      const id = req.header('id');
+      let whereClause = {};
 
-      res.status(200).json(response);
-    } else {
-      if (req.header('id') == '') {
-        const Value = await object.examination_list.findAll({});
-        res.status(404).json(Value);
-      } else {
-        const Value = await object.examination_list.findAll({
-          where: {
-            examination_type_id: req.header('id'),
-          },
-        });
-        res.status(200).json(Value);
+      if (examinationSubtypeId) {
+        whereClause = { where: { examination_subtype_id: examinationSubtypeId }};
+      } else if (id) {
+        whereClause = { where: { id: id }};
       }
+
+      const response = await object.examination_list.findAll(whereClause);
+
+      if (response.length > 0) {
+        return res.status(200).send(response);
+      } else {
+        return res.status(400).json('Could not find resource');
+      }
+    } catch (error) {
+      console.error('error fetching examination list ', error);
+      res.status(500).json('Something went wrong');
     }
   });
   // hämta treatments
@@ -326,6 +336,7 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
+  
   router.get('/getTreatmentSubtypes', async (req, res, _next) => {
     try {
       const id = req.header('id');

@@ -65,12 +65,12 @@ export const useTreatment = () => {
 
   const addNewTreatmentSubtype = async (name, id) => {
     try {
-      const response = await addNewTreatmentSubtypeApi({ body: { name: name, id: id }});
+      const response = await addNewTreatmentSubtypeApi({ body: { name: name, id: id } });
       return response.status === 201;
     } catch (error) {
       console.error('error adding new treatment subtype ', error);
     }
-  }
+  };
 
   const addNewTreatmentType = async (name) => {
     try {
@@ -138,6 +138,6 @@ export const useTreatment = () => {
     updateTreatment,
     deleteTreatment,
     addNewTreatmentType,
-    addNewTreatmentSubtype
+    addNewTreatmentSubtype,
   };
 };
