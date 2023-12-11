@@ -1,8 +1,8 @@
-import { Router, response } from 'express';
+import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
-import { ForeignKeyConstraintError, where } from 'sequelize';
+import { ForeignKeyConstraintError } from 'sequelize';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -278,25 +278,19 @@ export const getCaseRoutes = () => {
   router.get('/getExaminationSubtypes', async (req, res, _next) => {
     try {
       const examinationTypeId = req.header('examination_type_id');
-      const id = req.header('id');
       let whereClause = {};
 
       if (examinationTypeId) {
-        whereClause = { where: { examination_type_id: examinationTypeId } };
-      } else if (id) {
-        whereClause = { where: { id: id } };
+        whereClause = { where: { examination_type_id: examinationTypeId }};
       }
 
-      const response =
-        Object.keys(whereClause).length > 0
-          ? await object.examination_subtype.findOne(whereClause)
-          : await object.examination_subtype.findAll();
+      const response = await object.examination_subtype.findAll(whereClause);
 
-      if (!response) {
-        return res.status(400).json('Could not find examination subtype resource');
+      if (response.length > 0) {
+        return res.status(200).send(response);
       }
-
-      res.status(200).send(response);
+      
+      res.status(400).json('Could not find examination subtype resource');
     } catch (error) {
       console.error('Error fetching examination subtypes: ', error);
       res.status(500).json('Internal Server Error');
@@ -306,18 +300,15 @@ export const getCaseRoutes = () => {
   router.get('/getExaminationList', async (req, res, _next) => {
     try {
       const examinationSubtypeId = req.header('examination_subtype_id');
-      const id = req.header('id');
       let whereClause = {};
 
       if (examinationSubtypeId) {
         whereClause = { where: { examination_subtype_id: examinationSubtypeId } };
-      } else if (id) {
-        whereClause = { where: { id: id } };
-      }
+      } 
 
-      const response = await object.examination_list.findAll(whereClause);
+      const response = await object.examination_list.findAll({ whereClause, order : [['name', 'ASC']]});
 
-      if (response.length > 0) {
+      if (response) {
         return res.status(200).send(response);
       } else {
         return res.status(400).json('Could not find resource');
@@ -450,16 +441,16 @@ export const getCaseRoutes = () => {
   router.get('/getTreatmentSubtypes', async (req, res, _next) => {
     try {
       const id = req.header('id');
-      const whereClause = id ? { where: { treatment_subtype_id: id } } : {};
+      const whereClause = id ? { where: { treatment_type_id: id } } : {};
       const response = await object.treatment_subtype.findAll(whereClause);
 
-      if (response.length > 0) {
+      if (response) {
         return res.status(200).send(response);
       } else {
         return res.status(404).json('No resources found');
       }
     } catch (error) {
-      console.error('error fetching treatment types ', error);
+      console.error('error fetching treatment subtypes ', error);
       return res.status(500).json('Something went wrong');
     }
   });
