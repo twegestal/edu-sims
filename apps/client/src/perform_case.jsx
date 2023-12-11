@@ -210,14 +210,15 @@ export default function PerformCase() {
     }
 
     if (tests === null) {
+      console.log("här");
       tests = [];
       let tempArray = [];
       {
         Object.keys(runnedTestList).map((index) =>
-          console.log(index),
-          tempArray[index] = 0
+          tempArray[index] = runnedTestList[index]
         )
       }
+      tests[0] = tempArray;
 
     } else {
       const tempArray = [];
@@ -226,7 +227,7 @@ export default function PerformCase() {
           tempArray[index] = runnedTestList[index].name, " : ", runnedTestList[index].value
         )
       }
-
+      tests[tests.length] = tempArray;
     }
     console.log();
     //...
