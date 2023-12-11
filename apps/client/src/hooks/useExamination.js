@@ -8,6 +8,10 @@ export const useExamination = () => {
   const getExaminationSubtypesApi = useApi('getExaminationSubtypes');
   const getExaminationListApi = useApi('getExaminationList');
   const addNewExaminationApi = useApi('addNewExamination');
+  const updateExaminationApi = useApi('updateExamination');
+  const deleteExaminationApi = useApi('deleteExamination');
+  const addNewExaminationTypeApi = useApi('addNewExaminationType');
+  const addNewExaminationSubtypeApi = useApi('addNewExaminationSubtype');
 
   const [examinationStep, setExaminationStep] = useState([]);
   const [examinationTypes, setExaminationTypes] = useState();
@@ -74,13 +78,52 @@ export const useExamination = () => {
   };
 
   const addNewExamination = async (name, subtypeId, examinationTypeId) => {
-    console.log('Adding new examination values: ', name, subtypeId, examinationTypeId);
-    return true;
-  }
+    try {
+      const response = await addNewExaminationApi({
+        body: { name: name, subtypeId: subtypeId, examinationTypeId: examinationTypeId },
+      });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error adding new examination ', error);
+    }
+  };
 
   const updateExamination = async (newName, id) => {
-    console.log('updating ')
-  }
+    try {
+      const response = await updateExaminationApi({ body: { id: id, newName: newName } });
+      return response.status === 200;
+    } catch (error) {
+      console.error('Error updating examination ', error);
+    }
+  };
+
+  const deleteExamination = async (id) => {
+    try {
+      const response = await deleteExaminationApi({ body: { id: id } });
+      return response.status;
+    } catch (error) {
+      console.error('error removing examination ', error);
+      return error.response.status;
+    }
+  };
+
+  const addNewExaminationType = async (name) => {
+    try {
+      const response = await addNewExaminationTypeApi({ body: { name: name } });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error adding new examination type ', error);
+    }
+  };
+
+  const addNewExaminationSubtype = async (name, id) => {
+    try {
+      const response = await addNewExaminationSubtypeApi({ body: { name: name, id: id } });
+      return response.status === 201;
+    } catch (error) {
+      console.error('error adding new examination subtype ', error);
+    }
+  };
 
   return {
     examinationStep,
@@ -92,6 +135,10 @@ export const useExamination = () => {
     getExaminationSubtypes,
     examinationList,
     getExaminationList,
-    addNewExamination
+    addNewExamination,
+    updateExamination,
+    deleteExamination,
+    addNewExaminationType,
+    addNewExaminationSubtype,
   };
 };

@@ -118,7 +118,7 @@ export const useTreatment = () => {
       const response = await deleteTreatmentApi({ body: { id: id } });
       return response.status;
     } catch (error) {
-      console.log('error deleting treatment', error);
+      console.error('error deleting treatment', error);
       return error.response.status;
     }
   };

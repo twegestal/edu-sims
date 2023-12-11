@@ -264,11 +264,11 @@ export const getCaseRoutes = () => {
         ? await object.examination_type.findOne({ where: { id: id } })
         : await object.examination_type.findAll();
 
-        if (result) {
-          res.status(200).send(result);
-        } else {
-          res.status(400).json('Could not find resource');
-        }
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(400).json('Could not find resource');
+      }
     } catch (error) {
       console.error('error feting examination types ', error);
       res.status(500).json('Something went wrong');
@@ -282,14 +282,15 @@ export const getCaseRoutes = () => {
       let whereClause = {};
 
       if (examinationTypeId) {
-        whereClause = { where: { examination_type_id: examinationTypeId}}
+        whereClause = { where: { examination_type_id: examinationTypeId } };
       } else if (id) {
-        whereClause = { where: { id: id }};
+        whereClause = { where: { id: id } };
       }
 
-      const response = Object.keys(whereClause).length > 0
-        ? await object.examination_subtype.findOne(whereClause)
-        : await object.examination_subtype.findAll();
+      const response =
+        Object.keys(whereClause).length > 0
+          ? await object.examination_subtype.findOne(whereClause)
+          : await object.examination_subtype.findAll();
 
       if (!response) {
         return res.status(400).json('Could not find examination subtype resource');
@@ -309,9 +310,9 @@ export const getCaseRoutes = () => {
       let whereClause = {};
 
       if (examinationSubtypeId) {
-        whereClause = { where: { examination_subtype_id: examinationSubtypeId }};
+        whereClause = { where: { examination_subtype_id: examinationSubtypeId } };
       } else if (id) {
-        whereClause = { where: { id: id }};
+        whereClause = { where: { id: id } };
       }
 
       const response = await object.examination_list.findAll(whereClause);
@@ -326,6 +327,115 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
+
+  router.post('/examination', async (req, res, _next) => {
+    const { name, subtypeId, examinationTypeId } = req.body;
+
+    try {
+      if (subtypeId && examinationTypeId && name) {
+        const response = await object.examination_list.create({
+          name: name,
+          examination_type_id: examinationTypeId,
+          examination_subtype_id: subtypeId,
+        });
+
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new examination ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.patch('/examination', async (req, res, _next) => {
+    const { id, newName } = req.body;
+
+    try {
+      if (id && newName) {
+        const result = await object.examination_list.update(
+          { name: newName },
+          { where: { id: id } },
+        );
+        if (result > 0) {
+          return res.status(200).json('Resource updated');
+        }
+        return res.status(400).json('Could not update resource');
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error updating examination list ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.delete('/examination', async (req, res, _next) => {
+    const { id } = req.body;
+
+    try {
+      const result = await object.examination_list.destroy({ where: { id: id } });
+      if (result) {
+        return res.status(200).json('Resource deleted');
+      } else {
+        return res.status(400).json('Could not delete resouce');
+      }
+    } catch (error) {
+      if (error instanceof ForeignKeyConstraintError) {
+        res.status(400).json('Resource cannot be deleted');
+      } else {
+        console.error('error deleting diagnosis ', error);
+        res.status(500).json('Something went wrong');
+      }
+    }
+  });
+
+  router.post('/examinationType', async (req, res, _next) => {
+    const { name } = req.body;
+
+    try {
+      if (name) {
+        const response = object.examination_type.create({ name: name });
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new examination type ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.post('/examinationSubtype', async (req, res, _next) => {
+    const { name, id } = req.body;
+
+    try {
+      if (name && id) {
+        const response = await object.examination_subtype.create({
+          name: name,
+          examination_type_id: id,
+        });
+
+        if (!response) {
+          return res.status(400).json('Could not create resource');
+        }
+
+        res.status(201).send(response);
+      } else {
+        res.status(400).json('Could not parse input');
+      }
+    } catch (error) {
+      console.error('error adding new examination subtype ', error);
+      res.status(500).json('Something went wrong');
+    }
+  });
   // hämta treatments
   router.get('/getTreatmentTypes', async (_req, res, _next) => {
     try {
@@ -336,7 +446,7 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
-  
+
   router.get('/getTreatmentSubtypes', async (req, res, _next) => {
     try {
       const id = req.header('id');
@@ -424,7 +534,7 @@ export const getCaseRoutes = () => {
         res.status(400).json('Could not parse input');
       }
     } catch (error) {
-      console.error('error adding new treatment type ', error);
+      console.error('error adding new treatment ', error);
       res.status(500).json('Something went wrong');
     }
   });

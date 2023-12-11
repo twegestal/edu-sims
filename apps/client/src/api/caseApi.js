@@ -77,6 +77,16 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  addNewExaminationType: async (body) => {
+    const response = await apiClient.post(`${prefix}examinationType`, body);
+    return packageResponse(response);
+  },
+
+  addNewExaminationSubtype: async (body) => {
+    const response = await apiClient.post(`${prefix}examinationSubtype`, body);
+    return packageResponse(response);
+  },
+
   getExaminationSubtypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getExaminationSubtypes`, headers);
     return packageResponse(response);
@@ -163,6 +173,16 @@ export const caseApi = (apiClient) => ({
 
   addNewExamination: async (body) => {
     const response = await apiClient.post(`${prefix}examination`, body);
+    return packageResponse(response);
+  },
+
+  updateExamination: async (body) => {
+    const response = await apiClient.patch(`${prefix}examination`, body);
+    return packageResponse(response);
+  },
+
+  deleteExamination: async (body) => {
+    const response = await apiClient.delete(`${prefix}examination`, body);
     return packageResponse(response);
   },
 
