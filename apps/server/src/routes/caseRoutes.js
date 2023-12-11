@@ -135,7 +135,7 @@ export const getCaseRoutes = () => {
           },
         });
 
-        if (result.length > 0) {
+        if (result) {
           res.status(200).send(result);
         } else {
           res.status(404).json('Resource not found');
@@ -147,7 +147,7 @@ export const getCaseRoutes = () => {
     } else {
       try {
         const result = await object.diagnosis_list.findAll();
-        if (result.length > 0) {
+        if (result) {
           res.status(200).send(result);
         } else {
           res.status(404).json('Resource not found');
@@ -486,7 +486,7 @@ export const getCaseRoutes = () => {
       let whereClause = id ? { where: { treatment_step_id: id } } : {};
 
       const result = await object.step_specific_treatment.findAll(whereClause);
-      if (result.length > 0) {
+      if (result) {
         res.status(200).send(result);
       } else {
         res.status(404).json('Resource not found');
