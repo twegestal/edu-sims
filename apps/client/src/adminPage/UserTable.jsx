@@ -21,7 +21,15 @@ import Confirm from '../components/Confirm';
 
 export default function UserTable() {
   const { user } = useAuth();
-  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege, userGroups, getUserGroups } = useUser();
+  const {
+    allUsers,
+    getAllUsers,
+    clearUserInfo,
+    assingAdminPrivilege,
+    revokeAdminPrivilege,
+    userGroups,
+    getUserGroups,
+  } = useUser();
   const [loading, setLoading] = useState(true);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -101,21 +109,18 @@ export default function UserTable() {
 
   const closeConfirm = () => {
     setIsConfirmOpen(false);
-
   };
 
   const mapper = (toMap) => {
-    return (
-      toMap.map((aUser, index) =>
+    return toMap.map(
+      (aUser, index) =>
         aUser.email !== 'DeletedUser' &&
         aUser.id !== user.id && (
           <Tr key={index}>
             <Td>{aUser.email}</Td>
             <Td>
               <FormControl display={'flex'} flexDirection={'column'}>
-                <Button
-                  onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
-                >
+                <Button onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}>
                   {' '}
                   Sätt nytt lösenord{' '}
                 </Button>
@@ -128,10 +133,7 @@ export default function UserTable() {
             </Td>
             <Td>
               {aUser.is_admin ? (
-                <Button onClick={() => revokeAdminRights(aUser)}>
-                  {' '}
-                  Ta bort adminrättigheter{' '}
-                </Button>
+                <Button onClick={() => revokeAdminRights(aUser)}> Ta bort adminrättigheter </Button>
               ) : (
                 <Button onClick={() => assignAdminRights(aUser)}>
                   {' '}
@@ -141,9 +143,8 @@ export default function UserTable() {
             </Td>
           </Tr>
         ),
-      )
-    )
-  }
+    );
+  };
   const showToast = (title, description, status) => {
     toast({
       title: title,
@@ -163,20 +164,21 @@ export default function UserTable() {
             id='selectField'
             placeholder='Välj användare för användargrupp.'
             onChange={(e) => {
-              console.log(e.target.value)
-              setGroupToRender(e.target.value)
-            }}>
-            {userGroups.map((group) =>
-              group.is_active !== false && (
-                <option key={group.id} value={group.id}>
-                  {group.name}
-                </option>
-              ))}
+              console.log(e.target.value);
+              setGroupToRender(e.target.value);
+            }}
+          >
+            {userGroups.map(
+              (group) =>
+                group.is_active !== false && (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                ),
+            )}
           </Select>
           <Table variant='simple'>
-            <TableCaption>
-              Aktiva användare i EDU-SIMS.
-            </TableCaption>
+            <TableCaption>Aktiva användare i EDU-SIMS.</TableCaption>
             <Thead>
               <Tr>
                 <Th>Email</Th>
@@ -186,7 +188,9 @@ export default function UserTable() {
               </Tr>
             </Thead>
             <Tbody>
-              {groupToRender ? mapper(allUsers.filter((user) => user.group_id === groupToRender)) : mapper(allUsers)}
+              {groupToRender
+                ? mapper(allUsers.filter((user) => user.group_id === groupToRender))
+                : mapper(allUsers)}
             </Tbody>
           </Table>
         </TableContainer>
