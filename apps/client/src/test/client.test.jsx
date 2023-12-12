@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { describe, beforeEach } from 'vitest';
 import Confirm from '../components/Confirm';
 
-
 describe('Confirm component tests', () => {
   const mockOnClose = vi.fn();
   const mockHandleConfirm = vi.fn();
@@ -39,4 +38,3 @@ describe('Confirm component tests', () => {
     expect(mockHandleConfirm).toHaveBeenCalledTimes(1);
   });
 });
-

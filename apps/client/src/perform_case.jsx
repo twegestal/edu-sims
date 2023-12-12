@@ -20,7 +20,7 @@ import Diagnosis from './diagnosis.jsx';
 import { WarningIcon } from '@chakra-ui/icons';
 import Treatment from './Treatment.jsx';
 import { useCases } from './hooks/useCases.js';
-import './performCaseComponents/PerformCase.css'
+import './performCaseComponents/PerformCase.css';
 import CaseNav from './performCaseComponents/CaseNav.jsx';
 
 export default function PerformCase() {
@@ -57,7 +57,7 @@ export default function PerformCase() {
   const [caseIsFinished, setCaseIsFinished] = useState(false);
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
-  const [wasCorrect, setWasCorrect] = useState(false)
+  const [wasCorrect, setWasCorrect] = useState(false);
   const { caseById, getCaseById, updateAttempt } = useCases();
 
   useEffect(() => {
@@ -124,16 +124,16 @@ export default function PerformCase() {
   }, [caseIsFinished]);
 
   useEffect(() => {
-    if (displayFeedback==true){
+    if (displayFeedback == true) {
       setTimeout(() => {
-        scrollToElement("feedback");
+        scrollToElement('feedback');
       }, 100);
     }
   }, [displayFeedback]);
 
   const scrollToElement = (element) => {
     const elementToScrollTo = document.getElementById(element);
-    elementToScrollTo.scrollIntoView({ behavior: 'smooth', block: "center" });
+    elementToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const attemptUpdateFunction = () => {
@@ -274,26 +274,26 @@ export default function PerformCase() {
   return (
     <>
       <CaseNav
-      isNotesOpen={isNotesOpen}
-      onNotesOpen={onNotesOpen}
-      onNotesClose={onNotesClose}
-      saveNotes={saveNotes}
-      notes={notes}
-      onDescOpen={onDescOpen}
-      isDescOpen={isDescOpen}
-      onDescClose={onDescClose}
-      description={description}
-      onFeedbackOpen={onFeedbackOpen}
-      isFeedbackOpen={isFeedbackOpen}
-      onFeedbackClose={onFeedbackClose}
-      feedback={feedback}
-      onTreatmentResultsOpen={onTreatmentResultsOpen}
-      isTreatmentResultsOpen={isTreatmentResultsOpen}
-      onTreatmentResultsClose={onTreatmentResultsClose}
-      treatmentResults={treatmentResults}
-      onHomeOpen={onHomeOpen}
-      isHomeOpen={isHomeOpen}
-      onHomeClose={onHomeClose}
+        isNotesOpen={isNotesOpen}
+        onNotesOpen={onNotesOpen}
+        onNotesClose={onNotesClose}
+        saveNotes={saveNotes}
+        notes={notes}
+        onDescOpen={onDescOpen}
+        isDescOpen={isDescOpen}
+        onDescClose={onDescClose}
+        description={description}
+        onFeedbackOpen={onFeedbackOpen}
+        isFeedbackOpen={isFeedbackOpen}
+        onFeedbackClose={onFeedbackClose}
+        feedback={feedback}
+        onTreatmentResultsOpen={onTreatmentResultsOpen}
+        isTreatmentResultsOpen={isTreatmentResultsOpen}
+        onTreatmentResultsClose={onTreatmentResultsClose}
+        treatmentResults={treatmentResults}
+        onHomeOpen={onHomeOpen}
+        isHomeOpen={isHomeOpen}
+        onHomeClose={onHomeClose}
       ></CaseNav>
       <VStack alignItems='stretch' marginTop={'80px'} minW='80vw' id='caseContainer'>
         {currentStep.module_type_identifier === 0 && (

@@ -11,26 +11,37 @@ import {
   Input,
   ModalFooter,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
-import { useAlert } from '../hooks/useAlert';
 
 export default function ChangeUsername({ isOpen, onClose }) {
   const [usernameInput, setUsernameInput] = useState('');
   const { user } = useAuth();
   const { updateUsername } = useUser();
-  const { setAlert } = useAlert();
+  const toast = useToast();
 
   const handleUsernameChange = async () => {
     const result = await updateUsername(user.id, usernameInput);
 
     if (result) {
-      setAlert('success', 'Ditt användarnamn har uppdaterats');
+      showToast('Uppdaterat', 'Ditt användarnamn har uppdaterats', 'success');
       onClose();
     } else {
-      setAlert('error', 'Uppdatering av användarnamn', `Användarnamnet kunde inte uppdateras`);
+      showToast('Uppdatering av användarnamn', `Användarnamnet kunde inte uppdateras`, 'warning');
     }
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (

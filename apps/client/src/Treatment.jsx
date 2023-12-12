@@ -33,8 +33,8 @@ export default function Treatment(props) {
   const [feedbackText, setFeedbackText] = useState();
   const { isOpen, onToggle } = useDisclosure();
   const [feedbackWindow, setFeedbackWindow] = useState();
-  const [checkboxesChecked, setCheckboxesChecked] = useState({})
-  const [filteredList, setFilteredList] = useState([]) 
+  const [checkboxesChecked, setCheckboxesChecked] = useState({});
+  const [filteredList, setFilteredList] = useState([]);
 
   const {
     getTreatmentStep,
@@ -83,8 +83,8 @@ export default function Treatment(props) {
   }, [treatmentTypes]);
 
   useEffect(() => {
-    if(treatmentList){
-      checkBoxState()
+    if (treatmentList) {
+      checkBoxState();
     }
   }, [treatmentList]);
 
@@ -96,7 +96,6 @@ export default function Treatment(props) {
     setCheckedTreatments((oldValues) => [...oldValues, { treatmentId, name }]);
   };
   const removeAddedTreatment = async (id) => {
-
     //let newArr = checkedTreatments.filter((treatement) => treatement.treatmentId !== id)
     const newArr = [];
     for (let index = 0; index < checkedTreatments.length; index++) {
@@ -104,19 +103,19 @@ export default function Treatment(props) {
         newArr.push(checkedTreatments[index]);
       }
     }
-    setCheckedTreatments(newArr)
+    setCheckedTreatments(newArr);
   };
 
   useEffect(() => {}, [checkedTreatments]);
 
   const findTreatment = (searchString, treatmentTypeId) => {
-    let searchResults = []
+    let searchResults = [];
     if (searchString.length > 0) {
-       searchResults = treatmentList[treatmentTypeId].filter((obj) => {
+      searchResults = treatmentList[treatmentTypeId].filter((obj) => {
         return obj.name.toLowerCase().includes(searchString.toLowerCase());
       });
     }
-    setFilteredList(searchResults)
+    setFilteredList(searchResults);
   };
 
   const ValuateFeedback = () => {
@@ -153,7 +152,6 @@ export default function Treatment(props) {
     onToggle();
   };
 
-
   const checkBoxState = () => {
     const initialCheckboxesState = {};
 
@@ -169,7 +167,6 @@ export default function Treatment(props) {
       ...prev,
       [treatmentId]: !prev[treatmentId],
     }));
-
   };
 
   useEffect(() => {
@@ -178,7 +175,6 @@ export default function Treatment(props) {
       props.updateFeedback(feedbackText);
     }
   }, [feedbackText]);
-
 
   return (
     <div>
@@ -204,28 +200,30 @@ export default function Treatment(props) {
                     marginBottom={'10px'}
                   />
                   <List id={treatmentType.id}>
-                    {filteredList.map((treatmentItem, index) => (
-                      index < 10 && (
-                        <ListItem key={treatmentItem.id}>
-                          <HStack marginBottom={'5px'}>
-                            <Checkbox
-                              id={treatmentItem.id}
-                              isChecked={checkboxesChecked[treatmentItem.id]}
-                              onChange={(e) => {
-                              handleCheckboxChange(treatmentItem.id)
-                              if(e.target.checked){
-                                checkTreatmentBox(treatmentItem.id,  treatmentItem.name)
-                              } else{
-                                removeAddedTreatment(treatmentItem.id)
-                              }
-                              }}
-                            ></Checkbox>
-                              <label for={treatmentItem.id}><Text>{treatmentItem.name}</Text></label>
-                          </HStack>
-                        </ListItem>
-                      )
-                      ))
-                    }
+                    {filteredList.map(
+                      (treatmentItem, index) =>
+                        index < 10 && (
+                          <ListItem key={treatmentItem.id}>
+                            <HStack marginBottom={'5px'}>
+                              <Checkbox
+                                id={treatmentItem.id}
+                                isChecked={checkboxesChecked[treatmentItem.id]}
+                                onChange={(e) => {
+                                  handleCheckboxChange(treatmentItem.id);
+                                  if (e.target.checked) {
+                                    checkTreatmentBox(treatmentItem.id, treatmentItem.name);
+                                  } else {
+                                    removeAddedTreatment(treatmentItem.id);
+                                  }
+                                }}
+                              ></Checkbox>
+                              <label for={treatmentItem.id}>
+                                <Text>{treatmentItem.name}</Text>
+                              </label>
+                            </HStack>
+                          </ListItem>
+                        ),
+                    )}
                   </List>
                 </AccordionPanel>
               </h2>
@@ -240,7 +238,6 @@ export default function Treatment(props) {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel>
-
             {checkedTreatments.map((Item) => (
               <h2 key={Item.id}>
                 <VStack alignItems={'left'}>
@@ -249,11 +246,11 @@ export default function Treatment(props) {
                       icon={<SmallCloseIcon />}
                       margin={0.5}
                       onClick={() => {
-                        removeAddedTreatment(Item.treatmentId)
-                        handleCheckboxChange(Item.treatmentId)
+                        removeAddedTreatment(Item.treatmentId);
+                        handleCheckboxChange(Item.treatmentId);
                       }}
-                      variant="outline" 
-                      colorScheme="red"
+                      variant='outline'
+                      colorScheme='red'
                       size={'xs'}
                     ></IconButton>
                     <Text>{Item.name}</Text>
@@ -267,10 +264,10 @@ export default function Treatment(props) {
       {props.displayFeedback ? (
         <>
           <Feedback
-          onToggle={onToggle}
-          wasCorrect={props.wasCorrect}
-          isOpen={isOpen}
-          feedbackToDisplay={feedbackText}
+            onToggle={onToggle}
+            wasCorrect={props.wasCorrect}
+            isOpen={isOpen}
+            feedbackToDisplay={feedbackText}
           />
         </>
       ) : (

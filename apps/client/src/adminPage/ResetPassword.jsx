@@ -11,18 +11,18 @@ import {
   Input,
   ModalFooter,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import { validatePassword, errorsToString } from 'api';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
-import { useAlert } from '../hooks/useAlert';
 
 export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const { user } = useAuth();
   const { updatePassword } = useUser();
-  const { setAlert } = useAlert();
+  const toast = useToast();
 
   const handlePasswordReset = async () => {
     if (passwordInput === confirmPasswordInput) {
@@ -31,21 +31,36 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
         const result = await updatePassword(user.id, email, passwordInput, userToEditId);
 
         if (result) {
-          setAlert('success', 'Uppdatering av lösenord', `Lösenordet för ${email} har uppdaterats`);
+          showToast(
+            'Uppdatering av lösenord',
+            `Lösenordet för ${email} har uppdaterats`,
+            'success',
+          );
           onClose();
         } else {
-          setAlert(
-            'error',
+          showToast(
             'Uppdatering av lösenord',
             `Lösenordet för ${email} kunde inte uppdateras`,
+            'warning',
           );
         }
       } else {
-        setAlert('error', 'Error vid byte av lösenord', errorsToString(validationResult.errors));
+        showToast('Fel vid byte av lösenord', errorsToString(validationResult.errors), 'warning');
       }
     } else {
-      setAlert('error', 'Error vid byte av lösenord', 'Lösenorden måste matcha');
+      showToast('Fel vid byte av lösenord', 'Lösenorden måste matcha', 'warning');
     }
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (

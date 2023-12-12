@@ -53,7 +53,7 @@ export default function CaseBuilder() {
     } else if (source.droppableId === 'availableModules' && destination.droppableId === 'sandbox') {
       const moduleToAdd = moduleTypes[source.index];
       const uniqueId = `${moduleToAdd.id}-${Date.now()}`;
-      const newModule = { ...moduleToAdd, uniqueId, };
+      const newModule = { ...moduleToAdd, uniqueId };
       moduleHandlers.setState((currentModules) => {
         const updatedModules = [...currentModules];
         updatedModules.splice(destination.index, 0, newModule);
@@ -113,8 +113,9 @@ export default function CaseBuilder() {
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {
-          const titleString = validationResults[i].errors[index].module ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
-          : 'Påträffade följande fel';
+          const titleString = validationResults[i].errors[index].module
+            ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
+            : 'Påträffade följande fel';
           toast({
             title: titleString,
             description: errorWithPathToString(error),
@@ -123,8 +124,7 @@ export default function CaseBuilder() {
             isClosable: true,
             position: 'top',
           });
-      });
-        
+        });
       }
     }
   };

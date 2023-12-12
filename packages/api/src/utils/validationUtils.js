@@ -1,11 +1,11 @@
 import { ZodError } from 'zod';
 
 export const Modules = Object.freeze({
-  Introduction: "Introduktion",
-  Examination: "Utredning",
-  Diagnosis: "Diagnos",
-  Treatment: "Behandling",
-  Summary: "Sammanfattning",
+  Introduction: 'Introduktion',
+  Examination: 'Utredning',
+  Diagnosis: 'Diagnos',
+  Treatment: 'Behandling',
+  Summary: 'Sammanfattning',
 });
 
 export const handleZodErrors = (error) => {
@@ -34,12 +34,12 @@ export const handleZodCaseErrors = (error, moduleEnum) => {
     return {
       success: false,
       errors: errors,
-    }
+    };
   } else {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const errorsToString = (errors) => {
   return errors.map((error) => error.message);
