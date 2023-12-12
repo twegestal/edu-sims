@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import {
   Button,
   FormControl,
@@ -10,18 +11,20 @@ import {
   Td,
   Tbody,
   IconButton,
+  Input,
+  useStatStyles,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
 
 export default function UserGroupsCard() {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
+  const [filteredUserGroups, setFilteredUsergroups] = useState([]);
 
   useEffect(() => {
     const fetchUserGroups = async () => {
       await getUserGroups();
     };
-
     fetchUserGroups();
   }, []);
 
