@@ -300,23 +300,35 @@ export const getCaseRoutes = () => {
   });
   // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
   router.get('/getExaminationList', async (req, res, _next) => {
+    console.log('ALLA HEADERS -> ', req.headers)
     try {
       const examinationSubtypeId = req.header('examination_subtype_id');
-      let whereClause = {};
+      const id = req.header('id');
 
       if (examinationSubtypeId) {
-        whereClause = { where: { examination_subtype_id: examinationSubtypeId } };
-      }
+        const response = await object.examination_list.findAll({ where: { examination_subtype_id: examinationSubtypeId },
+          order: [['name', 'ASC']],
+        });
 
-      const response = await object.examination_list.findAll({
-        whereClause,
-        order: [['name', 'ASC']],
-      });
-
-      if (response) {
-        return res.status(200).send(response);
+        if (response) {
+          return res.status(200).send(response);
+        } else {
+          return res.status(400).json('Could not find resource');
+        }
+      } else if (id) {
+        const response = await object.examination_list.findAll({ where: { examination_type_id: id }, order: [['name', 'ASC']]});
+        if (response) {
+          return res.status(200).send(response);
+        } else {
+          return res.status(400).json('Could not find resource');
+        }
       } else {
-        return res.status(400).json('Could not find resource');
+        const response = await object.examination_list.findAll({order: [['name', 'ASC']]});
+        if (response) {
+          return res.status(200).send(response);
+        } else {
+          return res.status(400).json('Could not find resource');
+        }
       }
     } catch (error) {
       console.error('error fetching examination list ', error);
