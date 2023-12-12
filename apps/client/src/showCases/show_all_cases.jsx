@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -17,6 +17,7 @@ import StartCase from './startCase.jsx';
 import { errorWithPathToString } from 'api';
 
 export default function ShowAllCases() {
+  const [caseToRandomise, setCaseToRandomise] = useState();
   const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
     useCases();
   const { user } = useAuth();
@@ -84,6 +85,12 @@ export default function ShowAllCases() {
     }
   }
 
+  const randomiseCase = () => {
+    const casesToRandomise = cases.filter((c) => c.published === true);
+    const caseId = casesToRandomise[Math.floor(Math.random() * casesToRandomise.length)].id;
+    setCaseToRandomise(caseId);
+  };
+
   return (
     <Box maxW={'90%'} margin={'auto'}>
       <Accordion allowToggle defaultIndex={[0]}>
@@ -135,7 +142,7 @@ export default function ShowAllCases() {
                   {user.isAdmin == false && caseItem.published && (
                     <Flex direction={'column'}>
                       <p>{caseItem.name}</p>
-                      <StartCase caseId={caseItem.id} />
+                      <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
                     </Flex>
                   )}
                 </Box>
@@ -144,6 +151,7 @@ export default function ShowAllCases() {
           </AccordionItem>
         ))}
       </Accordion>
+      {!user.isAdmin && <Button onClick={randomiseCase}>Slumpa fall</Button>}
     </Box>
   );
 }
