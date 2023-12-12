@@ -50,7 +50,6 @@ export default function CaseDetails({ onSave }) {
           onChange={(e) => setCaseName(e.target.value)}
         ></Input>
 
-        
         <FormLabel>Medicinskt område</FormLabel>
         <Select placeholder='Välj ett område' onChange={(e) => setMedicalFieldId(e.target.value)}>
           {medicalFields &&

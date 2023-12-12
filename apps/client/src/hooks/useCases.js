@@ -95,8 +95,8 @@ export const useCases = () => {
       console.error('error updating case published state: ', error);
       if (error.response.status === 400) {
         const response = {
-          errors: await error.response.json()
-        }
+          errors: await error.response.json(),
+        };
         return response;
       }
     }

@@ -51,10 +51,10 @@ export default function Examination(props) {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(results).length != 0){
+    if (Object.keys(results).length != 0) {
       setResultsReady(true);
       setTimeout(() => {
-        props.scrollToElement("resultsAccordion");
+        props.scrollToElement('resultsAccordion');
       }, 100);
     }
   }, [results]);
@@ -179,41 +179,41 @@ export default function Examination(props) {
               </AccordionItem>
             </Accordion>
           </Card>
-          { props.displayFeedback == false &&(
+          {props.displayFeedback == false && (
             <Button onClick={runExams} colorScheme='teal'>
               Kör utredningar
             </Button>
           )}
-          {resultsReady == true &&(
-          <>
-          <Card variant='filled'>
-            <Accordion allowToggle defaultIndex={[0]} id="resultsAccordion">
-              <AccordionItem>
-                <AccordionButton>
-                  <Box as='span' flex='1' textAlign='center'>
-                    Resultat
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <List>
-                    {resultsReady &&
-                      Object.entries(results).map(([id, fields], index) => (
-                        <ListItem key={index}>
-                          <HStack>
-                            {!fields.isNormal && <WarningIcon />}
-                            <Text>
-                              {fields.name} : {fields.value}
-                            </Text>
-                          </HStack>
-                        </ListItem>
-                      ))}
-                  </List>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Card>
-          </>
+          {resultsReady == true && (
+            <>
+              <Card variant='filled'>
+                <Accordion allowToggle defaultIndex={[0]} id='resultsAccordion'>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Box as='span' flex='1' textAlign='center'>
+                        Resultat
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel pb={4}>
+                      <List>
+                        {resultsReady &&
+                          Object.entries(results).map(([id, fields], index) => (
+                            <ListItem key={index}>
+                              <HStack>
+                                {!fields.isNormal && <WarningIcon />}
+                                <Text>
+                                  {fields.name} : {fields.value}
+                                </Text>
+                              </HStack>
+                            </ListItem>
+                          ))}
+                      </List>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              </Card>
+            </>
           )}
           {props.displayFeedback ? (
             <>

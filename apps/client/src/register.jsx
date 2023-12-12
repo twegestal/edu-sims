@@ -8,11 +8,11 @@ import {
   InputRightElement,
   Tooltip,
   useBreakpointValue,
+  useToast,
 } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { useAuth } from './hooks/useAuth';
 import { validateRegistration, errorsToString } from 'api';
-import { useAlert } from './hooks/useAlert.jsx';
 import { useParams } from 'react-router-dom';
 
 export default function Register() {
@@ -21,9 +21,9 @@ export default function Register() {
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
   const { register } = useAuth();
-  const { setAlert } = useAlert();
   const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
   let { groupId } = useParams();
+  const toast = useToast();
 
   const postToRegister = async () => {
     groupId = groupId.split('groupId=')[1];
@@ -37,11 +37,22 @@ export default function Register() {
       if (validationResult.success) {
         await register(data);
       } else {
-        setAlert('error', 'Error vid registrering', errorsToString(validationResult.errors));
+        showToast('Fel vid registrering', errorsToString(validationResult.errors), 'warning');
       }
     } else {
-      setAlert('error', 'Error vid registrering', 'Lösenorden måste matcha');
+      showToast('Fel vid registrering', 'Lösenorden måste matcha', 'warning');
     }
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (

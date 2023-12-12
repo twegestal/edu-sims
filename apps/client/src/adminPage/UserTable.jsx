@@ -11,24 +11,23 @@ import {
   Button,
   Select,
   TableCaption,
+  useToast,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
-import { useAlert } from '../hooks/useAlert';
 import ResetPassword from './ResetPassword';
 import Confirm from '../components/Confirm';
 
 export default function UserTable() {
   const { user } = useAuth();
-  const { setAlert } = useAlert();
-  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege, userGroups, getUserGroups } =
-    useUser();
+  const { allUsers, getAllUsers, clearUserInfo, assingAdminPrivilege, revokeAdminPrivilege, userGroups, getUserGroups } = useUser();
   const [loading, setLoading] = useState(true);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [groupToRender, setGroupToRender] = useState();
+  const toast = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,13 +44,13 @@ export default function UserTable() {
     setIsConfirmOpen(false);
     const response = await clearUserInfo(userToRemove.id);
     if (response) {
-      setAlert('success', 'Användare borttagen', `${userToRemove.email} har tagits bort`);
+      showToast('Användare borttagen', `${userToRemove.email} har tagits bort`, 'success');
       await getAllUsers(user.id);
     } else {
-      setAlert(
-        'error',
+      showToast(
         'Användare kunde inte tas bort',
         `${userToRemove.email} kunde inte tas bort`,
+        'warning',
       );
     }
   };
@@ -60,14 +59,14 @@ export default function UserTable() {
     const response = await assingAdminPrivilege(userToAssing.id);
 
     if (response) {
-      setAlert(
-        'success',
-        'Användaren',
+      showToast(
+        'Användare uppdaterad',
         `${userToAssing.email} har tilldelats administratörsrättigheter`,
+        'success',
       );
       await getAllUsers(user.id);
     } else {
-      setAlert('error', 'Användaren kunde inte tilldelas administratörsrättigheter ');
+      showToast('Fel', 'Användaren kunde inte tilldelas administratörsrättigheter', 'warning');
     }
   };
 
@@ -75,14 +74,14 @@ export default function UserTable() {
     const response = await revokeAdminPrivilege(userToRevoke.id);
 
     if (response) {
-      setAlert(
-        'success',
-        'Användarem',
+      showToast(
+        'Användare uppdaterad',
         `${userToRevoke.email} har fråntagits administratörsrättigheter`,
+        'success',
       );
       await getAllUsers(user.id);
     } else {
-      setAlert('error', 'Användaren kunde inte fråntas administratörsrättigheter ');
+      showToast('Fel', 'Användaren kunde inte fråntas administratörsrättigheter', 'warning');
     }
   };
 
@@ -145,6 +144,16 @@ export default function UserTable() {
       )
     )
   }
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
+  };
 
   return (
     <>

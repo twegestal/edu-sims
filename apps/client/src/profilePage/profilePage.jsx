@@ -10,12 +10,12 @@ import {
   CardBody,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import ResetPassword from '../adminPage/ResetPassword';
 import { useAuth } from '../hooks/useAuth.jsx';
 import Confirm from '../components/Confirm';
-import { useAlert } from '../hooks/useAlert';
 import { useUser } from '../hooks/useUser';
 import ChangeUsername from './changeUsername.jsx';
 
@@ -23,9 +23,9 @@ export default function ProfilePage(props) {
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const [isChangeUsernameOpen, setIsChangeUsernameOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { setAlert } = useAlert();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { clearUserInfo } = useUser();
+  const toast = useToast();
 
   const openConfirm = () => {
     setIsConfirmOpen(true);
@@ -55,11 +55,22 @@ export default function ProfilePage(props) {
     setIsConfirmOpen(false);
     const response = await clearUserInfo(user.id);
     if (response) {
-      setAlert('success', 'Din användare har tagits bort');
+      showToast('Borttagen', 'Din användarprofil har tagits bort', 'success');
       await logout();
     } else {
-      setAlert('error', 'Användare kunde inte tas bort');
+      showToast('Fel', 'Användare kunde inte tas bort', 'warning');
     }
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (

@@ -54,7 +54,7 @@ export default function Diagnosis(props) {
             className='diagnosis_button'
             key={'set_diagnosis_' + caseItem.id}
             onClick={(e) => handleFeedback(caseItem.id)}
-            size={"md"} 
+            size={'md'}
             minW={'90%'}
             colorScheme='blue'
             variant={'outline'}

@@ -5,7 +5,6 @@ import './index.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth.jsx';
-import { AlertProvider } from './hooks/useAlert.jsx';
 import { MantineProvider } from '@mantine/core';
 import theme from '../theme.js';
 
@@ -15,9 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <MantineProvider>
         <ChakraProvider theme={theme}>
           <AuthProvider>
-            <AlertProvider>
-              <App />
-            </AlertProvider>
+            <App />
           </AuthProvider>
         </ChakraProvider>
       </MantineProvider>

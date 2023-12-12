@@ -3,8 +3,7 @@ import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
-import { validateCaseToPublish } from "api"
-
+import { validateCaseToPublish } from 'api';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -321,7 +320,8 @@ export const getCaseRoutes = () => {
       const id = req.header('id');
 
       if (examinationSubtypeId) {
-        const response = await object.examination_list.findAll({ where: { examination_subtype_id: examinationSubtypeId },
+        const response = await object.examination_list.findAll({
+          where: { examination_subtype_id: examinationSubtypeId },
           order: [['name', 'ASC']],
         });
 
@@ -331,14 +331,17 @@ export const getCaseRoutes = () => {
           return res.status(400).json('Could not find resource');
         }
       } else if (id) {
-        const response = await object.examination_list.findAll({ where: { examination_type_id: id }, order: [['name', 'ASC']]});
+        const response = await object.examination_list.findAll({
+          where: { examination_type_id: id },
+          order: [['name', 'ASC']],
+        });
         if (response) {
           return res.status(200).send(response);
         } else {
           return res.status(400).json('Could not find resource');
         }
       } else {
-        const response = await object.examination_list.findAll({order: [['name', 'ASC']]});
+        const response = await object.examination_list.findAll({ order: [['name', 'ASC']] });
         if (response) {
           return res.status(200).send(response);
         } else {
@@ -659,13 +662,13 @@ export const getCaseRoutes = () => {
       try {
         const medicalCase = await object.medical_case.findOne({
           where: {
-            id: req.header('id')
-          }
+            id: req.header('id'),
+          },
         });
         const steps = await object.step.findAll({
           where: {
-            case_id: medicalCase.id
-          }
+            case_id: medicalCase.id,
+          },
         });
         const caseToValidate = {
           name: medicalCase.name,
