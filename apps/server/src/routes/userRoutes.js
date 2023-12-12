@@ -145,7 +145,6 @@ export const getUserRoutes = () => {
 
     try {
       const exists = await object.user_group.findOne({ where: { name: groupName } });
-      console.log('här här ->', exists);
       if (exists !== null) {
         return res.status(400).json(`Can't create group with the selected name: ${groupName}`);
       }

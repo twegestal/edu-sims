@@ -33,7 +33,6 @@ export default function UserGroupsCard() {
   };
 
   const handleCopyLink = (link) => {
-    console.log(userGroups);
     navigator.clipboard.writeText(link);
   };
 
