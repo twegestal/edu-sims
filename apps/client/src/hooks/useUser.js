@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 export const useUser = () => {
   const { user } = useAuth();
-  const getUser = useApi('getUser');
   const getAllUsersApi = useApi('getAllUsers');
   const clearUserInfoApi = useApi('clearUserInfo');
   const createUserGroupApi = useApi('createUserGroup');
@@ -62,7 +61,9 @@ export const useUser = () => {
       const response = await createUserGroupApi({ body: { groupName: name } });
       if (response.status === 201) {
         setCreatedUserGroup(response.data);
+        return true;
       }
+      return false;
     } catch (error) {
       console.error('error creating user group: ', error);
     }
