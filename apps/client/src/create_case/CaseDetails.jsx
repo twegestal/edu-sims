@@ -1,27 +1,20 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionItem,
   FormControl,
   FormLabel,
   Input,
   VStack,
-  Heading,
-  Box,
-  AccordionIcon,
-  AccordionPanel,
-  Checkbox,
   Button,
   Select,
+  Heading,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
 
-export default function CaseDetails({ onSave }) {
+export default function CaseDetails({ onSave, setMedicalFieldId }) {
   const [caseName, setCaseName] = useState();
 
   const { medicalFields, getMedicalFields } = useCases();
-  const [medicalFieldId, setMedicalFieldId] = useState();
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +36,7 @@ export default function CaseDetails({ onSave }) {
       borderRadius={4}
       marginRight={'1%'}
     >
+      <Heading as={'h1'} size={'lg'}>Falldetaljer</Heading>
       <FormControl>
         <FormLabel>Namn på fallet</FormLabel>
         <Input
@@ -61,7 +55,7 @@ export default function CaseDetails({ onSave }) {
         </Select>
       </FormControl>
 
-      <Button onClick={() => onSave(caseName, medicalFieldId)}>Spara fallet</Button>
+      <Button onClick={() => onSave(caseName)}>Spara fallet</Button>
     </VStack>
   );
 }

@@ -70,5 +70,6 @@ export const useDiagnosis = () => {
     addNewDiagnosis,
     updateDiagnosis,
     deleteDiagnosis,
+    setDiagnosisList
   };
 };

@@ -4,7 +4,7 @@ import DiagnosisModal from './DiagnosisModal';
 import SummaryModal from './SummaryModal';
 import TreatmentModal from './TreatmentModal';
 
-export default function CreateCaseModal({ isOpen, onClose, module, moduleData }) {
+export default function CreateCaseModal({ isOpen, onClose, module, moduleData, medicalFieldId }) {
   return (
     <>
       {module.module_type_identifier === 0 && (
@@ -16,7 +16,7 @@ export default function CreateCaseModal({ isOpen, onClose, module, moduleData })
       )}
 
       {module.module_type_identifier === 2 && (
-        <DiagnosisModal isOpen={isOpen} onClose={onClose} moduleData={moduleData} />
+        <DiagnosisModal isOpen={isOpen} onClose={onClose} moduleData={moduleData} medicalFieldId={medicalFieldId} />
       )}
 
       {module.module_type_identifier === 3 && (
