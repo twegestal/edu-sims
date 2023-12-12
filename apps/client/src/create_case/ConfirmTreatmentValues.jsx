@@ -19,7 +19,7 @@ export default function ConfirmTreatmentValues({
   treatmentId,
   stepSpecificTreatments,
 }) {
-  const [treatmentDose, setTreatmentDose] = useState('Fyll i dosering här');
+  const [treatmentDose, setTreatmentDose] = useState();
 
   useEffect(() => {
     if (isOpen) {
@@ -28,7 +28,7 @@ export default function ConfirmTreatmentValues({
           if (element.value) {
             setTreatmentDose(element.value);
           } else {
-            setTreatmentDose('Fyll i dosering här');
+            setTreatmentDose();
           }
         }
       });

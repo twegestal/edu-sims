@@ -92,7 +92,13 @@ export const useCases = () => {
         return;
       }
     } catch (error) {
-      console.error('error fetch summary step: ', error);
+      console.error('error updating case published state: ', error);
+      if (error.response.status === 400) {
+        const response = {
+          errors: await error.response.json()
+        }
+        return response;
+      }
     }
   };
 
@@ -103,7 +109,7 @@ export const useCases = () => {
         return result.data;
       }
     } catch (error) {
-      console.error('error fetch summary step: ', error);
+      console.error('error creating attempt: ', error);
     }
   };
 

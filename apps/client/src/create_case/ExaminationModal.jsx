@@ -400,7 +400,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                   <FormLabel>Max antal test</FormLabel>
                   <NumberInput
                     value={maxNbrTests}
-                    onChange={(valueAsNumber) => setMaxNbrTests(valueAsNumber)}
+                    onChange={(valueAsNumber) => setMaxNbrTests(parseInt(valueAsNumber, 10))}
                   >
                     <NumberInputField />
                     <NumberInputStepper>

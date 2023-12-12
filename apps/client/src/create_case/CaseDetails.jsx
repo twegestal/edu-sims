@@ -22,7 +22,6 @@ export default function CaseDetails({ onSave }) {
 
   const { medicalFields, getMedicalFields } = useCases();
   const [medicalFieldId, setMedicalFieldId] = useState();
-  //const [checkboxChecked, setCheckboxChecked] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,10 +30,6 @@ export default function CaseDetails({ onSave }) {
 
     fetchData();
   }, []);
-
-  /* const handleCheckboxChange = (checkBoxId) => {
-    setCheckboxChecked(checkboxChecked === checkBoxId ? null : checkBoxId);
-  }; */
 
   return (
     <VStack
@@ -55,25 +50,7 @@ export default function CaseDetails({ onSave }) {
           onChange={(e) => setCaseName(e.target.value)}
         ></Input>
 
-        {/* <Accordion>
-          <AccordionItem>
-            <Heading as='h3' size='md'>
-              <AccordionButton>
-                <Box as='span' flex='1' textAlign='left'>
-                  Medicinskt område
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </Heading>
-            <AccordionPanel pb={4}>
-                {medicalFields && 
-                    medicalFields.map((medicalField) => (
-                        <Checkbox isChecked={medicalField.id === checkboxChecked} key={medicalField.id} onChange={() => handleCheckboxChange(medicalField.id)}>{medicalField.name}</Checkbox>
-                    ))
-                }
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion> */}
+        
         <FormLabel>Medicinskt område</FormLabel>
         <Select placeholder='Välj ett område' onChange={(e) => setMedicalFieldId(e.target.value)}>
           {medicalFields &&

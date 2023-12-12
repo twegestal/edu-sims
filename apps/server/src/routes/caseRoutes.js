@@ -3,6 +3,8 @@ import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
+import { validateCaseToPublish } from "api"
+
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -317,7 +319,7 @@ export const getCaseRoutes = () => {
         },
       });
       res.status(200).json(response);
-    } else if (req.header('id') == '') {
+    } else if (req.header('id') === '') {
       const Value = await object.examination_subtype.findAll({});
       res.status(200).json(Value);
     } else {
@@ -330,7 +332,7 @@ export const getCaseRoutes = () => {
     }
   });
   // kanske bara hämta beroende på examination_type_id och examination_subtyp_id för hämta delar av examinationer
-  router.get('/getExaminationList', async (req, res, next) => {
+  router.get('/getExaminationList', async (req, res, _next) => {
     if (req.header('examination_subtype_id')) {
       const response = await object.examination_list.findAll({
         where: {
@@ -410,18 +412,51 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.put('/publishCase', async (req, res, next) => {
-    if (req.header('id') == '') {
+  router.put('/publishCase', async (req, res, _next) => {
+    if (req.header('id') === '') {
       res.status(404).json('Not Found');
     } else {
       let publish = false;
-      if (req.header('isPublished') == 'false' || req.header('isPublished') == 'null') {
+      if (req.header('isPublished') === 'false' || req.header('isPublished') === 'null') {
         publish = true;
       }
       if (req.header('isPublished') == true) {
         publish = false;
       }
-      const result = await object.medical_case.update(
+
+      try {
+        const medicalCase = await object.medical_case.findOne({
+          where: {
+            id: req.header('id')
+          }
+        });
+        const steps = await object.step.findAll({
+          where: {
+            case_id: medicalCase.id
+          }
+        });
+        const caseToValidate = {
+          name: medicalCase.name,
+          creator_user_id: medicalCase.creator_user_id,
+          steps: steps,
+          medical_field_id: medicalCase.medical_field_id,
+        };
+        const validationResult = validateCaseToPublish(caseToValidate);
+
+        if (validationResult.success) {
+          /* await medicalCase.update({
+            published: publish,
+          }); */
+          res.status(200).json('Succesful update of case published state');
+        } else {
+          res.status(400).send(validationResult.errors);
+        }
+      } catch (error) {
+        console.error('Error updating medical case published status in database', error);
+        res.status(500).json('Internal server error');
+      }
+
+      /* const result = await object.medical_case.update(
         { published: publish },
         {
           where: {
@@ -429,7 +464,7 @@ export const getCaseRoutes = () => {
           },
         },
       );
-      res.status(200).json(result);
+      res.status(200).json(result); */
     }
   });
 

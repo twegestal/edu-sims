@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { handleZodErrors } from '../utils';
+import { handleZodErrors } from '../utils/index.js';
 
 const passwordSchema = z.object({
   password: z
