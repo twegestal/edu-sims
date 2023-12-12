@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { handleZodErrors } from '../utils';
+import { handleZodErrors, handleZodCaseErrors } from '../utils/index.js';
+import { Modules } from '../utils/index.js';
 
 const caseInProgressSchema = z.object({
   name: z.string().min(1, 'Fallets namn behöver vara minst ett tecken långt'),
@@ -148,7 +149,7 @@ export const validateIntroductionModule = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleZodErrors(error);
+    return handleZodCaseErrors(error, Modules.Introduction);
   }
 };
 
@@ -160,7 +161,7 @@ export const validateExaminationModule = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleZodErrors(error);
+    return handleZodCaseErrors(error, Modules.Examination);
   }
 };
 
@@ -172,7 +173,7 @@ export const validateDiagnosisModule = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleZodErrors(error);
+    return handleZodCaseErrors(error, Modules.Diagnosis);
   }
 };
 
@@ -184,7 +185,7 @@ export const validateTreatmentModule = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleZodErrors(error);
+    return handleZodCaseErrors(error, Modules.Treatment);
   }
 };
 
@@ -196,6 +197,6 @@ export const validateSummaryModule = (data) => {
       errors: null,
     };
   } catch (error) {
-    return handleZodErrors(error);
+    return handleZodCaseErrors(error, Modules.Summary);
   }
 };

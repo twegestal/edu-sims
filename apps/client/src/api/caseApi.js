@@ -102,10 +102,12 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
-  publishCase: async (headers) => {
+  /* publishCase: async (headers) => { // detta är väl en duplicate va????
     const response = await apiClient.put(`${prefix}publishCase`, headers);
+    
     return packageResponse(response);
-  },
+  }, */
+
   publishCase: async (headers) => {
     const response = await apiClient.put(`${prefix}publishCase`, headers);
     return packageResponse(response);

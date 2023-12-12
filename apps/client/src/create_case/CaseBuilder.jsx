@@ -1,4 +1,4 @@
-import { Box, VStack, Flex, HStack } from '@chakra-ui/react';
+import { Box, VStack, Flex, HStack, useToast } from '@chakra-ui/react';
 import ModuleCard from './ModuleCard';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -9,6 +9,15 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import CreateCaseModal from './CreateCaseModal.jsx';
 import Confirm from '../components/Confirm.jsx';
 import CaseDetails from './CaseDetails.jsx';
+import {
+  validateDiagnosisModule,
+  validateExaminationModule,
+  validateSummaryModule,
+  validateTreatmentModule,
+  validateIntroductionModule,
+  validateCaseInProgress,
+  errorWithPathToString,
+} from 'api';
 
 export default function CaseBuilder() {
   const [modules, moduleHandlers] = useListState([]);
@@ -20,6 +29,7 @@ export default function CaseBuilder() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
   const { createCase } = useCreateCase();
+  const toast = useToast();
 
   useEffect(() => {
     const fetchModuleTypes = async () => {
@@ -30,9 +40,6 @@ export default function CaseBuilder() {
       fetchModuleTypes();
     }
   }, []);
-  useEffect(() => {
-    console.log(modules);
-  }, [modules]);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -46,7 +53,7 @@ export default function CaseBuilder() {
     } else if (source.droppableId === 'availableModules' && destination.droppableId === 'sandbox') {
       const moduleToAdd = moduleTypes[source.index];
       const uniqueId = `${moduleToAdd.id}-${Date.now()}`;
-      const newModule = { ...moduleToAdd, uniqueId };
+      const newModule = { ...moduleToAdd, uniqueId, };
       moduleHandlers.setState((currentModules) => {
         const updatedModules = [...currentModules];
         updatedModules.splice(destination.index, 0, newModule);
@@ -94,7 +101,79 @@ export default function CaseBuilder() {
       creator_user_id: user.id,
     };
 
-    createCase(caseObject);
+    const validationResults = validateCaseToSave(caseObject);
+    let successfulValidation = true;
+    validationResults.forEach((result) => {
+      if (!result.success) {
+        successfulValidation = false;
+      }
+    });
+    if (successfulValidation) {
+      createCase(caseObject);
+    } else {
+      for (let i = 0; i < validationResults.length; i++) {
+        validationResults[i].errors?.map((error, index) => {
+          const titleString = validationResults[i].errors[index].module ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
+          : 'Påträffade följande fel';
+          toast({
+            title: titleString,
+            description: errorWithPathToString(error),
+            status: 'error',
+            duration: '9000',
+            isClosable: true,
+            position: 'top',
+          });
+      });
+        
+      }
+    }
+  };
+
+  const validateCaseToSave = (caseObject) => {
+    const validationResults = [];
+    caseObject.steps.forEach((module) => {
+      const stepData = module.stepData;
+      switch (module.module_type_identifier) {
+        case 0: {
+          const moduleValidationResult = validateIntroductionModule(stepData);
+
+          if (!moduleValidationResult.success) {
+            validationResults.push(moduleValidationResult);
+          }
+          break;
+        }
+        case 1: {
+          const moduleValidationResult = validateExaminationModule(stepData);
+          if (!moduleValidationResult.success) {
+            validationResults.push(moduleValidationResult);
+          }
+          break;
+        }
+        case 2: {
+          const moduleValidationResult = validateDiagnosisModule(stepData);
+          if (!moduleValidationResult.success) {
+            validationResults.push(moduleValidationResult);
+          }
+          break;
+        }
+        case 3: {
+          const moduleValidationResult = validateTreatmentModule(stepData);
+          if (!moduleValidationResult.success) {
+            validationResults.push(moduleValidationResult);
+          }
+          break;
+        }
+        case 4: {
+          const moduleValidationResult = validateSummaryModule(stepData);
+          if (!moduleValidationResult.success) {
+            validationResults.push(moduleValidationResult);
+          }
+          break;
+        }
+      }
+    });
+    validationResults.push(validateCaseInProgress(caseObject));
+    return validationResults;
   };
 
   return (

@@ -7,16 +7,19 @@ import {
   Button,
   Flex,
   Box,
+  useToast
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
+import { errorWithPathToString } from 'api';
 
 export default function ShowAllCases() {
   const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
     useCases();
   const { user } = useAuth();
+  const toast = useToast();
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -51,14 +54,24 @@ export default function ShowAllCases() {
   };
 
   async function handlePublish(caseId, isPublished) {
-    if (isPublished == true) {
+    if (isPublished) {
       if (confirm('Är du säker på att du vill avpublicera?')) {
-        await publishCase(caseId, isPublished);
+        const response = await publishCase(caseId, isPublished);
       }
     }
-    if (isPublished == false || isPublished == null) {
+    if (!isPublished) {
       if (confirm('Är du säker på att du vill publicera?')) {
-        await publishCase(caseId, isPublished);
+        const response = await publishCase(caseId, isPublished);
+        if (response.errors) {
+          toast({
+            title: 'Fel vid publicering av fall',
+            description: errorWithPathToString(response.errors[0]),
+            status: 'error',
+            duration: 9000,
+            position: 'top',
+            isClosable: true,
+          })
+        }
       }
     }
   }
