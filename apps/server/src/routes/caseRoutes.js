@@ -160,7 +160,7 @@ export const getCaseRoutes = () => {
           },
         });
 
-        if (result.length > 0) {
+        if (result) {
           res.status(200).send(result);
         } else {
           res.status(404).json('Resource not found');

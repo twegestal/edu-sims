@@ -9,7 +9,7 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  Heading,
+  Text,
   Checkbox,
   VStack,
 } from '@chakra-ui/react';
@@ -19,7 +19,7 @@ import LoadingSkeleton from '../loadingSkeleton';
 import { useCases } from '../hooks/useCases';
 import { useDiagnosis } from '../hooks/useDiagnosis';
 
-export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
+export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFieldId }) {
   const [loading, setLoading] = useState(true);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -29,25 +29,21 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
   const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
   const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
 
-  const { medicalFields, getMedicalFields } = useCases();
-  const { diagnosisList, getDiagnosisList } = useDiagnosis();
-  const [diagnosisMap, setDiagnosisMap] = useState();
+  const { getMedicalFields } = useCases();
+  const { diagnosisList, getDiagnosisList, setDiagnosisList } = useDiagnosis();
 
   useEffect(() => {
     const fetchData = async () => {
       await getMedicalFields();
-      await getDiagnosisList();
+
+      if (medicalFieldId) {
+        await getDiagnosisList(medicalFieldId);
+      }
       setLoading(false);
     };
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (medicalFields && diagnosisList) {
-      generateDiagnosisMap();
-    }
-  }, [medicalFields, diagnosisList]);
 
   useEffect(() => {
     setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
@@ -58,19 +54,17 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
     setFeedbackIncorrect(
       moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
     );
+
+    const updateDiagnosisList = async () => {
+      await getDiagnosisList(medicalFieldId);
+    };
+
+    if (medicalFieldId) {
+      updateDiagnosisList();
+    } else {
+      setDiagnosisList();
+    }
   }, [moduleData]);
-
-  const generateDiagnosisMap = () => {
-    const diagnosisMap = new Map();
-    medicalFields.forEach((medicalField) => {
-      const newArr = diagnosisList.filter(
-        (diagnosis) => diagnosis.medical_field_id === medicalField.id,
-      );
-      diagnosisMap.set(medicalField.name, newArr);
-    });
-
-    setDiagnosisMap(diagnosisMap);
-  };
 
   const clearContent = () => {
     setPrompt('');
@@ -127,24 +121,31 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData }) {
                   />
 
                   <FormLabel>Ange korrekt diagnos från listan</FormLabel>
-                  {diagnosisMap.size > 0 &&
-                    Array.from(diagnosisMap).map(([key, values]) => (
-                      <VStack key={key} alignItems={'flex-start'}>
-                        <Heading as={'h3'} size={'md'}>
-                          {key}
-                        </Heading>
-                        {values.map((diagnosis) => (
-                          <Checkbox
-                            key={diagnosis.id}
-                            id={diagnosis.id}
-                            isChecked={diagnosis.id === diagnosisId}
-                            onChange={() => handleCheckboxChange(diagnosis.id)}
-                          >
-                            {diagnosis.name}
-                          </Checkbox>
-                        ))}
-                      </VStack>
-                    ))}
+                  <VStack alignItems={'flex-start'}>
+                    {diagnosisList ? (
+                      <>
+                      {diagnosisList.length > 0 ? (
+                        <>
+                          {diagnosisList.map((diagnosis) => (
+                            <Checkbox
+                              key={diagnosis.id}
+                              id={diagnosis.id}
+                              isChecked={diagnosis.id === diagnosisId}
+                              onChange={() => handleCheckboxChange(diagnosis.id)}
+                            >
+                              {diagnosis.name}
+                            </Checkbox>
+                          ))}
+                        </>
+                      ) : (
+                        <Text as={'i'}>Det finns inga diagnoser kopplade till det valda medicinska området</Text>
+                      )}
+                      </>
+                    ) : (
+                      <Text as={'i'}>Du måste välja ett medicinskt område i falldetaljer</Text>
+                    )}
+                    
+                  </VStack>
                   <FormLabel>Korrekt feedback</FormLabel>
                   <Textarea
                     value={feedbackCorrect}

@@ -1,4 +1,4 @@
-import { Box, VStack, Flex, HStack, useToast } from '@chakra-ui/react';
+import { Box, VStack, Flex, HStack, useToast, Heading } from '@chakra-ui/react';
 import ModuleCard from './ModuleCard';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -25,6 +25,7 @@ export default function CaseBuilder() {
   const [activeModule, setActiveModule] = useState();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [moduleToDelete, setModuleToDelete] = useState();
+  const [medicalFieldId, setMedicalFieldId] = useState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
@@ -53,7 +54,7 @@ export default function CaseBuilder() {
     } else if (source.droppableId === 'availableModules' && destination.droppableId === 'sandbox') {
       const moduleToAdd = moduleTypes[source.index];
       const uniqueId = `${moduleToAdd.id}-${Date.now()}`;
-      const newModule = { ...moduleToAdd, uniqueId, };
+      const newModule = { ...moduleToAdd, uniqueId };
       moduleHandlers.setState((currentModules) => {
         const updatedModules = [...currentModules];
         updatedModules.splice(destination.index, 0, newModule);
@@ -93,7 +94,7 @@ export default function CaseBuilder() {
     setIsConfirmOpen(false);
   };
 
-  const saveCase = (caseName, medicalFieldId) => {
+  const saveCase = (caseName) => {
     const caseObject = {
       name: caseName,
       steps: modules,
@@ -113,8 +114,9 @@ export default function CaseBuilder() {
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {
-          const titleString = validationResults[i].errors[index].module ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
-          : 'Påträffade följande fel';
+          const titleString = validationResults[i].errors[index].module
+            ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
+            : 'Påträffade följande fel';
           toast({
             title: titleString,
             description: errorWithPathToString(error),
@@ -123,8 +125,7 @@ export default function CaseBuilder() {
             isClosable: true,
             position: 'top',
           });
-      });
-        
+        });
       }
     }
   };
@@ -199,6 +200,7 @@ export default function CaseBuilder() {
                     borderRadius={4}
                     marginRight={'1%'}
                   >
+                    <Heading as={'h1'} size={'lg'}>Moduler</Heading>
                     {moduleTypes.map((module, index) => (
                       <Draggable key={module.id} draggableId={module.id} index={index}>
                         {(provided) => (
@@ -232,6 +234,7 @@ export default function CaseBuilder() {
                     borderRadius={4}
                     marginLeft={'1%'}
                   >
+                    <Heading as={'h1'} size={'lg'}>Tidslinje</Heading>
                     {modules.map((module, index) => (
                       <Draggable key={module.uniqueId} draggableId={module.uniqueId} index={index}>
                         {(provided) => (
@@ -256,7 +259,7 @@ export default function CaseBuilder() {
             </Flex>
           </DragDropContext>
 
-          <CaseDetails onSave={saveCase} />
+          <CaseDetails onSave={saveCase} setMedicalFieldId={setMedicalFieldId} />
         </HStack>
       )}
       {activeModule && (
@@ -265,6 +268,7 @@ export default function CaseBuilder() {
           onClose={handleCloseModal}
           module={activeModule}
           moduleData={activeModule}
+          medicalFieldId={medicalFieldId}
         />
       )}
       <Confirm
