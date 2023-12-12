@@ -13,6 +13,7 @@ import ProfilePage from './profilePage/profilePage.jsx';
 import NavBar from './components/NavBar.jsx';
 import CaseBuilder from './create_case/CaseBuilder.jsx';
 import ManageLists from './adminPage/ManageLists.jsx';
+import WithAdminAuth from './adminPage/WithAdminAuth.jsx';
 
 export default function App() {
   const { user } = useAuth();
@@ -28,15 +29,30 @@ export default function App() {
           <>
             <Routes>
               <Route path='/' element={<Home />} />
+              <Route path='/profilePage' element={<ProfilePage />}></Route>
               <Route path='/case'>
                 <Route path=':caseid/:attemptid/:reload' element={<PerformCase />} />
               </Route>
-              <Route path='/manageCases' element={<ManageCases />}></Route>
-              <Route path='/showStatistics' element={<ShowStatistics />} />
-              <Route path='/manageUsers' element={<ManageUsers />}></Route>
-              <Route path='/caseBuilder' element={<CaseBuilder />} />
-              <Route path='/profilePage' element={<ProfilePage />}></Route>
-              <Route path='/manageLists' element={<ManageLists />} />
+              <Route
+                path='/manageCases'
+                element={<WithAdminAuth>{() => <ManageCases />}</WithAdminAuth>}
+              />
+              <Route
+                path='/showStatistics'
+                element={<WithAdminAuth>{() => <ShowStatistics />}</WithAdminAuth>}
+              />
+              <Route
+                path='/manageUsers'
+                element={<WithAdminAuth>{() => <ManageUsers />}</WithAdminAuth>}
+              />
+              <Route
+                path='/caseBuilder'
+                element={<WithAdminAuth>{() => <CaseBuilder />}</WithAdminAuth>}
+              />
+              <Route
+                path='/manageLists'
+                element={<WithAdminAuth>{() => <ManageLists />}</WithAdminAuth>}
+              />
             </Routes>
           </>
         ) : (
