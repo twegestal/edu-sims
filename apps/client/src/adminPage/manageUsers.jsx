@@ -10,6 +10,11 @@ import {
   CardBody,
   Text,
   IconButton,
+  TabList,
+  Tab,
+  Tabs,
+  TabPanel,
+  TabPanels
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
@@ -19,8 +24,7 @@ import UserGroupsCard from './UserGroupsCard.jsx';
 export default function ManageUsers() {
   const { createdUserGroup, createUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
-  const [showUserGroupCard, setShowUserGroupCard] = useState(false);
-  const [showUserTable, setShowUserTable] = useState(false);
+  const [reloading, setReloading] = useState(false);
 
   const handleInputUserGroupChange = (event) => {
     setInputUserGroup(event.target.value);
@@ -28,8 +32,12 @@ export default function ManageUsers() {
 
   const generateRegLink = async () => {
     if (inputUserGroup.length > 0) {
-      await createUserGroup(inputUserGroup);
-    }
+      const response = await createUserGroup(inputUserGroup);
+      if (response) {
+        setReloading((previous) => !previous);
+      }
+    } 
+
   };
 
   return (
@@ -41,7 +49,7 @@ export default function ManageUsers() {
       <Box mb='5%'>
         <h3>Skapa registreringslänk för nya användare</h3>
         <FormControl>
-          <Flex direction={'row'}>
+          <Flex direction={'row'} w='50%' marginLeft='25%'>
             <Input
               placeholder='Skriv namnet på den nya användargrupp länken skall skapas för'
               value={inputUserGroup}
@@ -72,18 +80,20 @@ export default function ManageUsers() {
           </Card>
         )}
       </Box>
-
-      <Box>
-        <Button onClick={() => setShowUserGroupCard(!showUserGroupCard)}>
-          {showUserGroupCard ? 'Dölj aktiva grupper' : 'Visa aktiva grupper'}
-        </Button>
-        <Button onClick={() => setShowUserTable(!showUserTable)}>
-          {showUserTable ? 'Dölj användare' : 'Visa användare'}
-        </Button>
-      </Box>
-
-      {showUserGroupCard && <UserGroupsCard />}
-      {showUserTable && <UserTable />}
+      <Tabs variant={'enclosed'}>
+        <TabList>
+          <Tab>Grupper</Tab>
+          <Tab>Användare</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <UserGroupsCard reloading={reloading} />
+          </TabPanel>
+          <TabPanel>
+            <UserTable />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Flex>
   );
 }

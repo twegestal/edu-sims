@@ -13,7 +13,7 @@ export default function ManageLists() {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <ManageExamination />
+          <ManageExamination  />
         </TabPanel>
         <TabPanel>
           <ManageDiagnosis />

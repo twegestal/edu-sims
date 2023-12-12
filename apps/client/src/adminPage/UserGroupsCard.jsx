@@ -11,22 +11,25 @@ import {
   Td,
   Tbody,
   IconButton,
-  Input,
-  useStatStyles,
+  TableCaption,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
 
-export default function UserGroupsCard() {
+export default function UserGroupsCard({reloading}) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
-  const [filteredUserGroups, setFilteredUsergroups] = useState([]);
 
+  const fetchUserGroups = async () => {
+    await getUserGroups();
+  };
   useEffect(() => {
-    const fetchUserGroups = async () => {
-      await getUserGroups();
-    };
     fetchUserGroups();
   }, []);
+  useEffect(() => {
+    fetchUserGroups(); 
+  }, [reloading]);
+
+  
 
   const removeRegistrationLink = async (id) => {
     const result = await deactivateUserGroup(id);
@@ -38,10 +41,12 @@ export default function UserGroupsCard() {
   const handleCopyLink = (link) => {
     navigator.clipboard.writeText(link);
   };
-
   return (
     <TableContainer maxWidth='90%'>
-      <Table>
+      <Table variant='simple'>
+        <TableCaption>
+          Aktiva grupper i EDU-SIMS.
+        </TableCaption>
         <Thead>
           <Tr>
             <Th>Användargrupp</Th>
