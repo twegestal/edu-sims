@@ -9,7 +9,6 @@ import {
   Box,
   Text,
   Card,
-  CardBody,
   VStack,
   HStack,
   List,
@@ -17,7 +16,6 @@ import {
   Checkbox,
   Button,
   useDisclosure,
-  Collapse,
 } from '@chakra-ui/react';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useExamination } from './hooks/useExamination';
@@ -28,6 +26,7 @@ import Feedback from './performCaseComponents/Feedback';
 export default function Examination(props) {
   const [loading, setLoading] = useState(true);
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
+  const [examinationsToRun, setExaminationsToRun] = useState([]);
   const [results, setResults] = useState({});
   const [resultsReady, setResultsReady] = useState(false);
   const { isOpen, onToggle } = useDisclosure();
@@ -39,6 +38,8 @@ export default function Examination(props) {
     examinationList,
     examinationsFetched,
     updateResults,
+    checkboxesChecked,
+    handleCheckboxChange,
   } = useExaminationUtils(examinationStep, props.stepId, loading);
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function Examination(props) {
 
   const runExams = () => {
     //TODO: lös denna skiten! ändra till att varje checkbox lägger till sig själv onclick/ontoggle typ
-    const examinationsToRun = [];
+    /* const examinationsToRun = [];
 
     for (const subCategory of Object.keys(examinationList)) {
       for (const examinationId of Object.keys(examinationList[subCategory])) {
@@ -75,7 +76,22 @@ export default function Examination(props) {
 
     setResultsReady(false);
     const resultsMap = updateResults(examinationsToRun, examinationList);
-    setResults(resultsMap);
+    setResults(resultsMap); */
+
+    const examinationsToRun = [];
+
+    Object.keys(checkboxesChecked).forEach((examinationId) => {
+      if (checkboxesChecked[examinationId]) {
+        examinationsToRun.push(examinationId);
+      }
+    });
+
+    setResultsReady(false);
+    const resultsMap = updateResults(examinationsToRun, examinationList);
+    setResults({
+      
+      resultsMap
+    });
   };
 
   const evaluateAnswer = async () => {
@@ -160,7 +176,13 @@ export default function Examination(props) {
                                           Object.entries(examinationList[subCategory]).map(
                                             ([id, name], index) => (
                                               <ListItem key={index}>
-                                                <Checkbox id={id}>{name}</Checkbox>
+                                                <Checkbox
+                                                  id={id}
+                                                  isChecked={checkboxesChecked[id]}
+                                                  onChange={() => handleCheckboxChange(id)}
+                                                >
+                                                  {name}
+                                                </Checkbox>
                                               </ListItem>
                                             ),
                                           )}

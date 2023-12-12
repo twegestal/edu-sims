@@ -14,6 +14,7 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
   const [stepValues, setStepValues] = useState({});
   const [examinationList, setExaminationList] = useState({});
   const [examinationsFetched, setExaminationsFetched] = useState(false);
+  const [checkboxesChecked, setCheckboxesChecked] = useState({});
 
   useEffect(() => {
     if (!loading) {
@@ -28,6 +29,12 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
       fetchExaminationList();
     }
   }, [subCategoryNames]);
+
+  useEffect(() => {
+    if(examinationList) {
+      resetCheckboxState();
+    }
+  }, [examinationList]);
 
   const fetchCategoryNames = async () => {
     const categoryNamesMap = {};
@@ -84,6 +91,7 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
 
   const updateResults = (examinationsToRun, examinations) => {
     const resultsMap = {};
+    console.log('examinationsToRun:', examinationsToRun);
 
     for (let i = 0; i < examinationsToRun.length; i++) {
       if (stepValues.hasOwnProperty(examinationsToRun[i])) {
@@ -129,6 +137,25 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
     return resultsMap;
   };
 
+  const resetCheckboxState = () => {
+    const initialCheckboxState = {};
+
+    Object.keys(examinationList).forEach((examinationSubcategoryId) => {
+      Object.keys(examinationList[examinationSubcategoryId]).forEach((examinationId) => {
+        initialCheckboxState[examinationId] = false;
+      });
+    });
+
+    setCheckboxesChecked(initialCheckboxState);
+  };
+
+  const handleCheckboxChange = (examinationId) => {
+    setCheckboxesChecked((prev) => ({
+      ...prev,
+      [examinationId]: !prev[examinationId],
+    }));
+  };
+
   return {
     categoryNames,
     subCategoryNames,
@@ -136,5 +163,7 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
     examinationList,
     examinationsFetched,
     updateResults,
+    checkboxesChecked,
+    handleCheckboxChange,
   };
 };
