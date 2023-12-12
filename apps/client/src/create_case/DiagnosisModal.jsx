@@ -124,27 +124,28 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                   <VStack alignItems={'flex-start'}>
                     {diagnosisList ? (
                       <>
-                      {diagnosisList.length > 0 ? (
-                        <>
-                          {diagnosisList.map((diagnosis) => (
-                            <Checkbox
-                              key={diagnosis.id}
-                              id={diagnosis.id}
-                              isChecked={diagnosis.id === diagnosisId}
-                              onChange={() => handleCheckboxChange(diagnosis.id)}
-                            >
-                              {diagnosis.name}
-                            </Checkbox>
-                          ))}
-                        </>
-                      ) : (
-                        <Text as={'i'}>Det finns inga diagnoser kopplade till det valda medicinska området</Text>
-                      )}
+                        {diagnosisList.length > 0 ? (
+                          <>
+                            {diagnosisList.map((diagnosis) => (
+                              <Checkbox
+                                key={diagnosis.id}
+                                id={diagnosis.id}
+                                isChecked={diagnosis.id === diagnosisId}
+                                onChange={() => handleCheckboxChange(diagnosis.id)}
+                              >
+                                {diagnosis.name}
+                              </Checkbox>
+                            ))}
+                          </>
+                        ) : (
+                          <Text as={'i'}>
+                            Det finns inga diagnoser kopplade till det valda medicinska området
+                          </Text>
+                        )}
                       </>
                     ) : (
                       <Text as={'i'}>Du måste välja ett medicinskt område i falldetaljer</Text>
                     )}
-                    
                   </VStack>
                   <FormLabel>Korrekt feedback</FormLabel>
                   <Textarea

@@ -16,7 +16,12 @@ export default function CreateCaseModal({ isOpen, onClose, module, moduleData, m
       )}
 
       {module.module_type_identifier === 2 && (
-        <DiagnosisModal isOpen={isOpen} onClose={onClose} moduleData={moduleData} medicalFieldId={medicalFieldId} />
+        <DiagnosisModal
+          isOpen={isOpen}
+          onClose={onClose}
+          moduleData={moduleData}
+          medicalFieldId={medicalFieldId}
+        />
       )}
 
       {module.module_type_identifier === 3 && (

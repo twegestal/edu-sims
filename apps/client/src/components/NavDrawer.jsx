@@ -1,11 +1,6 @@
 import {
-  Box,
-  Image,
   Flex,
-  Avatar,
-  useDisclosure,
   Button,
-  Input,
   Drawer,
   DrawerBody,
   DrawerFooter,
@@ -18,16 +13,11 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import DrawerBtn from './DrawerBtn.jsx';
 
-export default function NavDrawer(props) {
+export default function NavDrawer({ isOpen, onClose, btnRef }) {
   const { user, logout } = useAuth();
   return (
     <>
-      <Drawer
-        isOpen={props.isOpen}
-        placement='right'
-        onClose={props.onClose}
-        finalFocusRef={props.btnRef}
-      >
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent bg={'brand.bg'}>
           <DrawerCloseButton />
@@ -37,22 +27,22 @@ export default function NavDrawer(props) {
 
           <DrawerBody>
             <Flex flexDirection={'column'} justifyContent={'space-between'}>
-              <Link to='/'>
-                <DrawerBtn onClick={props.onClose} text='Hem' />
+              <Link onClick={onClose} to='/'>
+                <DrawerBtn text='Hem' />
               </Link>
-              <Link to='/profilePage'>
-                <DrawerBtn onClick={props.onClose} text='Min profil' />
+              <Link onClick={onClose} to='/profilePage'>
+                <DrawerBtn text='Min profil' />
               </Link>
               {user.isAdmin && (
                 <>
-                  <Link to='/manageUsers'>
-                    <DrawerBtn onClick={props.onClose} text='Hantera användare' />
+                  <Link onClick={onClose} to='/manageUsers'>
+                    <DrawerBtn text='Hantera användare' />
                   </Link>
-                  <Link to='/manageCases'>
-                    <DrawerBtn onClick={props.onClose} text='Hantera fall' />
+                  <Link onClick={onClose} to='/manageCases'>
+                    <DrawerBtn text='Hantera fall' />
                   </Link>
-                  <Link to='/manageLists'>
-                    <DrawerBtn onClick={props.onClose} text='Hantera listor' />
+                  <Link onClick={onClose} to='/manageLists'>
+                    <DrawerBtn text='Hantera listor' />
                   </Link>
                 </>
               )}
@@ -62,12 +52,8 @@ export default function NavDrawer(props) {
           <DrawerFooter>
             <Button
               onClick={() => {
-                {
-                  logout();
-                }
-                {
-                  props.onClose();
-                }
+                onClose();
+                logout();
               }}
               w={'100%'}
             >
