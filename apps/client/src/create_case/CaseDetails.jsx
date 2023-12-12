@@ -1,12 +1,4 @@
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  Button,
-  Select,
-  Heading,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, VStack, Button, Select, Heading } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
 
@@ -14,7 +6,6 @@ export default function CaseDetails({ onSave, setMedicalFieldId }) {
   const [caseName, setCaseName] = useState();
 
   const { medicalFields, getMedicalFields } = useCases();
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +27,9 @@ export default function CaseDetails({ onSave, setMedicalFieldId }) {
       borderRadius={4}
       marginRight={'1%'}
     >
-      <Heading as={'h1'} size={'lg'}>Falldetaljer</Heading>
+      <Heading as={'h1'} size={'lg'}>
+        Falldetaljer
+      </Heading>
       <FormControl>
         <FormLabel>Namn på fallet</FormLabel>
         <Input

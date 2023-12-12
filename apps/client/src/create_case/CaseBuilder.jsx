@@ -200,7 +200,9 @@ export default function CaseBuilder() {
                     borderRadius={4}
                     marginRight={'1%'}
                   >
-                    <Heading as={'h1'} size={'lg'}>Moduler</Heading>
+                    <Heading as={'h1'} size={'lg'}>
+                      Moduler
+                    </Heading>
                     {moduleTypes.map((module, index) => (
                       <Draggable key={module.id} draggableId={module.id} index={index}>
                         {(provided) => (
@@ -234,7 +236,9 @@ export default function CaseBuilder() {
                     borderRadius={4}
                     marginLeft={'1%'}
                   >
-                    <Heading as={'h1'} size={'lg'}>Tidslinje</Heading>
+                    <Heading as={'h1'} size={'lg'}>
+                      Tidslinje
+                    </Heading>
                     {modules.map((module, index) => (
                       <Draggable key={module.uniqueId} draggableId={module.uniqueId} index={index}>
                         {(provided) => (
