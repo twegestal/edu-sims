@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
-import { generateRegistrationLink } from '../utils/userUtils.js';
+import { generateRandomPassword, generateRegistrationLink } from '../utils/userUtils.js';
 
 export const getUserRoutes = () => {
   const router = Router();
@@ -69,36 +69,34 @@ export const getUserRoutes = () => {
     }
   });
 
-  router.put('/clearUserInfo', async (req, res, next) => {
-    function generatePass() {
-      let pass = '';
-      let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz0123456789@#$';
-
-      for (let i = 1; i <= 8; i++) {
-        let char = Math.floor(Math.random() * str.length + 1);
-
-        pass += str.charAt(char);
+  router.put('/clearUserInfo', async (req, res, _next) => {
+    try {
+      const id = req.header('user_id');
+      if (!id) {
+        return res.status(400).json('Could not find resource');
       }
-
-      return pass;
-    }
-
-    const result = await object.end_user.update(
-      {
-        email: 'DeletedUser',
-        password: generatePass(),
-      },
-      {
-        where: {
-          id: req.header('user_id'),
+      const generatedPassword = generateRandomPassword();
+      const hashedPassword = await hashPassword(generatedPassword);
+      const result = await object.end_user.update(
+        { 
+          email: 'DeletedUser', 
+          password: hashedPassword,
         },
-      },
-    );
+        {
+          where: {
+            id: id,
+          },
+        },
+      );
 
-    if (result === null) {
-      res.status(404).json('No users found');
-    } else {
-      res.status(200).json('User deleted');
+      if (!result) {
+        res.status(404).json('No users found');
+      } else {
+        res.status(200).json('User deleted');
+      }
+    } catch (error) {
+      console.error('error clearing user info ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
