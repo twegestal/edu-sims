@@ -10,6 +10,7 @@ import {
   FormControl,
   Button,
   Select,
+  TableCaption,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useAuth } from '../hooks/useAuth';
@@ -38,7 +39,7 @@ export default function UserTable() {
     fetchData();
   }, []);
 
-  useEffect(() => { console.log(allUsers) }, [allUsers])
+  //useEffect(() => { console.log(allUsers) }, [allUsers])
 
   const handleRemoveUser = async (userToRemove) => {
     setIsConfirmOpen(false);
@@ -104,6 +105,47 @@ export default function UserTable() {
 
   };
 
+  const mapper = (toMap) => {
+    return (
+      toMap.map((aUser, index) =>
+        aUser.email !== 'DeletedUser' &&
+        aUser.id !== user.id && (
+          <Tr key={index}>
+            <Td>{aUser.email}</Td>
+            <Td>
+              <FormControl display={'flex'} flexDirection={'column'}>
+                <Button
+                  onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
+                >
+                  {' '}
+                  Sätt nytt lösenord{' '}
+                </Button>
+              </FormControl>
+            </Td>
+            <Td>
+              <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
+                <DeleteIcon />
+              </Button>
+            </Td>
+            <Td>
+              {aUser.is_admin ? (
+                <Button onClick={() => revokeAdminRights(aUser)}>
+                  {' '}
+                  Ta bort adminrättigheter{' '}
+                </Button>
+              ) : (
+                <Button onClick={() => assignAdminRights(aUser)}>
+                  {' '}
+                  Tilldela adminrättigheter{' '}
+                </Button>
+              )}
+            </Td>
+          </Tr>
+        ),
+      )
+    )
+  }
+
   return (
     <>
       {!loading && (
@@ -122,89 +164,20 @@ export default function UserTable() {
                 </option>
               ))}
           </Select>
-          <Table>
+          <Table variant='simple'>
+            <TableCaption>
+              Aktiva användare i EDU-SIMS.
+            </TableCaption>
             <Thead>
               <Tr>
                 <Th>Email</Th>
                 <Th>Byt lösenord</Th>
-                <Th isNumeric>Ta bort användare</Th>
-                <Th isNumeric>Tilldela/Ta bort administratörs rättigheter</Th>
+                <Th>Ta bort användare</Th>
+                <Th>Tilldela/Ta bort administratörs rättigheter</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {groupToRender ? (allUsers.filter((user) => user.group_id === groupToRender).map(
-                (aUser, index) =>
-                  aUser.email !== 'DeletedUser' &&
-                  aUser.id !== user.id && (
-                    <Tr key={index}>
-                      <Td>{aUser.email}</Td>
-                      <Td>
-                        <FormControl display={'flex'} flexDirection={'column'}>
-                          <Button
-                            onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
-                          >
-                            {' '}
-                            Sätt nytt lösenord{' '}
-                          </Button>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
-                          <DeleteIcon />
-                        </Button>
-                      </Td>
-                      <Td>
-                        {aUser.is_admin ? (
-                          <Button onClick={() => revokeAdminRights(aUser)}>
-                            {' '}
-                            Ta bort adminrättigheter{' '}
-                          </Button>
-                        ) : (
-                          <Button onClick={() => assignAdminRights(aUser)}>
-                            {' '}
-                            Tilldela adminrättigheter{' '}
-                          </Button>
-                        )}
-                      </Td>
-                    </Tr>
-                  ),
-              )) : (allUsers.map(
-                (aUser, index) =>
-                  aUser.email !== 'DeletedUser' &&
-                  aUser.id !== user.id && (
-                    <Tr key={index}>
-                      <Td>{aUser.email}</Td>
-                      <Td>
-                        <FormControl display={'flex'} flexDirection={'column'}>
-                          <Button
-                            onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
-                          >
-                            {' '}
-                            Sätt nytt lösenord{' '}
-                          </Button>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
-                          <DeleteIcon />
-                        </Button>
-                      </Td>
-                      <Td>
-                        {aUser.is_admin ? (
-                          <Button onClick={() => revokeAdminRights(aUser)}>
-                            {' '}
-                            Ta bort adminrättigheter{' '}
-                          </Button>
-                        ) : (
-                          <Button onClick={() => assignAdminRights(aUser)}>
-                            {' '}
-                            Tilldela adminrättigheter{' '}
-                          </Button>
-                        )}
-                      </Td>
-                    </Tr>
-                  ),
-              ))}
+              {groupToRender ? mapper(allUsers.filter((user) => user.group_id === groupToRender)) : mapper(allUsers)}
             </Tbody>
           </Table>
         </TableContainer>
@@ -225,4 +198,132 @@ export default function UserTable() {
       />
     </>
   );
+
+
+
+
+
+
+
+  // return (
+  //   <>
+  //     {!loading && (
+  //       <TableContainer maxWidth='90%'>
+  //         <Select
+  //           id='selectField'
+  //           placeholder='Välj användare för användargrupp.'
+  //           onChange={(e) => {
+  //             console.log(e.target.value)
+  //             setGroupToRender(e.target.value)
+  //           }}>
+  //           {userGroups.map((group) =>
+  //             group.is_active !== false && (
+  //               <option key={group.id} value={group.id}>
+  //                 {group.name}
+  //               </option>
+  //             ))}
+  //         </Select>
+  //         <Table>
+  //           <Thead>
+  //             <Tr>
+  //               <Th>Email</Th>
+  //               <Th>Byt lösenord</Th>
+  //               <Th isNumeric>Ta bort användare</Th>
+  //               <Th isNumeric>Tilldela/Ta bort administratörs rättigheter</Th>
+  //             </Tr>
+  //           </Thead>
+  //           <Tbody>
+  //             {groupToRender ? (allUsers.filter((user) => user.group_id === groupToRender).map(
+  //               (aUser, index) =>
+  //                 aUser.email !== 'DeletedUser' &&
+  //                 aUser.id !== user.id && (
+  //                   <Tr key={index}>
+  //                     <Td>{aUser.email}</Td>
+  //                     <Td>
+  //                       <FormControl display={'flex'} flexDirection={'column'}>
+  //                         <Button
+  //                           onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
+  //                         >
+  //                           {' '}
+  //                           Sätt nytt lösenord{' '}
+  //                         </Button>
+  //                       </FormControl>
+  //                     </Td>
+  //                     <Td>
+  //                       <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
+  //                         <DeleteIcon />
+  //                       </Button>
+  //                     </Td>
+  //                     <Td>
+  //                       {aUser.is_admin ? (
+  //                         <Button onClick={() => revokeAdminRights(aUser)}>
+  //                           {' '}
+  //                           Ta bort adminrättigheter{' '}
+  //                         </Button>
+  //                       ) : (
+  //                         <Button onClick={() => assignAdminRights(aUser)}>
+  //                           {' '}
+  //                           Tilldela adminrättigheter{' '}
+  //                         </Button>
+  //                       )}
+  //                     </Td>
+  //                   </Tr>
+  //                 ),
+  //             )) : (allUsers.map(
+  //               (aUser, index) =>
+  //                 aUser.email !== 'DeletedUser' &&
+  //                 aUser.id !== user.id && (
+  //                   <Tr key={index}>
+  //                     <Td>{aUser.email}</Td>
+  //                     <Td>
+  //                       <FormControl display={'flex'} flexDirection={'column'}>
+  //                         <Button
+  //                           onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}
+  //                         >
+  //                           {' '}
+  //                           Sätt nytt lösenord{' '}
+  //                         </Button>
+  //                       </FormControl>
+  //                     </Td>
+  //                     <Td>
+  //                       <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}>
+  //                         <DeleteIcon />
+  //                       </Button>
+  //                     </Td>
+  //                     <Td>
+  //                       {aUser.is_admin ? (
+  //                         <Button onClick={() => revokeAdminRights(aUser)}>
+  //                           {' '}
+  //                           Ta bort adminrättigheter{' '}
+  //                         </Button>
+  //                       ) : (
+  //                         <Button onClick={() => assignAdminRights(aUser)}>
+  //                           {' '}
+  //                           Tilldela adminrättigheter{' '}
+  //                         </Button>
+  //                       )}
+  //                     </Td>
+  //                   </Tr>
+  //                 ),
+  //             ))}
+  //           </Tbody>
+  //         </Table>
+  //       </TableContainer>
+  //     )}
+
+  //     <ResetPassword
+  //       isOpen={isResetPasswordOpen}
+  //       onClose={closeResetPassword}
+  //       email={selectedUser.email}
+  //       userToEditId={selectedUser.id}
+  //     />
+  //     <Confirm
+  //       isOpen={isConfirmOpen}
+  //       onClose={closeConfirm}
+  //       header={'Ta bort användare'}
+  //       body={`Är du säker att du vill ta bort användare ${selectedUser.email}`}
+  //       handleConfirm={() => handleRemoveUser(selectedUser)}
+  //     />
+  //   </>
+  // );
 }
