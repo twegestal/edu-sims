@@ -24,6 +24,7 @@ export default function ShowAllCases() {
   const { user } = useAuth();
   const toast = useToast();
   const [loading, setLoading] = useState(true);
+  const [buttonsLoadingState, setButtonsLoadingState] = useState({})
 
 
   useEffect(() => {
@@ -32,9 +33,26 @@ export default function ShowAllCases() {
       await getMedicalFields();
       setLoading(false)
     };
-
     fetchCases();
   }, []);
+
+  useEffect(() => {
+    if(loading==false){
+      const initialState = {}
+      cases.forEach((medicalCase) => {
+        initialState['edit_' + medicalCase.id] = false;
+        initialState['publish_' + medicalCase.id] = false;
+        initialState['unpublish_' + medicalCase.id] = false;
+        initialState['delete_' + medicalCase.id] = false;
+      });
+      setButtonsLoadingState(initialState)
+    }
+  }, [loading]);
+
+
+  useEffect(() => {
+    console.log(buttonsLoadingState)
+  }, [buttonsLoadingState]);
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -60,6 +78,7 @@ export default function ShowAllCases() {
   };
 
   async function handlePublish(caseId, isPublished) {
+    handleButtonChange('publish', caseId)
     if (isPublished) {
       if (confirm('Är du säker på att du vill avpublicera?')) {
         const response = await publishCase(caseId, isPublished);
@@ -68,18 +87,21 @@ export default function ShowAllCases() {
     if (!isPublished) {
       if (confirm('Är du säker på att du vill publicera?')) {
         const response = await publishCase(caseId, isPublished);
-        if (response.errors) {
-          toast({
-            title: 'Fel vid publicering av fall',
-            description: errorWithPathToString(response.errors[0]),
-            status: 'error',
-            duration: 9000,
-            position: 'top',
-            isClosable: true,
-          });
+        if (response != undefined){
+          if (response.errors) {
+            toast({
+              title: 'Fel vid publicering av fall',
+              description: errorWithPathToString(response.errors[0]),
+              status: 'error',
+              duration: 9000,
+              position: 'top',
+              isClosable: true,
+            });
+          }
         }
       }
     }
+    handleButtonChange('publish', caseId)
   }
 
   function removeCase(caseId) {
@@ -93,6 +115,14 @@ export default function ShowAllCases() {
     const casesToRandomise = cases.filter((c) => c.published === true);
     const caseId = casesToRandomise[Math.floor(Math.random() * casesToRandomise.length)].id;
     setCaseToRandomise(caseId);
+  };
+
+  const handleButtonChange = (method,id) => {
+    console.log('körs')
+    setButtonsLoadingState((prev) => ({
+      ...prev,
+      [method + '_' + id]: !prev[method + '_' + id],
+    }));
   };
 
   return (
@@ -110,7 +140,7 @@ export default function ShowAllCases() {
                       {getMedicalFieldName(medicalFieldId)}{' '}
                     </Heading>
                   </AccordionButton>
-                  <AccordionPanel pb={4}>
+                  <AccordionPanel pb={4} className="caseAccordion">
                     {groupedCases[medicalFieldId].map((caseItem) => (
                       <Box key={caseItem.id}>
                         {user.isAdmin && (
@@ -124,8 +154,11 @@ export default function ShowAllCases() {
                             {(caseItem.published == false || caseItem.published == null) && (
                               <Button
                                 marginBottom='5%'
-                                onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
+                                onClick={(e) => {
+                                  handlePublish(caseItem.id, caseItem.published)
+                                }}
                                 colorScheme='teal'
+                                isLoading={buttonsLoadingState['publish_'+ caseItem.id]}
                               >
                                 Publicera fallet
                               </Button>
@@ -135,6 +168,7 @@ export default function ShowAllCases() {
                                 marginBottom='5%'
                                 onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                                 colorScheme='teal'
+                                id={'unpublish_' + caseItem.id}
                               >
                                 Avpublicera fallet
                               </Button>
@@ -143,6 +177,7 @@ export default function ShowAllCases() {
                               onClick={(e) => removeCase(caseItem.id)}
                               colorScheme='teal'
                               marginBottom='5%'
+                              id={'remove_' + caseItem.id}
                             >
                               Ta bort fallet
                             </Button>
