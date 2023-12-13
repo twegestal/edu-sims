@@ -9,6 +9,7 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import CreateCaseModal from './CreateCaseModal.jsx';
 import Confirm from '../components/Confirm.jsx';
 import CaseDetails from './CaseDetails.jsx';
+import { useCases } from '../hooks/useCases.js';
 import {
   validateDiagnosisModule,
   validateExaminationModule,
@@ -26,11 +27,13 @@ export default function CaseBuilder() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [moduleToDelete, setModuleToDelete] = useState();
   const [medicalFieldId, setMedicalFieldId] = useState();
+  const [caseDetailsData, setCaseDetailsData] = useState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
   const { createCase } = useCreateCase();
   const toast = useToast();
+  const { caseById, getCaseById } = useCases();
 
   useEffect(() => {
     const fetchModuleTypes = async () => {
@@ -40,7 +43,28 @@ export default function CaseBuilder() {
     if (!moduleTypes) {
       fetchModuleTypes();
     }
+
+    const caseId = localStorage.getItem('caseId');
+    if (caseId) {
+      localStorage.removeItem('caseId');
+      fetchCaseToEdit(caseId);
+    }
   }, []);
+
+  const fetchCaseToEdit = async (caseId) => {
+    await getCaseById(caseId);
+  }
+
+  useEffect(() => {
+    console.log('casebyid:', caseById);
+    if (caseById.length > 0) {
+      setCaseDetailsData({
+        caseName: caseById[0].medical_case.name,
+        medicalFieldId: caseById[0].medical_case.medical_field_id,
+      });
+      setMedicalFieldId(caseById[0].medical_case.medical_field_id);
+    }
+  }, [caseById]);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -111,7 +135,6 @@ export default function CaseBuilder() {
     });
     if (successfulValidation) {
       const response = await createCase(caseObject);
-      console.log('response i CB:', response);
       evaluateResponse(response, caseObject.name);
     } else {
       for (let i = 0; i < validationResults.length; i++) {
@@ -286,7 +309,7 @@ export default function CaseBuilder() {
             </Flex>
           </DragDropContext>
 
-          <CaseDetails onSave={saveCase} setMedicalFieldId={setMedicalFieldId} />
+          <CaseDetails onSave={saveCase} setMedicalFieldId={setMedicalFieldId} caseDetailsData={caseDetailsData}/>
         </HStack>
       )}
       {activeModule && (

@@ -12,6 +12,9 @@ export default function AdminOverview(props) {
         postCallToApi={props.postCallToApi}
         user={props.user}
       ></ShowAllCases>
+      <Link to={'/caseBuilder'}>
+        <Button>Skapa nytt fall</Button>
+      </Link>
     </div>
   );
 }

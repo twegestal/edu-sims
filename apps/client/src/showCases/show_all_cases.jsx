@@ -91,6 +91,10 @@ export default function ShowAllCases() {
     setCaseToRandomise(caseId);
   };
 
+  const handleCaseToEdit = (id) => {
+    localStorage.setItem('caseId', id);
+  };
+
   return (
     <Box maxW={'90%'} margin={'auto'}>
       <Accordion allowToggle defaultIndex={[0]}>
@@ -109,9 +113,13 @@ export default function ShowAllCases() {
                       <p>Name: {caseItem.name}</p>
                       <p>Skapat av: {caseItem.end_user.email}</p>
                       <StartCase caseId={caseItem.id} />
-                      <Button colorScheme='teal' marginBottom='5%'>
-                        Redigera fallet
-                      </Button>
+                      <Link
+                      onClick={() => handleCaseToEdit(caseItem.id)}
+                      to={'/caseBuilder'}>
+                        <Button colorScheme='teal' marginBottom='5%'>
+                          Redigera fallet
+                        </Button>
+                      </Link>
                       {(caseItem.published == false || caseItem.published == null) && (
                         <Button
                           marginBottom='5%'
