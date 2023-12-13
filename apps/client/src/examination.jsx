@@ -124,67 +124,69 @@ export default function Examination(props) {
             {examinationStep && <Text align='left'>{examinationStep.prompt}</Text>}
           </Card>
 
-          <Card variant='filled'>
-            <Accordion allowMultiple>
-              <AccordionItem>
-                <AccordionButton>
-                  <Box as='span' flex='1' textAlign='center'>
-                    Utredningar
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
+          {!props.displayFeedback && (
+            <Card variant='filled'>
+              <Accordion allowMultiple>
+                <AccordionItem>
+                  <AccordionButton>
+                    <Box as='span' flex='1' textAlign='center'>
+                      Utredningar
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
 
-                <AccordionPanel pb={4}>
-                  <Accordion allowMultiple>
-                    {Object.entries(examinationStep.examination_to_display).map(
-                      ([category, subCategories], index) => (
-                        <AccordionItem key={index}>
-                          <h2>
-                            <AccordionButton>
-                              {categoryNames[category]}
-                              <AccordionIcon />
-                            </AccordionButton>
-                          </h2>
-                          <AccordionPanel>
-                            <Accordion allowMultiple>
-                              {subCategories.map((subCategory, i) => (
-                                <AccordionItem key={i}>
-                                  <AccordionButton alignContent='left'>
-                                    {subCategoryNames[subCategory]}
-                                    <AccordionIcon />
-                                  </AccordionButton>
-                                  <AccordionPanel>
-                                    <List>
-                                      <VStack alignItems={'flex-start'}>
-                                        {examinationsFetched &&
-                                          Object.entries(examinationList[subCategory]).map(
-                                            ([id, name], index) => (
-                                              <ListItem key={index}>
-                                                <Checkbox id={id}>{name}</Checkbox>
-                                              </ListItem>
-                                            ),
-                                          )}
-                                      </VStack>
-                                    </List>
-                                  </AccordionPanel>
-                                </AccordionItem>
-                              ))}
-                            </Accordion>
-                          </AccordionPanel>
-                        </AccordionItem>
-                      ),
-                    )}
-                  </Accordion>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Card>
+                  <AccordionPanel pb={4}>
+                    <Accordion allowMultiple>
+                      {Object.entries(examinationStep.examination_to_display).map(
+                        ([category, subCategories], index) => (
+                          <AccordionItem key={index}>
+                            <h2>
+                              <AccordionButton>
+                                {categoryNames[category]}
+                                <AccordionIcon />
+                              </AccordionButton>
+                            </h2>
+                            <AccordionPanel>
+                              <Accordion allowMultiple>
+                                {subCategories.map((subCategory, i) => (
+                                  <AccordionItem key={i}>
+                                    <AccordionButton alignContent='left'>
+                                      {subCategoryNames[subCategory]}
+                                      <AccordionIcon />
+                                    </AccordionButton>
+                                    <AccordionPanel>
+                                      <List>
+                                        <VStack alignItems={'flex-start'}>
+                                          {examinationsFetched &&
+                                            Object.entries(examinationList[subCategory]).map(
+                                              ([id, name], index) => (
+                                                <ListItem key={index}>
+                                                  <Checkbox id={id}>{name}</Checkbox>
+                                                </ListItem>
+                                              ),
+                                            )}
+                                        </VStack>
+                                      </List>
+                                    </AccordionPanel>
+                                  </AccordionItem>
+                                ))}
+                              </Accordion>
+                            </AccordionPanel>
+                          </AccordionItem>
+                        ),
+                      )}
+                    </Accordion>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </Card>
+          )}
           {props.displayFeedback == false && (
             <Button onClick={runExams} colorScheme='teal'>
               Kör utredningar
             </Button>
           )}
-          {resultsReady == true && (
+          {resultsReady && (
             <>
               <Card variant='filled'>
                 <Accordion allowToggle defaultIndex={[0]} id='resultsAccordion'>
