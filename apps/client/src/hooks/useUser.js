@@ -61,11 +61,11 @@ export const useUser = () => {
       const response = await createUserGroupApi({ body: { groupName: name } });
       if (response.status === 201) {
         setCreatedUserGroup(response.data);
-        return true;
+        return 201;
       }
-      return false;
     } catch (error) {
       console.error('error creating user group: ', error);
+      return error.response.status;
     }
   };
 

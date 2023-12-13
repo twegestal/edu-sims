@@ -14,7 +14,8 @@ import {
   Tab,
   Tabs,
   TabPanel,
-  TabPanels
+  TabPanels,
+  useToast,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
@@ -25,6 +26,7 @@ export default function ManageUsers() {
   const { createdUserGroup, createUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [reloading, setReloading] = useState(false);
+  const toast = useToast();
 
   const handleInputUserGroupChange = (event) => {
     setInputUserGroup(event.target.value);
@@ -33,11 +35,30 @@ export default function ManageUsers() {
   const generateRegLink = async () => {
     if (inputUserGroup.length > 0) {
       const response = await createUserGroup(inputUserGroup);
-      if (response) {
+      if (response === 201) {
+        showToast('Grupp skapad', `${inputUserGroup} har skapats`, 'success');
         setReloading((previous) => !previous);
+      } else if (response === 400) {
+        showToast(
+          'Gruppnamn upptaget',
+          `Det finns redan en grupp skapad med det valda namnet`,
+          'warning',
+        );
+      } else {
+        showToast('Fel', 'Någonting gick fel och gruppen kunde inte skapas', 'warning');
       }
-    } 
+    }
+  };
 
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 2000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (
