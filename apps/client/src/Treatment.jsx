@@ -8,12 +8,9 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  CardBody,
-  Collapse,
   useDisclosure,
   Input,
   List,
-  ListIcon,
   ListItem,
   Checkbox,
   IconButton,
@@ -119,25 +116,18 @@ export default function Treatment(props) {
   };
 
   const ValuateFeedback = () => {
-    let ok = true;
-    if (checkedTreatments.length === treatmentSpecificValues.length) {
-      for (let index = 0; index < treatmentSpecificValues.length; index++) {
-        for (let jindex = 0; jindex < checkedTreatments.length; jindex++) {
-          if (
-            treatmentSpecificValues[index.treatment_Id] === checkedTreatments[jindex].treatmentId
-          ) {
-            break;
-          } else {
-            ok = false;
-          }
-        }
-      }
-    } else {
-      ok = false;
-    }
-    ok = false;
 
-    if (ok) {
+    var checkedTreatmentsInValues = [];
+
+    for (let index = 0; index < treatmentSpecificValues.length; index++) {
+      var exists_check = false;
+
+      exists_check = checkedTreatments.find((checkedTreatment) => checkedTreatment.treatmentId === treatmentSpecificValues[index].treatment_id);
+      if(exists_check){
+        checkedTreatmentsInValues.push(exists_check)
+      }
+    }
+    if (checkedTreatmentsInValues.length == treatmentSpecificValues.length) {
       setFeedbackText(treatmentStep.feedback_correct);
       setFeedbackWindow();
       props.setWasCorrect(true);
