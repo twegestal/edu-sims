@@ -688,9 +688,9 @@ export const getCaseRoutes = () => {
         const validationResult = validateCaseToPublish(caseToValidate);
 
         if (validationResult.success) {
-          /* await medicalCase.update({
+          await medicalCase.update({
             published: publish,
-          }); */
+          });
           res.status(200).json('Succesful update of case published state');
         } else {
           res.status(400).send(validationResult.errors);

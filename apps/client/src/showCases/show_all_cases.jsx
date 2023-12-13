@@ -49,11 +49,6 @@ export default function ShowAllCases() {
     }
   }, [loading]);
 
-
-  useEffect(() => {
-    console.log(buttonsLoadingState)
-  }, [buttonsLoadingState]);
-
   useEffect(() => {
     const fetchCases = async () => {
       await getAllCases();
@@ -78,13 +73,27 @@ export default function ShowAllCases() {
   };
 
   async function handlePublish(caseId, isPublished) {
-    handleButtonChange('publish', caseId)
     if (isPublished) {
+      handleButtonChange('unpublish', caseId)
       if (confirm('Är du säker på att du vill avpublicera?')) {
         const response = await publishCase(caseId, isPublished);
+        if (response != undefined){
+          if (response.errors) {
+            toast({
+              title: 'Fel vid publicering av fall',
+              description: errorWithPathToString(response.errors[0]),
+              status: 'error',
+              duration: 9000,
+              position: 'top',
+              isClosable: true,
+            });
+          }
+        }
       }
+      handleButtonChange('unpublish', caseId)
     }
     if (!isPublished) {
+      handleButtonChange('publish', caseId)
       if (confirm('Är du säker på att du vill publicera?')) {
         const response = await publishCase(caseId, isPublished);
         if (response != undefined){
@@ -100,15 +109,17 @@ export default function ShowAllCases() {
           }
         }
       }
+      handleButtonChange('publish', caseId)
     }
-    handleButtonChange('publish', caseId)
   }
 
   function removeCase(caseId) {
+    handleButtonChange('remove', caseId)
     if (confirm('Är du säker på att du vill ta bort fallet?')) {
       //TODO: API call
       console.log('Ta bort');
     }
+    handleButtonChange('remove', caseId)
   }
 
   const randomiseCase = () => {
@@ -118,7 +129,6 @@ export default function ShowAllCases() {
   };
 
   const handleButtonChange = (method,id) => {
-    console.log('körs')
     setButtonsLoadingState((prev) => ({
       ...prev,
       [method + '_' + id]: !prev[method + '_' + id],
@@ -148,7 +158,11 @@ export default function ShowAllCases() {
                             <p>Name: {caseItem.name}</p>
                             <p>Skapat av: {caseItem.end_user.email}</p>
                             <StartCase caseId={caseItem.id} />
-                            <Button colorScheme='teal' marginBottom='5%'>
+                            <Button 
+                              colorScheme='teal'
+                              marginBottom='5%'
+                              isLoading={buttonsLoadingState['edit_'+ caseItem.id]}
+                            >
                               Redigera fallet
                             </Button>
                             {(caseItem.published == false || caseItem.published == null) && (
@@ -168,7 +182,7 @@ export default function ShowAllCases() {
                                 marginBottom='5%'
                                 onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
                                 colorScheme='teal'
-                                id={'unpublish_' + caseItem.id}
+                                isLoading={buttonsLoadingState['unpublish_'+ caseItem.id]}
                               >
                                 Avpublicera fallet
                               </Button>
@@ -177,7 +191,7 @@ export default function ShowAllCases() {
                               onClick={(e) => removeCase(caseItem.id)}
                               colorScheme='teal'
                               marginBottom='5%'
-                              id={'remove_' + caseItem.id}
+                              isLoading={buttonsLoadingState['remove_'+ caseItem.id]}
                             >
                               Ta bort fallet
                             </Button>
