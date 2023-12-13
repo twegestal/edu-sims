@@ -94,7 +94,7 @@ export default function CaseBuilder() {
     setIsConfirmOpen(false);
   };
 
-  const saveCase = (caseName) => {
+  const saveCase = async (caseName) => {
     const caseObject = {
       name: caseName,
       steps: modules,
@@ -110,7 +110,9 @@ export default function CaseBuilder() {
       }
     });
     if (successfulValidation) {
-      createCase(caseObject);
+      const response = await createCase(caseObject);
+      console.log('response i CB:', response);
+      evaluateResponse(response, caseObject.name);
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {
@@ -129,6 +131,16 @@ export default function CaseBuilder() {
       }
     }
   };
+
+  const evaluateResponse = (response, caseName) => {
+    if (response === 201) {
+      showToast('Fall sparat', 'Fallet har sparats', 'success');
+    } else if (response === 400) {
+      showToast('Namnkonflikt', `Fallet ${caseName} finns redan. Välj ett annat namn.`, 'error');
+    } else {
+      showToast('Fel', 'Någonting gick fel och fallet kunde inte läggas till.', 'error');
+    }
+  }
 
   const validateCaseToSave = (caseObject) => {
     const validationResults = [];
@@ -175,6 +187,17 @@ export default function CaseBuilder() {
     });
     validationResults.push(validateCaseInProgress(caseObject));
     return validationResults;
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 9000,
+      isClosable: true,
+      position: 'top',
+    });
   };
 
   return (

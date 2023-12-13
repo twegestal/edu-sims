@@ -3,7 +3,7 @@ const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
   createCase: async (body) => {
-    const response = apiClient.post(`${prefix}createCase`, body);
+    const response = await apiClient.post(`${prefix}createCase`, body);
     return packageResponse(response);
   },
 

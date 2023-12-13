@@ -13,6 +13,7 @@ export const medical_case = db.define(
     },
     name: {
       type: DataTypes.TEXT,
+      unique: true,
     },
     medical_field_id: {
       type: DataTypes.UUID,

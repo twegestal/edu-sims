@@ -13,24 +13,33 @@ export const getCaseRoutes = () => {
 
     const transaction = await getTransaction();
     try {
-      const medicalCase = await object.medical_case.create(
-        {
+      const existingMedicalCase = await object.medical_case.findOne({
+        where: {
           name: caseObject.name,
-          medical_field_id: caseObject.medical_field_id,
-          creator_user_id: caseObject.creator_user_id,
-          published: false,
         },
-        { transaction: transaction },
-      );
+      });
+      if (!existingMedicalCase) {
+        const medicalCase = await object.medical_case.create(
+          {
+            name: caseObject.name,
+            medical_field_id: caseObject.medical_field_id,
+            creator_user_id: caseObject.creator_user_id,
+            published: false,
+          },
+          { transaction: transaction },
+        );
 
-      await insertSteps(caseObject.steps, medicalCase.id, transaction);
+        await insertSteps(caseObject.steps, medicalCase.id, transaction);
 
-      await transaction.commit();
-      res.status(201).json('Case created');
+        await transaction.commit();
+        res.status(201).json('Case created');
+      } else {
+        res.status(400).json('Resource already exists');
+      }
     } catch (error) {
       console.error('transaction did not work', error);
       await transaction.rollback();
-      res.status(400).send(error);
+      res.status(500).send(error);
     }
   });
 

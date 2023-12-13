@@ -5,11 +5,11 @@ import { Modules } from '../utils/index.js';
 const caseInProgressSchema = z.object({
   name: z.string().min(1, 'Fallets namn behöver vara minst ett tecken långt'),
   creator_user_id: z.string().uuid(),
+  medical_field_id: z.string().uuid(),
 });
 
 const caseToPublishSchema = caseInProgressSchema.extend({
   steps: z.array(z.object({})).nonempty({ message: 'Fallet måste innehålla steg' }),
-  medical_field_id: z.string().uuid(),
 });
 
 const baseModuleSchema = z.object({

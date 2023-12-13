@@ -92,10 +92,11 @@ export const useCreateCase = () => {
     try {
       const result = await createCaseApi({ body: caseData });
       if (result.status === 201) {
-        //TODO show alert/toast with confirmation on created case
+        return 201;
       }
     } catch (error) {
       console.error('error creating case: ', error);
+      return error.response.status;
     }
   };
 
