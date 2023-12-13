@@ -89,6 +89,8 @@ export default function Examination(props) {
       setFeedbackToDisplay(examinationStep.feedback_incorrect);
       props.setWasCorrect(false);
     }
+
+    props.updateLabResultsList(results);
   };
 
   const checkExams = () => {
@@ -107,12 +109,6 @@ export default function Examination(props) {
       props.updateFeedback(feedbackToDisplay);
     }
   }, [feedbackToDisplay]);
-
-  useEffect(() => {
-    if (!loading) {
-      props.updateLabResultsList(results);
-    }
-  }, [results]);
 
   return (
     <div>
