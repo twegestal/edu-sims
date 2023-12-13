@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, redirect } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
@@ -8,6 +8,7 @@ export default function StartCase({ caseId, caseToRandomise }) {
   const { user } = useAuth();
   const { createAttempt } = useCases();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (caseToRandomise === caseId) {
@@ -16,6 +17,7 @@ export default function StartCase({ caseId, caseToRandomise }) {
   }, [caseToRandomise]);
 
   const postToAttemptNoReload = async () => {
+    setLoading(true)
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, caseId);
     return navigate(
@@ -24,6 +26,7 @@ export default function StartCase({ caseId, caseToRandomise }) {
   };
 
   const postToAttemptReload = async () => {
+    setLoading(true)
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, caseId);
     return navigate(
@@ -41,10 +44,10 @@ return (
 
   return (
     <>
-      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='2%'>
+      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='2%' isLoading={loading}>
         Starta fallet
       </Button>
-      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%'>
+      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%' isLoading={loading}>
         Fortsätt fallet
       </Button>
     </>

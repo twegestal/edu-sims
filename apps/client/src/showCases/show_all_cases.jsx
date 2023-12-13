@@ -15,6 +15,7 @@ import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
 import { errorWithPathToString } from 'api';
+import LoadingSkeleton from '../loadingSkeleton.jsx';
 
 export default function ShowAllCases() {
   const [caseToRandomise, setCaseToRandomise] = useState();
@@ -22,11 +23,14 @@ export default function ShowAllCases() {
     useCases();
   const { user } = useAuth();
   const toast = useToast();
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchCases = async () => {
       await getAllCases();
       await getMedicalFields();
+      setLoading(false)
     };
 
     fetchCases();
@@ -92,66 +96,74 @@ export default function ShowAllCases() {
   };
 
   return (
-    <Box maxW={'90%'} margin={'auto'}>
-      <Accordion allowToggle defaultIndex={[0]}>
-        {Object.keys(groupedCases).map((medicalFieldId) => (
-          <AccordionItem key={medicalFieldId}>
-            <AccordionButton>
-              <Heading margin={'auto'} size='sm'>
-                {getMedicalFieldName(medicalFieldId)}{' '}
-              </Heading>
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              {groupedCases[medicalFieldId].map((caseItem) => (
-                <Box key={caseItem.id}>
-                  {user.isAdmin && (
-                    <Flex justify={'space-evenly'} direction={'column'}>
-                      <p>Name: {caseItem.name}</p>
-                      <p>Skapat av: {caseItem.end_user.email}</p>
-                      <StartCase caseId={caseItem.id} />
-                      <Button colorScheme='teal' marginBottom='5%'>
-                        Redigera fallet
-                      </Button>
-                      {(caseItem.published == false || caseItem.published == null) && (
-                        <Button
-                          marginBottom='5%'
-                          onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
-                          colorScheme='teal'
-                        >
-                          Publicera fallet
-                        </Button>
-                      )}
-                      {caseItem.published && (
-                        <Button
-                          marginBottom='5%'
-                          onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
-                          colorScheme='teal'
-                        >
-                          Avpublicera fallet
-                        </Button>
-                      )}
-                      <Button
-                        onClick={(e) => removeCase(caseItem.id)}
-                        colorScheme='teal'
-                        marginBottom='5%'
-                      >
-                        Ta bort fallet
-                      </Button>
-                    </Flex>
-                  )}
-                  {user.isAdmin == false && caseItem.published && (
-                    <Flex direction={'column'}>
-                      <p>{caseItem.name}</p>
-                      <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
-                    </Flex>
-                  )}
-                </Box>
+    <div>
+      {loading ? (
+        <LoadingSkeleton />
+      ):(
+        <>
+          <Box maxW={'90%'} margin={'auto'}>
+            <Accordion allowToggle defaultIndex={[0]}>
+              {Object.keys(groupedCases).map((medicalFieldId) => (
+                <AccordionItem key={medicalFieldId}>
+                  <AccordionButton>
+                    <Heading margin={'auto'} size='sm'>
+                      {getMedicalFieldName(medicalFieldId)}{' '}
+                    </Heading>
+                  </AccordionButton>
+                  <AccordionPanel pb={4}>
+                    {groupedCases[medicalFieldId].map((caseItem) => (
+                      <Box key={caseItem.id}>
+                        {user.isAdmin && (
+                          <Flex justify={'space-evenly'} direction={'column'}>
+                            <p>Name: {caseItem.name}</p>
+                            <p>Skapat av: {caseItem.end_user.email}</p>
+                            <StartCase caseId={caseItem.id} />
+                            <Button colorScheme='teal' marginBottom='5%'>
+                              Redigera fallet
+                            </Button>
+                            {(caseItem.published == false || caseItem.published == null) && (
+                              <Button
+                                marginBottom='5%'
+                                onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
+                                colorScheme='teal'
+                              >
+                                Publicera fallet
+                              </Button>
+                            )}
+                            {caseItem.published && (
+                              <Button
+                                marginBottom='5%'
+                                onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
+                                colorScheme='teal'
+                              >
+                                Avpublicera fallet
+                              </Button>
+                            )}
+                            <Button
+                              onClick={(e) => removeCase(caseItem.id)}
+                              colorScheme='teal'
+                              marginBottom='5%'
+                            >
+                              Ta bort fallet
+                            </Button>
+                          </Flex>
+                        )}
+                        {user.isAdmin == false && caseItem.published && (
+                          <Flex direction={'column'}>
+                            <p>{caseItem.name}</p>
+                            <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
+                          </Flex>
+                        )}
+                      </Box>
+                    ))}
+                  </AccordionPanel>
+                </AccordionItem>
               ))}
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
-      {!user.isAdmin && <Button onClick={randomiseCase}>Slumpa fall</Button>}
-    </Box>
+            </Accordion>
+            {!user.isAdmin && <Button onClick={randomiseCase}>Slumpa fall</Button>}
+          </Box>
+        </>
+      )}
+    </div>
   );
 }
