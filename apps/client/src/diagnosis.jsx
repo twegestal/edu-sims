@@ -17,8 +17,8 @@ import Feedback from './performCaseComponents/Feedback.jsx';
 import { AddIcon } from '@chakra-ui/icons';
 
 export default function Diagnosis(props) {
-  const [diagnosisListHtml, setDiagnosisListHtml] = useState('');
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
+  const [ filterdList, setFilterdList] = useState([]);
   const [loading, setLoading] = useState(true);
   const { isOpen, onToggle } = useDisclosure();
 
@@ -31,41 +31,29 @@ export default function Diagnosis(props) {
 
     const fetchDiagnosisList = async () => {
       await getDiagnosisList(props.medicalFieldId);
+      setLoading(false);
     };
     props.setDisplayFeedback(false);
     fetchStep();
     fetchDiagnosisList();
-    setLoading(false);
+    console.log("körs")
   }, []);
+
+  useEffect(() => {
+    console.log(loading) 
+  }, [loading]);
+
 
   const findDiagnosis = async (searchString) => {
     /* Filters the diagnosis list based on the param search string  */
-    var filterdList = [];
+    var filterResults = [];
     if (searchString.length > 0) {
-      filterdList = diagnosisList.filter((obj) => {
+      filterResults = diagnosisList.filter((obj) => {
         return obj.name.toLowerCase().includes(searchString.toLowerCase());
       });
     }
+    setFilterdList(filterResults)
 
-    setDiagnosisListHtml(
-      filterdList.map((caseItem) => (
-        <Box key={caseItem.id} padding={'10px'}>
-          <Button
-            className='diagnosis_button'
-            key={'set_diagnosis_' + caseItem.id}
-            onClick={(e) => handleFeedback(caseItem.id)}
-            size={'md'}
-            minW={'90%'}
-            colorScheme='blue'
-            variant={'outline'}
-            boxShadow='lg'
-            leftIcon={<AddIcon />}
-          >
-            {caseItem.name}
-          </Button>
-        </Box>
-      )),
-    );
   };
 
   const handleFeedback = (choosenDiagnosId) => {
@@ -119,7 +107,23 @@ export default function Diagnosis(props) {
                 onChange={(e) => findDiagnosis(e.target.value)}
                 placeholder='Skriv din diagnos här'
               />
-              {diagnosisListHtml}
+              {filterdList.map((caseItem) => (
+                <Box key={caseItem.id} padding={'10px'}>
+                  <Button
+                    className='diagnosis_button'
+                    key={'set_diagnosis_' + caseItem.id}
+                    onClick={(e) => handleFeedback(caseItem.id)}
+                    size={'md'}
+                    minW={'90%'}
+                    colorScheme='blue'
+                    variant={'outline'}
+                    boxShadow='lg'
+                    leftIcon={<AddIcon />}
+                  >
+                    {caseItem.name}
+                  </Button>
+                </Box>
+              ))}
             </Card>
           )}
         </VStack>
