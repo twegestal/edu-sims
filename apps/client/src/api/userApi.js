@@ -46,6 +46,11 @@ export const userApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  updatePasswordAdmin: async (headers, body) => {
+    const response = await apiClient.patch(`${prefix}update-password-admin`, headers, body);
+    return packageResponse(response);
+  },
+
   updateUsername: async (headers, body) => {
     const response = await apiClient.patch(`${prefix}updateUsername`, headers, body);
     return packageResponse(response);

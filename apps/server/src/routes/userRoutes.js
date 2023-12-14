@@ -228,7 +228,7 @@ export const getUserRoutes = () => {
     res.status(200).send('Logout successful');
   });
 
-  router.patch('/update-password', async (req, res, _next) => {
+  router.patch('/update-password-admin', async (req, res, _next) => {
     const id = req.header('id');
     const userToEditId = req.header('userToEditId');
 
@@ -240,6 +240,26 @@ export const getUserRoutes = () => {
 
       const { email, newPassword } = req.body;
       const userToUpdate = await object.end_user.findOne({ where: { email: email } });
+
+      if (userToUpdate) {
+        const hash = await hashPassword(newPassword);
+        const result = await userToUpdate.update({ password: hash });
+        res.status(201).send(result);
+      } else {
+        res.status(404).json('Could not find resource');
+      }
+    } catch (error) {
+      console.error('error in update-password: ', error);
+      res.status(500).json('Internal Server Error');
+    }
+  });
+
+  router.patch('/update-password', async (req, res, _next) => {
+    const id = req.header('id');
+
+    try {
+      const { newPassword } = req.body;
+      const userToUpdate = await object.end_user.findOne({ where: { id: id } });
 
       if (userToUpdate) {
         const hash = await hashPassword(newPassword);

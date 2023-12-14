@@ -17,19 +17,25 @@ import { validatePassword, errorsToString } from 'api';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
 
-export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
+export default function ResetPassword({ isOpen, onClose, email, userToEdit }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
+  const [passwordIsLoading, setPasswordIsLoading] = useState(false)
   const { user } = useAuth();
-  const { updatePassword } = useUser();
+  const { updatePassword, updatePasswordAdmin } = useUser();
   const toast = useToast();
 
   const handlePasswordReset = async () => {
+    setPasswordIsLoading(true)
     if (passwordInput === confirmPasswordInput) {
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
-        const result = await updatePassword(user.id, email, passwordInput, userToEditId);
-
+        var result;
+        if (userToEdit != undefined){
+          result = await updatePasswordAdmin(user.id, passwordInput, userToEdit);
+        } else{
+          result = await updatePassword(user.id, passwordInput);
+        }
         if (result) {
           showToast(
             'Uppdatering av lösenord',
@@ -50,7 +56,9 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
     } else {
       showToast('Fel vid byte av lösenord', 'Lösenorden måste matcha', 'warning');
     }
+    setPasswordIsLoading(false)
   };
+
 
   const showToast = (title, description, status) => {
     toast({
@@ -90,7 +98,7 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={handlePasswordReset}>
+          <Button colorScheme='blue' mr={3} onClick={handlePasswordReset} isLoading={passwordIsLoading}>
             Spara
           </Button>
           <Button onClick={onClose}>Cancel</Button>
