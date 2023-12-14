@@ -18,21 +18,37 @@ import { useUser } from '../hooks/useUser';
 
 export default function UserGroupsCard({reloading}) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
-
+  const [loading, setLoading] = useState(true)
+  const [buttonsLoadingState, setButtonsLoadingState] = useState([])
+ 
   const fetchUserGroups = async () => {
     await getUserGroups();
+    setLoading(false)
   };
   useEffect(() => {
     fetchUserGroups();
   }, []);
+
   useEffect(() => {
     fetchUserGroups(); 
   }, [reloading]);
 
+
+  useEffect(() => {
+    if(loading==false){
+      const initialState = {}
+      userGroups.forEach((userGroup) => {
+        initialState[userGroup.id] = false;
+      });
+      setButtonsLoadingState(initialState)
+    }
+  }, [loading]);
   
 
   const removeRegistrationLink = async (id) => {
+    handleButtonChange(id)
     const result = await deactivateUserGroup(id);
+    handleButtonChange(id)
     if (result === true) {
       await getUserGroups();
     }
@@ -41,6 +57,15 @@ export default function UserGroupsCard({reloading}) {
   const handleCopyLink = (link) => {
     navigator.clipboard.writeText(link);
   };
+
+  const handleButtonChange = (groupId) => {
+    setButtonsLoadingState((prev) => ({
+      ...prev,
+      [groupId]: !prev[groupId],
+    }));
+  };
+
+
   return (
     <TableContainer maxWidth='90%'>
       <Table variant='simple'>
@@ -69,7 +94,7 @@ export default function UserGroupsCard({reloading}) {
                     </Td>
                     <Td>
                       <FormControl display={'flex'} flexDirection={'column'}>
-                        <Button onClick={() => removeRegistrationLink(group.id)}>Inaktivera</Button>
+                        <Button onClick={() => removeRegistrationLink(group.id)} isLoading={buttonsLoadingState[group.id]}>Inaktivera</Button>
                       </FormControl>
                     </Td>
                   </Tr>

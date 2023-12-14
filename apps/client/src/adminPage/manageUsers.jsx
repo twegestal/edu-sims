@@ -26,6 +26,7 @@ export default function ManageUsers() {
   const { createdUserGroup, createUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [reloading, setReloading] = useState(false);
+  const [generateIsLoading, setGenerateIsLoading] = useState(false)
   const toast = useToast();
 
   const handleInputUserGroupChange = (event) => {
@@ -33,6 +34,7 @@ export default function ManageUsers() {
   };
 
   const generateRegLink = async () => {
+    setGenerateIsLoading(true)
     if (inputUserGroup.length > 0) {
       const response = await createUserGroup(inputUserGroup);
       if (response === 201) {
@@ -48,6 +50,7 @@ export default function ManageUsers() {
         showToast('Fel', 'Någonting gick fel och gruppen kunde inte skapas', 'warning');
       }
     }
+    setGenerateIsLoading(false)
   };
 
   const showToast = (title, description, status) => {
@@ -76,7 +79,7 @@ export default function ManageUsers() {
               value={inputUserGroup}
               onChange={handleInputUserGroupChange}
             />
-            <Button onClick={generateRegLink}>Generera länk</Button>
+            <Button onClick={generateRegLink} isLoading={generateIsLoading}>Generera länk</Button>
           </Flex>
         </FormControl>
         {createdUserGroup.length !== 0 && (

@@ -17,6 +17,7 @@ export default function Login() {
     if (!result) {
       showToast('Fel vid inloggning', 'Fel användarnamn eller lösenord', 'warning');
     }
+    setLoading(false)
   };
 
   const showToast = (title, description, status) => {
