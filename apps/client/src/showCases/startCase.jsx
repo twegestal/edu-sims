@@ -42,7 +42,6 @@ return (
       <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='2%'>
         Fortsätt fallet
       </Button>
-      <Progress hasStripe value={80} marginBottom='5%'/>
     </>
   );
 }

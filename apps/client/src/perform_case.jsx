@@ -21,6 +21,7 @@ import {
   Flex,
   Card,
   list,
+  Text,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -87,8 +88,11 @@ export default function PerformCase() {
       if (reload === 'true') {
         const storedIndex = JSON.parse(localStorage.getItem(caseid.toString() + 'index'));
         const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
+        const storedLabTests = JSON.parse(localStorage.getItem(caseid.toString() + 'labTests'));
+        console.log("LABTETSER", storedLabTests);
         if (storedFeedback !== null) {
           const feedbackList = [];
+          const labTestList = [];
           for (let index = 0; index < storedFeedback.length; index++) {
             feedbackList[index] = (
               <Card key={index} variant='filled'>
@@ -105,11 +109,43 @@ export default function PerformCase() {
                 </Accordion>
               </Card>
             );
-            setFeedback([feedbackList]);
-            console.log(storedIndex);
-            setCurrentStep(caseById[storedIndex]);
-            setCurrentIndex(caseById[storedIndex].index);
           }
+          let indexer = 0;
+          console.log("HÄR", storedLabTests);
+          for (let index = 0; index < storedLabTests.length; index++) {
+            for (let counter = 0; counter < storedLabTests[index].length; counter++) {
+              labTestList[++indexer] = (
+                <Flex key={indexer} alignItems='center' flexDirection='column'>
+
+                  {storedLabTests[index][counter].isNormal ? (
+                    <>
+                      <Flex key={indexer} flexDirection='row'>
+                        <p>
+                          {storedLabTests[index][counter].name} : {storedLabTests[index][counter].value}{' '}
+                        </p>
+                      </Flex>
+                    </>
+                  ) : (
+                    <>
+                    {console.log("KOM IN PÅ RÄTT STÄLLE")}
+                      <Flex key={index} flexDirection='row' justifyContent='space-between'>
+                        <WarningIcon />
+                        <p>
+                          {storedLabTests[index][counter].name} : {storedLabTests[index][counter].value}
+                        </p>
+                      </Flex>
+                    </>
+                  )}
+
+                </Flex>
+              );
+            }
+          }
+          setTreatmentResults([labTestList])
+          setFeedback([feedbackList]);
+          console.log(storedIndex);
+          setCurrentStep(caseById[storedIndex]);
+          setCurrentIndex(caseById[storedIndex].index);
         }
       } else {
         localStorage.removeItem(caseid.toString());
@@ -143,6 +179,14 @@ export default function PerformCase() {
     const timestamp_finished = finishCaseTimestamp;
     const correct_diagnosis = correctDiagnosis;
     const nbr_of_tests_performed = nbrTestPerformed;
+
+
+    const AttemptArr = [attemptId,
+      isFinished,
+      faults,
+      timestamp_finished,
+      correct_diagnosis,
+      nbr_of_tests_performed];
 
     //Updates the attempt record
     updateAttempt(
@@ -210,30 +254,35 @@ export default function PerformCase() {
     }
 
     if (tests === null) {
-      console.log("här");
       tests = [];
       let tempArray = [];
+      let counter = 0;
       {
-        Object.keys(runnedTestList).map((index) =>
-          tempArray[index] = runnedTestList[index]
+        Object.keys(runnedTestList).map((index) => (
+          console.log("objext", runnedTestList[index]),
+          tempArray[counter++] = runnedTestList[index])
         )
       }
       tests[0] = tempArray;
+      console.log("tmeeep, " + tempArray);
+      localStorage.setItem(caseid.toString() + 'labTests', JSON.stringify(tests));
 
     } else {
-      const tempArray = [];
+      let tempArray = [];
+      let counter = 0;
       {
-        Object.keys(runnedTestList).map((index) =>
-          tempArray[index] = runnedTestList[index].name, " : ", runnedTestList[index].value
-        )
+        Object.keys(runnedTestList).map((index) => (
+          console.log(runnedTestList[index]),
+          tempArray[counter++] = (runnedTestList[index])
+        ))
       }
       tests[tests.length] = tempArray;
+      localStorage.setItem(caseid.toString() + 'labTests', JSON.stringify(tests));
     }
-    console.log();
     //...
     const storedNames = JSON.parse(localStorage.getItem(caseid.toString() + 'labTests'));
 
-    //console.log("LABSTESTS: ", storedNames);
+    console.log("LABSTESTS: ", storedNames);
     //localStorage.removeItem(caseid.toString());
     //localStorage.removeItem("feedbackArray");
   }
