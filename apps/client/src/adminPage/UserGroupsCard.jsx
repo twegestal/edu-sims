@@ -16,7 +16,7 @@ import {
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
 
-export default function UserGroupsCard({reloading}) {
+export default function UserGroupsCard({ reloading, onGroupRemoved }) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
 
   const fetchUserGroups = async () => {
@@ -26,15 +26,14 @@ export default function UserGroupsCard({reloading}) {
     fetchUserGroups();
   }, []);
   useEffect(() => {
-    fetchUserGroups(); 
+    fetchUserGroups();
   }, [reloading]);
-
-  
 
   const removeRegistrationLink = async (id) => {
     const result = await deactivateUserGroup(id);
-    if (result === true) {
+    if (result) {
       await getUserGroups();
+      onGroupRemoved();
     }
   };
 
@@ -44,9 +43,7 @@ export default function UserGroupsCard({reloading}) {
   return (
     <TableContainer maxWidth='90%'>
       <Table variant='simple'>
-        <TableCaption>
-          Aktiva grupper i EDU-SIMS.
-        </TableCaption>
+        <TableCaption>Aktiva grupper i EDU-SIMS.</TableCaption>
         <Thead>
           <Tr>
             <Th>Användargrupp</Th>

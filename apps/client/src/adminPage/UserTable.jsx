@@ -19,7 +19,7 @@ import { useUser } from '../hooks/useUser';
 import ResetPassword from './ResetPassword';
 import Confirm from '../components/Confirm';
 
-export default function UserTable() {
+export default function UserTable({ reload }) {
   const { user } = useAuth();
   const {
     allUsers,
@@ -37,16 +37,19 @@ export default function UserTable() {
   const [groupToRender, setGroupToRender] = useState();
   const toast = useToast();
 
+  const fetchData = async () => {
+    await getAllUsers(user.id);
+    await getUserGroups();
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      await getAllUsers(user.id);
-      await getUserGroups();
-      setLoading(false);
-    };
     fetchData();
+    setLoading(false);
   }, []);
 
-  //useEffect(() => { console.log(allUsers) }, [allUsers])
+  useEffect(() => {
+    fetchData();
+  }, [reload]);
 
   const handleRemoveUser = async (userToRemove) => {
     setIsConfirmOpen(false);
@@ -164,18 +167,18 @@ export default function UserTable() {
             id='selectField'
             placeholder='Välj användare för användargrupp.'
             onChange={(e) => {
-              console.log(e.target.value);
               setGroupToRender(e.target.value);
             }}
           >
-            {userGroups.map(
-              (group) =>
-                group.is_active !== false && (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ),
-            )}
+            {userGroups &&
+              userGroups.map(
+                (group) =>
+                  group.is_active !== false && (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ),
+              )}
           </Select>
           <Table variant='simple'>
             <TableCaption>Aktiva användare i EDU-SIMS.</TableCaption>

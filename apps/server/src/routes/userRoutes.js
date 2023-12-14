@@ -78,8 +78,8 @@ export const getUserRoutes = () => {
       const generatedPassword = generateRandomPassword();
       const hashedPassword = await hashPassword(generatedPassword);
       const result = await object.end_user.update(
-        { 
-          email: 'DeletedUser', 
+        {
+          email: 'DeletedUser',
           password: hashedPassword,
         },
         {

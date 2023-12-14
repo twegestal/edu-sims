@@ -116,15 +116,17 @@ export default function Treatment(props) {
   };
 
   const ValuateFeedback = () => {
-
     var checkedTreatmentsInValues = [];
 
     for (let index = 0; index < treatmentSpecificValues.length; index++) {
       var exists_check = false;
 
-      exists_check = checkedTreatments.find((checkedTreatment) => checkedTreatment.treatmentId === treatmentSpecificValues[index].treatment_id);
-      if(exists_check){
-        checkedTreatmentsInValues.push(exists_check)
+      exists_check = checkedTreatments.find(
+        (checkedTreatment) =>
+          checkedTreatment.treatmentId === treatmentSpecificValues[index].treatment_id,
+      );
+      if (exists_check) {
+        checkedTreatmentsInValues.push(exists_check);
       }
     }
     if (checkedTreatmentsInValues.length == treatmentSpecificValues.length) {

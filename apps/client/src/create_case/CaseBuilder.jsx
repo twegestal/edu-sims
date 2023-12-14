@@ -140,7 +140,7 @@ export default function CaseBuilder() {
     } else {
       showToast('Fel', 'Någonting gick fel och fallet kunde inte läggas till.', 'error');
     }
-  }
+  };
 
   const validateCaseToSave = (caseObject) => {
     const validationResults = [];

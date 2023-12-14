@@ -26,6 +26,7 @@ export default function ManageUsers() {
   const { createdUserGroup, createUserGroup } = useUser();
   const [inputUserGroup, setInputUserGroup] = useState('');
   const [reloading, setReloading] = useState(false);
+  const [reloadUserGroups, setReloadUserGroups] = useState(false);
   const toast = useToast();
 
   const handleInputUserGroupChange = (event) => {
@@ -48,6 +49,10 @@ export default function ManageUsers() {
         showToast('Fel', 'Någonting gick fel och gruppen kunde inte skapas', 'warning');
       }
     }
+  };
+
+  const handleUserGroupRemoved = () => {
+    setReloadUserGroups((prev) => !prev);
   };
 
   const showToast = (title, description, status) => {
@@ -108,10 +113,10 @@ export default function ManageUsers() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <UserGroupsCard reloading={reloading} />
+            <UserGroupsCard reloading={reloading} onGroupRemoved={handleUserGroupRemoved} />
           </TabPanel>
           <TabPanel>
-            <UserTable />
+            <UserTable reload={reloadUserGroups} />
           </TabPanel>
         </TabPanels>
       </Tabs>
