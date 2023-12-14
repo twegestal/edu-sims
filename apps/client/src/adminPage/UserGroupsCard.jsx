@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import {
   Button,
   FormControl,
@@ -15,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
+import LoadingSkeleton from '../loadingSkeleton';
 
 export default function UserGroupsCard({reloading}) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
@@ -67,41 +67,47 @@ export default function UserGroupsCard({reloading}) {
 
 
   return (
-    <TableContainer maxWidth='90%'>
-      <Table variant='simple'>
-        <TableCaption>
-          Aktiva grupper i EDU-SIMS.
-        </TableCaption>
-        <Thead>
-          <Tr>
-            <Th>Användargrupp</Th>
-            <Th>Kopiera länk</Th>
-            <Th>Inaktivera användargrupp</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {userGroups &&
-            userGroups.map(
-              (group, _index) =>
-                group.is_active !== false && (
-                  <Tr key={group.id}>
-                    <Td>{group.name}</Td>
-                    <Td>
-                      <IconButton
-                        onClick={() => handleCopyLink(group.registration_link)}
-                        icon={<CopyIcon />}
-                      />
-                    </Td>
-                    <Td>
-                      <FormControl display={'flex'} flexDirection={'column'}>
-                        <Button onClick={() => removeRegistrationLink(group.id)} isLoading={buttonsLoadingState[group.id]}>Inaktivera</Button>
-                      </FormControl>
-                    </Td>
-                  </Tr>
-                ),
-            )}
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <div>
+      {loading ? (
+        <LoadingSkeleton />
+      ):(
+        <TableContainer maxWidth='90%'>
+          <Table variant='simple'>
+            <TableCaption>
+              Aktiva grupper i EDU-SIMS.
+            </TableCaption>
+            <Thead>
+              <Tr>
+                <Th>Användargrupp</Th>
+                <Th>Kopiera länk</Th>
+                <Th>Inaktivera användargrupp</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {userGroups &&
+                userGroups.map(
+                  (group, _index) =>
+                    group.is_active !== false && (
+                      <Tr key={group.id}>
+                        <Td>{group.name}</Td>
+                        <Td>
+                          <IconButton
+                            onClick={() => handleCopyLink(group.registration_link)}
+                            icon={<CopyIcon />}
+                          />
+                        </Td>
+                        <Td>
+                          <FormControl display={'flex'} flexDirection={'column'}>
+                            <Button onClick={() => removeRegistrationLink(group.id)} isLoading={buttonsLoadingState[group.id]}>Inaktivera</Button>
+                          </FormControl>
+                        </Td>
+                      </Tr>
+                    ),
+                )}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
+    </div>
   );
 }
