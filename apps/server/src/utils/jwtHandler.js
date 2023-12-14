@@ -12,6 +12,7 @@ export const createRefreshCookie = (id) => {
 
 export const validateToken = (req, res, next) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
+  console.log('token: ', token);
   if (!token) {
     return res.status(401).send('No token provided');
   }

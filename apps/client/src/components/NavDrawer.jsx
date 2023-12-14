@@ -12,9 +12,16 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import DrawerBtn from './DrawerBtn.jsx';
+import { useUser } from '../hooks/useUser.js';
 
 export default function NavDrawer({ isOpen, onClose, btnRef }) {
-  const { user, logout } = useAuth();
+  const { user, setUserNull } = useAuth();
+  const { logout } = useUser();
+
+  const handleLogout = async () => {
+    await logout();
+    setUserNull();
+  };
   return (
     <>
       <Drawer isOpen={isOpen} placement='right' onClose={onClose} finalFocusRef={btnRef}>
@@ -50,13 +57,7 @@ export default function NavDrawer({ isOpen, onClose, btnRef }) {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button
-              onClick={() => {
-                onClose();
-                logout();
-              }}
-              w={'100%'}
-            >
+            <Button onClick={handleLogout} w={'100%'}>
               Logout
             </Button>
           </DrawerFooter>

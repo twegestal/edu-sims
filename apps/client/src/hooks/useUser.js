@@ -13,6 +13,7 @@ export const useUser = () => {
   const assingAdminPrivilegeApi = useApi('assingAdminPrivilege');
   const revokeAdminPrivilegeApi = useApi('revokeAdminPrivilege');
   const updateUsernameApi = useApi('updateUsername');
+  const logoutApi = useApi('logout');
 
   const [allUsers, setAllUsers] = useState([]);
   const [createdUserGroup, setCreatedUserGroup] = useState([]);
@@ -119,6 +120,17 @@ export const useUser = () => {
     }
   };
 
+  const logout = async () => {
+    try {
+      const response = await logoutApi({ body: { id: user.id } });
+      if (response.status === 200) {
+        console.log('we logged out');
+      }
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
   return {
     getAllUsers,
     allUsers,
@@ -132,5 +144,6 @@ export const useUser = () => {
     updateUsername,
     userGroups,
     getUserGroups,
+    logout,
   };
 };

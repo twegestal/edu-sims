@@ -50,4 +50,9 @@ export const userApi = (apiClient) => ({
     const response = await apiClient.patch(`${prefix}updateUsername`, headers, body);
     return packageResponse(response);
   },
+
+  logout: async (body) => {
+    const response = await apiClient.post(`${prefix}logout`, body);
+    return packageResponse(response);
+  },
 });

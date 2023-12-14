@@ -6,7 +6,6 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const loginApi = useApi('login');
-  const logoutApi = useApi('logout');
   const registerApi = useApi('register');
   const refreshTokenApi = useApi('refreshToken');
 
@@ -41,15 +40,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async (id) => {
-    try {
-      //await logoutApi(id);
-      setUser(null);
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
-  };
-
   const register = async ({ email, password, group_id }) => {
     try {
       const response = await registerApi({
@@ -74,8 +64,12 @@ export const AuthProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
+  const setUserNull = () => {
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, updateToken }}>
+    <AuthContext.Provider value={{ user, login, register, updateToken, setUserNull }}>
       {children}
     </AuthContext.Provider>
   );

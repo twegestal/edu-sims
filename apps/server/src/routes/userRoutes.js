@@ -214,18 +214,28 @@ export const getUserRoutes = () => {
     }
   });
 
-  router.patch('/logout', async (req, res, _next) => {
-    const user = await object.end_user.findOne({ where: { id: req.headers('id') } });
-    if (!user) {
-      return res.status(404).send('User does not exist');
+  router.post('/logout', async (req, res, _next) => {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json('Identifier missing');
     }
-    user.refresh_token = null;
+
     try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+
+      if (!user) {
+        return res.status(404).json('Could not find resource');
+      }
+
+      user.refresh_token = null;
       await user.save();
+
+      return res.status(200).json('Logout succesful');
     } catch (error) {
-      console.error('error logging out user: ', error);
+      console.error('Error logging out ', error);
+      res.status(500).json('Something went wrong');
     }
-    res.status(200).send('Logout successful');
   });
 
   router.patch('/update-password', async (req, res, _next) => {
