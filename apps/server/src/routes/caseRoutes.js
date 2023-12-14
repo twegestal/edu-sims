@@ -45,14 +45,25 @@ export const getCaseRoutes = () => {
 
   //hämtar alla cases
   router.get('/getAllCases', async (_req, res, _next) => {
-    const cases = await object.medical_case.findAll({
-      include: [
-        {
-          model: object.end_user,
-        },
-      ],
-    });
-    res.status(200).send(cases);
+    try {
+      const cases = await object.medical_case.findAll({
+        include: [
+          {
+            model: object.end_user,
+            attributes: ['email'],
+          },
+        ],
+      });
+
+      if (cases.length > 0) {
+        res.status(200).send(cases);
+      } else {
+        res.status(404).json('Could not find resource');
+      }
+    } catch (error) {
+      console.error('error fetching all cases ', error);
+      res.status(500).json('Something went wrong');
+    }
   });
 
   router.get('/getCaseById', async (req, res, _next) => {
