@@ -31,9 +31,7 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
         var result;
-        console.log(userToEditId)
         if (userToEditId != undefined){
-          console.log("admin")
           result = await updatePasswordAdmin(user.id, passwordInput, userToEditId);
         } else{
           result = await updatePassword(user.id, passwordInput);
