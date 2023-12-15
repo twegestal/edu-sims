@@ -29,7 +29,6 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
         const result = await updatePassword(user.id, email, passwordInput, userToEditId);
-
         if (result) {
           showToast(
             'Uppdatering av lösenord',

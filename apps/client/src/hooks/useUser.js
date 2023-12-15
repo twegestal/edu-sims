@@ -96,7 +96,7 @@ export const useUser = () => {
     }
   };
 
-  const updatePassword = async (id, email, newPassword) => {
+  const updatePassword = async (id, email, newPassword, userToEditId) => {
     try {
       const response = await updatePasswordApi({
         headers: { id: id, userToEditId: userToEditId },
@@ -124,7 +124,7 @@ export const useUser = () => {
     try {
       const response = await logoutApi({ body: { id: user.id } });
       if (response.status === 200) {
-        console.log('we logged out');
+        //do we handle this?
       }
     } catch (error) {
       console.error('Logout failed', error);
