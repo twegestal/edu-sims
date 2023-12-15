@@ -24,6 +24,7 @@ export const useTreatment = () => {
       const response = await getTreatmentStepApi({ headers: { id: id } });
       if (response.status === 200) {
         setTreatmentStep(response.data);
+        return response.data;
       }
     } catch (error) {
       console.error('error fetching treatment step: ', error);

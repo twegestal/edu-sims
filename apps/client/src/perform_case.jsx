@@ -176,7 +176,6 @@ export default function PerformCase() {
   };
   //FIXME: key is not unique
   const updateLabResultsList = (resultsObject) => {
-    console.log('resultsobject:', resultsObject);
     setTreatmentResults([
       ...treatmentResults,
       <Flex key={'1'} alignItems='center' flexDirection='column'>

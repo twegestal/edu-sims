@@ -16,6 +16,7 @@ export const useDiagnosis = () => {
       const response = await getDiagnosisStepApi({ headers: { id: id } });
       if (response.status === 200) {
         setDiagnosisStep(response.data);
+        return response.data;
       }
     } catch (error) {
       console.error('error fetching diagnosis step: ', error);

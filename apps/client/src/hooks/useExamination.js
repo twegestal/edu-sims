@@ -34,6 +34,7 @@ export const useExamination = () => {
       const response = await getExaminationStepApi({ headers: { id: id } });
       if (response.status === 200) {
         setExaminationStep(response.data);
+        return response.data;
       }
     } catch (error) {
       console.error('error fetching examination step: ', error);

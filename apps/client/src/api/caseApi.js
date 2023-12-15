@@ -3,7 +3,12 @@ const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
   createCase: async (body) => {
-    const response = await apiClient.post(`${prefix}createCase`, body);
+    const response = await apiClient.post(`${prefix}`, body);
+    return packageResponse(response);
+  },
+
+  updateCase: async (body) => {
+    const response = await apiClient.patch(`${prefix}`, body);
     return packageResponse(response);
   },
 
@@ -156,12 +161,6 @@ export const caseApi = (apiClient) => ({
     const response = await apiClient.put(`${prefix}updateAttempt`, headers);
     return packageResponse(response);
   },
-
-  /* publishCase: async (headers) => { // detta är väl en duplicate va????
-    const response = await apiClient.put(`${prefix}publishCase`, headers);
-    
-    return packageResponse(response);
-  }, */
 
   publishCase: async (headers) => {
     const response = await apiClient.put(`${prefix}publishCase`, headers);

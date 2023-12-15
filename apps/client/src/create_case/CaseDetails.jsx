@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input, VStack, Button, Select, Heading } from '
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
 
-export default function CaseDetails({ onSave, setMedicalFieldId, caseDetailsData }) {
+export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseDetailsData }) {
   const [caseName, setCaseName] = useState('Fyll i namnet på fallet');
 
   const { medicalFields, getMedicalFields } = useCases();
@@ -46,7 +46,6 @@ export default function CaseDetails({ onSave, setMedicalFieldId, caseDetailsData
 
         <FormLabel>Medicinskt område</FormLabel>
         <Select
-          id={'medicalFieldSelect'}
           placeholder='Välj ett område'
           onChange={(e) => setMedicalFieldId(e.target.value)}
           value={caseDetailsData?.medicalFieldId || ''}
@@ -59,8 +58,11 @@ export default function CaseDetails({ onSave, setMedicalFieldId, caseDetailsData
             ))}
         </Select>
       </FormControl>
-
-      <Button onClick={() => onSave(caseName)}>Spara fallet</Button>
+      {caseDetailsData ? (
+        <Button onClick={() => onUpdate(caseName)}>Uppdatera fallet</Button>
+      ) : (
+        <Button onClick={() => onSave(caseName)}>Spara fallet</Button>
+      )}
     </VStack>
   );
 }
