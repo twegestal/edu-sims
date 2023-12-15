@@ -36,12 +36,7 @@ export default function Diagnosis(props) {
     props.setDisplayFeedback(false);
     fetchStep();
     fetchDiagnosisList();
-    console.log("körs")
   }, []);
-
-  useEffect(() => {
-    console.log(loading) 
-  }, [loading]);
 
 
   const findDiagnosis = async (searchString) => {
