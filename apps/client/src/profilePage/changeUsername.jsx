@@ -18,11 +18,13 @@ import { useUser } from '../hooks/useUser';
 
 export default function ChangeUsername({ isOpen, onClose }) {
   const [usernameInput, setUsernameInput] = useState('');
+  const [usernameIsLoading, setUsernameIsLoading] = useState(false)
   const { user } = useAuth();
   const { updateUsername } = useUser();
   const toast = useToast();
 
   const handleUsernameChange = async () => {
+    setUsernameIsLoading(true)
     const result = await updateUsername(user.id, usernameInput);
 
     if (result) {
@@ -31,6 +33,7 @@ export default function ChangeUsername({ isOpen, onClose }) {
     } else {
       showToast('Uppdatering av användarnamn', `Användarnamnet kunde inte uppdateras`, 'warning');
     }
+    setUsernameIsLoading(false)
   };
 
   const showToast = (title, description, status) => {
@@ -62,7 +65,12 @@ export default function ChangeUsername({ isOpen, onClose }) {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={handleUsernameChange}>
+          <Button 
+            colorScheme='blue'
+            mr={3}
+            onClick={handleUsernameChange}
+            isLoading={usernameIsLoading}
+          >
             Spara
           </Button>
           <Button onClick={onClose}>Cancel</Button>
