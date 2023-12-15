@@ -116,6 +116,7 @@ export default function UserTable({ reload }) {
 
   const openResetPassword = (user) => {
     setSelectedUser(user);
+    console.log(user)
     setIsResetPasswordOpen(true);
   };
 

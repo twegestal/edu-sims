@@ -17,7 +17,7 @@ import { validatePassword, errorsToString } from 'api';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
 
-export default function ResetPassword({ isOpen, onClose, email, userToEdit }) {
+export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const [passwordIsLoading, setPasswordIsLoading] = useState(false)
@@ -31,8 +31,10 @@ export default function ResetPassword({ isOpen, onClose, email, userToEdit }) {
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
         var result;
-        if (userToEdit != undefined){
-          result = await updatePasswordAdmin(user.id, passwordInput, userToEdit);
+        console.log(userToEditId)
+        if (userToEditId != undefined){
+          console.log("admin")
+          result = await updatePasswordAdmin(user.id, passwordInput, userToEditId);
         } else{
           result = await updatePassword(user.id, passwordInput);
         }
