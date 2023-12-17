@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Flex, Stat, StatLabel, StatNumber, StatGroup } from '@chakra-ui/react';
-import { useStatistics } from '../hooks/useStatistic.js';
+import { 
+  Button,
+  Flex,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatGroup, 
+  Card,
+  CardHeader,
+  CardBody,
+  IconButton
+} from '@chakra-ui/react';
+import{
+  DownloadIcon,
+} from '@chakra-ui/icons'
+import { useStatistics } from '../../hooks/useStatistic.js';
 
 export default function ShowStatistics(props) {
   const { getTotalAmountUsers, amountUser, getActiveUsers, activeUsers, allCasesStatistics } =
@@ -77,22 +91,29 @@ export default function ShowStatistics(props) {
 
   return (
     <div>
-      <Flex direction={'column'}>
-        <h2>Statistik</h2>
-
-        <Button onClick={handleDownloadReports}>Ladda ner CSV fil med statistik</Button>
-
-        <StatGroup>
-          <Stat>
-            <StatLabel>Totalt antal användare</StatLabel>
-            <StatNumber>{amountUser}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Aktiva användare senaste veckan</StatLabel>
-            <StatNumber>{activeUsers}</StatNumber>
-          </Stat>
-        </StatGroup>
-      </Flex>
+      <Card width={'100%'} margin={'auto'} paddingTop={'20px'} paddingBottom={'20px'} bottom={'10px'} position={'fixed'}>
+        <CardBody>
+          <Flex direction={'column'}>
+            <StatGroup>
+              <Stat>
+                <StatLabel>Totalt antal användare</StatLabel>
+                <StatNumber>{amountUser}</StatNumber>
+              </Stat>
+              <Stat>
+                <StatLabel>Aktiva användare senaste veckan</StatLabel>
+                <StatNumber>{activeUsers}</StatNumber>
+              </Stat>
+            </StatGroup>
+            <Button
+              onClick={handleDownloadReports}
+              width={'50%'}
+              maxW={'500px'}
+              margin={'auto'}
+              marginTop={'20px'}
+            >Ladda ner statistik <DownloadIcon marginLeft={'5px'} /></Button>
+          </Flex >
+        </CardBody>
+      </Card>
     </div>
   );
 }

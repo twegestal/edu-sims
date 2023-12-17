@@ -7,7 +7,6 @@ import './App.css';
 import ManageCases from './adminPage/manageCases.jsx';
 import Login from './login.jsx';
 import { useAuth } from './hooks/useAuth.jsx';
-import ShowStatistics from './statistics/showStatistics.jsx';
 import ManageUsers from './adminPage/manageUsers.jsx';
 import ProfilePage from './profilePage/profilePage.jsx';
 import NavBar from './components/NavBar.jsx';
@@ -36,10 +35,6 @@ export default function App() {
               <Route
                 path='/manageCases'
                 element={<WithAdminAuth>{() => <ManageCases />}</WithAdminAuth>}
-              />
-              <Route
-                path='/showStatistics'
-                element={<WithAdminAuth>{() => <ShowStatistics />}</WithAdminAuth>}
               />
               <Route
                 path='/manageUsers'
