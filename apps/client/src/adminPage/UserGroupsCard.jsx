@@ -95,6 +95,8 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
                           <IconButton
                             onClick={() => handleCopyLink(group.registration_link)}
                             icon={<CopyIcon />}
+                            paddingTop={'10px'}
+                            paddingBottom={'10px'}
                           />
                         </Td>
                         <Td>
