@@ -3,4 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  min-width: 100%;
+  padding: 0rem !important;
+  min-height: 100vh;
+  background-color: #f2f2f2;
 }
