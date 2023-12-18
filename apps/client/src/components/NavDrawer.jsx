@@ -19,6 +19,7 @@ export default function NavDrawer({ isOpen, onClose, btnRef }) {
   const { logout } = useUser();
 
   const handleLogout = async () => {
+    onClose();
     await logout();
     setUserNull();
   };

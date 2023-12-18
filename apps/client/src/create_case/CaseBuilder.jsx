@@ -280,6 +280,24 @@ export default function CaseBuilder() {
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    <Box
+                      borderStyle='dashed'
+                      borderWidth='2px'
+                      borderColor='gray.300'
+                      borderRadius='md'
+                      p={5}
+                      textAlign='center'
+                      color='gray.500'
+                      fontSize='lg'
+                      minHeight='150px'
+                      display='flex'
+                      alignItems='center'
+                      justifyContent='center'
+                    >
+                      {modules.length === 0
+                        ? 'Dra kort från Moduler till tidslinjen för att skapa ett fall'
+                        : 'Du kan dra in fler kort och arrangera om moduler för att skapa ditt fall'}
+                    </Box>
                   </VStack>
                 )}
               </Droppable>

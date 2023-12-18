@@ -19,12 +19,16 @@ export default function App() {
   const location = useLocation();
 
   const isPerformCaseRoute = location.pathname.startsWith('/case');
+  const isRegisterRoute = location.pathname.startsWith('/register');
 
   return (
     <>
       <Box id='container' bg='brand.bg'>
         {!isPerformCaseRoute && <NavBar />}
-        {user ? (
+        <Routes>
+          <Route path='/register/:groupId' element={<Register />}></Route>
+        </Routes>
+        {user && (
           <>
             <Routes>
               <Route path='/' element={<Home />} />
@@ -50,14 +54,8 @@ export default function App() {
               />
             </Routes>
           </>
-        ) : (
-          <>
-            <Routes>
-              <Route path='/register/:groupId' element={<Register />}></Route>
-            </Routes>
-            <Login />
-          </>
         )}
+        {!user && !isRegisterRoute && <Login />}
       </Box>
     </>
   );
