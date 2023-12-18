@@ -42,13 +42,15 @@ export default function Examination(props) {
   } = useExaminationUtils(examinationStep, props.stepId, loading);
 
   useEffect(() => {
+    setResultsReady(false);
+    setResults({});
     props.setDisplayFeedback(false);
     const fetchStep = async () => {
       await getExaminationStep(props.stepId);
       setLoading(false);
     };
     fetchStep();
-  }, []);
+  }, [props.stepId]);
 
   useEffect(() => {
     if (Object.keys(results).length != 0) {
