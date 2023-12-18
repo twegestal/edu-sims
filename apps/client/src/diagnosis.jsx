@@ -110,10 +110,16 @@ export default function Diagnosis(props) {
                     onClick={(e) => handleFeedback(caseItem.id)}
                     size={'md'}
                     minW={'90%'}
+                    maxW={'90%'}
+                    padding={'10px'}
+                    overflow={'none'}
                     colorScheme='blue'
                     variant={'outline'}
                     boxShadow='lg'
                     leftIcon={<AddIcon />}
+                    whiteSpace={"normal"}
+                    height={"auto"}
+                    blockSize={"auto"}
                   >
                     {caseItem.name}
                   </Button>

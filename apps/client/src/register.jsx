@@ -9,6 +9,7 @@ import {
   Tooltip,
   useBreakpointValue,
   useToast,
+  Box,
 } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { useAuth } from './hooks/useAuth';
@@ -57,41 +58,43 @@ export default function Register() {
 
   return (
     <>
-      <FormControl>
-        <FormLabel>Registrering</FormLabel>
-        <Input type='email' placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
-        <InputGroup>
+      <Box width={'90%'} margin={'auto'} height={'100%'}>
+        <FormControl>
+          <FormLabel>Registrering</FormLabel>
+          <Input type='email' placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
+          <InputGroup>
+            <Input
+              type='password'
+              placeholder='Lösenord'
+              onChange={(e) => setPasswordInput(e.target.value)}
+            />
+            <InputRightElement width={'4.5rem'}>
+              <Tooltip
+                label='Lösenordet måste innehålla minst 8 tecken och max 12 tecken. Lösenordet måste innehålla minst en versal, minst en gemen, minst en siffra och minst ett specialtecken'
+                isOpen={showTooltip}
+                placement={placement}
+                shouldWrapChildren
+                trigger={{ base: 'click', md: 'hover' }}
+                hasArrow
+              >
+                <InfoOutlineIcon
+                  color='gray.500'
+                  _focus={{ outline: 'none' }}
+                  onClick={() => setShowTooltip(!showTooltip)}
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                />
+              </Tooltip>
+            </InputRightElement>
+          </InputGroup>
           <Input
             type='password'
-            placeholder='Lösenord'
-            onChange={(e) => setPasswordInput(e.target.value)}
+            placeholder='Bekräfta lösenord'
+            onChange={(e) => setConfirmPasswordInput(e.target.value)}
           />
-          <InputRightElement width={'4.5rem'}>
-            <Tooltip
-              label='Lösenordet måste innehålla minst 8 tecken och max 12 tecken. Lösenordet måste innehålla minst en versal, minst en gemen, minst en siffra och minst ett specialtecken'
-              isOpen={showTooltip}
-              placement={placement}
-              shouldWrapChildren
-              trigger={{ base: 'click', md: 'hover' }}
-              hasArrow
-            >
-              <InfoOutlineIcon
-                color='gray.500'
-                _focus={{ outline: 'none' }}
-                onClick={() => setShowTooltip(!showTooltip)}
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-              />
-            </Tooltip>
-          </InputRightElement>
-        </InputGroup>
-        <Input
-          type='password'
-          placeholder='Bekräfta lösenord'
-          onChange={(e) => setConfirmPasswordInput(e.target.value)}
-        />
-        <Button onClick={postToRegister}>Skapa konto</Button>
-      </FormControl>
+          <Button onClick={postToRegister}marginTop={'20px'}>Skapa konto</Button>
+        </FormControl>
+      </Box>
     </>
   );
 }
