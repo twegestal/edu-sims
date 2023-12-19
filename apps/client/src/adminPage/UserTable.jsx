@@ -36,7 +36,7 @@ export default function UserTable({ reload }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [groupToRender, setGroupToRender] = useState();
-  const [buttonsLoadingState, setButtonsLoadingState] = useState([])
+  const [buttonsLoadingState, setButtonsLoadingState] = useState([]);
   const toast = useToast();
 
   const fetchData = async () => {
@@ -54,18 +54,18 @@ export default function UserTable({ reload }) {
   }, [reload]);
 
   useEffect(() => {
-    if(loading==false){
-      const initialState = {}
+    if (loading == false) {
+      const initialState = {};
       allUsers.forEach((endUser) => {
         initialState['adminRights_' + endUser.id] = false;
         initialState['remove_' + endUser.id] = false;
       });
-      setButtonsLoadingState(initialState)
+      setButtonsLoadingState(initialState);
     }
   }, [loading]);
 
   const handleRemoveUser = async (userToRemove) => {
-    handleButtonChange('remove', userToRemove.id)
+    handleButtonChange('remove', userToRemove.id);
     setIsConfirmOpen(false);
     const response = await clearUserInfo(userToRemove.id);
     if (response) {
@@ -78,13 +78,13 @@ export default function UserTable({ reload }) {
         'warning',
       );
     }
-    handleButtonChange('remove', userToRemove.id)
+    handleButtonChange('remove', userToRemove.id);
   };
 
   const assignAdminRights = async (userToAssing) => {
-    handleButtonChange('adminRights',userToAssing.id)
+    handleButtonChange('adminRights', userToAssing.id);
     const response = await assingAdminPrivilege(userToAssing.id);
-    handleButtonChange('adminRights',userToAssing.id)
+    handleButtonChange('adminRights', userToAssing.id);
 
     if (response) {
       showToast(
@@ -99,9 +99,9 @@ export default function UserTable({ reload }) {
   };
 
   const revokeAdminRights = async (userToRevoke) => {
-    handleButtonChange('adminRights',userToRevoke.id)
+    handleButtonChange('adminRights', userToRevoke.id);
     const response = await revokeAdminPrivilege(userToRevoke.id);
-    handleButtonChange('adminRights',userToRevoke.id)
+    handleButtonChange('adminRights', userToRevoke.id);
     if (response) {
       showToast(
         'Användare uppdaterad',
@@ -155,15 +155,27 @@ export default function UserTable({ reload }) {
               </FormControl>
             </Td>
             <Td>
-              <Button onClick={() => openConfirm({ id: aUser.id, email: aUser.email })} isLoading={buttonsLoadingState['remove_'+  aUser.id]}>
+              <Button
+                onClick={() => openConfirm({ id: aUser.id, email: aUser.email })}
+                isLoading={buttonsLoadingState['remove_' + aUser.id]}
+              >
                 <DeleteIcon />
               </Button>
             </Td>
             <Td>
               {aUser.is_admin ? (
-                <Button onClick={() => revokeAdminRights(aUser)} isLoading={buttonsLoadingState['adminRights_'+  aUser.id]}> Ta bort adminrättigheter </Button>
+                <Button
+                  onClick={() => revokeAdminRights(aUser)}
+                  isLoading={buttonsLoadingState['adminRights_' + aUser.id]}
+                >
+                  {' '}
+                  Ta bort adminrättigheter{' '}
+                </Button>
               ) : (
-                <Button onClick={() => assignAdminRights(aUser)} isLoading={buttonsLoadingState['adminRights_'+  aUser.id]}>
+                <Button
+                  onClick={() => assignAdminRights(aUser)}
+                  isLoading={buttonsLoadingState['adminRights_' + aUser.id]}
+                >
                   {' '}
                   Tilldela adminrättigheter{' '}
                 </Button>
@@ -188,7 +200,7 @@ export default function UserTable({ reload }) {
     <>
       {loading ? (
         <LoadingSkeleton />
-      ):(
+      ) : (
         <TableContainer maxWidth='90%'>
           <Select
             id='selectField'

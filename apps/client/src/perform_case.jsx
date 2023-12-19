@@ -165,7 +165,6 @@ export default function PerformCase() {
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
-    
   };
 
   const saveNotes = () => {

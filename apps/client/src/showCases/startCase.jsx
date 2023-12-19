@@ -1,6 +1,6 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonGroup } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
 
@@ -17,7 +17,7 @@ export default function StartCase({ caseId, caseToRandomise }) {
   }, [caseToRandomise]);
 
   const postToAttemptNoReload = async () => {
-    setLoading(true)
+    setLoading(true);
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, caseId);
     return navigate(
@@ -26,7 +26,7 @@ export default function StartCase({ caseId, caseToRandomise }) {
   };
 
   const postToAttemptReload = async () => {
-    setLoading(true)
+    setLoading(true);
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, caseId);
     return navigate(
@@ -34,22 +34,26 @@ export default function StartCase({ caseId, caseToRandomise }) {
     );
   };
 
-  /*
-return (
-    <Link to={'/case/caseid=' + props.caseId + 'attemptid=' + createdAttempt.id}>
-    <Button onClick={postToAttempt} colorScheme='teal' marginBottom='5%'>Starta fallet</Button>
-    </Link>
-);
-*/
-
   return (
     <>
-      <Button onClick={postToAttemptNoReload} colorScheme='teal' marginBottom='2%' isLoading={loading}>
-        Starta fallet
-      </Button>
-      <Button onClick={postToAttemptReload} colorScheme='teal' marginBottom='5%' isLoading={loading}>
-        Fortsätt fallet
-      </Button>
+      <ButtonGroup>
+        <Button
+          onClick={postToAttemptNoReload}
+          colorScheme='teal'
+          marginBottom='2%'
+          isLoading={loading}
+        >
+          Starta fallet
+        </Button>
+        {/* <Button
+          onClick={postToAttemptReload}
+          colorScheme='teal'
+          marginBottom='5%'
+          isLoading={loading}
+        >
+          Fortsätt fallet
+        </Button> */}
+      </ButtonGroup>
     </>
   );
 }

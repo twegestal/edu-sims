@@ -18,12 +18,12 @@ import LoadingSkeleton from '../loadingSkeleton';
 
 export default function UserGroupsCard({ reloading, onGroupRemoved }) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
-  const [loading, setLoading] = useState(true)
-  const [buttonsLoadingState, setButtonsLoadingState] = useState([])
- 
+  const [loading, setLoading] = useState(true);
+  const [buttonsLoadingState, setButtonsLoadingState] = useState([]);
+
   const fetchUserGroups = async () => {
     await getUserGroups();
-    setLoading(false)
+    setLoading(false);
   };
   useEffect(() => {
     fetchUserGroups();
@@ -33,22 +33,20 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
     fetchUserGroups();
   }, [reloading]);
 
-
   useEffect(() => {
-    if(loading==false){
-      const initialState = {}
+    if (loading == false) {
+      const initialState = {};
       userGroups.forEach((userGroup) => {
         initialState[userGroup.id] = false;
       });
-      setButtonsLoadingState(initialState)
+      setButtonsLoadingState(initialState);
     }
   }, [loading]);
-  
 
   const removeRegistrationLink = async (id) => {
-    handleButtonChange(id)
+    handleButtonChange(id);
     const result = await deactivateUserGroup(id);
-    handleButtonChange(id)
+    handleButtonChange(id);
     if (result === true) {
       await getUserGroups();
       onGroupRemoved();
@@ -66,17 +64,14 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
     }));
   };
 
-
   return (
     <div>
       {loading ? (
         <LoadingSkeleton />
-      ):(
+      ) : (
         <TableContainer maxWidth='90%'>
           <Table variant='simple'>
-            <TableCaption>
-              Aktiva grupper i EDU-SIMS.
-            </TableCaption>
+            <TableCaption>Aktiva grupper i EDU-SIMS.</TableCaption>
             <Thead>
               <Tr>
                 <Th>Användargrupp</Th>
@@ -101,7 +96,12 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
                         </Td>
                         <Td>
                           <FormControl display={'flex'} flexDirection={'column'}>
-                            <Button onClick={() => removeRegistrationLink(group.id)} isLoading={buttonsLoadingState[group.id]}>Inaktivera</Button>
+                            <Button
+                              onClick={() => removeRegistrationLink(group.id)}
+                              isLoading={buttonsLoadingState[group.id]}
+                            >
+                              Inaktivera
+                            </Button>
                           </FormControl>
                         </Td>
                       </Tr>

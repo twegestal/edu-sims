@@ -5,12 +5,19 @@ import {
   AccordionButton,
   AccordionPanel,
   Button,
-  Flex,
-  Box,
   Heading,
   useToast,
+  SimpleGrid,
+  Card,
+  CardBody,
+  Stack,
+  Text,
+  CardFooter,
+  ButtonGroup,
+  AccordionIcon,
+  IconButton,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
@@ -24,28 +31,27 @@ export default function ShowAllCases() {
   const { user } = useAuth();
   const toast = useToast();
   const [loading, setLoading] = useState(true);
-  const [buttonsLoadingState, setButtonsLoadingState] = useState({})
-
+  const [buttonsLoadingState, setButtonsLoadingState] = useState({});
 
   useEffect(() => {
     const fetchCases = async () => {
       await getAllCases();
       await getMedicalFields();
-      setLoading(false)
+      setLoading(false);
     };
     fetchCases();
   }, []);
 
   useEffect(() => {
-    if(loading==false){
-      const initialState = {}
+    if (loading == false) {
+      const initialState = {};
       cases.forEach((medicalCase) => {
         initialState['edit_' + medicalCase.id] = false;
         initialState['publish_' + medicalCase.id] = false;
         initialState['unpublish_' + medicalCase.id] = false;
         initialState['delete_' + medicalCase.id] = false;
       });
-      setButtonsLoadingState(initialState)
+      setButtonsLoadingState(initialState);
     }
   }, [loading]);
 
@@ -72,12 +78,12 @@ export default function ShowAllCases() {
     return medicalField ? medicalField.name : 'Unknown';
   };
 
-  async function handlePublish(caseId, isPublished) {
+  const handlePublish = async (caseId, isPublished) => {
     if (isPublished) {
-      handleButtonChange('unpublish', caseId)
+      handleButtonChange('unpublish', caseId);
       if (confirm('Är du säker på att du vill avpublicera?')) {
         const response = await publishCase(caseId, isPublished);
-        if (response != undefined){
+        if (response != undefined) {
           if (response.errors) {
             toast({
               title: 'Fel vid publicering av fall',
@@ -90,13 +96,13 @@ export default function ShowAllCases() {
           }
         }
       }
-      handleButtonChange('unpublish', caseId)
+      handleButtonChange('unpublish', caseId);
     }
     if (!isPublished) {
-      handleButtonChange('publish', caseId)
+      handleButtonChange('publish', caseId);
       if (confirm('Är du säker på att du vill publicera?')) {
         const response = await publishCase(caseId, isPublished);
-        if (response != undefined){
+        if (response != undefined) {
           if (response.errors) {
             toast({
               title: 'Fel vid publicering av fall',
@@ -109,18 +115,18 @@ export default function ShowAllCases() {
           }
         }
       }
-      handleButtonChange('publish', caseId)
+      handleButtonChange('publish', caseId);
     }
-  }
+  };
 
-  function removeCase(caseId) {
-    handleButtonChange('remove', caseId)
+  const removeCase = (caseId) => {
+    handleButtonChange('remove', caseId);
     if (confirm('Är du säker på att du vill ta bort fallet?')) {
       //TODO: API call
       console.log('Ta bort');
     }
-    handleButtonChange('remove', caseId)
-  }
+    handleButtonChange('remove', caseId);
+  };
 
   const randomiseCase = () => {
     const casesToRandomise = cases.filter((c) => c.published === true);
@@ -128,7 +134,7 @@ export default function ShowAllCases() {
     setCaseToRandomise(caseId);
   };
 
-  const handleButtonChange = (method,id) => {
+  const handleButtonChange = (method, id) => {
     setButtonsLoadingState((prev) => ({
       ...prev,
       [method + '_' + id]: !prev[method + '_' + id],
@@ -136,83 +142,99 @@ export default function ShowAllCases() {
   };
 
   return (
-    <div>
+    <>
       {loading ? (
-        <LoadingSkeleton />
-      ):(
-        <>
-          <Box maxW={'90%'} margin={'auto'}>
-            <Accordion allowToggle defaultIndex={[0]}>
-              {Object.keys(groupedCases).map((medicalFieldId) => (
-                <AccordionItem key={medicalFieldId}>
-                  <AccordionButton>
-                    <Heading margin={'auto'} size='sm'>
-                      {getMedicalFieldName(medicalFieldId)}{' '}
-                    </Heading>
-                  </AccordionButton>
-                  <AccordionPanel pb={4} className="caseAccordion">
+        <SimpleGrid columns={[1, 2, 3]} spacing={10} justifyContent={'space-around'}>
+          {Array.from({ length: 9 }).map((_, index) => (
+            <LoadingSkeleton key={index} />
+          ))}
+        </SimpleGrid>
+      ) : (
+        <Accordion allowToggle>
+          {Object.keys(groupedCases).map((medicalFieldId) => (
+            <AccordionItem key={medicalFieldId}>
+              <AccordionButton>
+                <Heading margin={'auto'} size='sm'>
+                  {getMedicalFieldName(medicalFieldId)}{' '}
+                </Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel pb={4} className='caseAccordion'>
+                {user.isAdmin ? (
+                  <SimpleGrid columns={[1, 2, 3]} spacing={10} justifyContent={'space-around'}>
                     {groupedCases[medicalFieldId].map((caseItem) => (
-                      <Box key={caseItem.id}>
-                        {user.isAdmin && (
-                          <Flex justify={'space-evenly'} direction={'column'}>
-                            <p>Name: {caseItem.name}</p>
-                            <p>Skapat av: {caseItem.end_user.email}</p>
-                            <StartCase caseId={caseItem.id} />
-                            <Button 
-                              colorScheme='teal'
-                              marginBottom='5%'
-                              isLoading={buttonsLoadingState['edit_'+ caseItem.id]}
-                            >
-                              Redigera fallet
-                            </Button>
-                            {(caseItem.published == false || caseItem.published == null) && (
-                              <Button
-                                marginBottom='5%'
-                                onClick={(e) => {
-                                  handlePublish(caseItem.id, caseItem.published)
-                                }}
-                                colorScheme='teal'
-                                isLoading={buttonsLoadingState['publish_'+ caseItem.id]}
-                              >
-                                Publicera fallet
-                              </Button>
-                            )}
-                            {caseItem.published && (
-                              <Button
-                                marginBottom='5%'
-                                onClick={(e) => handlePublish(caseItem.id, caseItem.published)}
-                                colorScheme='teal'
-                                isLoading={buttonsLoadingState['unpublish_'+ caseItem.id]}
-                              >
-                                Avpublicera fallet
-                              </Button>
-                            )}
-                            <Button
-                              onClick={(e) => removeCase(caseItem.id)}
-                              colorScheme='teal'
-                              marginBottom='5%'
-                              isLoading={buttonsLoadingState['remove_'+ caseItem.id]}
-                            >
-                              Ta bort fallet
-                            </Button>
-                          </Flex>
-                        )}
-                        {user.isAdmin == false && caseItem.published && (
-                          <Flex direction={'column'}>
-                            <p>{caseItem.name}</p>
+                      <Card maxW={'md'} alignItems={'center'}>
+                        <CardBody>
+                          <Stack>
+                            <Heading size={'md'}>{caseItem.name}</Heading>
+                            <Text>Skapat av {caseItem.end_user.email}</Text>
+                          </Stack>
+                        </CardBody>
+                        <CardFooter>
+                          <Stack>
                             <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
-                          </Flex>
-                        )}
-                      </Box>
+                            <ButtonGroup>
+                              <Button
+                                onClick={() => handlePublish(caseItem.id, caseItem.published)}
+                                isLoading={
+                                  caseItem.published
+                                    ? buttonsLoadingState['unpublish_' + caseItem.id]
+                                    : buttonsLoadingState['publish_' + caseItem.id]
+                                }
+                              >
+                                {caseItem.published ? 'Avpublicera' : 'Publicera'}
+                              </Button>
+                              <IconButton
+                                icon={<EditIcon />}
+                                isLoading={buttonsLoadingState['edit_' + caseItem.id]}
+                              >
+                                Redigera
+                              </IconButton>
+                              <IconButton
+                                icon={<DeleteIcon />}
+                                onClick={() => removeCase(caseItem.id)}
+                                colorScheme='teal'
+                                marginBottom='5%'
+                                isLoading={buttonsLoadingState['remove_' + caseItem.id]}
+                              >
+                                Ta bort fallet
+                              </IconButton>
+                            </ButtonGroup>
+                          </Stack>
+                        </CardFooter>
+                      </Card>
                     ))}
-                  </AccordionPanel>
-                </AccordionItem>
-              ))}
-            </Accordion>
-            {!user.isAdmin && <Button onClick={randomiseCase}>Slumpa fall</Button>}
-          </Box>
-        </>
+                  </SimpleGrid>
+                ) : (
+                  <SimpleGrid columns={[1, 2, 3]} spacing={10} justifyContent={'space-around'}>
+                    {groupedCases[medicalFieldId]
+                      .filter((c) => c.published === true)
+                      .map((caseItem) => (
+                        <Card maxW={'md'} alignItems={'center'}>
+                          <CardBody>
+                            <Stack>
+                              <Heading size={'md'}>{caseItem.name}</Heading>
+                            </Stack>
+                          </CardBody>
+                          <CardFooter>
+                            <Stack>
+                              <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
+                            </Stack>
+                          </CardFooter>
+                        </Card>
+                      ))}
+                  </SimpleGrid>
+                )}
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
       )}
-    </div>
+      {!user.isAdmin && (
+        <Button onClick={randomiseCase} marginTop={'30px'}>
+          Slumpa fall
+        </Button>
+      )}
+    </>
   );
 }

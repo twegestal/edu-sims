@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   Button,
   Flex,
   Stat,
   StatLabel,
   StatNumber,
-  StatGroup, 
+  StatGroup,
   Card,
   CardHeader,
   CardBody,
-  IconButton
+  IconButton,
 } from '@chakra-ui/react';
-import{
-  DownloadIcon,
-} from '@chakra-ui/icons'
+import { DownloadIcon } from '@chakra-ui/icons';
 import { useStatistics } from '../../hooks/useStatistic.js';
 
 export default function ShowStatistics(props) {
@@ -110,8 +108,10 @@ export default function ShowStatistics(props) {
               maxW={'500px'}
               margin={'auto'}
               marginTop={'20px'}
-            >Ladda ner statistik <DownloadIcon marginLeft={'5px'} /></Button>
-          </Flex >
+            >
+              Ladda ner statistik <DownloadIcon marginLeft={'5px'} />
+            </Button>
+          </Flex>
         </CardBody>
       </Card>
     </div>

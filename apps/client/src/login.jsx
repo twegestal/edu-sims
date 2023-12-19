@@ -6,18 +6,18 @@ export default function Login() {
   const { login } = useAuth();
   const [emailInput, setEmailInput] = useState('Email');
   const [passwordInput, setPasswordInput] = useState('Password');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const handleSubmit = async (e) => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
-  
+
     const result = await login(emailInput, passwordInput);
     if (!result) {
       showToast('Fel vid inloggning', 'Fel användarnamn eller lösenord', 'warning');
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const showToast = (title, description, status) => {

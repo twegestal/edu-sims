@@ -109,7 +109,7 @@ export const useUser = () => {
     }
   };
 
-  const updatePassword = async (id, newPassword ) => {
+  const updatePassword = async (id, newPassword) => {
     try {
       const response = await updatePasswordApi({
         headers: { id: id },

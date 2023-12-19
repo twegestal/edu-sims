@@ -173,7 +173,7 @@ export default function Treatment(props) {
     <div>
       {loading ? (
         <LoadingSkeleton />
-      ): (
+      ) : (
         <>
           <Card variant='filled' padding='5'>
             <Text allign='left'>{treatmentStep.prompt}</Text>

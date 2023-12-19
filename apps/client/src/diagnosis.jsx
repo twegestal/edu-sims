@@ -18,7 +18,7 @@ import { AddIcon } from '@chakra-ui/icons';
 
 export default function Diagnosis(props) {
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
-  const [ filterdList, setFilterdList] = useState([]);
+  const [filterdList, setFilterdList] = useState([]);
   const [loading, setLoading] = useState(true);
   const { isOpen, onToggle } = useDisclosure();
 
@@ -38,7 +38,6 @@ export default function Diagnosis(props) {
     fetchDiagnosisList();
   }, []);
 
-
   const findDiagnosis = async (searchString) => {
     /* Filters the diagnosis list based on the param search string  */
     var filterResults = [];
@@ -47,8 +46,7 @@ export default function Diagnosis(props) {
         return obj.name.toLowerCase().includes(searchString.toLowerCase());
       });
     }
-    setFilterdList(filterResults)
-
+    setFilterdList(filterResults);
   };
 
   const handleFeedback = (choosenDiagnosId) => {

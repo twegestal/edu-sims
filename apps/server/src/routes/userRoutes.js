@@ -246,7 +246,7 @@ export const getUserRoutes = () => {
       const user = await object.end_user.findOne({ where: { id: id } });
       if (!user.is_admin && id != userToEditId) {
         return res.status(403).json('Not authorized for selected resource');
-      } else{
+      } else {
         const { newPassword } = req.body;
         const userToUpdate = await object.end_user.findOne({ where: { id: userToEditId } });
 
@@ -257,12 +257,11 @@ export const getUserRoutes = () => {
         } else {
           res.status(404).json('Could not find resource');
         }
-    }
+      }
     } catch (error) {
       console.error('error in update-password: ', error);
       res.status(500).json('Internal Server Error');
     }
-  
   });
 
   router.patch('/update-password', async (req, res, _next) => {

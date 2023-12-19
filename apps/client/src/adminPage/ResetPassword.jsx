@@ -20,20 +20,20 @@ import { useUser } from '../hooks/useUser';
 export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
-  const [passwordIsLoading, setPasswordIsLoading] = useState(false)
+  const [passwordIsLoading, setPasswordIsLoading] = useState(false);
   const { user } = useAuth();
   const { updatePassword, updatePasswordAdmin } = useUser();
   const toast = useToast();
 
   const handlePasswordReset = async () => {
-    setPasswordIsLoading(true)
+    setPasswordIsLoading(true);
     if (passwordInput === confirmPasswordInput) {
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
         var result;
-        if (userToEditId != undefined){
+        if (userToEditId != undefined) {
           result = await updatePasswordAdmin(user.id, passwordInput, userToEditId);
-        } else{
+        } else {
           result = await updatePassword(user.id, passwordInput);
         }
         if (result) {
@@ -56,9 +56,8 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
     } else {
       showToast('Fel vid byte av lösenord', 'Lösenorden måste matcha', 'warning');
     }
-    setPasswordIsLoading(false)
+    setPasswordIsLoading(false);
   };
-
 
   const showToast = (title, description, status) => {
     toast({
@@ -98,7 +97,12 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={handlePasswordReset} isLoading={passwordIsLoading}>
+          <Button
+            colorScheme='blue'
+            mr={3}
+            onClick={handlePasswordReset}
+            isLoading={passwordIsLoading}
+          >
             Spara
           </Button>
           <Button onClick={onClose}>Cancel</Button>
