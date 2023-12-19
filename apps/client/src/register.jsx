@@ -14,17 +14,18 @@ import {
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { useAuth } from './hooks/useAuth';
 import { validateRegistration, errorsToString } from 'api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Register() {
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
-  const { register } = useAuth();
+  const { register, login } = useAuth();
   const placement = useBreakpointValue({ base: 'bottom', md: 'right' });
   let { groupId } = useParams();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const postToRegister = async () => {
     groupId = groupId.split('groupId=')[1];
@@ -36,7 +37,31 @@ export default function Register() {
       };
       const validationResult = validateRegistration(data);
       if (validationResult.success) {
-        await register(data);
+        const response = await register(data);
+        if (response === 201) {
+          showToast(
+            'Registrering lyckades',
+            `Användaren ${emailInput} har registrerats`,
+            'success',
+          );
+
+          const response = await login(emailInput, passwordInput);
+          if (response) {
+            return navigate('/');
+          }
+        } else if (response === 400) {
+          showToast(
+            'Registrering misslyckades',
+            `Det finns redan en användare med användarnamnet ${emailInput}`,
+            'warning',
+          );
+        } else {
+          showToast(
+            'Registrering misslyckades',
+            'Någonting gick fel och registreringen kunde inte genomföras',
+            'error',
+          );
+        }
       } else {
         showToast('Fel vid registrering', errorsToString(validationResult.errors), 'warning');
       }

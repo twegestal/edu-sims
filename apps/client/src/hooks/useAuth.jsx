@@ -50,11 +50,10 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      if (response.status === 201) {
-        login(email, password);
-      }
+      return response.status;
     } catch (error) {
       console.error('Registration failed', error);
+      return error.response.status;
     }
   };
 
