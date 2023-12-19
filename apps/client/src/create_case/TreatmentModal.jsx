@@ -58,7 +58,6 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
   }, []);
 
   useEffect(() => {
-    console.log('moduleData:', moduleData);
     if (treatmentSubtypes) {
       resetCheckBoxState();
     }

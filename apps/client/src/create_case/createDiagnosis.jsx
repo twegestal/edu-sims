@@ -64,8 +64,6 @@ export default function CreateDiagnosis({ updateCaseObject }) {
       setDiagnosisNames(diagnosisMap);
       setResultDiagnosis(arr);
     }
-
-    console.log(diagnosisList);
   }, [diagnosisList]);
 
   const setPrompt = (prompt) => {

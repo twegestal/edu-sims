@@ -23,6 +23,7 @@ import {
   errorWithPathToString,
   validateCaseToPublish,
 } from 'api';
+import { useNavigate } from 'react-router-dom';
 
 export default function CaseBuilder() {
   const [modules, moduleHandlers] = useListState([]);
@@ -32,6 +33,7 @@ export default function CaseBuilder() {
   const [moduleToDelete, setModuleToDelete] = useState();
   const [medicalFieldId, setMedicalFieldId] = useState();
   const [caseDetailsData, setCaseDetailsData] = useState();
+  const [removedModules, setRemovedModules] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
@@ -41,6 +43,7 @@ export default function CaseBuilder() {
   const { getExaminationStep } = useExamination();
   const { getDiagnosisStep } = useDiagnosis();
   const { getTreatmentStep } = useTreatment();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchModuleTypes = async () => {
@@ -63,7 +66,6 @@ export default function CaseBuilder() {
   };
 
   useEffect(() => {
-    console.log('casebyid:', caseById);
     if (caseById.length > 0 && moduleTypes) {
       const caseDetails = caseById[0].medical_case;
       setCaseDetailsData({
@@ -163,6 +165,13 @@ export default function CaseBuilder() {
     moduleHandlers.setState((currentModules) =>
       currentModules.filter((module) => module.uniqueId !== moduleToDelete),
     );
+
+    const moduleToRemove = modules.find((m) => m.uniqueId === moduleToDelete);
+    if (moduleToRemove){
+    setRemovedModules([
+      ...removedModules,
+      moduleToRemove,
+    ])};
     setIsConfirmOpen(false);
   };
 
@@ -176,7 +185,6 @@ export default function CaseBuilder() {
     if (index !== -1) {
       moduleHandlers.setItemProp(index, 'stepData', stepData);
     }
-    console.log('modules: ', modules);
     setIsModalOpen(false);
   };
 
@@ -206,10 +214,11 @@ export default function CaseBuilder() {
       }
     });
     if (successfulValidation) {
-      console.time('innan');
       const response = await createCase(caseObject);
-      console.timeEnd('innan');
       evaluateResponse(response, caseObject.name);
+      return navigate(
+        '/manageCases',
+      );
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {
@@ -236,8 +245,6 @@ export default function CaseBuilder() {
       medical_field_id: medicalFieldId,
       creator_user_id: user.id,
     };
-
-    console.log('caseObject i saveEdited:', caseObject);
     const validationResults = validateEditedCase(caseObject);
     let successfulValidation = true;
     validationResults.forEach((result) => {
@@ -247,9 +254,13 @@ export default function CaseBuilder() {
     });
     if (successfulValidation) {
       console.time('editsave');
-      const response = await updateCase(caseObject, caseById[0].case_id);
+      const response = await updateCase(caseObject, caseById[0].case_id, removedModules);
       console.timeEnd('editsave');
+      setRemovedModules([]);
       evaluateUpdateResponse(response, caseObject.name);
+      return navigate(
+        '/manageCases'
+      );
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {

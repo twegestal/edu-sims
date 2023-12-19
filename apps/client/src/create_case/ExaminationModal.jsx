@@ -127,7 +127,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
 
     const examinations = moduleData?.stepData?.examination_to_display;
-      console.log('examinations:', examinations);
       if (examinations) {
         Object.keys(examinations).forEach((categoryId) => {
           examinations[categoryId].forEach((subCategoryId) => {
@@ -137,7 +136,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       }
 
       const stepValues = moduleData?.stepData?.step_specific_values;
-      console.log('stepValues:', stepValues);
       if (stepValues) {
         stepValues.forEach((element) => {
           handleExaminationCheckboxChange(element.examination_id);
@@ -148,7 +146,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   useEffect(() => {
     if (isCheckboxStatesDone) {
       const examinations = moduleData?.stepData?.examination_to_display;
-      console.log('examinations:', examinations);
       if (examinations) {
         Object.keys(examinations).forEach((categoryId) => {
           examinations[categoryId].forEach((subCategoryId) => {
@@ -158,7 +155,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       }
 
       const stepValues = moduleData?.stepData?.step_specific_values;
-      console.log('stepValues:', stepValues);
       if (stepValues) {
         stepValues.forEach((element) => {
           handleExaminationCheckboxChange(element.examination_id);
@@ -166,12 +162,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       }
     }
   }, [isCheckboxStatesDone]);
-
-  /*  useEffect(() => {
-    if (examinationSubcategories) {
-      resetCheckBoxState();
-    }
-  }, [examinationSubcategories]); */
 
   useEffect(() => {
     if (!loading) {

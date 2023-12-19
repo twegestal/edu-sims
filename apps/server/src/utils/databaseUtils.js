@@ -1,4 +1,5 @@
 import * as object from '../models/object_index.js';
+import { db } from '../database/databaseConnection.js';
 
 export const insertSteps = async (steps, caseId, transaction) => {
   for (let i = 0; i < steps.length; i++) {
@@ -41,7 +42,7 @@ const insertIntroductionStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  const step = await object.step.create(
+  await object.step.create(
     {
       case_id: caseId,
       index: index,
@@ -65,7 +66,7 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
   );
 
   for (let i = 0; i < stepData.step_specific_values.length; i++) {
-    const stepSpecificValue = await object.step_specific_values.create(
+    await object.step_specific_values.create(
       {
         examination_step_id: examinationStep.id,
         examination_id: stepData.step_specific_values[i].examination_id,
@@ -76,7 +77,7 @@ const insertExaminationStep = async (stepData, index, caseId, transaction) => {
     );
   }
 
-  const step = await object.step.create(
+  await object.step.create(
     {
       case_id: caseId,
       index: index,
@@ -98,7 +99,7 @@ const insertDiagnosisStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  const step = await object.step.create(
+  await object.step.create(
     {
       case_id: caseId,
       index: index,
@@ -121,7 +122,7 @@ const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
   );
 
   for (let i = 0; i < stepData.step_specific_treatments.length; i++) {
-    const stepSpecificTreatment = await object.step_specific_treatment.create(
+    await object.step_specific_treatment.create(
       {
         treatment_step_id: treatmentStep.id,
         treatment_id: stepData.step_specific_treatments[i].treatment_id,
@@ -131,7 +132,7 @@ const insertTreatmentStep = async (stepData, index, caseId, transaction) => {
     );
   }
 
-  const step = await object.step.create(
+  await object.step.create(
     {
       case_id: caseId,
       index: index,
@@ -152,7 +153,7 @@ const insertSummaryStep = async (stepData, index, caseId, transaction) => {
     { transaction: transaction },
   );
 
-  const step = await object.step.create(
+  await object.step.create(
     {
       case_id: caseId,
       index: index,
@@ -166,7 +167,7 @@ const insertSummaryStep = async (stepData, index, caseId, transaction) => {
 export const updateSteps = async (steps, medicalCaseId, transaction) => {
   for (let i = 0; i < steps.length; i++) {
     const stepData = steps[i].stepData;
-    const moduleTypeIdentifier = stepData.module_type_identifier;
+    const moduleTypeIdentifier = steps[i].module_type_identifier;
     const stepTableId = steps[i].stepTableId;
     const moduleTableId = steps[i].moduleTableId;
     switch (moduleTypeIdentifier) {
@@ -313,7 +314,6 @@ const updateExaminationStep = async (
 
     for (let i = 0; i < stepData.step_specific_values.length; i++) {
       const valueId = stepData.step_specific_values[i].id;
-      console.log('valueId:', valueId);
       if (valueId) {
         const stepSpecificValue = await object.step_specific_values.findOne({
           where: {
@@ -391,12 +391,15 @@ const updateDiagnosisStep = async (
       { transaction: transaction },
     );
 
+    
+
     await step.update(
       {
         index: index,
       },
       { transaction: transaction },
     );
+
   } else {
     await insertDiagnosisStep(stepData, index, medicalCaseId, transaction);
   }
@@ -513,7 +516,7 @@ const updateSummaryStep = async (
       { transaction: transaction },
     );
 
-    await summaryStep.update(
+    await step.update(
       {
         index: index,
       },
@@ -523,3 +526,36 @@ const updateSummaryStep = async (
     await insertSummaryStep(stepData, index, medicalCaseId, transaction);
   }
 };
+
+export const deleteModules = async (removedModules) => {
+  removedModules.forEach( async (module) => {
+    const moduleTypeIdentifier = module.module_type_identifier;
+    switch (moduleTypeIdentifier) {
+      case 0: {
+        await db.query(`CALL remove_introduction_step('${module.moduleTableId}')`);
+        
+        break;
+      }
+      case 1: {
+        await db.query(`CALL remove_examination_step('${module.moduleTableId}')`);
+        
+        break;
+      }
+      case 2: {
+        await db.query(`CALL remove_diagnosis_step('${module.moduleTableId}')`);
+        
+        break;
+      }
+      case 3: {
+        await db.query(`CALL remove_treatment_step('${module.moduleTableId}')`);
+        
+        break;
+      }
+      case 4: {
+        await db.query(`CALL remove_summary_step('${module.moduleTableId}')`);
+        
+        break;
+      }
+    }
+  });
+}

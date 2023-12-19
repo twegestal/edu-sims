@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
-import { insertSteps, updateSteps } from '../utils/databaseUtils.js';
+import { insertSteps, updateSteps, deleteModules } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
 
@@ -9,8 +9,8 @@ export const getCaseRoutes = () => {
   const router = Router();
 
   router.patch('/', async (req, res, _next) => {
-    const { caseObject, caseId } = req.body;
-    console.log('caseObject.steps:', caseObject);
+    const { caseObject, caseId, removedModules } = req.body;
+    console.log('removedModules: ', removedModules);
 
     if (!caseObject || !caseId) {
       return res.status(400).json('Missing required properties in body');
@@ -39,6 +39,7 @@ export const getCaseRoutes = () => {
       );
 
       await updateSteps(caseObject.steps, medicalCase.id, transaction);
+      await deleteModules(removedModules);
 
       await transaction.commit();
       res.status(200).json('Case updated successfully');
