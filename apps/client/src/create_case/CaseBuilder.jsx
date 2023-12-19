@@ -167,11 +167,9 @@ export default function CaseBuilder() {
     );
 
     const moduleToRemove = modules.find((m) => m.uniqueId === moduleToDelete);
-    if (moduleToRemove){
-    setRemovedModules([
-      ...removedModules,
-      moduleToRemove,
-    ])};
+    if (moduleToRemove) {
+      setRemovedModules([...removedModules, moduleToRemove]);
+    }
     setIsConfirmOpen(false);
   };
 
@@ -216,9 +214,7 @@ export default function CaseBuilder() {
     if (successfulValidation) {
       const response = await createCase(caseObject);
       evaluateResponse(response, caseObject.name);
-      return navigate(
-        '/manageCases',
-      );
+      return navigate('/manageCases');
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {
@@ -258,9 +254,7 @@ export default function CaseBuilder() {
       console.timeEnd('editsave');
       setRemovedModules([]);
       evaluateUpdateResponse(response, caseObject.name);
-      return navigate(
-        '/manageCases'
-      );
+      return navigate('/manageCases');
     } else {
       for (let i = 0; i < validationResults.length; i++) {
         validationResults[i].errors?.map((error, index) => {

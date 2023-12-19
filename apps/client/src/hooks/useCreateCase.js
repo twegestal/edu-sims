@@ -101,13 +101,15 @@ export const useCreateCase = () => {
 
   const updateCase = async (caseData, caseId, removedModules) => {
     try {
-      const response = await updateCaseApi({body: {caseObject: caseData, caseId: caseId, removedModules: removedModules}});
+      const response = await updateCaseApi({
+        body: { caseObject: caseData, caseId: caseId, removedModules: removedModules },
+      });
       return response.status;
     } catch (error) {
       console.error('error updating case', error);
       return error.response.status;
     }
-  }
+  };
 
   const getModuleTypes = async () => {
     try {

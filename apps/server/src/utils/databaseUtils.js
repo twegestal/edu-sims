@@ -391,15 +391,12 @@ const updateDiagnosisStep = async (
       { transaction: transaction },
     );
 
-    
-
     await step.update(
       {
         index: index,
       },
       { transaction: transaction },
     );
-
   } else {
     await insertDiagnosisStep(stepData, index, medicalCaseId, transaction);
   }
@@ -528,34 +525,34 @@ const updateSummaryStep = async (
 };
 
 export const deleteModules = async (removedModules) => {
-  removedModules.forEach( async (module) => {
+  removedModules.forEach(async (module) => {
     const moduleTypeIdentifier = module.module_type_identifier;
     switch (moduleTypeIdentifier) {
       case 0: {
         await db.query(`CALL remove_introduction_step('${module.moduleTableId}')`);
-        
+
         break;
       }
       case 1: {
         await db.query(`CALL remove_examination_step('${module.moduleTableId}')`);
-        
+
         break;
       }
       case 2: {
         await db.query(`CALL remove_diagnosis_step('${module.moduleTableId}')`);
-        
+
         break;
       }
       case 3: {
         await db.query(`CALL remove_treatment_step('${module.moduleTableId}')`);
-        
+
         break;
       }
       case 4: {
         await db.query(`CALL remove_summary_step('${module.moduleTableId}')`);
-        
+
         break;
       }
     }
   });
-}
+};

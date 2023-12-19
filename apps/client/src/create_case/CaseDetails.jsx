@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input, VStack, Button, Select, Heading } from '
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
 import { useNavigate } from 'react-router-dom';
-import  Confirm  from '../components/Confirm.jsx';
+import Confirm from '../components/Confirm.jsx';
 
 export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseDetailsData }) {
   const [caseName, setCaseName] = useState('Fyll i namnet på fallet');
@@ -27,7 +27,7 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
 
   const handleCloseConfirm = () => {
     setIsConfirmExitOpen(false);
-  }
+  };
 
   const handleConfirmAbort = () => {
     setIsConfirmExitOpen(false);
@@ -85,7 +85,8 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
         onClose={handleCloseConfirm}
         header={'Avsluta'}
         body={'Är du säker på att vill avsluta utan att spara?'}
-        handleConfirm={handleConfirmAbort} />
+        handleConfirm={handleConfirmAbort}
+      />
     </>
   );
 }

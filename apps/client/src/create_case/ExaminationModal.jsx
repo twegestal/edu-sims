@@ -127,20 +127,20 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
 
     const examinations = moduleData?.stepData?.examination_to_display;
-      if (examinations) {
-        Object.keys(examinations).forEach((categoryId) => {
-          examinations[categoryId].forEach((subCategoryId) => {
-            handleCheckboxChange(subCategoryId);
-          });
+    if (examinations) {
+      Object.keys(examinations).forEach((categoryId) => {
+        examinations[categoryId].forEach((subCategoryId) => {
+          handleCheckboxChange(subCategoryId);
         });
-      }
+      });
+    }
 
-      const stepValues = moduleData?.stepData?.step_specific_values;
-      if (stepValues) {
-        stepValues.forEach((element) => {
-          handleExaminationCheckboxChange(element.examination_id);
-        });
-      }
+    const stepValues = moduleData?.stepData?.step_specific_values;
+    if (stepValues) {
+      stepValues.forEach((element) => {
+        handleExaminationCheckboxChange(element.examination_id);
+      });
+    }
   }, [moduleData]);
 
   useEffect(() => {
