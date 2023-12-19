@@ -193,8 +193,6 @@ export default function ShowAllCases() {
                               <IconButton
                                 icon={<DeleteIcon />}
                                 onClick={() => removeCase(caseItem.id)}
-                                colorScheme='teal'
-                                marginBottom='5%'
                                 isLoading={buttonsLoadingState['remove_' + caseItem.id]}
                               >
                                 Ta bort fallet
