@@ -115,9 +115,9 @@ export default function Diagnosis(props) {
                     variant={'outline'}
                     boxShadow='lg'
                     leftIcon={<AddIcon />}
-                    whiteSpace={"normal"}
-                    height={"auto"}
-                    blockSize={"auto"}
+                    whiteSpace={'normal'}
+                    height={'auto'}
+                    blockSize={'auto'}
                   >
                     {caseItem.name}
                   </Button>

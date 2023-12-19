@@ -31,11 +31,11 @@ const theme = extendTheme({
         // Make a variant, we'll call it `base` here and leave it empty
         base: {
           bg: '#D2D2D2',
-          whiteSpace:"normal",
-          height:"auto",
-          blockSize:"auto",
+          whiteSpace: 'normal',
+          height: 'auto',
+          blockSize: 'auto',
           paddingTop: '10px',
-          paddingBottom: '10px'
+          paddingBottom: '10px',
         },
         good: {
           bg: '#4CB963',

@@ -45,7 +45,9 @@ export default function Login() {
             placeholder='Password'
             onChange={(e) => setPasswordInput(e.target.value)}
           />
-          <Button isLoading={loading} type='submit' marginTop={'20px'}>Logga in</Button>
+          <Button isLoading={loading} type='submit' marginTop={'20px'}>
+            Logga in
+          </Button>
         </form>
       </Box>
     </>

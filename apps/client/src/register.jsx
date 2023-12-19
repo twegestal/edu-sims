@@ -92,7 +92,9 @@ export default function Register() {
             placeholder='Bekräfta lösenord'
             onChange={(e) => setConfirmPasswordInput(e.target.value)}
           />
-          <Button onClick={postToRegister}marginTop={'20px'}>Skapa konto</Button>
+          <Button onClick={postToRegister} marginTop={'20px'}>
+            Skapa konto
+          </Button>
         </FormControl>
       </Box>
     </>

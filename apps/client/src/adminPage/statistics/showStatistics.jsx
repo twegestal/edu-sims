@@ -89,7 +89,14 @@ export default function ShowStatistics(props) {
 
   return (
     <div>
-      <Card width={'100%'} margin={'auto'} paddingTop={'20px'} paddingBottom={'20px'} bottom={'10px'} position={'relative'}>
+      <Card
+        width={'100%'}
+        margin={'auto'}
+        paddingTop={'20px'}
+        paddingBottom={'20px'}
+        bottom={'10px'}
+        position={'relative'}
+      >
         <CardBody>
           <Flex direction={'column'}>
             <StatGroup>
