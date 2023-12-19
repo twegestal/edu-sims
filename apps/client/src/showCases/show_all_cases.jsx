@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState  } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -7,13 +7,20 @@ import {
   Button,
   Flex,
   Box,
+  Checkbox,
+  Tooltip
 } from '@chakra-ui/react';
+
+import { CheckCircleIcon,CloseIcon,MoonIcon,MinusIcon} from '@chakra-ui/icons'
+
 import { Link } from 'react-router-dom';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
 
 export default function ShowAllCases() {
+
+  const [caseIcon, setCaseIcon] = useState([]);
   const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
     useCases();
   const { user } = useAuth();
@@ -25,6 +32,14 @@ export default function ShowAllCases() {
     };
 
     fetchCases();
+  }, []);
+
+  useEffect(() => {
+    const existingAttempt = JSON.parse(localStorage.getItem( 'lab'));
+
+    if (existingAttempt===null) {
+      setCaseIcon();
+    }
   }, []);
 
   useEffect(() => {
@@ -69,6 +84,16 @@ export default function ShowAllCases() {
       console.log('Ta bort');
     }
   }
+
+  const SetIcon = (Item) => {
+    const existingAttempt = JSON.parse(localStorage.getItem( 'lab'));
+console.log();
+    if (Item==="Case 1") {
+      return (<Tooltip label="Avklarat" ><CheckCircleIcon color={'orange.300'} /></Tooltip>)
+    }else{
+      return <Tooltip label="EJ påbörjat" ><MinusIcon color={'red'} w={8} h={6}/></Tooltip> 
+    }
+  };
 
   return (
     <Box maxW={'90%'} margin={'auto'}>
@@ -118,7 +143,8 @@ export default function ShowAllCases() {
                   )}
                   {user.isAdmin == false && caseItem.published && (
                     <Flex direction={'column'}>
-                      <p>{caseItem.name}</p>
+                      <p>{caseItem.name} {SetIcon(caseItem.name)}</p>
+                      
                       <StartCase caseId={caseItem.id} />
                     </Flex>
                   )}
