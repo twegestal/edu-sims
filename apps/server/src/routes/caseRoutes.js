@@ -1,18 +1,60 @@
 import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
-import { insertSteps } from '../utils/databaseUtils.js';
+import { insertSteps, updateSteps, deleteModules } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
 
 export const getCaseRoutes = () => {
   const router = Router();
 
-  router.post('/createCase', async (req, res, _next) => {
-    const caseObject = req.body;
+  router.patch('/', async (req, res, _next) => {
+    const { caseObject, caseId, removedModules } = req.body;
+    console.log('removedModules: ', removedModules);
 
-    const transaction = await getTransaction();
+    if (!caseObject || !caseId) {
+      return res.status(400).json('Missing required properties in body');
+    }
+    let transaction = null;
     try {
+      transaction = await getTransaction();
+
+      const medicalCase = await object.medical_case.findOne({
+        where: {
+          id: caseId,
+        },
+      });
+
+      if (!medicalCase) {
+        return res.status(404).json('Medical case does not exist');
+      }
+
+      medicalCase.update(
+        {
+          name: caseObject.name,
+          medical_field_id: caseObject.medical_field_id,
+          creator_user_id: caseObject.creator_user_id,
+        },
+        { transaction: transaction },
+      );
+
+      await updateSteps(caseObject.steps, medicalCase.id, transaction);
+      await deleteModules(removedModules);
+
+      await transaction.commit();
+      res.status(200).json('Case updated successfully');
+    } catch (error) {
+      console.error('transaction did not work', error);
+      await transaction.rollback();
+      res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.post('/', async (req, res, _next) => {
+    const caseObject = req.body;
+    let transaction = null;
+    try {
+      transaction = await getTransaction();
       const existingMedicalCase = await object.medical_case.findOne({
         where: {
           name: caseObject.name,
@@ -121,15 +163,37 @@ export const getCaseRoutes = () => {
   });
   //Hämta specifict Examination step
   router.get('/getExaminationStep', async (req, res, next) => {
-    if (req.header('id') == '') {
-      res.status(404).json('not found');
-    } else {
-      const result = await object.examination.findOne({
-        where: {
-          id: req.header('id'),
-        },
-      });
-      res.status(200).json(result);
+    const id = req.header('id');
+
+    try {
+      if (id) {
+        let examinationStep = await object.examination.findOne({
+          where: {
+            id: req.header('id'),
+          },
+          raw: true,
+        });
+        if (!examinationStep) {
+          return res.status(404).json('Could not find selected resource');
+        }
+        let stepSpecificValues = await object.step_specific_values.findAll({
+          where: {
+            examination_step_id: id,
+          },
+          raw: true,
+        });
+
+        if (!stepSpecificValues > 0) {
+          return res.status(404).json('Could not find selected resource');
+        }
+        examinationStep.step_specific_values = stepSpecificValues;
+
+        res.status(200).send(examinationStep);
+      } else {
+        res.status(400).json('Missing header');
+      }
+    } catch (error) {
+      res.status(500).json('Something went wrong', error);
     }
   });
   //Hämta specifict Diagnosis step
@@ -243,16 +307,41 @@ export const getCaseRoutes = () => {
   });
 
   //Hämta specifict Treatment step
-  router.get('/getTreatmentStep', async (req, res, next) => {
-    if (req.header('id') == '') {
-      res.status(404).json('not found');
-    } else {
-      const result = await object.treatment.findOne({
-        where: {
-          id: req.header('id'),
-        },
-      });
-      res.status(200).json(result);
+  router.get('/getTreatmentStep', async (req, res, _next) => {
+    const id = req.header('id');
+
+    try {
+      if (id) {
+        let treatmentStep = await object.treatment.findOne({
+          where: {
+            id: id,
+          },
+          raw: true,
+        });
+
+        if (!treatmentStep) {
+          return res.status(404).json('Resource not found');
+        }
+
+        const treatmentSpecificValues = await object.step_specific_treatment.findAll({
+          where: {
+            treatment_step_id: id,
+          },
+          raw: true,
+        });
+
+        if (!treatmentSpecificValues > 0) {
+          return res.status(404).json('Resource not found');
+        }
+
+        treatmentStep.step_specific_treatments = treatmentSpecificValues;
+        res.status(200).send(treatmentStep);
+      } else {
+        res.status(400).json('Missing header');
+      }
+    } catch (error) {
+      console.error('Error fetching treatment step ', error);
+      res.status(500).json('Something went wrong');
     }
   });
   //Hämta specifict Summary step

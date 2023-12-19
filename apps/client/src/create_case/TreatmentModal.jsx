@@ -35,6 +35,7 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
   const [feedbackCorrect, setFeedbackCorrect] = useState();
   const [feedbackIncorrect, setFeedbackIncorrect] = useState();
   const [stepSpecificTreatments, setStepSpecificTreatments] = useState([]);
+  const [isCheckboxStatesDone, setIsCheckboxStatesDone] = useState(false);
 
   const [treatmentToConfirm, setTreatmentToConfirm] = useState();
 
@@ -93,14 +94,36 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
   }, [moduleData]);
 
   useEffect(() => {
+    if (isCheckboxStatesDone) {
+      const treatments = moduleData?.stepData?.treatments_to_display;
+      if (treatments) {
+        Object.keys(treatments).forEach((treatmentTypeId) => {
+          treatments[treatmentTypeId].forEach((treatmentSubtypeId) => {
+            handleCheckboxChange(treatmentSubtypeId);
+          });
+        });
+      }
+
+      const stepValues = moduleData?.stepData?.step_specific_treatments;
+      if (stepValues) {
+        stepValues.forEach((element) => {
+          handleTreatmentCheckboxChange(element.treatment_id);
+        });
+      }
+    }
+  }, [isCheckboxStatesDone]);
+  /* 
+  useEffect(() => {
     if (treatmentSubtypes) {
       resetCheckBoxState();
     }
   }, [treatmentSubtypes]);
-
+ */
   useEffect(() => {
     if (!loading) {
+      resetCheckBoxState();
       resetTreatmentCheckboxState();
+      setIsCheckboxStatesDone(true);
     }
   }, [loading]);
 

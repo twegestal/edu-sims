@@ -8,6 +8,7 @@ export const useCreateCase = () => {
   const getTreatmentSubtypesApi = useApi('getTreatmentSubtypes');
   const getTreatmentListApi = useApi('getTreatmentList');
   const createCaseApi = useApi('createCase');
+  const updateCaseApi = useApi('updateCase');
   const getExaminationListApi = useApi('getExaminationList');
   const getModuleTypesApi = useApi('getModuleTypes');
 
@@ -90,15 +91,23 @@ export const useCreateCase = () => {
 
   const createCase = async (caseData) => {
     try {
-      const result = await createCaseApi({ body: caseData });
-      if (result.status === 201) {
-        return 201;
-      }
+      const response = await createCaseApi({ body: caseData });
+      return response.status;
     } catch (error) {
       console.error('error creating case: ', error);
       return error.response.status;
     }
   };
+
+  const updateCase = async (caseData, caseId, removedModules) => {
+    try {
+      const response = await updateCaseApi({body: {caseObject: caseData, caseId: caseId, removedModules: removedModules}});
+      return response.status;
+    } catch (error) {
+      console.error('error updating case', error);
+      return error.response.status;
+    }
+  }
 
   const getModuleTypes = async () => {
     try {
@@ -120,6 +129,7 @@ export const useCreateCase = () => {
     getTreatmentSubtypes,
     getTreatmentList,
     createCase,
+    updateCase,
     getModuleTypes,
     moduleTypes,
   };

@@ -67,6 +67,7 @@ export const useCases = () => {
       const response = await getIntroductionStepApi({ headers: { id: id } });
       if (response.status === 200) {
         setIntroductionStep(response.data);
+        return response.data;
       }
     } catch (error) {
       console.error('Error fetch introduction step', error);
@@ -78,6 +79,7 @@ export const useCases = () => {
       const response = await getSummaryStepApi({ headers: { id: id } });
       if (response.status === 200) {
         setSummaryStep(response.data);
+        return response.data;
       }
     } catch (error) {
       console.error('error fetch summary step: ', error);

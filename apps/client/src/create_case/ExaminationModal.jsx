@@ -37,6 +37,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isConfirmValuesOpen, setIsConfirmValuesOpen] = useState(false);
   const [examinationToConfirm, setExaminationToConfirm] = useState();
+  const [isCheckboxStatesDone, setIsCheckboxStatesDone] = useState(false);
 
   const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
   const [examinationToDisplay, setExaminationToDisplay] = useState({});
@@ -64,76 +65,6 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     resetCheckBoxState();
     resetExaminationCheckboxState();
     setIsConfirmOpen(false);
-  };
-
-  useEffect(() => {
-    if (examinationSubcategories) {
-      resetCheckBoxState();
-    }
-    if (stepSpecificValues.length > 0) {
-      resetExaminationCheckboxState();
-    }
-
-    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
-    setExaminationToDisplay(moduleData?.stepData?.examination_to_display || {});
-    setStepSpecificValues(moduleData?.stepData?.step_specific_values || []);
-    setFeedbackCorrect(
-      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
-    );
-    setFeedbackIncorrect(
-      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
-    );
-    setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
-
-    const examinations = moduleData?.stepData?.examination_to_display;
-    if (examinations) {
-      Object.keys(examinations).forEach((categoryId) => {
-        examinations[categoryId].forEach((subCategoryId) => {
-          handleCheckboxChange(subCategoryId);
-        });
-      });
-    }
-
-    const stepValues = moduleData?.stepData?.step_specific_values;
-    if (stepValues) {
-      stepValues.forEach((element) => {
-        handleExaminationCheckboxChange(element.examination_id);
-      });
-    }
-  }, [moduleData]);
-
-  useEffect(() => {
-    if (examinationSubcategories) {
-      resetCheckBoxState();
-    }
-  }, [examinationSubcategories]);
-
-  useEffect(() => {
-    if (!loading) {
-      resetExaminationCheckboxState();
-    }
-  }, [loading]);
-
-  const resetCheckBoxState = () => {
-    const initialCheckboxesState = {};
-
-    Object.keys(examinationSubcategories).forEach((categoryId) => {
-      Object.keys(examinationSubcategories[categoryId]).forEach((subCategoryId) => {
-        initialCheckboxesState[subCategoryId] = false;
-      });
-    });
-
-    setCheckboxesChecked(initialCheckboxesState);
-  };
-
-  const resetExaminationCheckboxState = () => {
-    const initialCheckboxesState = {};
-
-    stepSpecificValues.forEach((element) => {
-      initialCheckboxesState[element.examination_id] = false;
-    });
-
-    setExaminationCheckboxesChecked(initialCheckboxesState);
   };
 
   useEffect(() => {
@@ -175,6 +106,92 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (examinationSubcategories) {
+      resetCheckBoxState();
+    }
+    if (stepSpecificValues.length > 0) {
+      resetExaminationCheckboxState();
+    }
+
+    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
+    setExaminationToDisplay(moduleData?.stepData?.examination_to_display || {});
+    setStepSpecificValues(moduleData?.stepData?.step_specific_values || []);
+    setFeedbackCorrect(
+      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
+    );
+    setFeedbackIncorrect(
+      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
+    );
+    setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
+
+    const examinations = moduleData?.stepData?.examination_to_display;
+      if (examinations) {
+        Object.keys(examinations).forEach((categoryId) => {
+          examinations[categoryId].forEach((subCategoryId) => {
+            handleCheckboxChange(subCategoryId);
+          });
+        });
+      }
+
+      const stepValues = moduleData?.stepData?.step_specific_values;
+      if (stepValues) {
+        stepValues.forEach((element) => {
+          handleExaminationCheckboxChange(element.examination_id);
+        });
+      }
+  }, [moduleData]);
+
+  useEffect(() => {
+    if (isCheckboxStatesDone) {
+      const examinations = moduleData?.stepData?.examination_to_display;
+      if (examinations) {
+        Object.keys(examinations).forEach((categoryId) => {
+          examinations[categoryId].forEach((subCategoryId) => {
+            handleCheckboxChange(subCategoryId);
+          });
+        });
+      }
+
+      const stepValues = moduleData?.stepData?.step_specific_values;
+      if (stepValues) {
+        stepValues.forEach((element) => {
+          handleExaminationCheckboxChange(element.examination_id);
+        });
+      }
+    }
+  }, [isCheckboxStatesDone]);
+
+  useEffect(() => {
+    if (!loading) {
+      resetCheckBoxState();
+      resetExaminationCheckboxState();
+      setIsCheckboxStatesDone(true);
+    }
+  }, [loading]);
+
+  const resetCheckBoxState = () => {
+    const initialCheckboxesState = {};
+
+    Object.keys(examinationSubcategories).forEach((categoryId) => {
+      Object.keys(examinationSubcategories[categoryId]).forEach((subCategoryId) => {
+        initialCheckboxesState[subCategoryId] = false;
+      });
+    });
+
+    setCheckboxesChecked(initialCheckboxesState);
+  };
+
+  const resetExaminationCheckboxState = () => {
+    const initialCheckboxesState = {};
+
+    stepSpecificValues.forEach((element) => {
+      initialCheckboxesState[element.examination_id] = false;
+    });
+
+    setExaminationCheckboxesChecked(initialCheckboxesState);
+  };
 
   const fetchSubcategories = async (id) => {
     const response = await getAllExaminationSubtypes(id);

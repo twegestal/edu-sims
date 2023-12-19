@@ -64,14 +64,8 @@ export default function CreateCase(props) {
       medical_field_id: medicalFieldId,
     });
   };
-
-  useEffect(() => {
-    console.log(caseObject);
-  }, [caseObject]);
-
   useEffect(() => {
     if (medicalFields.length > 0) {
-      console.log(medicalFields);
       setLoading(false);
     }
   }, [medicalFields]);
