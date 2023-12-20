@@ -22,17 +22,9 @@ export default function SummaryModal({ isOpen, onClose, moduleData }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   useEffect(() => {
-    setProcess(
-      moduleData?.stepData?.process ||
-        'Hur hade den korrekta processen sett ut om en läkare tagit sig an fallet?',
-    );
-    setAdditionalInfo(
-      moduleData?.stepData?.additional_info ||
-        'Fyll i övrig information om sjukdomen till studenten',
-    );
-    setAdditionalLinks(
-      moduleData?.stepData?.additional_links || 'Fyll i länkar till övrig information om sjukdomen',
-    );
+    setProcess(moduleData?.stepData?.process || '');
+    setAdditionalInfo(moduleData?.stepData?.additional_info || '');
+    setAdditionalLinks(moduleData?.stepData?.additional_links || '');
   }, [moduleData]);
 
   const clearContent = () => {
@@ -75,21 +67,21 @@ export default function SummaryModal({ isOpen, onClose, moduleData }) {
               <FormLabel>Process</FormLabel>
               <Textarea
                 value={process}
-                placeholder={process}
+                placeholder='Hur hade den korrekta processen sett ut om en läkare tagit sig an fallet?'
                 onChange={(e) => setProcess(e.target.value)}
               ></Textarea>
 
               <FormLabel>Additional info</FormLabel>
               <Textarea
                 value={additionalInfo}
-                placeholder={additionalInfo}
+                placeholder='Fyll i övrig information om sjukdomen till studenten'
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               ></Textarea>
 
               <FormLabel>Additional Links</FormLabel>
               <Textarea
                 value={additionalLinks}
-                placeholder={additionalLinks}
+                placeholder='Fyll i länkar till övrig information om sjukdomen'
                 onChange={(e) => setAdditionalLinks(e.target.value)}
               ></Textarea>
             </FormControl>

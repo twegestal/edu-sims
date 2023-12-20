@@ -66,15 +66,11 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
       resetTreatmentCheckboxState();
     }
 
-    setPrompt(moduleData?.stepData?.prompt || 'Fyll i uppmaning till användaren');
+    setPrompt(moduleData?.stepData?.prompt || '');
     setTreatmentsToDisplay(moduleData?.stepData?.treatments_to_display || {});
     setStepSpecificTreatments(moduleData?.stepData?.step_specific_treatments || []);
-    setFeedbackCorrect(
-      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
-    );
-    setFeedbackIncorrect(
-      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
-    );
+    setFeedbackCorrect(moduleData?.stepData?.feedback_correct || '');
+    setFeedbackIncorrect(moduleData?.stepData?.feedback_incorrect || '');
 
     const treatments = moduleData?.stepData?.treatments_to_display;
     if (treatments) {
@@ -277,7 +273,7 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
 
                   <Textarea
                     value={prompt}
-                    placeholder={prompt}
+                    placeholder={'Fyll i uppmaning till användaren'}
                     onChange={(e) => setPrompt(e.target.value)}
                   ></Textarea>
 
@@ -379,12 +375,14 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
 
                   <FormLabel>Korrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för korrekt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   ></Textarea>
 
                   <FormLabel>Inkorrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för inkorrekt svar'
                     value={feedbackIncorrect}
                     onChange={(e) => setFeedbackIncorrect(e.target.value)}
                   ></Textarea>
