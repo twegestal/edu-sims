@@ -39,11 +39,11 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
   const [examinationToConfirm, setExaminationToConfirm] = useState();
   const [isCheckboxStatesDone, setIsCheckboxStatesDone] = useState(false);
 
-  const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
+  const [prompt, setPrompt] = useState();
   const [examinationToDisplay, setExaminationToDisplay] = useState({});
   const [stepSpecificValues, setStepSpecificValues] = useState([]);
-  const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
-  const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
+  const [feedbackCorrect, setFeedbackCorrect] = useState();
+  const [feedbackIncorrect, setFeedbackIncorrect] = useState();
   const [maxNbrTests, setMaxNbrTests] = useState(0);
 
   const [examinationCategories, setExaminationCategories] = useState();
@@ -115,15 +115,11 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
       resetExaminationCheckboxState();
     }
 
-    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
+    setPrompt(moduleData?.stepData?.prompt || '');
     setExaminationToDisplay(moduleData?.stepData?.examination_to_display || {});
     setStepSpecificValues(moduleData?.stepData?.step_specific_values || []);
-    setFeedbackCorrect(
-      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
-    );
-    setFeedbackIncorrect(
-      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
-    );
+    setFeedbackCorrect(moduleData?.stepData?.feedback_correct || '');
+    setFeedbackIncorrect(moduleData?.stepData?.feedback_incorrect || '');
     setMaxNbrTests(moduleData?.stepData?.max_nbr_tests || 0);
 
     const examinations = moduleData?.stepData?.examination_to_display;
@@ -318,7 +314,11 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               <ModalBody>
                 <FormControl>
                   <FormLabel>Uppmaning</FormLabel>
-                  <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}></Textarea>
+                  <Textarea
+                    placeholder='Fyll i din uppmaning till användaren'
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                  ></Textarea>
 
                   <FormLabel>Utredningar att visa för användare</FormLabel>
                   {Object.entries(examinationCategories).map(([categoryId, name]) => (
@@ -428,12 +428,14 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
                   <FormLabel>Korrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för korrekt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   ></Textarea>
 
                   <FormLabel>Inkorrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för inkorrekt svar'
                     value={feedbackIncorrect}
                     onChange={(e) => setFeedbackIncorrect(e.target.value)}
                   ></Textarea>
