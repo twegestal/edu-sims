@@ -36,16 +36,15 @@ export default function StartCase({ caseId, caseToRandomise }) {
 
   return (
     <>
-      <ButtonGroup>
-        <Button
-          onClick={postToAttemptNoReload}
-          colorScheme='teal'
-          marginBottom='2%'
-          isLoading={loading}
-        >
-          Starta fallet
-        </Button>
-        {/* <Button
+      <Button
+        onClick={postToAttemptNoReload}
+        colorScheme='teal'
+        marginBottom='10%'
+        isLoading={loading}
+      >
+        Starta fallet
+      </Button>
+      {/* <Button
           onClick={postToAttemptReload}
           colorScheme='teal'
           marginBottom='5%'
@@ -53,7 +52,6 @@ export default function StartCase({ caseId, caseToRandomise }) {
         >
           Fortsätt fallet
         </Button> */}
-      </ButtonGroup>
     </>
   );
 }
