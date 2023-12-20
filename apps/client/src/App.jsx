@@ -18,7 +18,7 @@ export default function App() {
   const { user } = useAuth();
   const location = useLocation();
 
-  const isPerformCaseRoute = location.pathname.startsWith('/case');
+  const isPerformCaseRoute = location.pathname.startsWith('/case/');
   const isRegisterRoute = location.pathname.startsWith('/register');
 
   return (
