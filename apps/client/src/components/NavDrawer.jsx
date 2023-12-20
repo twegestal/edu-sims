@@ -59,7 +59,7 @@ export default function NavDrawer({ isOpen, onClose, btnRef }) {
 
           <DrawerFooter>
             <Button onClick={handleLogout} w={'100%'}>
-              Logout
+              Logga ut
             </Button>
           </DrawerFooter>
         </DrawerContent>
