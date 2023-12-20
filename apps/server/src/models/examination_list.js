@@ -23,14 +23,17 @@ export const examination_list = db.define(
       allowNull: false,
     },
     min_value: {
-      type: DataTypes.FLOAT
+      type: DataTypes.TEXT
     },
     max_value: {
-      type: DataTypes.FLOAT
+      type: DataTypes.TEXT
     },
-    is_randomizeable: {
+    is_randomizable: {
       type: DataTypes.BOOLEAN
-    }
+    },
+    unit: {
+      type: DataTypes.TEXT
+    },
   },
   {
     // Other model information goes here

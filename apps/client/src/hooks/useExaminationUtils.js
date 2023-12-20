@@ -74,7 +74,14 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
       const examinationsResponse = await getExaminationList(subCategoryId);
       const entry = {};
       for (let i = 0; i < examinationsResponse.length; i++) {
-        entry[examinationsResponse[i].id] = examinationsResponse[i].name;
+        entry[examinationsResponse[i].id] = {
+          name:examinationsResponse[i].name,
+          minValue: examinationsResponse[i].min_value,
+          maxValue: examinationsResponse[i].max_value,
+          isRandomizable: examinationsResponse[i].is_randomizable,
+          examinationSubtypeId: examinationsResponse[i].examination_subtype_id,
+          unit: examinationsResponse[i].unit,
+        }
       }
       listMap[subCategoryId] = entry;
     }
@@ -97,7 +104,7 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
         for (const subCategory of Object.keys(examinations)) {
           for (const examinationId of Object.keys(examinations[subCategory])) {
             if (examinationId === examinationsToRun[i]) {
-              examinationName = examinations[subCategory][examinationId];
+              examinationName = examinations[subCategory][examinationId].name;
             }
           }
         }
@@ -113,14 +120,14 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
         for (const subCategory of Object.keys(examinations)) {
           for (const examinationId of Object.keys(examinations[subCategory])) {
             if (examinationId === examinationsToRun[i]) {
-              examinationName = examinations[subCategory][examinationId];
+              examinationName = examinations[subCategory][examinationId].name;
             }
           }
         }
 
         resultsMap[examinationsToRun[i]] = {
           name: examinationName,
-          value: 'Normalvärde',
+          value: randomizeNormalValue(examinationsToRun[i]),
           isNormal: true,
         };
       }
@@ -128,6 +135,32 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
 
     return resultsMap;
   };
+
+  const randomizeNormalValue = (examinationId) => {
+    console.log('examinationsToRun[i]:', examinationId);
+    console.log('examinationList:', examinationList);
+    let examination = null;
+    for (const examinationSubCategoryId of Object.keys(examinationList)) {
+      for (const examinationIdSearch of Object.keys(examinationList[examinationSubCategoryId])) {
+        if (examinationIdSearch === examinationId) {
+          examination = examinationList[examinationSubCategoryId][examinationIdSearch];
+        }
+      }
+    }
+    console.log('examination:', examination);
+
+    if (examination.isRandomizable) {
+      let randomizedValue = 0;
+      const maxValue = Number.parseFloat(examination.maxValue.replace(',','.'));
+      const minValue = Number.parseFloat(examination.minValue.replace(',','.'));
+
+      randomizedValue = Math.random() * (maxValue - minValue) + minValue;
+
+      return `${randomizedValue.toFixed(2)} ${examination.unit} (${minValue} - ${maxValue} ${examination.unit})`;
+    }
+
+    return 'Normalvärde';
+  }
 
   return {
     categoryNames,
