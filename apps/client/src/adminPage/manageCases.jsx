@@ -13,7 +13,7 @@ export default function AdminOverview(props) {
         user={props.user}
       ></ShowAllCases>
       <Link to={'/caseBuilder'}>
-        <Button>Skapa nytt fall</Button>
+        <Button marginTop={'20px'}>Skapa nytt fall</Button>
       </Link>
     </div>
   );

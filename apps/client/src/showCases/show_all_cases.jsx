@@ -16,6 +16,7 @@ import {
   ButtonGroup,
   AccordionIcon,
   IconButton,
+  Tooltip,
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useCases } from '../hooks/useCases.js';
@@ -23,6 +24,7 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
 import { errorWithPathToString } from 'api';
 import LoadingSkeleton from '../loadingSkeleton.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function ShowAllCases() {
   const [caseToRandomise, setCaseToRandomise] = useState();
@@ -32,6 +34,7 @@ export default function ShowAllCases() {
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [buttonsLoadingState, setButtonsLoadingState] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -141,6 +144,11 @@ export default function ShowAllCases() {
     }));
   };
 
+  const handleCaseToEdit = (caseId) => {
+    localStorage.setItem('caseId', caseId);
+    return navigate('/caseBuilder');
+  };
+
   return (
     <>
       {loading ? (
@@ -184,19 +192,24 @@ export default function ShowAllCases() {
                               >
                                 {caseItem.published ? 'Avpublicera' : 'Publicera'}
                               </Button>
-                              <IconButton
-                                icon={<EditIcon />}
-                                isLoading={buttonsLoadingState['edit_' + caseItem.id]}
-                              >
-                                Redigera
-                              </IconButton>
-                              <IconButton
-                                icon={<DeleteIcon />}
-                                onClick={() => removeCase(caseItem.id)}
-                                isLoading={buttonsLoadingState['remove_' + caseItem.id]}
-                              >
-                                Ta bort fallet
-                              </IconButton>
+                              <Tooltip label='Redigera' fontSize={'md'} placement='right' hasArrow>
+                                <IconButton
+                                  icon={<EditIcon />}
+                                  isLoading={buttonsLoadingState['edit_' + caseItem.id]}
+                                  onClick={() => handleCaseToEdit(caseItem.id)}
+                                >
+                                  Redigera
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip label='Ta bort' fontSize={'md'} placement='right' hasArrow>
+                                <IconButton
+                                  icon={<DeleteIcon />}
+                                  onClick={() => removeCase(caseItem.id)}
+                                  isLoading={buttonsLoadingState['remove_' + caseItem.id]}
+                                >
+                                  Ta bort fallet
+                                </IconButton>
+                              </Tooltip>
                             </ButtonGroup>
                           </Stack>
                         </CardFooter>
