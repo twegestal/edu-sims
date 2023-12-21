@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import Confirm from '../components/Confirm.jsx';
 
 export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseDetailsData }) {
-  const [caseName, setCaseName] = useState('Fyll i namnet på fallet');
+  const [caseName, setCaseName] = useState();
   const [isConfirmExitOpen, setIsConfirmExitOpen] = useState(false);
+  const [selectedMedicalField, setSelectedMedicalField] = useState('');
 
   const { medicalFields, getMedicalFields } = useCases();
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
 
   useEffect(() => {
     if (caseDetailsData) {
-      setCaseName(caseDetailsData?.caseName || 'Fyll i namnet på fallet');
+      setCaseName(caseDetailsData?.caseName || '');
+      setSelectedMedicalField(caseDetailsData?.medicalFieldId || '');
     }
   }, [caseDetailsData]);
 
@@ -32,6 +34,11 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
   const handleConfirmAbort = () => {
     setIsConfirmExitOpen(false);
     return navigate('/manageCases');
+  };
+
+  const handleChangeMedicalField = (e) => {
+    setSelectedMedicalField(e.target.value);
+    setMedicalFieldId(e.target.value);
   };
 
   return (
@@ -53,6 +60,7 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
         <FormControl>
           <FormLabel>Namn på fallet</FormLabel>
           <Input
+            autocomplete='off'
             value={caseName}
             placeholder='Fyll i namnet på fallet'
             onChange={(e) => setCaseName(e.target.value)}
@@ -61,8 +69,8 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
           <FormLabel>Medicinskt område</FormLabel>
           <Select
             placeholder='Välj ett område'
-            onChange={(e) => setMedicalFieldId(e.target.value)}
-            value={caseDetailsData?.medicalFieldId || ''}
+            onChange={handleChangeMedicalField}
+            value={selectedMedicalField}
           >
             {medicalFields &&
               medicalFields.map((medicalField) => (
