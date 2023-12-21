@@ -75,13 +75,13 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
       const entry = {};
       for (let i = 0; i < examinationsResponse.length; i++) {
         entry[examinationsResponse[i].id] = {
-          name:examinationsResponse[i].name,
+          name: examinationsResponse[i].name,
           minValue: examinationsResponse[i].min_value,
           maxValue: examinationsResponse[i].max_value,
           isRandomizable: examinationsResponse[i].is_randomizable,
           examinationSubtypeId: examinationsResponse[i].examination_subtype_id,
           unit: examinationsResponse[i].unit,
-        }
+        };
       }
       listMap[subCategoryId] = entry;
     }
@@ -109,11 +109,34 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
           }
         }
 
-        resultsMap[examinationsToRun[i]] = {
-          name: examinationName,
-          value: stepValues[examinationsToRun[i]].value,
-          isNormal: stepValues[examinationsToRun[i]].isNormal,
-        };
+        let examination = null;
+        for (const examinationSubCategoryId of Object.keys(examinationList)) {
+          for (const examinationIdSearch of Object.keys(
+            examinationList[examinationSubCategoryId],
+          )) {
+            if (examinationIdSearch === examinationsToRun[i]) {
+              examination = examinationList[examinationSubCategoryId][examinationIdSearch];
+            }
+          }
+        }
+        if (examination.isRandomizable) {
+          const unit = examination.unit;
+          const minValue = Number.parseFloat(examination.minValue.replace(',', '.'));
+          const maxValue = Number.parseFloat(examination.maxValue.replace(',', '.'));
+          resultsMap[examinationsToRun[i]] = {
+            name: examinationName,
+            value: `${
+              stepValues[examinationsToRun[i]].value
+            } ${unit} (${minValue} - ${maxValue} ${unit})`,
+            isNormal: stepValues[examinationsToRun[i]].isNormal,
+          };
+        } else {
+          resultsMap[examinationsToRun[i]] = {
+            name: examinationName,
+            value: `${stepValues[examinationsToRun[i]].value}`,
+            isNormal: stepValues[examinationsToRun[i]].isNormal,
+          };
+        }
       } else {
         let examinationName = '';
 
@@ -151,16 +174,18 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
 
     if (examination.isRandomizable) {
       let randomizedValue = 0;
-      const maxValue = Number.parseFloat(examination.maxValue.replace(',','.'));
-      const minValue = Number.parseFloat(examination.minValue.replace(',','.'));
+      const maxValue = Number.parseFloat(examination.maxValue.replace(',', '.'));
+      const minValue = Number.parseFloat(examination.minValue.replace(',', '.'));
 
       randomizedValue = Math.random() * (maxValue - minValue) + minValue;
 
-      return `${randomizedValue.toFixed(2)} ${examination.unit} (${minValue} - ${maxValue} ${examination.unit})`;
+      return `${randomizedValue.toFixed(2)} ${examination.unit} (${minValue} - ${maxValue} ${
+        examination.unit
+      })`;
     }
 
     return 'Normalvärde';
-  }
+  };
 
   return {
     categoryNames,

@@ -12,6 +12,7 @@ import {
   VStack,
   Flex,
   Card,
+  Text,
 } from '@chakra-ui/react';
 import Introduction from './introduction.jsx';
 import Examination from './examination.jsx';
@@ -174,24 +175,22 @@ export default function PerformCase() {
       onNotesClose();
     }
   };
-  //FIXME: key is not unique
   const updateLabResultsList = (resultsObject) => {
     setTreatmentResults([
       ...treatmentResults,
-      <Flex key={'1'} alignItems='center' flexDirection='column'>
+      <Flex key={Date.now()} alignItems='center' flexDirection='column'>
         {Object.keys(resultsObject).map((index) =>
           resultsObject[index].isNormal ? (
             <Flex key={index} flexDirection='row'>
-              <p>
+              <Text>
                 {resultsObject[index].name} : {resultsObject[index].value}{' '}
-              </p>
+              </Text>
             </Flex>
           ) : (
-            <Flex key={index} flexDirection='row' justifyContent='space-between'>
-              <WarningIcon />
-              <p>
+            <Flex key={index} flexDirection='row'>
+              <Text color='red'>
                 {resultsObject[index].name} : {resultsObject[index].value}
-              </p>
+              </Text>
             </Flex>
           ),
         )}
