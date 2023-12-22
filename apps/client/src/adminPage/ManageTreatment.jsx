@@ -80,7 +80,7 @@ export default function ManageTreatment() {
       if (result) {
         await fetchTreatments();
         showToast('Behandling tillagd', `${newValue} har lagts till`, 'success');
-        setNewDiagnosis({ ...newTreatment, [subtypeId]: '' });
+        setNewTreatment({ ...newTreatment, [subtypeId]: '' });
       } else {
         showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
       }
