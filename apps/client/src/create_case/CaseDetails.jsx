@@ -7,6 +7,8 @@ import {
   Select,
   Heading,
   Spacer,
+  ButtonGroup,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
@@ -17,6 +19,8 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
   const [caseName, setCaseName] = useState();
   const [isConfirmExitOpen, setIsConfirmExitOpen] = useState(false);
   const [selectedMedicalField, setSelectedMedicalField] = useState('');
+  const [caseNameError, setCaseNameError] = useState();
+  const [medicalFieldError, setMedicalFieldError] = useState();
 
   const { medicalFields, getMedicalFields } = useCases();
   const navigate = useNavigate();
@@ -48,6 +52,35 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
   const handleChangeMedicalField = (e) => {
     setSelectedMedicalField(e.target.value);
     setMedicalFieldId(e.target.value);
+    setMedicalFieldError(false);
+  };
+
+  const handleSave = () => {
+    if (caseName && selectedMedicalField) {
+      onSave(caseName);
+    } else {
+      if (!caseName) {
+        setCaseNameError(true);
+      }
+
+      if (!selectedMedicalField) {
+        setMedicalFieldError(true);
+      }
+    }
+  };
+
+  const handleUpdate = () => {
+    if (caseName && selectedMedicalField) {
+      onUpdate(caseName);
+    } else {
+      if (!caseName) {
+        setCaseNameError(true);
+      }
+
+      if (!selectedMedicalField) {
+        setMedicalFieldError(true);
+      }
+    }
   };
 
   return (
@@ -66,15 +99,22 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
         <Heading as={'h1'} size={'lg'}>
           Falldetaljer
         </Heading>
-        <FormControl>
+        <FormControl isRequired isInvalid={caseNameError}>
           <FormLabel>Namn på fallet</FormLabel>
           <Input
             autocomplete='off'
             value={caseName}
             placeholder='Fyll i namnet på fallet'
-            onChange={(e) => setCaseName(e.target.value)}
+            onChange={(e) => {
+              setCaseName(e.target.value);
+              setCaseNameError(false);
+            }}
           ></Input>
-
+          {caseNameError && (
+            <FormErrorMessage>Du måste fylla i ett namn för fallet</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isRequired isInvalid={medicalFieldError}>
           <FormLabel>Medicinskt område</FormLabel>
           <Select
             placeholder='Välj ett område'
@@ -88,14 +128,19 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
                 </option>
               ))}
           </Select>
+          {medicalFieldError && (
+            <FormErrorMessage>Du måste välja ett medicinskt område för fallet</FormErrorMessage>
+          )}
         </FormControl>
         <Spacer />
-        {caseDetailsData ? (
-          <Button onClick={() => onUpdate(caseName)}>Uppdatera fallet</Button>
-        ) : (
-          <Button onClick={() => onSave(caseName)}>Spara fallet</Button>
-        )}
-        <Button onClick={() => setIsConfirmExitOpen(true)}>Avsluta utan att spara</Button>
+        <ButtonGroup marginBottom={'30%'}>
+          {caseDetailsData ? (
+            <Button onClick={handleUpdate}>Uppdatera fallet</Button>
+          ) : (
+            <Button onClick={handleSave}>Spara fallet</Button>
+          )}
+          <Button onClick={() => setIsConfirmExitOpen(true)}>Avsluta utan att spara</Button>
+        </ButtonGroup>
       </VStack>
 
       <Confirm
