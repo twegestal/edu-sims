@@ -44,7 +44,7 @@ export default function ConfirmTreatmentValues({
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            {`Fyll i dosering för behandlingen "${treatmentName}" om det är applicerbart.`}
+            {`Fyll i dosering för behandlingen "${treatmentName}" om det är applicerbart. Detta är frivilligt att fylla i.`}
             <Textarea
               value={treatmentDose}
               placeholder={treatmentDose}
