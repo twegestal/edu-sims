@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, FLOAT } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 
 export const examination_list = db.define(
@@ -21,6 +21,18 @@ export const examination_list = db.define(
     examination_subtype_id: {
       type: DataTypes.UUID,
       allowNull: false,
+    },
+    min_value: {
+      type: DataTypes.TEXT
+    },
+    max_value: {
+      type: DataTypes.TEXT
+    },
+    is_randomizable: {
+      type: DataTypes.BOOLEAN
+    },
+    unit: {
+      type: DataTypes.TEXT
     },
   },
   {

@@ -159,7 +159,7 @@ export default function Examination(props) {
                                             Object.entries(examinationList[subCategory]).map(
                                               ([id, name], index) => (
                                                 <ListItem key={index}>
-                                                  <Checkbox id={id}>{name}</Checkbox>
+                                                  <Checkbox id={id}>{name.name}</Checkbox>
                                                 </ListItem>
                                               ),
                                             )}
@@ -201,10 +201,15 @@ export default function Examination(props) {
                           Object.entries(results).map(([id, fields], index) => (
                             <ListItem key={index}>
                               <HStack>
-                                {!fields.isNormal && <WarningIcon />}
-                                <Text>
-                                  {fields.name} : {fields.value}
-                                </Text>
+                                {fields.isNormal ? (
+                                  <Text>
+                                    {fields.name} : {fields.value}
+                                  </Text>
+                                ) : (
+                                  <Text color={'red'}>
+                                    {fields.name} : {fields.value}
+                                  </Text>
+                                )}
                               </HStack>
                             </ListItem>
                           ))}

@@ -204,7 +204,7 @@ export default function UserTable({ reload }) {
         <TableContainer maxWidth='90%'>
           <Select
             id='selectField'
-            placeholder='Välj användare för användargrupp.'
+            placeholder='Filtrera på användargrupp'
             onChange={(e) => {
               setGroupToRender(e.target.value);
             }}

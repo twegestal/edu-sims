@@ -19,6 +19,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { BiHide, BiShow } from 'react-icons/bi';
 import { useCases } from '../hooks/useCases.js';
 import { useAuth } from '../hooks/useAuth.jsx';
 import StartCase from './startCase.jsx';
@@ -181,34 +182,36 @@ export default function ShowAllCases() {
                         <CardFooter>
                           <Stack>
                             <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
-                            <ButtonGroup>
-                              <Button
-                                onClick={() => handlePublish(caseItem.id, caseItem.published)}
-                                isLoading={
-                                  caseItem.published
-                                    ? buttonsLoadingState['unpublish_' + caseItem.id]
-                                    : buttonsLoadingState['publish_' + caseItem.id]
-                                }
+                            <ButtonGroup spacing={10}>
+                              <Tooltip
+                                label={caseItem.published ? 'Avpublicera' : 'Publicera'}
+                                fontSize={'md'}
+                                placement='right'
+                                hasArrow
                               >
-                                {caseItem.published ? 'Avpublicera' : 'Publicera'}
-                              </Button>
+                                <IconButton
+                                  icon={caseItem.published ? <BiHide /> : <BiShow />}
+                                  onClick={() => handlePublish(caseItem.id, caseItem.published)}
+                                  isLoading={
+                                    caseItem.published
+                                      ? buttonsLoadingState['unpublish_' + caseItem.id]
+                                      : buttonsLoadingState['publish_' + caseItem.id]
+                                  }
+                                />
+                              </Tooltip>
                               <Tooltip label='Redigera' fontSize={'md'} placement='right' hasArrow>
                                 <IconButton
                                   icon={<EditIcon />}
                                   isLoading={buttonsLoadingState['edit_' + caseItem.id]}
                                   onClick={() => handleCaseToEdit(caseItem.id)}
-                                >
-                                  Redigera
-                                </IconButton>
+                                />
                               </Tooltip>
                               <Tooltip label='Ta bort' fontSize={'md'} placement='right' hasArrow>
                                 <IconButton
                                   icon={<DeleteIcon />}
                                   onClick={() => removeCase(caseItem.id)}
                                   isLoading={buttonsLoadingState['remove_' + caseItem.id]}
-                                >
-                                  Ta bort fallet
-                                </IconButton>
+                                />
                               </Tooltip>
                             </ButtonGroup>
                           </Stack>

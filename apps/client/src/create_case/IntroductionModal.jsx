@@ -17,24 +17,16 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
   const moduleTypeIdentifier = 0;
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const [description, setDescription] = useState('Fyll i din beskrivning av ett patientmöte');
-  const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
-  const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
-  const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
+  const [description, setDescription] = useState();
+  const [prompt, setPrompt] = useState();
+  const [feedbackCorrect, setFeedbackCorrect] = useState();
+  const [feedbackIncorrect, setFeedbackIncorrect] = useState();
 
   useEffect(() => {
-    setDescription(
-      moduleData?.stepData?.description || 'Fyll i din beskrivning av ett patientmöte',
-    );
-    setPrompt(
-      moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren som en Ja/Nej-fråga',
-    );
-    setFeedbackCorrect(
-      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
-    );
-    setFeedbackIncorrect(
-      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
-    );
+    setDescription(moduleData?.stepData?.description || '');
+    setPrompt(moduleData?.stepData?.prompt || '');
+    setFeedbackCorrect(moduleData?.stepData?.feedback_correct || '');
+    setFeedbackIncorrect(moduleData?.stepData?.feedback_incorrect || '');
   }, [moduleData]);
 
   const clearContent = () => {
@@ -85,21 +77,28 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
             <FormControl>
               <FormLabel>Beskrivning</FormLabel>
               <Textarea
+                placeholder='Fyll i din beskrivning av ett patientmöte'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Textarea>
 
               <FormLabel>Uppmaning</FormLabel>
-              <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}></Textarea>
+              <Textarea
+                placeholder='Fyll i din uppmaning till användaren som en Ja/Nej-fråga'
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              ></Textarea>
 
               <FormLabel>Korrekt feedback</FormLabel>
               <Textarea
+                placeholder='Fyll i feedback för korrekt svar'
                 value={feedbackCorrect}
                 onChange={(e) => setFeedbackCorrect(e.target.value)}
               ></Textarea>
 
               <FormLabel>Inkorrekt feedback</FormLabel>
               <Textarea
+                placeholder='Fyll i feedback för inkorrekt svar'
                 value={feedbackIncorrect}
                 onChange={(e) => setFeedbackIncorrect(e.target.value)}
               ></Textarea>

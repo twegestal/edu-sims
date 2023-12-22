@@ -24,10 +24,10 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const moduleTypeIdentifier = 2;
-  const [prompt, setPrompt] = useState('Fyll i din uppmaning till användaren');
+  const [prompt, setPrompt] = useState();
   const [diagnosisId, setDiagnosisId] = useState();
-  const [feedbackCorrect, setFeedbackCorrect] = useState('Fyll i feedback för korrekt svar');
-  const [feedbackIncorrect, setFeedbackIncorrect] = useState('Fyll i feedback för inkorrekt svar');
+  const [feedbackCorrect, setFeedbackCorrect] = useState();
+  const [feedbackIncorrect, setFeedbackIncorrect] = useState();
 
   const { getMedicalFields } = useCases();
   const { diagnosisList, getDiagnosisList, setDiagnosisList } = useDiagnosis();
@@ -46,14 +46,10 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
   }, []);
 
   useEffect(() => {
-    setPrompt(moduleData?.stepData?.prompt || 'Fyll i din uppmaning till användaren');
+    setPrompt(moduleData?.stepData?.prompt || '');
     setDiagnosisId(moduleData?.stepData?.diagnosis_id || null);
-    setFeedbackCorrect(
-      moduleData?.stepData?.feedback_correct || 'Fyll i feedback för korrekt svar',
-    );
-    setFeedbackIncorrect(
-      moduleData?.stepData?.feedback_incorrect || 'Fyll i feedback för inkorrekt svar',
-    );
+    setFeedbackCorrect(moduleData?.stepData?.feedback_correct || '');
+    setFeedbackIncorrect(moduleData?.stepData?.feedback_incorrect || '');
 
     const updateDiagnosisList = async () => {
       await getDiagnosisList(medicalFieldId);
@@ -115,8 +111,8 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                 <FormControl>
                   <FormLabel>Uppmaning till användaren</FormLabel>
                   <Textarea
+                    placeholder='Fyll i din uppmaning till användaren'
                     value={prompt}
-                    placeholder={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   />
 
@@ -149,11 +145,13 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                   </VStack>
                   <FormLabel>Korrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för korrekt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   />
                   <FormLabel>Inkorrekt feedback</FormLabel>
                   <Textarea
+                    placeholder='Fyll i feedback för inkorrekt svar'
                     value={feedbackIncorrect}
                     onChange={(e) => setFeedbackIncorrect(e.target.value)}
                   />

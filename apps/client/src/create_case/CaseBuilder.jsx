@@ -492,8 +492,8 @@ export default function CaseBuilder() {
                       justifyContent='center'
                     >
                       {modules.length === 0
-                        ? 'Dra kort från Moduler till tidslinjen för att skapa ett fall'
-                        : 'Du kan dra in fler kort och arrangera om moduler för att skapa ditt fall'}
+                        ? 'Dra kort från moduler till tidslinjen för att skapa ett fall'
+                        : 'Du kan dra in fler kort och arrangera om kort i tidslinjen för att skapa ditt fall'}
                     </Box>
                   </VStack>
                 )}
