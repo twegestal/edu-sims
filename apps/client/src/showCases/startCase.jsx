@@ -1,10 +1,10 @@
-import { Button, ButtonGroup } from '@chakra-ui/react';
+import { Button, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
 
-export default function StartCase({ caseId, caseToRandomise }) {
+export default function StartCase({ caseId, caseToRandomise, published }) {
   const { user } = useAuth();
   const { createAttempt } = useCases();
   const navigate = useNavigate();
@@ -36,14 +36,42 @@ export default function StartCase({ caseId, caseToRandomise }) {
 
   return (
     <>
-      <Button
-        onClick={postToAttemptNoReload}
-        colorScheme='teal'
-        marginBottom='10%'
-        isLoading={loading}
-      >
-        Starta fallet
-      </Button>
+      {user.isAdmin ? (
+        published ? (
+          <Button
+            onClick={postToAttemptNoReload}
+            colorScheme='teal'
+            marginBottom='10%'
+            isLoading={loading}
+          >
+            Starta fallet
+          </Button>
+        ) : (
+          <Tooltip
+            hasArrow
+            label='Fallet är inte publicerat och visas därför inte för studenter, men du som admin kan testa fallet'
+          >
+            <Button
+              onClick={postToAttemptNoReload}
+              colorScheme='teal'
+              marginBottom='10%'
+              isLoading={loading}
+            >
+              Testa fallet
+            </Button>
+          </Tooltip>
+        )
+      ) : (
+        <Button
+          onClick={postToAttemptNoReload}
+          colorScheme='teal'
+          marginBottom='10%'
+          isLoading={loading}
+        >
+          Starta fallet
+        </Button>
+      )}
+
       {/* <Button
           onClick={postToAttemptReload}
           colorScheme='teal'

@@ -181,7 +181,11 @@ export default function ShowAllCases() {
                         </CardBody>
                         <CardFooter>
                           <Stack>
-                            <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
+                            <StartCase
+                              caseId={caseItem.id}
+                              caseToRandomise={caseToRandomise}
+                              published={caseItem.published}
+                            />
                             <ButtonGroup spacing={10}>
                               <Tooltip
                                 label={caseItem.published ? 'Avpublicera' : 'Publicera'}
