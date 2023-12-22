@@ -23,16 +23,16 @@ export const examination_list = db.define(
       allowNull: false,
     },
     min_value: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
     max_value: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
     is_randomizable: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
     },
     unit: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
   },
   {
