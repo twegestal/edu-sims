@@ -25,7 +25,7 @@ export default function Login() {
       title: title,
       description: description,
       status: status,
-      duration: 2000,
+      duration: 9000,
       isClosable: true,
       position: 'top',
     });

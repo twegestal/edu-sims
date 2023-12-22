@@ -63,7 +63,7 @@ export default function ManageUsers() {
       title: title,
       description: description,
       status: status,
-      duration: 2000,
+      duration: 9000,
       isClosable: true,
       position: 'top',
     });
