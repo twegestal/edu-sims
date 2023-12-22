@@ -150,7 +150,7 @@ export default function UserTable({ reload }) {
               <FormControl display={'flex'} flexDirection={'column'}>
                 <Button onClick={() => openResetPassword({ id: aUser.id, email: aUser.email })}>
                   {' '}
-                  Sätt nytt lösenord{' '}
+                  Byt lösenord{' '}
                 </Button>
               </FormControl>
             </Td>
