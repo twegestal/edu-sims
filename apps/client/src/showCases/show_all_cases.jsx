@@ -188,7 +188,11 @@ export default function ShowAllCases() {
                             />
                             <ButtonGroup spacing={10}>
                               <Tooltip
-                                label={caseItem.published ? 'Avpublicera' : 'Publicera'}
+                                label={
+                                  caseItem.published
+                                    ? 'Avpublicera fallet så att det inte visas för studenter'
+                                    : 'Publicera fallet för att visa det för studenter'
+                                }
                                 fontSize={'md'}
                                 placement='right'
                                 hasArrow
