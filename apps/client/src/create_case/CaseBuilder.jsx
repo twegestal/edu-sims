@@ -197,40 +197,48 @@ export default function CaseBuilder() {
   };
 
   const saveCase = async (caseName) => {
-    const caseObject = {
-      name: caseName,
-      steps: modules,
-      medical_field_id: medicalFieldId,
-      creator_user_id: user.id,
-    };
+    if (modules.length > 0) {
+      const caseObject = {
+        name: caseName,
+        steps: modules,
+        medical_field_id: medicalFieldId,
+        creator_user_id: user.id,
+      };
 
-    const validationResults = validateCaseToSave(caseObject);
-    let successfulValidation = true;
-    validationResults.forEach((result) => {
-      if (!result.success) {
-        successfulValidation = false;
-      }
-    });
-    if (successfulValidation) {
-      const response = await createCase(caseObject);
-      evaluateResponse(response, caseObject.name);
-      return navigate('/manageCases');
-    } else {
-      for (let i = 0; i < validationResults.length; i++) {
-        validationResults[i].errors?.map((error, index) => {
-          const titleString = validationResults[i].errors[index].module
-            ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
-            : 'Påträffade följande fel';
-          toast({
-            title: titleString,
-            description: errorWithPathToString(error),
-            status: 'error',
-            duration: '9000',
-            isClosable: true,
-            position: 'top',
+      const validationResults = validateCaseToSave(caseObject);
+      let successfulValidation = true;
+      validationResults.forEach((result) => {
+        if (!result.success) {
+          successfulValidation = false;
+        }
+      });
+      if (successfulValidation) {
+        const response = await createCase(caseObject);
+        evaluateResponse(response, caseObject.name);
+        return navigate('/manageCases');
+      } else {
+        for (let i = 0; i < validationResults.length; i++) {
+          validationResults[i].errors?.map((error, index) => {
+            const titleString = validationResults[i].errors[index].module
+              ? `Påträffade följande fel i modulen ${validationResults[i].errors[index].module}`
+              : 'Påträffade följande fel';
+            toast({
+              title: titleString,
+              description: errorWithPathToString(error),
+              status: 'error',
+              duration: '9000',
+              isClosable: true,
+              position: 'top',
+            });
           });
-        });
+        }
       }
+    } else {
+      showToast(
+        'Kunde inte spara fallet',
+        'Minst en modul måste läggas till för att kunna spara ett fall',
+        'warning',
+      );
     }
   };
 

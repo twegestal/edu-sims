@@ -1,4 +1,13 @@
-import { FormControl, FormLabel, Input, VStack, Button, Select, Heading } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  VStack,
+  Button,
+  Select,
+  Heading,
+  Spacer,
+} from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useCases } from '../hooks/useCases';
 import { useNavigate } from 'react-router-dom';
@@ -80,6 +89,7 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
               ))}
           </Select>
         </FormControl>
+        <Spacer />
         {caseDetailsData ? (
           <Button onClick={() => onUpdate(caseName)}>Uppdatera fallet</Button>
         ) : (
