@@ -19,7 +19,7 @@ export default function ConfirmValues({
   examinationId,
   stepSpecificValues,
 }) {
-  const [examinationValue, setExaminationValue] = useState('Fyll i värde här');
+  const [examinationValue, setExaminationValue] = useState();
   const [isNormal, setIsNormal] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ConfirmValues({
             setExaminationValue(element.value);
             setIsNormal(element.is_normal);
           } else {
-            setExaminationValue('Fyll i värde här');
+            setExaminationValue('');
             setIsNormal(false);
           }
         }
@@ -49,7 +49,7 @@ export default function ConfirmValues({
             {`Fyll i värdet som resultatet av utredningen "${examinationName}" ska ge.`}
             <Textarea
               value={examinationValue}
-              placeholder={examinationValue}
+              placeholder={'Fyll i värde här'}
               onChange={(e) => setExaminationValue(e.target.value)}
             ></Textarea>
             <Checkbox isChecked={isNormal} onChange={(e) => setIsNormal(e.target.checked)}>

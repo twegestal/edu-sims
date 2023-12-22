@@ -312,17 +312,18 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               <ModalHeader>Utredning</ModalHeader>
 
               <ModalBody>
-                <FormControl>
-                  <FormLabel>Uppmaning</FormLabel>
+                <FormControl isRequired>
+                  <FormLabel fontWeight={'bold'}>Uppmaning</FormLabel>
                   <Textarea
+                    marginBottom={'5px'}
                     placeholder='Fyll i din uppmaning till användaren'
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                  ></Textarea>
+                  />
 
-                  <FormLabel>Utredningar att visa för användare</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Utredningar att visa för användare</FormLabel>
                   {Object.entries(examinationCategories).map(([categoryId, name]) => (
-                    <div key={'div' + categoryId}>
+                    <VStack key={'div' + categoryId} alignItems={'flex-start'} marginBottom={'5px'}>
                       <Heading as='h3' size='sm' key={categoryId}>
                         {name}
                       </Heading>
@@ -344,10 +345,14 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                           </VStack>
                         ),
                       )}
-                    </div>
+                    </VStack>
                   ))}
 
-                  <FormLabel>Bocka i korrekta undersökningar för det här steget</FormLabel>
+                  {Object.keys(examinationToDisplay).length > 0 && (
+                    <FormLabel fontWeight={'bold'}>
+                      Bocka i korrekta undersökningar för det här steget
+                    </FormLabel>
+                  )}
                   {Object.entries(examinationToDisplay).map(([categoryId], index) => (
                     <div key={'div' + categoryId}>
                       <Heading key={categoryId} as='h3' size='md'>
@@ -414,8 +419,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                     </div>
                   ))}
 
-                  <FormLabel>Max antal test</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Max antal tester studenten får göra</FormLabel>
                   <NumberInput
+                    min={0}
                     value={maxNbrTests}
                     onChange={(valueAsNumber) => setMaxNbrTests(parseInt(valueAsNumber, 10))}
                   >
@@ -426,16 +432,16 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                     </NumberInputStepper>
                   </NumberInput>
 
-                  <FormLabel>Korrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för rätt svar</FormLabel>
                   <Textarea
-                    placeholder='Fyll i feedback för korrekt svar'
+                    placeholder='Fyll i feedback för rätt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   ></Textarea>
 
-                  <FormLabel>Inkorrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för fel svar</FormLabel>
                   <Textarea
-                    placeholder='Fyll i feedback för inkorrekt svar'
+                    placeholder='Fyll i feedback för fel svar'
                     value={feedbackIncorrect}
                     onChange={(e) => setFeedbackIncorrect(e.target.value)}
                   ></Textarea>

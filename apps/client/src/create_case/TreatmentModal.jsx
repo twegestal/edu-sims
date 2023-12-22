@@ -108,13 +108,7 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
       }
     }
   }, [isCheckboxStatesDone]);
-  /* 
-  useEffect(() => {
-    if (treatmentSubtypes) {
-      resetCheckBoxState();
-    }
-  }, [treatmentSubtypes]);
- */
+
   useEffect(() => {
     if (!loading) {
       resetCheckBoxState();
@@ -268,8 +262,8 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
               <ModalHeader>Behandling</ModalHeader>
 
               <ModalBody>
-                <FormControl>
-                  <FormLabel>Uppmaning till användaren</FormLabel>
+                <FormControl isRequired>
+                  <FormLabel fontWeight={'bold'}>Uppmaning till användaren</FormLabel>
 
                   <Textarea
                     value={prompt}
@@ -277,11 +271,15 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
                     onChange={(e) => setPrompt(e.target.value)}
                   ></Textarea>
 
-                  <FormLabel>Behandlingar att visa för användare</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Behandlingar att visa för användare</FormLabel>
                   {treatmentTypes &&
                     Object.entries(treatmentTypes).map(([treatmentId, name]) => (
-                      <div key={'div' + treatmentId}>
-                        <Heading as='h3' size='sm' key={treatmentId}>
+                      <VStack
+                        marginBottom={'5px'}
+                        key={'div' + treatmentId}
+                        alignItems={'flex-start'}
+                      >
+                        <Heading size='sm' key={treatmentId}>
                           {name}
                         </Heading>
 
@@ -303,10 +301,14 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
                               </VStack>
                             ),
                           )}
-                      </div>
+                      </VStack>
                     ))}
 
-                  <FormLabel>Bocka i korrekta behandlingar för det här steget</FormLabel>
+                  {Object.keys(treatmentsToDisplay).length > 0 && (
+                    <FormLabel fontWeight={'bold'}>
+                      Bocka i korrekta behandlingar för det här steget
+                    </FormLabel>
+                  )}
                   {Object.entries(treatmentsToDisplay).map(([treatmentTypeId]) => (
                     <div key={'div' + treatmentTypeId}>
                       <Heading key={treatmentTypeId} as='h3' size='md'>
@@ -373,16 +375,16 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
                     </div>
                   ))}
 
-                  <FormLabel>Korrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för rätt svar</FormLabel>
                   <Textarea
-                    placeholder='Fyll i feedback för korrekt svar'
+                    placeholder='Fyll i feedback för rätt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   ></Textarea>
 
-                  <FormLabel>Inkorrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för fel svar</FormLabel>
                   <Textarea
-                    placeholder='Fyll i feedback för inkorrekt svar'
+                    placeholder='Fyll i feedback för fel svar'
                     value={feedbackIncorrect}
                     onChange={(e) => setFeedbackIncorrect(e.target.value)}
                   ></Textarea>

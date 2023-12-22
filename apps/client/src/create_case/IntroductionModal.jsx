@@ -38,14 +38,6 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
     setIsConfirmOpen(false);
   };
 
-  const resetContent = () => {
-    //TODO: kan detta vara en lösning, tror inte det??
-    setDescription('Fyll i din beskrivning av ett patientmöte');
-    setPrompt('Fyll i din uppmaning till användaren som en Ja/Nej-fråga');
-    setFeedbackCorrect('Fyll i feedback för korrekt svar');
-    setFeedbackIncorrect('Fyll i feedback för inkorrekt svar');
-  };
-
   const handleOpenConfirm = () => {
     setIsConfirmOpen(true);
   };
@@ -62,7 +54,6 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
       feedback_correct: feedbackCorrect,
       feedback_incorrect: feedbackIncorrect,
     };
-    //resetContent();
     onClose(stepData);
   };
 
@@ -75,30 +66,30 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
 
           <ModalBody>
             <FormControl>
-              <FormLabel>Beskrivning</FormLabel>
+              <FormLabel fontWeight={'bold'}>Beskrivning</FormLabel>
               <Textarea
                 placeholder='Fyll i din beskrivning av ett patientmöte'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Textarea>
 
-              <FormLabel>Uppmaning</FormLabel>
+              <FormLabel fontWeight={'bold'}>Uppmaning</FormLabel>
               <Textarea
                 placeholder='Fyll i din uppmaning till användaren som en Ja/Nej-fråga'
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
               ></Textarea>
 
-              <FormLabel>Korrekt feedback</FormLabel>
+              <FormLabel fontWeight={'bold'}>Feedbeck för rätt svar</FormLabel>
               <Textarea
-                placeholder='Fyll i feedback för korrekt svar'
+                placeholder='Fyll i feedback för rätt svar'
                 value={feedbackCorrect}
                 onChange={(e) => setFeedbackCorrect(e.target.value)}
               ></Textarea>
 
-              <FormLabel>Inkorrekt feedback</FormLabel>
+              <FormLabel fontWeight={'bold'}>Feedback för fel svar</FormLabel>
               <Textarea
-                placeholder='Fyll i feedback för inkorrekt svar'
+                placeholder='Fyll i feedback för fel svar'
                 value={feedbackIncorrect}
                 onChange={(e) => setFeedbackIncorrect(e.target.value)}
               ></Textarea>

@@ -108,16 +108,17 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
               <ModalHeader>Diagnos</ModalHeader>
 
               <ModalBody>
-                <FormControl>
-                  <FormLabel>Uppmaning till användaren</FormLabel>
+                <FormControl isRequired>
+                  <FormLabel fontWeight={'bold'}>Uppmaning till användaren</FormLabel>
                   <Textarea
+                    marginBottom={'5px'}
                     placeholder='Fyll i din uppmaning till användaren'
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   />
 
-                  <FormLabel>Ange korrekt diagnos från listan</FormLabel>
-                  <VStack alignItems={'flex-start'}>
+                  <FormLabel fontWeight={'bold'}>Ange korrekt diagnos från listan</FormLabel>
+                  <VStack alignItems={'flex-start'} marginBottom={'5px'}>
                     {diagnosisList ? (
                       <>
                         {diagnosisList.length > 0 ? (
@@ -143,13 +144,13 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                       <Text as={'i'}>Du måste välja ett medicinskt område i falldetaljer</Text>
                     )}
                   </VStack>
-                  <FormLabel>Korrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för rätt svar</FormLabel>
                   <Textarea
-                    placeholder='Fyll i feedback för korrekt svar'
+                    placeholder='Fyll i feedback för rätt svar'
                     value={feedbackCorrect}
                     onChange={(e) => setFeedbackCorrect(e.target.value)}
                   />
-                  <FormLabel>Inkorrekt feedback</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Feedback för fel svar</FormLabel>
                   <Textarea
                     placeholder='Fyll i feedback för inkorrekt svar'
                     value={feedbackIncorrect}

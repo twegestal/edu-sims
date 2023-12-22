@@ -172,7 +172,7 @@ export default function ShowAllCases() {
                 {user.isAdmin ? (
                   <SimpleGrid columns={[1, 2, 3]} spacing={10} justifyContent={'space-around'}>
                     {groupedCases[medicalFieldId].map((caseItem) => (
-                      <Card maxW={'md'} alignItems={'center'}>
+                      <Card key={caseItem.id} maxW={'md'} alignItems={'center'}>
                         <CardBody>
                           <Stack>
                             <Heading size={'md'}>{caseItem.name}</Heading>

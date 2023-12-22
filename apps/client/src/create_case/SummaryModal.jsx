@@ -63,22 +63,22 @@ export default function SummaryModal({ isOpen, onClose, moduleData }) {
           <ModalHeader>Sammanfattning</ModalHeader>
 
           <ModalBody>
-            <FormControl>
-              <FormLabel>Process</FormLabel>
+            <FormControl isRequired>
+              <FormLabel fontWeight={'bold'}>Process</FormLabel>
               <Textarea
                 value={process}
                 placeholder='Hur hade den korrekta processen sett ut om en läkare tagit sig an fallet?'
                 onChange={(e) => setProcess(e.target.value)}
               ></Textarea>
 
-              <FormLabel>Additional info</FormLabel>
+              <FormLabel fontWeight={'bold'}>Ytterligare information</FormLabel>
               <Textarea
                 value={additionalInfo}
                 placeholder='Fyll i övrig information om sjukdomen till studenten'
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               ></Textarea>
 
-              <FormLabel>Additional Links</FormLabel>
+              <FormLabel fontWeight={'bold'}>Länkar</FormLabel>
               <Textarea
                 value={additionalLinks}
                 placeholder='Fyll i länkar till övrig information om sjukdomen'
