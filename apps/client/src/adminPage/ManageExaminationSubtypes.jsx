@@ -11,6 +11,9 @@ import {
   Text,
   Select,
   useToast,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useExamination } from '../hooks/useExamination';
@@ -19,7 +22,8 @@ export default function ManageExaminationSubtypes({ onAdd, update }) {
   const [value, setValue] = useState('');
   const [examinationType, setExaminationType] = useState();
   const { examinationTypes, getExaminationTypes } = useExamination();
-  const toast = useToast();
+  const [subcategoryError, setSubcategoryError] = useState();
+  const [maincategoryError, setMaincategoryError] = useState();
 
   const fetchExaminationTypes = async () => {
     await getExaminationTypes();
@@ -34,14 +38,13 @@ export default function ManageExaminationSubtypes({ onAdd, update }) {
       setExaminationType('');
       onAdd(value, examinationType);
     } else {
-      toast({
-        title: 'Värde saknas',
-        description: 'Fyll i namn och kategori',
-        status: 'warning',
-        duration: 2000,
-        isClosable: true,
-        position: 'top',
-      });
+      if (!value) {
+        setSubcategoryError(true);
+      }
+
+      if (!examinationType) {
+        setMaincategoryError(true);
+      }
     }
   };
   return (
@@ -54,29 +57,36 @@ export default function ManageExaminationSubtypes({ onAdd, update }) {
       </CardHeader>
       <CardBody>
         <Stack spacing={4}>
-          {' '}
-          <Box>
-            <Text mb={4} textAlign='left'>
-              {' '}
-              Skriv in namnet på en ny underkategori.
-            </Text>
-          </Box>
-          <Input
-            placeholder='Ny underkategori...'
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <Select
-            placeholder='Välj huvudkategori...'
-            onChange={(e) => setExaminationType(e.target.value)}
-          >
-            {examinationTypes &&
-              examinationTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
-                </option>
-              ))}
-          </Select>
+          <FormControl isRequired isInvalid={subcategoryError}>
+            <FormLabel>Fyll i namnet på ny underkategori</FormLabel>
+            <Input
+              placeholder='Ny underkategori...'
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setSubcategoryError(false);
+              }}
+            />
+            {subcategoryError && <FormErrorMessage>Underkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
+          <FormControl isRequired isInvalid={maincategoryError}>
+            <FormLabel>Tillhör huvudkategori</FormLabel>
+            <Select
+              placeholder='Välj huvudkategori...'
+              onChange={(e) => {
+                setExaminationType(e.target.value);
+                setMaincategoryError(false);
+              }}
+            >
+              {examinationTypes &&
+                examinationTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+            </Select>
+            {maincategoryError && <FormErrorMessage>Huvudkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
         </Stack>
       </CardBody>
       <CardFooter>

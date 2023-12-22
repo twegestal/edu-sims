@@ -7,33 +7,26 @@ import {
   Stack,
   Input,
   Button,
-  Box,
-  Text,
-  useToast,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function ManageTreatmentTypes({ onAdd }) {
   const [value, setValue] = useState('');
-  const toast = useToast();
+  const [isError, setIsError] = useState();
 
   const handleAddTreatmentType = () => {
     if (value) {
       setValue('');
       onAdd(value);
     } else {
-      toast({
-        title: 'Värde saknas',
-        description: 'Fyll i namn för ny kategori',
-        status: 'warning',
-        duration: 2000,
-        isClosable: true,
-        position: 'top',
-      });
+      setIsError(true);
     }
   };
   return (
-    <Card>
+    <Card size={'md'}>
       <CardHeader>
         <Heading as={'h3'} size={'md'}>
           {' '}
@@ -42,18 +35,19 @@ export default function ManageTreatmentTypes({ onAdd }) {
       </CardHeader>
       <CardBody>
         <Stack spacing={4}>
-          {' '}
-          <Box>
-            <Text mb={4} textAlign='left'>
-              {' '}
-              Skriv in namnet på en ny huvudkategori.
-            </Text>
-          </Box>
-          <Input
-            placeholder='Ny huvudkategori...'
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <FormControl isRequired isInvalid={isError}>
+            <FormLabel>Fyll i namnet på ny huvudkategori</FormLabel>
+            <Input
+              isInvalid={isError}
+              placeholder='Ny huvudkategori...'
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setIsError(false);
+              }}
+            />
+            {isError && <FormErrorMessage>Huvudkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
         </Stack>
       </CardBody>
       <CardFooter>

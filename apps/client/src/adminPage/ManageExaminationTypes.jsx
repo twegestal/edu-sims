@@ -10,26 +10,22 @@ import {
   Box,
   Text,
   useToast,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function ManageExaminationTypes({ onAdd }) {
   const [value, setValue] = useState('');
-  const toast = useToast();
+  const [isError, setIsError] = useState();
 
   const handleAddExaminationType = () => {
     if (value) {
       setValue('');
       onAdd(value);
     } else {
-      toast({
-        title: 'Värde saknas',
-        description: 'Fyll i namn för ny kategori',
-        status: 'warning',
-        duration: 2000,
-        isClosable: true,
-        position: 'top',
-      });
+      setIsError(true);
     }
   };
   return (
@@ -42,18 +38,18 @@ export default function ManageExaminationTypes({ onAdd }) {
       </CardHeader>
       <CardBody>
         <Stack spacing={4}>
-          {' '}
-          <Box>
-            <Text mb={4} textAlign='left'>
-              {' '}
-              Skriv in namnet på en ny huvudkategori.
-            </Text>
-          </Box>
-          <Input
-            placeholder='Ny huvudkategori...'
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <FormControl isRequired isInvalid={isError}>
+            <FormLabel>Fyll i namnet på ny huvudkategorin</FormLabel>
+            <Input
+              placeholder='Ny huvudkategori...'
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setIsError(false);
+              }}
+            />
+            {isError && <FormErrorMessage>Huvudkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
         </Stack>
       </CardBody>
       <CardFooter>

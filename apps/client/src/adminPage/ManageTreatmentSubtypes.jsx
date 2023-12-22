@@ -7,10 +7,11 @@ import {
   Stack,
   Input,
   Button,
-  Box,
-  Text,
   Select,
   useToast,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { useTreatment } from '../hooks/useTreatment';
@@ -19,7 +20,8 @@ export default function ManageTreatmentSubtypes({ onAdd, update }) {
   const [value, setValue] = useState('');
   const [treatmentType, setTreatmentType] = useState();
   const { treatmentTypes, getTreatmentTypes } = useTreatment();
-  const toast = useToast();
+  const [maincategoryError, setMaincategoryError] = useState();
+  const [subcategoryError, setSubcategoryError] = useState();
 
   const fetchTreatmentTypes = async () => {
     await getTreatmentTypes();
@@ -34,14 +36,13 @@ export default function ManageTreatmentSubtypes({ onAdd, update }) {
       setTreatmentType('');
       onAdd(value, treatmentType);
     } else {
-      toast({
-        title: 'Värde saknas',
-        description: 'Fyll i namn och kategori',
-        status: 'warning',
-        duration: 2000,
-        isClosable: true,
-        position: 'top',
-      });
+      if (!value) {
+        setSubcategoryError(true);
+      }
+
+      if (!treatmentType) {
+        setMaincategoryError(true);
+      }
     }
   };
   return (
@@ -54,29 +55,37 @@ export default function ManageTreatmentSubtypes({ onAdd, update }) {
       </CardHeader>
       <CardBody>
         <Stack spacing={4}>
-          {' '}
-          <Box>
-            <Text mb={4} textAlign='left'>
-              {' '}
-              Skriv in namnet på en ny underkategori.
-            </Text>
-          </Box>
-          <Input
-            placeholder='Ny underkategori...'
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <Select
-            placeholder='Välj huvudkategori...'
-            onChange={(e) => setTreatmentType(e.target.value)}
-          >
-            {treatmentTypes &&
-              treatmentTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
-                </option>
-              ))}
-          </Select>
+          <FormControl isRequired isInvalid={subcategoryError}>
+            <FormLabel>Fyll i namnet på ny underkategori</FormLabel>
+            <Input
+              placeholder='Ny underkategori...'
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setSubcategoryError(false);
+              }}
+            />
+            {subcategoryError && <FormErrorMessage>Underkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
+          <FormControl isRequired isInvalid={maincategoryError}>
+            <FormLabel>Tillhör huvudkategori</FormLabel>
+            <Select
+              isInvalid={maincategoryError}
+              placeholder='Välj huvudkategori...'
+              onChange={(e) => {
+                setTreatmentType(e.target.value);
+                setMaincategoryError(false);
+              }}
+            >
+              {treatmentTypes &&
+                treatmentTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+            </Select>
+            {maincategoryError && <FormErrorMessage>Huvudkategori måste fyllas i</FormErrorMessage>}
+          </FormControl>
         </Stack>
       </CardBody>
       <CardFooter>
