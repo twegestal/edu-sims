@@ -102,7 +102,6 @@ export default function CaseDetails({ onSave, onUpdate, setMedicalFieldId, caseD
         <FormControl isRequired isInvalid={caseNameError}>
           <FormLabel>Namn på fallet</FormLabel>
           <Input
-            autocomplete='off'
             value={caseName}
             placeholder='Fyll i namnet på fallet'
             onChange={(e) => {

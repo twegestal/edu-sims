@@ -17,6 +17,9 @@ export default function ConfirmValues({
   handleConfirm,
   examinationName,
   examinationId,
+  min,
+  max,
+  unit,
   stepSpecificValues,
 }) {
   const [examinationValue, setExaminationValue] = useState();
@@ -46,7 +49,7 @@ export default function ConfirmValues({
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            {`Fyll i värdet som resultatet av utredningen "${examinationName}" ska ge.`}
+            {`Fyll i värdet som resultatet av utredningen "${examinationName}" ska ge. Gränsintervall: (${min}-${max} ${unit})`}
             <Textarea
               value={examinationValue}
               placeholder={'Fyll i värde här'}

@@ -89,6 +89,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
             let newEntry = {
               id: examinations[k].id,
               name: examinations[k].name,
+              min: examinations[k].min_value,
+              max: examinations[k].max_value,
+              unit: examinations[k].unit,
             };
             examinationsArray.push(newEntry);
             examinationsMap[subcategories[j].id] = examinationsArray;
@@ -208,10 +211,13 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
     setIsConfirmOpen(false);
   };
 
-  const handleOpenConfirmValues = (examinationName, examinationId) => {
+  const handleOpenConfirmValues = (examinationName, examinationId, min, max, unit) => {
     setExaminationToConfirm({
       id: examinationId,
       name: examinationName,
+      min: min,
+      max: max,
+      unit: unit,
     });
     setIsConfirmValuesOpen(true);
   };
@@ -401,6 +407,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                                               handleOpenConfirmValues(
                                                 examination.name,
                                                 examination.id,
+                                                examination.min,
+                                                examination.max,
+                                                examination.unit,
                                               )
                                             }
                                           >
@@ -473,6 +482,9 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
               handleConfirm={handleConfirmValues}
               examinationName={examinationToConfirm.name}
               examinationId={examinationToConfirm.id}
+              min={examinationToConfirm.min}
+              max={examinationToConfirm.max}
+              unit={examinationToConfirm.unit}
               stepSpecificValues={stepSpecificValues}
             />
           )}
