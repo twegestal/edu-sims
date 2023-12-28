@@ -107,7 +107,6 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
   };
 
   const handleAddNewDiagnosis = async () => {
-    console.log(medicalFieldId);
     if (newDiagnosis) {
       const exists = diagnosisList.find(
         (d) => d.name.toLowerCase().trim() === newDiagnosis.toLowerCase().trim(),
