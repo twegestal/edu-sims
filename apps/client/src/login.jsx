@@ -36,13 +36,13 @@ export default function Login() {
       <Box marginTop={'10%'} width={'90%'} margin={'auto'}>
         <form onSubmit={handleSubmit}>
           <Input
-            placeholder='Email'
+            placeholder='Användarnamn'
             onChange={(e) => setEmailInput(e.target.value)}
             marginBottom={'8px'}
           />
           <Input
             type='password'
-            placeholder='Password'
+            placeholder='Lösenord'
             onChange={(e) => setPasswordInput(e.target.value)}
           />
           <Button isLoading={loading} type='submit' marginTop={'20px'}>

@@ -16,7 +16,7 @@ const passwordSchema = z.object({
 });
 
 const loginSchema = passwordSchema.extend({
-  email: z.string().email('Email must me a valid email address'),
+  email: z.string().email('Email must be a valid email address'),
 });
 
 const registerSchema = loginSchema.extend({

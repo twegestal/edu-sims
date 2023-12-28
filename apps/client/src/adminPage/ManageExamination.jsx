@@ -225,7 +225,7 @@ export default function ManageExamination() {
                           </Heading>
                           <HStack>
                             <Input
-                              placeholder='Ny behandling'
+                              placeholder='Ny undersökning'
                               value={newExamination?.[subtype.id] || ''}
                               onChange={(e) => handleExaminationChange(subtype.id, e.target.value)}
                               w={'30%'}
@@ -240,7 +240,7 @@ export default function ManageExamination() {
                             <Table variant={'simple'}>
                               <Thead>
                                 <Tr>
-                                  <Th>Behandling</Th>
+                                  <Th>Undersökning</Th>
                                   <Th>Ändra</Th>
                                   <Th>Ta bort</Th>
                                 </Tr>
@@ -307,7 +307,7 @@ export default function ManageExamination() {
         <Confirm
           isOpen={isConfirmDeleteOpen}
           onClose={handleCloseConfirmDelete}
-          header={'Ta bort behandling'}
+          header={'Ta bort undersökning'}
           body={`Är du säker på att du vill ta bort ${examinationToDelete.name}?`}
           handleConfirm={handleDeleteExamination}
         />
