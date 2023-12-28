@@ -12,7 +12,16 @@ import {
   ModalFooter,
   Button,
   useToast,
+  SimpleGrid,
+  Box,
+  InputGroup,
+  InputRightElement,
+  VStack,
+  Heading,
+  HStack,
+  Text,
 } from '@chakra-ui/react';
+import { CheckCircleIcon, NotAllowedIcon } from '@chakra-ui/icons';
 import { validatePassword, errorsToString } from 'api';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../hooks/useUser';
@@ -20,17 +29,33 @@ import { useUser } from '../hooks/useUser';
 export default function ResetPassword({ isOpen, onClose, email, userToEditId }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordIsLoading, setPasswordIsLoading] = useState(false);
   const { user } = useAuth();
   const { updatePassword, updatePasswordAdmin } = useUser();
   const toast = useToast();
+
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
+  const passwordCriteria = {
+    uppercase: /[A-Z]/.test(passwordInput),
+    lowercase: /[a-z]/.test(passwordInput),
+    number: /\d/.test(passwordInput),
+    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(passwordInput),
+    length: passwordInput.length >= 8 && passwordInput.length <= 12,
+    match: passwordInput && passwordInput === confirmPasswordInput,
+  };
+
+  const Icon = ({ meetsCriteria }) => {
+    return meetsCriteria ? <CheckCircleIcon color={'green'} /> : <NotAllowedIcon color={'red'} />;
+  };
 
   const handlePasswordReset = async () => {
     setPasswordIsLoading(true);
     if (passwordInput === confirmPasswordInput) {
       const validationResult = validatePassword({ password: passwordInput });
       if (validationResult.success) {
-        var result;
+        let result;
         if (userToEditId != undefined) {
           result = await updatePasswordAdmin(user.id, passwordInput, userToEditId);
         } else {
@@ -42,7 +67,7 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
             `Lösenordet för ${email} har uppdaterats`,
             'success',
           );
-          onClose();
+          handleClose();
         } else {
           showToast(
             'Uppdatering av lösenord',
@@ -59,6 +84,12 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
     setPasswordIsLoading(false);
   };
 
+  const handleClose = () => {
+    setPasswordInput('');
+    setConfirmPasswordInput('');
+    onClose();
+  };
+
   const showToast = (title, description, status) => {
     toast({
       title: title,
@@ -71,29 +102,69 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Sätt nytt lösenord för {email}</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <FormControl>
-            <FormLabel>Lösenord</FormLabel>
-            <Input
-              type='password'
-              placeholder='Lösenord'
-              onChange={(e) => setPasswordInput(e.target.value)}
-            />
-          </FormControl>
+          <SimpleGrid columns={2} spacing={5}>
+            <Box>
+              <FormControl isRequired>
+                <FormLabel>Lösenord</FormLabel>
+                <Input
+                  id='passwordInput'
+                  placeholder='Lösenord...'
+                  value={passwordInput}
+                  autoComplete='off'
+                  type={showPassword ? 'text' : 'password'}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                />
 
-          <FormControl mt={4}>
-            <FormLabel>Upprepa lösenord</FormLabel>
-            <Input
-              type='password'
-              placeholder='Upprepa lösenord'
-              onChange={(e) => setConfirmPasswordInput(e.target.value)}
-            />
-          </FormControl>
+                <FormLabel>Bekräfta lösenord</FormLabel>
+                <Input
+                  id='repeatPasswordInput'
+                  placeholder='Upprepa lösenord...'
+                  value={confirmPasswordInput}
+                  autoComplete='off'
+                  type={showPassword ? 'text' : 'password'}
+                  onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                />
+                <Button marginTop={'5%'} size={'sm'} onClick={handleShowPassword}>
+                  {showPassword ? 'Dölj lösenord' : 'Visa lösenord'}
+                </Button>
+              </FormControl>
+            </Box>
+            <Box>
+              <VStack alignItems={'flex-start'}>
+                <Heading size={'md'}>Lösenordsregler:</Heading>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.length} />
+                  <Text>8 till 12 tecken</Text>
+                </HStack>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.uppercase} />
+                  <Text>Minst en versal</Text>
+                </HStack>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.lowercase} />
+                  <Text>Minst en gemen</Text>
+                </HStack>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.number} />
+                  <Text>Minst en siffra</Text>
+                </HStack>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.specialChar} />
+                  <Text>Minst ett specialtecken</Text>
+                </HStack>
+                <HStack>
+                  <Icon meetsCriteria={passwordCriteria.match} />
+                  <Text>Lösenorden måste matcha</Text>
+                </HStack>
+              </VStack>
+            </Box>
+          </SimpleGrid>
         </ModalBody>
 
         <ModalFooter>
@@ -105,7 +176,7 @@ export default function ResetPassword({ isOpen, onClose, email, userToEditId }) 
           >
             Spara
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleClose}>Avbryt</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
