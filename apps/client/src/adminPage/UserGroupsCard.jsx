@@ -11,15 +11,20 @@ import {
   Tbody,
   IconButton,
   TableCaption,
+  useToast,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser';
 import LoadingSkeleton from '../loadingSkeleton';
+import Confirm from '../components/Confirm';
 
 export default function UserGroupsCard({ reloading, onGroupRemoved }) {
   const { userGroups, getUserGroups, deactivateUserGroup } = useUser();
   const [loading, setLoading] = useState(true);
   const [buttonsLoadingState, setButtonsLoadingState] = useState([]);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [groupToRemove, setGroupToRemove] = useState();
+  const toast = useToast();
 
   const fetchUserGroups = async () => {
     await getUserGroups();
@@ -43,14 +48,24 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
     }
   }, [loading]);
 
-  const removeRegistrationLink = async (id) => {
-    handleButtonChange(id);
-    const result = await deactivateUserGroup(id);
-    handleButtonChange(id);
-    if (result === true) {
+  const removeRegistrationLink = async () => {
+    handleButtonChange(groupToRemove.id);
+    const result = await deactivateUserGroup(groupToRemove.id);
+    handleButtonChange(groupToRemove.id);
+    if (result) {
+      showToast('Grupp borttagen', `Gruppen ${groupToRemove.name} har tagits bort`, 'success');
       await getUserGroups();
       onGroupRemoved();
+    } else {
+      showToast('Någonting gick fel', `Gruppen ${groupToRemove.name} kunde inte tas bort`, 'error');
     }
+    setGroupToRemove(null);
+    setIsConfirmOpen(false);
+  };
+
+  const handleCloseConfirm = () => {
+    setGroupToRemove(null);
+    setIsConfirmOpen(false);
   };
 
   const handleCopyLink = (link) => {
@@ -64,8 +79,19 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
     }));
   };
 
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 9000,
+      isClosable: true,
+      position: 'top',
+    });
+  };
+
   return (
-    <div>
+    <>
       {loading ? (
         <LoadingSkeleton />
       ) : (
@@ -97,7 +123,10 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
                         <Td>
                           <FormControl display={'flex'} flexDirection={'column'}>
                             <Button
-                              onClick={() => removeRegistrationLink(group.id)}
+                              onClick={() => {
+                                setGroupToRemove(group);
+                                setIsConfirmOpen(true);
+                              }}
                               isLoading={buttonsLoadingState[group.id]}
                             >
                               Inaktivera
@@ -111,6 +140,15 @@ export default function UserGroupsCard({ reloading, onGroupRemoved }) {
           </Table>
         </TableContainer>
       )}
-    </div>
+      <Confirm
+        isOpen={isConfirmOpen}
+        onClose={handleCloseConfirm}
+        header={'Ta bort grupp'}
+        body={
+          'Är du säker på att du vill ta bort gruppen? Du kommer inte kunna aktivera gruppen igen'
+        }
+        handleConfirm={removeRegistrationLink}
+      />
+    </>
   );
 }
