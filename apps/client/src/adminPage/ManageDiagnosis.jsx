@@ -14,6 +14,7 @@ import {
   useToast,
   IconButton,
   Grid,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useDiagnosis } from '../hooks/useDiagnosis';
@@ -181,9 +182,27 @@ export default function ManageDiagnosis() {
                 boxShadow='md'
               >
                 <VStack align='left' spacing={4}>
-                  <Heading as={'h3'} size={'md'} alignSelf='flex-start'>
-                    {field.name}
-                  </Heading>
+                  <HStack>
+                    <Heading as={'h3'} size={'md'} alignSelf='flex-start'>
+                      {field.name}
+                    </Heading>
+                    <Tooltip
+                      label={`Byt namn på ${field.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton icon={<EditIcon />} />
+                    </Tooltip>
+                    <Tooltip
+                      label={`Ta bort ${field.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton icon={<DeleteIcon />} />
+                    </Tooltip>
+                  </HStack>
                   <HStack>
                     <Input
                       placeholder='Ny diagnos'

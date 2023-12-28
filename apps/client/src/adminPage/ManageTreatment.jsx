@@ -14,6 +14,7 @@ import {
   IconButton,
   Input,
   useToast,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
@@ -216,17 +217,53 @@ export default function ManageTreatment() {
                 boxShadow={'md'}
               >
                 <VStack align={'left'} spacing={4}>
-                  <Heading as={'h3'} size={'md'} alignSelf={'flex-start'}>
-                    {treatment.name}
-                  </Heading>
+                  <HStack>
+                    <Heading as={'h3'} size={'md'} alignSelf={'flex-start'}>
+                      {treatment.name}
+                    </Heading>
+                    <Tooltip
+                      label={`Byt namn på ${treatment.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton icon={<EditIcon />} />
+                    </Tooltip>
+                    <Tooltip
+                      label={`Ta bort ${treatment.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton icon={<DeleteIcon />} />
+                    </Tooltip>
+                  </HStack>
                   {treatmentSubtypes &&
                     treatmentSubtypes
                       .filter((subtype) => subtype.treatment_type_id === treatment.id)
                       .map((subtype) => (
                         <Box key={subtype.id}>
-                          <Heading as={'h5'} size={'sm'} textAlign={'left'}>
-                            {subtype.name}
-                          </Heading>
+                          <HStack marginBottom={'10px'}>
+                            <Heading as={'h5'} size={'sm'} textAlign={'left'}>
+                              {subtype.name}
+                            </Heading>
+                            <Tooltip
+                              label={`Byt namn på ${subtype.name}`}
+                              fontSize={'md'}
+                              placement='right'
+                              hasArrow
+                            >
+                              <IconButton icon={<EditIcon />} />
+                            </Tooltip>
+                            <Tooltip
+                              label={`Ta bort ${subtype.name}`}
+                              fontSize={'md'}
+                              placement='right'
+                              hasArrow
+                            >
+                              <IconButton icon={<DeleteIcon />} />
+                            </Tooltip>
+                          </HStack>
                           <HStack>
                             <Input
                               placeholder='Ny behandling'
