@@ -12,6 +12,8 @@ import {
   Text,
   Checkbox,
   VStack,
+  Input,
+  useToast,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Confirm from '../components/Confirm';
@@ -28,9 +30,12 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
   const [diagnosisId, setDiagnosisId] = useState();
   const [feedbackCorrect, setFeedbackCorrect] = useState();
   const [feedbackIncorrect, setFeedbackIncorrect] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [newDiagnosis, setNewDiagnosis] = useState('');
 
   const { getMedicalFields } = useCases();
-  const { diagnosisList, getDiagnosisList, setDiagnosisList } = useDiagnosis();
+  const { diagnosisList, getDiagnosisList, setDiagnosisList, addNewDiagnosis } = useDiagnosis();
+  const toast = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +66,12 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
       setDiagnosisList();
     }
   }, [moduleData]);
+
+  const filteredDiagnosisList = searchTerm
+    ? diagnosisList.filter((diagnosis) =>
+        diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : diagnosisList;
 
   const clearContent = () => {
     setPrompt('');
@@ -95,6 +106,44 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
     onClose(stepData);
   };
 
+  const handleAddNewDiagnosis = async () => {
+    console.log(medicalFieldId);
+    if (newDiagnosis) {
+      const exists = diagnosisList.find(
+        (d) => d.name.toLowerCase().trim() === newDiagnosis.toLowerCase().trim(),
+      );
+      if (exists) {
+        showToast(
+          'Diagnos finns redan',
+          `En diagnos med namnet ${newDiagnosis} finns redan`,
+          'error',
+        );
+      } else {
+        const response = await addNewDiagnosis(newDiagnosis, medicalFieldId);
+        if (response) {
+          showToast('Diagnos tillagd', `${newDiagnosis} har lagts till`, 'success');
+          setNewDiagnosis('');
+          await getDiagnosisList(medicalFieldId);
+        } else {
+          showToast('Någonting gick fel', `${newDiagnosis} kunde inte läggas till`, 'error');
+        }
+      }
+    } else {
+      showToast('Fel', 'Du måste ange ett namn för att kunna lägga till en diagnos', 'error');
+    }
+  };
+
+  const showToast = (title, description, status) => {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 9000,
+      isClosable: true,
+      position: 'top',
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -118,12 +167,24 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                   />
 
                   <FormLabel fontWeight={'bold'}>Ange korrekt diagnos från listan</FormLabel>
+                  {diagnosisList && (
+                    <>
+                      <FormLabel fontWeight={'bold'}>Sök diagnos</FormLabel>
+                      <Input
+                        autoComplete='off'
+                        marginBottom={'5px'}
+                        placeholder='Sök efter diagnos'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </>
+                  )}
                   <VStack alignItems={'flex-start'} marginBottom={'5px'}>
-                    {diagnosisList ? (
+                    {filteredDiagnosisList ? (
                       <>
-                        {diagnosisList.length > 0 ? (
+                        {filteredDiagnosisList.length > 0 ? (
                           <>
-                            {diagnosisList.map((diagnosis) => (
+                            {filteredDiagnosisList.map((diagnosis) => (
                               <Checkbox
                                 key={diagnosis.id}
                                 id={diagnosis.id}
@@ -135,9 +196,19 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
                             ))}
                           </>
                         ) : (
-                          <Text as={'i'}>
-                            Det finns inga diagnoser kopplade till det valda medicinska området
-                          </Text>
+                          <>
+                            <Text as={'i'}>
+                              Inga diagnoser hittades som matchar din sökning. Lägg till en ny
+                              diagnos genom att skriva in namnet och klicka "Lägg till"
+                            </Text>
+                            <FormControl>
+                              <Input
+                                placeholder='Skriv in namnet på en ny diagnos här...'
+                                onChange={(e) => setNewDiagnosis(e.target.value)}
+                              ></Input>
+                            </FormControl>
+                            <Button onClick={handleAddNewDiagnosis}>Lägg till</Button>
+                          </>
                         )}
                       </>
                     ) : (
