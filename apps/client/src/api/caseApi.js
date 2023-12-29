@@ -32,6 +32,16 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  updateMedicalField: async (body) => {
+    const response = await apiClient.patch(`${prefix}medicalField`, body);
+    return packageResponse(response);
+  },
+
+  deleteMedicalField: async (body) => {
+    const response = await apiClient.delete(`${prefix}medicalField`, body);
+    return packageResponse(response);
+  },
+
   getIntroductionStep: async (headers) => {
     const response = await apiClient.get(`${prefix}getIntroductionStep`, headers);
     return packageResponse(response);

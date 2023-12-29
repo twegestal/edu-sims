@@ -12,6 +12,8 @@ export const useCases = () => {
   const createAttemptApi = useApi('createAttempt');
   const updateAttemptApi = useApi('updateAttempt');
   const addMedicalFieldApi = useApi('addMedicalField');
+  const updateMedicalFieldApi = useApi('updateMedicalField');
+  const deleteMedicalFieldApi = useApi('deleteMedicalField');
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
@@ -48,6 +50,25 @@ export const useCases = () => {
       return response.status === 201;
     } catch (error) {
       console.error('error adding new medical field ', error);
+    }
+  };
+
+  const updateMedicalField = async (id, name) => {
+    try {
+      const response = await updateMedicalFieldApi({ body: { id: id, name: name } });
+      return response.status === 200;
+    } catch (error) {
+      console.error('Error updating medical field ', error);
+    }
+  };
+
+  const deleteMedicalField = async (id) => {
+    try {
+      const response = await deleteMedicalFieldApi({ body: { id: id } });
+      return response.status;
+    } catch (error) {
+      console.error('Error deleting medical field', error);
+      return error.response;
     }
   };
 
@@ -148,6 +169,8 @@ export const useCases = () => {
     medicalFields,
     getMedicalFields,
     addMedicalField,
+    updateMedicalField,
+    deleteMedicalField,
     caseById,
     getCaseById,
     introductionStep,
