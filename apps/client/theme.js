@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { ButtonStyles as Button } from './componenStyles/buttonStyles';
 
 const theme = extendTheme({
   fonts: {
@@ -23,33 +24,7 @@ const theme = extendTheme({
     },
   },
   components: {
-    Button: {
-      baseStyle: {
-        // ...define your base styles
-      },
-      variants: {
-        // Make a variant, we'll call it `base` here and leave it empty
-        base: {
-          bg: '#D2D2D2',
-          whiteSpace: 'normal',
-          height: 'auto',
-          blockSize: 'auto',
-          paddingTop: '10px',
-          paddingBottom: '10px',
-        },
-        good: {
-          bg: '#4CB963',
-        },
-        caseNav: {
-          bg: '#3182ce',
-          color: '#f5faf6',
-        },
-      },
-      defaultProps: {
-        // Then here we set the base variant as the default
-        variant: 'base',
-      },
-    },
+    Button,
   },
 });
 
