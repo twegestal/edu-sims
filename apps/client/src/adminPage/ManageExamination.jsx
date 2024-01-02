@@ -24,7 +24,7 @@ import ConfirmInput from '../components/ConfirmInput';
 import ManageExaminationTypes from './ManageExaminationTypes';
 import ManageExaminationSubtypes from './ManageExaminationSubtypes';
 
-export default function ManageExamination() {
+export default function ManageExamination({ examinationListEdited }) {
   const [newExamination, setNewExamination] = useState({});
   const [examinationToEdit, setNewExaminationToEdit] = useState();
   const [examinationToDelete, setExaminationToDelete] = useState();
@@ -97,6 +97,7 @@ export default function ManageExamination() {
       const result = await addNewExamination(newValue, subtypeId, examinationTypeId);
       if (result) {
         await fetchExaminations();
+        examinationListEdited();
         showToast('Utredning tillagd', `${newValue} har lagts till`, 'success');
         setNewExamination({ ...newExamination, [subtypeId]: '' });
       } else {
@@ -151,6 +152,7 @@ export default function ManageExamination() {
     if (response === 200) {
       showToast('Undersökning borttagen', `${examinationToDelete.name} har tagits bort`, 'success');
       await fetchExaminations();
+      examinationListEdited();
     } else if (response === 400) {
       showToast(
         'Undersökningen kan inte tas bort',

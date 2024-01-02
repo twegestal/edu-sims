@@ -243,6 +243,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  editExaminationRange: async (body) => {
+    const response = await apiClient.patch(`${prefix}examinationRange`, body);
+    return packageResponse(response);
+  },
+
   getModuleTypes: async () => {
     const response = await apiClient.get(`${prefix}getModuleTypes`);
     return packageResponse(response);

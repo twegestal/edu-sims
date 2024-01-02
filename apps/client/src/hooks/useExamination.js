@@ -16,6 +16,7 @@ export const useExamination = () => {
   const deleteExaminationTypeApi = useApi('deleteExaminationType');
   const editExaminationSubtypeApi = useApi('editExaminationSubtype');
   const deleteExaminationSubtypeApi = useApi('deleteExaminationSubtype');
+  const editExaminationRangeApi = useApi('editExaminationRange');
 
   const [examinationStep, setExaminationStep] = useState([]);
   const [examinationTypes, setExaminationTypes] = useState();
@@ -165,6 +166,15 @@ export const useExamination = () => {
       console.error('error deleting examination subtype ', error);
       return error.response;
     }
+  };
+
+  const editExaminationRange = async (id, min, max, unit) => {
+    try {
+      const response = await editExaminationRangeApi({ body: { id: id, min: min, max: max, unit: unit }});
+      return response.status === 200;
+    } catch (error) {
+      console.error('error editing examination range ', error);
+    }
   }
 
   return {
@@ -186,5 +196,6 @@ export const useExamination = () => {
     deleteExaminationType,
     editExaminationSubtype,
     deleteExaminationSubtype,
+    editExaminationRange
   };
 };

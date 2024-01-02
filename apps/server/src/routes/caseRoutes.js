@@ -717,7 +717,32 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
-  // hämta treatments
+
+  router.patch('/examinationRange', async (req, res, _next) => {
+    const { id, min, max, unit } = req.body;
+
+    if (!id || !min ||  !max || !unit) {
+      return res.status(400).json('Missing body');
+    }
+
+    try {
+      const examination = await object.examination_list.findOne({ where: { id: id }});
+      if (!examination) {
+        return res.status(404).json('Resource not found');
+      }
+
+      const result = await examination.update({ min_value: min, max_value: max, unit: unit });
+      if (!result) {
+        return res.status(500).json('Something went wrong');
+      }
+
+      res.status(200).json('Resource updated');
+    } catch (error) {
+      console.error('error updating examination range ', error);
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
   router.get('/getTreatmentTypes', async (_req, res, _next) => {
     try {
       const result = await object.treatment_type.findAll({ order: [['name', 'ASC']] });
