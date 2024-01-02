@@ -127,6 +127,16 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  editTreatmentType: async (body) => {
+    const response = await apiClient.patch(`${prefix}treatmentType`, body);
+    return packageResponse(response);
+  },
+
+  deleteTreatmentType: async (body) => {
+    const response = await apiClient.delete(`${prefix}treatmentType`, body);
+    return packageResponse(response);
+  },
+
   getTreatmentSubtypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getTreatmentSubtypes`, headers);
     return packageResponse(response);
@@ -134,6 +144,16 @@ export const caseApi = (apiClient) => ({
 
   addNewTreatmentSubtype: async (body) => {
     const response = await apiClient.post(`${prefix}treatmentSubtypes`, body);
+    return packageResponse(response);
+  },
+
+  editTreatmentSubtype: async (body) => {
+    const response = await apiClient.patch(`${prefix}treatmentSubtypes`, body);
+    return packageResponse(response);
+  },
+
+  deleteTreatmentSubtype: async (body) => {
+    const response = await apiClient.delete(`${prefix}treatmentSubtype`, body);
     return packageResponse(response);
   },
 
