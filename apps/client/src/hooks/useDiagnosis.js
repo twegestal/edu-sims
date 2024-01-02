@@ -60,7 +60,7 @@ export const useDiagnosis = () => {
       return response.status;
     } catch (error) {
       console.error('error deleting diagnosis', error);
-      return error.response.status;
+      return error.response;
     }
   };
   return {

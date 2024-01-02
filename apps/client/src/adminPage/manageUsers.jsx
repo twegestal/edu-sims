@@ -16,6 +16,8 @@ import {
   TabPanel,
   TabPanels,
   useToast,
+  Heading,
+  HStack,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useUser } from '../hooks/useUser.js';
@@ -72,14 +74,17 @@ export default function ManageUsers() {
   return (
     <Flex direction={'column'} justifyContent={'space-between'}>
       <Box mb='5%'>
-        <h2>Hantera användare</h2>
+        <Heading size={'md'}>Hantera användare</Heading>
       </Box>
 
       <Box mb='5%'>
-        <h3>Skapa registreringslänk för nya användare</h3>
+        <Heading marginBottom={'2%'} size={'sm'}>
+          Skapa registreringslänk för nya användare
+        </Heading>
         <FormControl>
-          <Flex direction={'row'} w='50%' marginLeft='25%'>
+          <HStack direction={'row'} w='50%' marginLeft='25%'>
             <Input
+              autoComplete='off'
               placeholder='Skriv namnet på den nya användargrupp länken skall skapas för'
               value={inputUserGroup}
               onChange={handleInputUserGroupChange}
@@ -87,7 +92,7 @@ export default function ManageUsers() {
             <Button onClick={generateRegLink} isLoading={generateIsLoading}>
               Generera länk
             </Button>
-          </Flex>
+          </HStack>
         </FormControl>
         {createdUserGroup.length !== 0 && (
           <Card>

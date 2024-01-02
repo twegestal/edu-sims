@@ -37,15 +37,15 @@ export default function ConfirmInput({ isOpen, onClose, onConfirm, valueToConfir
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-            Ändra värden
+            Ändra namn
           </AlertDialogHeader>
           <AlertDialogBody>
-            <Text>{`Ange nytt värde för ${valueToConfirm}`}</Text>
-            <Input placeholder='Nytt värde...' onChange={(e) => setNewValue(e.target.value)} />
+            <Text>{`Ange nytt namn för ${valueToConfirm}`}</Text>
+            <Input placeholder='Nytt namn...' onChange={(e) => setNewValue(e.target.value)} />
           </AlertDialogBody>
           <AlertDialogFooter>
             <ButtonGroup>
-              <Button colorScheme='teal' onClick={handleConfirm} ml={3}>
+              <Button onClick={handleConfirm} ml={3}>
                 Bekräfta
               </Button>
               <Button onClick={onClose}>Avbryt</Button>

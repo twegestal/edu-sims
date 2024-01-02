@@ -1,4 +1,5 @@
 import { packageResponse } from '../utils/apiUtils.js';
+import { api } from './index.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
@@ -29,6 +30,16 @@ export const caseApi = (apiClient) => ({
 
   addMedicalField: async (body) => {
     const response = await apiClient.post(`${prefix}medicalField`, body);
+    return packageResponse(response);
+  },
+
+  updateMedicalField: async (body) => {
+    const response = await apiClient.patch(`${prefix}medicalField`, body);
+    return packageResponse(response);
+  },
+
+  deleteMedicalField: async (body) => {
+    const response = await apiClient.delete(`${prefix}medicalField`, body);
     return packageResponse(response);
   },
 
@@ -117,6 +128,16 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  editTreatmentType: async (body) => {
+    const response = await apiClient.patch(`${prefix}treatmentType`, body);
+    return packageResponse(response);
+  },
+
+  deleteTreatmentType: async (body) => {
+    const response = await apiClient.delete(`${prefix}treatmentType`, body);
+    return packageResponse(response);
+  },
+
   getTreatmentSubtypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getTreatmentSubtypes`, headers);
     return packageResponse(response);
@@ -124,6 +145,16 @@ export const caseApi = (apiClient) => ({
 
   addNewTreatmentSubtype: async (body) => {
     const response = await apiClient.post(`${prefix}treatmentSubtypes`, body);
+    return packageResponse(response);
+  },
+
+  editTreatmentSubtype: async (body) => {
+    const response = await apiClient.patch(`${prefix}treatmentSubtypes`, body);
+    return packageResponse(response);
+  },
+
+  deleteTreatmentSubtype: async (body) => {
+    const response = await apiClient.delete(`${prefix}treatmentSubtype`, body);
     return packageResponse(response);
   },
 
@@ -169,6 +200,26 @@ export const caseApi = (apiClient) => ({
 
   getAllExaminationTypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getExaminationTypes`, headers);
+    return packageResponse(response);
+  },
+
+  editExaminationType: async (body) => {
+    const response = await apiClient.patch(`${prefix}examinationType`, body);
+    return packageResponse(response);
+  },
+
+  deleteExaminationType: async (body) => {
+    const response = await apiClient.delete(`${prefix}examinationType`, body);
+    return packageResponse(response);
+  },
+
+  editExaminationSubtype: async (body) => {
+    const response = await apiClient.patch(`${prefix}examinationSubtype`, body);
+    return packageResponse(response);
+  },
+
+  deleteExaminationSubtype: async (body) => {
+    const response = await apiClient.delete(`${prefix}examinationSubtype`, body);
     return packageResponse(response);
   },
 

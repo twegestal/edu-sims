@@ -25,7 +25,7 @@ describe('login validation', () => {
       password: 'Aa1!Aa1!Aa1!',
     };
     const result = validateLogin(user);
-    expect(result.errors[0].message).toEqual('Email must me a valid email address');
+    expect(result.errors[0].message).toEqual('Email must be a valid email address');
   });
 
   it('should throw an error due to password being less than 8 characters', () => {

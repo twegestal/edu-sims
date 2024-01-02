@@ -14,6 +14,7 @@ import {
   useToast,
   IconButton,
   Grid,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useDiagnosis } from '../hooks/useDiagnosis';
@@ -29,9 +30,19 @@ export default function ManageDiagnosis() {
   const [diagnosisToDelete, setDiagnosisToDelete] = useState();
   const [isConfirmValueOpen, setIsConfirmValueOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [isChangeMedicalFieldOpen, setIsChangeMedicalFieldOpen] = useState(false);
+  const [isDeleteMedicalFieldOpen, setIsDeleteMedicalFieldOpen] = useState(false);
+  const [medicalFieldToChange, setMedicalFieldToChange] = useState();
+  const [medicalFieldToDelete, setMedicalFieldToDelete] = useState();
   const { diagnosisList, getDiagnosisList, addNewDiagnosis, updateDiagnosis, deleteDiagnosis } =
     useDiagnosis();
-  const { medicalFields, getMedicalFields, addMedicalField } = useCases();
+  const {
+    medicalFields,
+    getMedicalFields,
+    addMedicalField,
+    updateMedicalField,
+    deleteMedicalField,
+  } = useCases();
   const toast = useToast();
 
   const fetchData = async () => {
@@ -154,6 +165,74 @@ export default function ManageDiagnosis() {
     return medicalFields.some((field) => field.name.toLowerCase() === name.toLowerCase().trim());
   };
 
+  const handleCloseChangeMedicalField = () => {
+    setIsChangeMedicalFieldOpen(false);
+    setMedicalFieldToChange(null);
+  };
+
+  const handleChangeMedicalField = async (newName) => {
+    setIsChangeMedicalFieldOpen(false);
+
+    const exists = medicalFields.find(
+      (field) => field.name.toLowerCase().trim() === newName.toLowerCase().trim(),
+    );
+
+    if (exists) {
+      showToast(
+        'Medicinskt område finns redan',
+        `Det medicinska området ${newName} är redan tillagt`,
+        'error',
+      );
+    } else {
+      const respose = await updateMedicalField(medicalFieldToChange.id, newName);
+      if (respose) {
+        showToast('Medicinskt område uppdaterat', `${newName} har lagts till`, 'success');
+        await getMedicalFields();
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${newName} kunde inte läggas till`,
+          'error',
+        );
+      }
+    }
+    setMedicalFieldToChange(null);
+  };
+
+  const handleCloseDeleteMedicalField = () => {
+    setIsDeleteMedicalFieldOpen(false);
+    setMedicalFieldToDelete(null);
+  };
+
+  const handleDeleteMedicalField = async () => {
+    setIsDeleteMedicalFieldOpen(false);
+    const response = await deleteMedicalField(medicalFieldToDelete.id);
+    if (response === 200) {
+      showToast(
+        'Medicinskt område borttaget',
+        `${medicalFieldToDelete.name} har tagits bort`,
+        'success',
+      );
+      await getMedicalFields();
+    } else {
+      const message = await response.json();
+      if (message === 'Resource cannot be deleted') {
+        showToast(
+          'Fel',
+          `${medicalFieldToDelete.name} kan inte tas bort eftersom det har diagnoser kopplade till sig`,
+          'error',
+        );
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${medicalFieldToDelete.name} kunde inte tas bort`,
+          'error',
+        );
+      }
+    }
+    setMedicalFieldToDelete(null);
+  };
+
   const showToast = (title, description, status) => {
     toast({
       title: title,
@@ -181,9 +260,39 @@ export default function ManageDiagnosis() {
                 boxShadow='md'
               >
                 <VStack align='left' spacing={4}>
-                  <Heading as={'h3'} size={'md'} alignSelf='flex-start'>
-                    {field.name}
-                  </Heading>
+                  <HStack>
+                    <Heading as={'h3'} size={'md'} alignSelf='flex-start'>
+                      {field.name}
+                    </Heading>
+                    <Tooltip
+                      label={`Byt namn på ${field.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setMedicalFieldToChange(field);
+                          setIsChangeMedicalFieldOpen(true);
+                        }}
+                        icon={<EditIcon />}
+                      />
+                    </Tooltip>
+                    <Tooltip
+                      label={`Ta bort ${field.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setMedicalFieldToDelete(field);
+                          setIsDeleteMedicalFieldOpen(true);
+                        }}
+                        icon={<DeleteIcon />}
+                      />
+                    </Tooltip>
+                  </HStack>
                   <HStack>
                     <Input
                       placeholder='Ny diagnos'
@@ -272,6 +381,24 @@ export default function ManageDiagnosis() {
           header={'Ta bort diagnos'}
           body={`Är du säker på att du vill ta bort ${diagnosisToDelete.name}?`}
           handleConfirm={handleDeleteDiagnosis}
+        />
+      )}
+      {medicalFieldToChange && (
+        <ConfirmInput
+          isOpen={isChangeMedicalFieldOpen}
+          onClose={handleCloseChangeMedicalField}
+          onConfirm={handleChangeMedicalField}
+          valueToConfirm={medicalFieldToChange.name}
+        />
+      )}
+
+      {medicalFieldToDelete && (
+        <Confirm
+          isOpen={isDeleteMedicalFieldOpen}
+          onClose={handleCloseDeleteMedicalField}
+          header={'Ta bort medicinskt område'}
+          body={`Är du säker på att du vill ta bort ${medicalFieldToDelete.name}`}
+          handleConfirm={handleDeleteMedicalField}
         />
       )}
     </>

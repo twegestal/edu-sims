@@ -14,6 +14,7 @@ import {
   IconButton,
   Input,
   useToast,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
@@ -29,6 +30,14 @@ export default function ManageTreatment() {
   const [treatmentToDelete, setTreatmentToDelete] = useState();
   const [isConfirmInputOpen, setIsConfirmInputOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [subtypeToEdit, setSubtypeToEdit] = useState();
+  const [isEditSubtypeOpen, setIsEditSubtypeOpen] = useState(false);
+  const [subtypeToDelete, setSubtypeToDelete] = useState();
+  const [isDeleteSubtypeOpen, setIsDeleteSubtypeOpen] = useState(false);
+  const [treatmentTypeToEdit, setTreatmentTypeToEdit] = useState();
+  const [treatmentTypeToDelete, setTreatmentTypeToDelete] = useState();
+  const [isEditTreatmentTypeOpen, setIsEditTreatmentTypeOpen] = useState(false);
+  const [isDeleteTreatmentTypeOpen, setIsDeleteTreatmentTypeOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const toast = useToast();
   const {
@@ -43,6 +52,10 @@ export default function ManageTreatment() {
     deleteTreatment,
     addNewTreatmentType,
     addNewTreatmentSubtype,
+    editTreatmentSubtype,
+    deleteTreatmentSubtype,
+    editTreatmentType,
+    deleteTreatmentType,
   } = useTreatment();
 
   const fetchTreatments = async () => {
@@ -189,6 +202,141 @@ export default function ManageTreatment() {
     setIsConfirmDeleteOpen(false);
   };
 
+  const handleCloseEditSubtype = () => {
+    setIsEditSubtypeOpen(false);
+    setSubtypeToEdit(null);
+  };
+
+  const handleEditSubtype = async (newName) => {
+    setIsEditSubtypeOpen(false);
+    const exists = treatmentSubtypes.find(
+      (subtype) => subtype.name.toLowerCase().trim() === newName.toLowerCase().trim(),
+    );
+
+    if (exists) {
+      showToast('Underkategori finns redan', `Underkategorin ${newName} är redan tillagd`, 'error');
+    } else {
+      const response = await editTreatmentSubtype(subtypeToEdit.id, newName);
+      if (response) {
+        showToast(
+          'Underkategori uppdaterad',
+          `Underkategorin ${newName} har lagts till`,
+          'success',
+        );
+        await fetchTreatments();
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${newName} kunde inte läggas till`,
+          'error',
+        );
+      }
+    }
+    setSubtypeToEdit(null);
+  };
+
+  const handleCloseDeleteSubtype = () => {
+    setIsDeleteSubtypeOpen(false);
+    setSubtypeToDelete(null);
+  };
+
+  const handleDeleteSubtype = async () => {
+    setIsDeleteSubtypeOpen(false);
+    const response = await deleteTreatmentSubtype(subtypeToDelete.id);
+    if (response === 200) {
+      showToast('Underkategori borttagen', `Underkategorin ${subtypeToDelete.name}`, 'success');
+      await fetchTreatments();
+    } else {
+      const message = await response.json();
+      if (message === 'Cannot delete resource') {
+        showToast(
+          'Underkategori kan inte tas bort',
+          `Underkategorin ${subtypeToDelete.name} kan inte tas bort, eftersom den har behandlingar kopplade till sig`,
+          'error',
+        );
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och underkategorin ${subtypeToDelete.name} kunde inte tas bort`,
+          'error',
+        );
+      }
+    }
+    setSubtypeToDelete(null);
+  };
+
+  const handleCloseEditTreatmentType = () => {
+    setIsEditTreatmentTypeOpen(false);
+    setTreatmentTypeToEdit(null);
+  };
+
+  const handleEditTreatmentType = async (newName) => {
+    setIsEditTreatmentTypeOpen(false);
+
+    const exists = treatmentTypes.find(
+      (type) => type.name.toLowerCase().trim() === newName.toLowerCase().trim(),
+    );
+
+    if (exists) {
+      showToast(
+        'Huvudkategori finns redan',
+        `Huvudkategorin ${newName} finns redan och kan därför inte läggas till`,
+        'error',
+      );
+    } else {
+      const response = await editTreatmentType(treatmentTypeToEdit.id, newName);
+      if (response) {
+        showToast(
+          'Huvudkategori uppdaterad',
+          `Huvudkategorin ${newName} har lagts till`,
+          'success',
+        );
+        await fetchTreatments();
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting fick fel och ${newName} kunde inte läggas till`,
+          'error',
+        );
+      }
+    }
+    setTreatmentTypeToEdit(null);
+  };
+
+  const handleCloseDeleteTreatmentType = () => {
+    setIsDeleteTreatmentTypeOpen(false);
+    setTreatmentTypeToDelete(null);
+  };
+
+  const handleDeleteTreatmentType = async () => {
+    setIsDeleteTreatmentTypeOpen(false);
+    const response = await deleteTreatmentType(treatmentTypeToDelete.id);
+    if (response === 200) {
+      showToast(
+        'Huvudkategori borttagen',
+        `Huvudkategorin ${treatmentTypeToDelete.name} har tagits bort`,
+        'success',
+      );
+      await fetchTreatments();
+    } else {
+      const message = await response.json();
+      if (message === 'Cannot delete resource') {
+        showToast(
+          'Huvudkategori kan inte tas bort',
+          `Huvudkategorin ${treatmentTypeToDelete.name} har underkategorier kopplade till sig och kan därför inte tas bort`,
+          'error',
+        );
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${treatmentTypeToDelete.name} kunde inte tas bort`,
+          'error',
+        );
+      }
+    }
+    setTreatmentTypeToDelete(null);
+  };
+
   const showToast = (title, description, status) => {
     toast({
       title: title,
@@ -216,17 +364,77 @@ export default function ManageTreatment() {
                 boxShadow={'md'}
               >
                 <VStack align={'left'} spacing={4}>
-                  <Heading as={'h3'} size={'md'} alignSelf={'flex-start'}>
-                    {treatment.name}
-                  </Heading>
+                  <HStack>
+                    <Heading as={'h3'} size={'md'} alignSelf={'flex-start'}>
+                      {treatment.name}
+                    </Heading>
+                    <Tooltip
+                      label={`Byt namn på ${treatment.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setTreatmentTypeToEdit(treatment);
+                          setIsEditTreatmentTypeOpen(true);
+                        }}
+                        icon={<EditIcon />}
+                      />
+                    </Tooltip>
+                    <Tooltip
+                      label={`Ta bort ${treatment.name}`}
+                      fontSize={'md'}
+                      placement='right'
+                      hasArrow
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setTreatmentTypeToDelete(treatment);
+                          setIsDeleteTreatmentTypeOpen(true);
+                        }}
+                        icon={<DeleteIcon />}
+                      />
+                    </Tooltip>
+                  </HStack>
                   {treatmentSubtypes &&
                     treatmentSubtypes
                       .filter((subtype) => subtype.treatment_type_id === treatment.id)
                       .map((subtype) => (
                         <Box key={subtype.id}>
-                          <Heading as={'h5'} size={'sm'} textAlign={'left'}>
-                            {subtype.name}
-                          </Heading>
+                          <HStack marginBottom={'10px'}>
+                            <Heading as={'h5'} size={'sm'} textAlign={'left'}>
+                              {subtype.name}
+                            </Heading>
+                            <Tooltip
+                              label={`Byt namn på ${subtype.name}`}
+                              fontSize={'md'}
+                              placement='right'
+                              hasArrow
+                            >
+                              <IconButton
+                                onClick={() => {
+                                  setSubtypeToEdit(subtype);
+                                  setIsEditSubtypeOpen(true);
+                                }}
+                                icon={<EditIcon />}
+                              />
+                            </Tooltip>
+                            <Tooltip
+                              label={`Ta bort ${subtype.name}`}
+                              fontSize={'md'}
+                              placement='right'
+                              hasArrow
+                            >
+                              <IconButton
+                                onClick={() => {
+                                  setSubtypeToDelete(subtype);
+                                  setIsDeleteSubtypeOpen(true);
+                                }}
+                                icon={<DeleteIcon />}
+                              />
+                            </Tooltip>
+                          </HStack>
                           <HStack>
                             <Input
                               placeholder='Ny behandling'
@@ -311,6 +519,40 @@ export default function ManageTreatment() {
           header={'Ta bort behandling'}
           body={`Är du säker på att du vill ta bort ${treatmentToDelete.name}?`}
           handleConfirm={handleDeleteTreatment}
+        />
+      )}
+      {subtypeToEdit && (
+        <ConfirmInput
+          isOpen={isEditSubtypeOpen}
+          onClose={handleCloseEditSubtype}
+          onConfirm={handleEditSubtype}
+          valueToConfirm={subtypeToEdit.name}
+        />
+      )}
+      {subtypeToDelete && (
+        <Confirm
+          isOpen={isDeleteSubtypeOpen}
+          onClose={handleCloseDeleteSubtype}
+          header={'Ta bort underkategori'}
+          body={`Är du säker på att du vill ta bort ${subtypeToDelete.name}?`}
+          handleConfirm={handleDeleteSubtype}
+        />
+      )}
+      {treatmentTypeToEdit && (
+        <ConfirmInput
+          isOpen={isEditTreatmentTypeOpen}
+          onClose={handleCloseEditTreatmentType}
+          onConfirm={handleEditTreatmentType}
+          valueToConfirm={treatmentTypeToEdit.name}
+        />
+      )}
+      {treatmentTypeToDelete && (
+        <Confirm
+          isOpen={isDeleteTreatmentTypeOpen}
+          onClose={handleCloseDeleteTreatmentType}
+          header={'Ta bort huvudkategori'}
+          body={`Är du säker på att du vill ta bort ${treatmentTypeToDelete.name}?`}
+          handleConfirm={handleDeleteTreatmentType}
         />
       )}
     </>

@@ -12,6 +12,10 @@ export const useExamination = () => {
   const deleteExaminationApi = useApi('deleteExamination');
   const addNewExaminationTypeApi = useApi('addNewExaminationType');
   const addNewExaminationSubtypeApi = useApi('addNewExaminationSubtype');
+  const editExaminationTypeApi = useApi('editExaminationType');
+  const deleteExaminationTypeApi = useApi('deleteExaminationType');
+  const editExaminationSubtypeApi = useApi('editExaminationSubtype');
+  const deleteExaminationSubtypeApi = useApi('deleteExaminationSubtype');
 
   const [examinationStep, setExaminationStep] = useState([]);
   const [examinationTypes, setExaminationTypes] = useState();
@@ -125,6 +129,44 @@ export const useExamination = () => {
     }
   };
 
+  const editExaminationType = async (id, name) => {
+    try {
+      const response = await editExaminationTypeApi({ body: { id: id, name: name }});
+      return response.status === 200;
+    } catch (error) {
+      console.error('error editing examination type ', error);    
+    }
+  };
+
+  const deleteExaminationType = async (id) => {
+    try {
+      const response = await deleteExaminationTypeApi({ body: { id: id }});
+      return response.status;
+    } catch (error) {
+      console.error('error deleting examination type ', error);
+      return error.response;
+    }
+  };
+
+  const editExaminationSubtype = async (id, name) => {
+    try {
+      const response = await editExaminationSubtypeApi({ body: { id: id, name: name }});
+      return response.status === 200;
+    } catch (error) {
+      console.error('error deleting examination subtype ', error);
+    }
+  };
+
+  const deleteExaminationSubtype = async (id) => {
+    try {
+      const response = await deleteExaminationSubtypeApi({ body: { id: id }});
+      return response.status;
+    } catch (error) {
+      console.error('error deleting examination subtype ', error);
+      return error.response;
+    }
+  }
+
   return {
     examinationStep,
     getExaminationSpecificValues,
@@ -140,5 +182,9 @@ export const useExamination = () => {
     deleteExamination,
     addNewExaminationType,
     addNewExaminationSubtype,
+    editExaminationType,
+    deleteExaminationType,
+    editExaminationSubtype,
+    deleteExaminationSubtype,
   };
 };

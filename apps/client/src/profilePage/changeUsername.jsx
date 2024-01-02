@@ -73,7 +73,7 @@ export default function ChangeUsername({ isOpen, onClose }) {
           >
             Spara
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>Avbryt</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

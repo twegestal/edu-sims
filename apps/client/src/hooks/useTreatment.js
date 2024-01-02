@@ -6,10 +6,14 @@ export const useTreatment = () => {
   const getTreatmentTypesApi = useApi('getTreatmentTypes');
   const getTreatmentSubtypesApi = useApi('getTreatmentSubtypes');
   const addNewTreatmentSubtypeApi = useApi('addNewTreatmentSubtype');
+  const editTreatmentSubtypeApi = useApi('editTreatmentSubtype');
+  const deleteTreatmentSubtypeApi = useApi('deleteTreatmentSubtype');
   const getTreatmentListApi = useApi('getTreatmentList');
   const getTreatmentSpecificValuesApi = useApi('getTreatmentSpecificValues');
   const addNewTreatmentApi = useApi('addNewTreatment');
   const addNewTreatmentTypeApi = useApi('addNewTreatmentType');
+  const editTreatmentTypeApi = useApi('editTreatmentType');
+  const deleteTreatmentTypeApi = useApi('deleteTreatmentType');
   const updateTreatmentApi = useApi('updateTreatment');
   const deleteTreatmentApi = useApi('deleteTreatment');
 
@@ -53,6 +57,25 @@ export const useTreatment = () => {
     }
   };
 
+  const editTreatmentType = async (id, name) => {
+    try {
+      const response = await editTreatmentTypeApi({ body: { id: id, name: name }});
+      return response.status === 200;
+    } catch (error) {
+      console.error('error editing treatment type ', error);
+    }
+  }
+
+  const deleteTreatmentType = async (id) => {
+    try {
+      const response = await deleteTreatmentTypeApi({ body: { id: id }});
+      return response.status;
+    } catch (error) {
+      console.error('error deleting treatment type ', error);
+      return error.response;
+    }
+  }
+
   const getTreatmentSubTypes = async () => {
     try {
       const response = await getTreatmentSubtypesApi();
@@ -72,6 +95,25 @@ export const useTreatment = () => {
       console.error('error adding new treatment subtype ', error);
     }
   };
+
+  const editTreatmentSubtype = async (id, name) => {
+    try {
+      const response = await editTreatmentSubtypeApi({ body: { id: id, name: name }});
+      return response.status === 200;
+    } catch (error) {
+      console.error('error updating treatment subtype ', error);
+    }
+  }
+
+  const deleteTreatmentSubtype = async (id) => {
+    try {
+      const response = await deleteTreatmentSubtypeApi({ body: { id: id }});
+      return response.status;
+    } catch (error) {
+      console.error('error deleting treatment subtype ', error);
+      return error.response;
+    }
+  }
 
   const addNewTreatmentType = async (name) => {
     try {
@@ -140,5 +182,9 @@ export const useTreatment = () => {
     deleteTreatment,
     addNewTreatmentType,
     addNewTreatmentSubtype,
+    editTreatmentSubtype,
+    deleteTreatmentSubtype,
+    editTreatmentType,
+    deleteTreatmentType
   };
 };

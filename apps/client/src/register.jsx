@@ -86,9 +86,15 @@ export default function Register() {
       <Box width={'90%'} margin={'auto'} height={'100%'}>
         <FormControl>
           <FormLabel>Registrering</FormLabel>
-          <Input type='email' placeholder='Email' onChange={(e) => setEmailInput(e.target.value)} />
+          <Input
+            autoComplete='off'
+            type='email'
+            placeholder='Email'
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
           <InputGroup>
             <Input
+              autoComplete='off'
               type='password'
               placeholder='Lösenord'
               onChange={(e) => setPasswordInput(e.target.value)}
@@ -113,6 +119,7 @@ export default function Register() {
             </InputRightElement>
           </InputGroup>
           <Input
+            autoComplete='off'
             type='password'
             placeholder='Bekräfta lösenord'
             onChange={(e) => setConfirmPasswordInput(e.target.value)}
