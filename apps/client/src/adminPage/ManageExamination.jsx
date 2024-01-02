@@ -30,6 +30,14 @@ export default function ManageExamination() {
   const [examinationToDelete, setExaminationToDelete] = useState();
   const [isConfirmInputOpen, setIsConfirmInputOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [examinationTypeToEdit, setExaminationTypeToEdit] = useState();
+  const [examinationTypeToDelete, setExaminationTypeToDelete] = useState();
+  const [isEditExaminationTypeOpen, setIsEditExaminationTypeOpen] = useState(false);
+  const [isDeleteExaminationTypeOpen, setIsDeleteExaminationTypeOpen] = useState(false);
+  const [examinationSubTypeToEdit, setExaminationSubtypeToEdit] = useState();
+  const [examinationSubtypeToDelete, setExaminationSubtypeToDelete] = useState();
+  const [isEditExaminationSubtypeOpen, setIsEditExaminationSubtypeOpen] = useState(false);
+  const [isDeleteExaminationSubtypeOpen, setIsDeleteExaminationSubtypeOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const toast = useToast();
 
@@ -45,6 +53,10 @@ export default function ManageExamination() {
     deleteExamination,
     addNewExaminationType,
     addNewExaminationSubtype,
+    editExaminationType,
+    deleteExaminationType,
+    editExaminationSubtype,
+    deleteExaminationSubtype,
   } = useExamination();
 
   const fetchExaminations = async () => {
@@ -187,6 +199,140 @@ export default function ManageExamination() {
     }
   };
 
+  const handleCloseEditExaminationType = () => {
+    setIsEditExaminationTypeOpen(false);
+    setExaminationTypeToEdit(null);
+  };
+
+  const handleEditExaminationType = async (newName) => {
+    setIsEditExaminationTypeOpen(false);
+    const exists = examinationTypes.find(
+      (type) => type.name.toLowerCase().trim() === newName.toLowerCase().trim(),
+    );
+
+    if (exists) {
+      showToast(
+        'Huvudkategori finns redan',
+        `${newName} finns redan och kan därför inte läggas till`,
+        'error',
+      );
+    } else {
+      const response = await editExaminationType(examinationTypeToEdit.id, newName);
+      if (response) {
+        showToast('Huvudkategori uppdaterad', `${newName} har lagts till`, 'success');
+        await fetchExaminations();
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${newName} kunde inte läggas till`,
+          'error',
+        );
+      }
+    }
+    setExaminationTypeToEdit(null);
+  };
+
+  const handleCloseDeleteExaminationType = () => {
+    setIsDeleteExaminationTypeOpen(false);
+    setExaminationTypeToDelete(null);
+  };
+
+  const handleDeleteExaminationType = async () => {
+    setIsDeleteExaminationTypeOpen(false);
+    const response = await deleteExaminationType(examinationTypeToDelete.id);
+    if (response === 200) {
+      showToast(
+        'Huvudkategori borttagen',
+        `${examinationTypeToDelete.name} har tagits bort`,
+        'success',
+      );
+      await fetchExaminations();
+    } else {
+      const message = await response.json();
+      if (message === 'Resource cannot be deleted') {
+        showToast(
+          'Huvudkategori kan inte tas bort',
+          `${examinationTypeToDelete.name} har underkategorier kopplade till sig och kan därför inte tas bort`,
+          'error',
+        );
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${examinationTypeToDelete.name} kunde inte tas bort`,
+          'error',
+        );
+      }
+    }
+    setExaminationTypeToDelete(null);
+  };
+
+  const handleCloseEditExaminationSubtype = () => {
+    setIsEditExaminationSubtypeOpen(false);
+    setExaminationSubtypeToEdit(null);
+  };
+
+  const handleEditExaminationSubtype = async (newName) => {
+    setIsEditExaminationSubtypeOpen(false);
+    const exists = examinationSubtypes.find(
+      (sub) => sub.name.toLowerCase().trim() === newName.toLowerCase().trim(),
+    );
+
+    if (exists) {
+      showToast(
+        'Underkategori finns redan',
+        `${newName} finns redan och kan därför inte läggas till`,
+        'error',
+      );
+    } else {
+      const response = await editExaminationSubtype(examinationSubTypeToEdit.id, newName);
+      if (response) {
+        showToast('Underkategori ändrar', `${newName} har lagts till`, 'success');
+        await fetchExaminations();
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${newName} kunde inte läggas till`,
+          'error',
+        );
+      }
+    }
+    setExaminationSubtypeToEdit(null);
+  };
+
+  const handleCloseDeleteExaminationSubtype = () => {
+    setIsDeleteExaminationSubtypeOpen(false);
+    setExaminationSubtypeToDelete(null);
+  };
+
+  const handleDeleteExaminationSubtype = async () => {
+    setIsDeleteExaminationSubtypeOpen(false);
+    const response = await deleteExaminationSubtype(examinationSubtypeToDelete.id);
+    if (response === 200) {
+      showToast(
+        'Underkategori borttagen',
+        `${examinationSubtypeToDelete.name} har tagits bort`,
+        'success',
+      );
+      await fetchExaminations();
+    } else {
+      const message = await response.json();
+      if (message === 'Resource cannot be deleted') {
+        showToast(
+          'Underkategori kan inte tas bort',
+          `Underkategorin ${examinationSubtypeToDelete.name} kan inte tas bort eftersom den har undersökningar kopplade till sig`,
+          'error',
+        );
+      } else {
+        showToast(
+          'Någonting gick fel',
+          `Någonting gick fel och ${examinationSubtypeToDelete.name} kunde inte tas bort`,
+          'error',
+        );
+      }
+    }
+    setExaminationSubtypeToDelete(null);
+  };
+
   const showToast = (title, description, status) => {
     toast({
       title: title,
@@ -223,7 +369,13 @@ export default function ManageExamination() {
                       placement='right'
                       hasArrow
                     >
-                      <IconButton icon={<EditIcon />} />
+                      <IconButton
+                        onClick={() => {
+                          setExaminationTypeToEdit(examType);
+                          setIsEditExaminationTypeOpen(true);
+                        }}
+                        icon={<EditIcon />}
+                      />
                     </Tooltip>
                     <Tooltip
                       label={`Ta bort ${examType.name}`}
@@ -231,7 +383,13 @@ export default function ManageExamination() {
                       placement='right'
                       hasArrow
                     >
-                      <IconButton icon={<DeleteIcon />} />
+                      <IconButton
+                        onClick={() => {
+                          setExaminationTypeToDelete(examType);
+                          setIsDeleteExaminationTypeOpen(true);
+                        }}
+                        icon={<DeleteIcon />}
+                      />
                     </Tooltip>
                   </HStack>
                   {examinationSubtypes &&
@@ -249,7 +407,13 @@ export default function ManageExamination() {
                               placement='right'
                               hasArrow
                             >
-                              <IconButton icon={<EditIcon />} />
+                              <IconButton
+                                onClick={() => {
+                                  setExaminationSubtypeToEdit(subtype);
+                                  setIsEditExaminationSubtypeOpen(true);
+                                }}
+                                icon={<EditIcon />}
+                              />
                             </Tooltip>
                             <Tooltip
                               label={`Ta bort ${subtype.name}`}
@@ -257,7 +421,13 @@ export default function ManageExamination() {
                               placement='right'
                               hasArrow
                             >
-                              <IconButton icon={<DeleteIcon />} />
+                              <IconButton
+                                onClick={() => {
+                                  setExaminationSubtypeToDelete(subtype);
+                                  setIsDeleteExaminationSubtypeOpen(true);
+                                }}
+                                icon={<DeleteIcon />}
+                              />
                             </Tooltip>
                           </HStack>
                           <HStack>
@@ -347,6 +517,40 @@ export default function ManageExamination() {
           header={'Ta bort undersökning'}
           body={`Är du säker på att du vill ta bort ${examinationToDelete.name}?`}
           handleConfirm={handleDeleteExamination}
+        />
+      )}
+      {examinationTypeToEdit && (
+        <ConfirmInput
+          isOpen={isEditExaminationTypeOpen}
+          onClose={handleCloseEditExaminationType}
+          onConfirm={handleEditExaminationType}
+          valueToConfirm={examinationTypeToEdit.name}
+        />
+      )}
+      {examinationTypeToDelete && (
+        <Confirm
+          isOpen={isDeleteExaminationTypeOpen}
+          onClose={handleCloseDeleteExaminationType}
+          header={'Ta bort huvudkategori'}
+          body={`Är du säker på att du vill ta bort ${examinationTypeToDelete.name}?`}
+          handleConfirm={handleDeleteExaminationType}
+        />
+      )}
+      {examinationSubTypeToEdit && (
+        <ConfirmInput
+          isOpen={isEditExaminationSubtypeOpen}
+          onClose={handleCloseEditExaminationSubtype}
+          onConfirm={handleEditExaminationSubtype}
+          valueToConfirm={examinationSubTypeToEdit.name}
+        />
+      )}
+      {examinationSubtypeToDelete && (
+        <Confirm
+          isOpen={isDeleteExaminationSubtypeOpen}
+          onClose={handleCloseDeleteExaminationSubtype}
+          header={'Ta bort underkategori'}
+          body={`Är du säker på att du vill ta bort ${examinationSubtypeToDelete.name}?`}
+          handleConfirm={handleDeleteExaminationSubtype}
         />
       )}
     </>

@@ -1,4 +1,5 @@
 import { packageResponse } from '../utils/apiUtils.js';
+import { api } from './index.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
@@ -199,6 +200,26 @@ export const caseApi = (apiClient) => ({
 
   getAllExaminationTypes: async (headers) => {
     const response = await apiClient.get(`${prefix}getExaminationTypes`, headers);
+    return packageResponse(response);
+  },
+
+  editExaminationType: async (body) => {
+    const response = await apiClient.patch(`${prefix}examinationType`, body);
+    return packageResponse(response);
+  },
+
+  deleteExaminationType: async (body) => {
+    const response = await apiClient.delete(`${prefix}examinationType`, body);
+    return packageResponse(response);
+  },
+
+  editExaminationSubtype: async (body) => {
+    const response = await apiClient.patch(`${prefix}examinationSubtype`, body);
+    return packageResponse(response);
+  },
+
+  deleteExaminationSubtype: async (body) => {
+    const response = await apiClient.delete(`${prefix}examinationSubtype`, body);
     return packageResponse(response);
   },
 

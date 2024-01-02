@@ -45,7 +45,7 @@ export default function ConfirmInput({ isOpen, onClose, onConfirm, valueToConfir
           </AlertDialogBody>
           <AlertDialogFooter>
             <ButtonGroup>
-              <Button colorScheme='teal' onClick={handleConfirm} ml={3}>
+              <Button onClick={handleConfirm} ml={3}>
                 Bekräfta
               </Button>
               <Button onClick={onClose}>Avbryt</Button>

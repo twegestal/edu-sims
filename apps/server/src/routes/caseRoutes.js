@@ -445,7 +445,106 @@ export const getCaseRoutes = () => {
       res.status(500).json('Something went wrong');
     }
   });
-  // Tar emot en examination types id och hämtar alla subtyper för det id
+
+  router.patch('/examinationType', async (req, res, _next) => {
+    const { id, name } = req.body;
+
+    if (!id || !name) {
+      return res.status(400).json('Missing body');
+    }
+
+    try {
+      const examinationType = await object.examination_type.findOne({ where: { id: id }});
+      if (!examinationType) {
+        return res.status(404).json('Resource not found');
+      }
+
+      const result = await examinationType.update({ name: name });
+      if (!result) {
+        return res.status(500).json('Something went wrong');
+      }
+
+      res.status(200).json('Resource updated');
+
+    } catch (error) {
+      console.error('error updating examination type ', error);
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.delete('/examinationType', async (req, res, _next) => {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json('Missing body');
+    }
+
+    try {
+      const response = await object.examination_type.destroy({ where: { id: id }});
+      if (!response) {
+        return res.status(400).json('Could not find resource');
+      }
+      res.status(200).json('Resource deleted');
+    } catch (error) {
+      console.error('error deleting examination type ', error);
+      if (error instanceof ForeignKeyConstraintError) {
+        return res.status(400).json('Resource cannot be deleted');
+      } else {
+        return res.status(500).json('Something went wrong');
+      }
+    }
+  });
+
+  router.patch('/examinationSubtype', async (req, res, _next) => {
+    const { id, name } = req.body;
+
+    if (!id || !name) {
+      return res.status(400).json('Missing body');
+    }
+
+    try {
+      const examinationSubtype = await object.examination_subtype.findOne({ where: { id: id }});
+
+      if (!examinationSubtype) {
+        return res.status(404).json('Resource not found');
+      }
+
+      const result = await examinationSubtype.update({ name: name });
+      if (!result) {
+        return res.status(500).json('Something went wrong');
+      }
+
+      res.status(200).json('Resource updated');
+    } catch (error) {
+      console.error('error updating examination subtype ', error);
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
+  router.delete('/examinationSubtype', async (req, res, _next) => {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json('Missing body');
+    }
+      try {
+        const response = await object.examination_subtype.destroy({ where: { id: id }});
+        if (!response) {
+          return res.status(404).json('Resource not found');
+        }
+
+        res.status(200).json('Resource deleted');
+      } catch (error) {
+        console.error('error deleting examination subtype ', error);
+        if (error instanceof ForeignKeyConstraintError) {
+          return res.status(400).json('Resource cannot be deleted');
+        } else {
+          return res.status(500).json('Something went wrong');
+        }
+      }
+    }
+  );
+
   router.get('/getExaminationSubtypes', async (req, res, _next) => {
     try {
       const examinationTypeId = req.header('examination_type_id');
