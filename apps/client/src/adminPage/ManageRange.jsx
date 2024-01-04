@@ -96,7 +96,7 @@ export default function ManageRange({ update }) {
           <Thead>
             <Tr>
               <Th>Undersökning</Th>
-              <Th>Under gräns</Th>
+              <Th>Undre gräns</Th>
               <Th>Övre gräns</Th>
               <Th>Enhet</Th>
               <Th>Ändra</Th>
