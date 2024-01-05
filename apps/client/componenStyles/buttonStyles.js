@@ -1,22 +1,20 @@
 export const ButtonStyles = {
-
-    baseStyle: {
+  baseStyle: {},
+  variants: {
+    base: {
+      bg: '#D2D2D2',
+      paddingTop: '10px',
+      paddingBottom: '10px',
     },
-    variants: {
-        base: {
-        bg: '#D2D2D2',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        },
-        good: {
-        bg: '#4CB963',
-        },
-        caseNav: {
-        bg: '#3182ce',
-        color: '#f5faf6',
-        },
+    good: {
+      bg: '#4CB963',
     },
-    defaultProps: {
-        variant: 'base',
+    caseNav: {
+      bg: '#3182ce',
+      color: '#f5faf6',
     },
+  },
+  defaultProps: {
+    variant: 'base',
+  },
 };

@@ -454,7 +454,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const examinationType = await object.examination_type.findOne({ where: { id: id }});
+      const examinationType = await object.examination_type.findOne({ where: { id: id } });
       if (!examinationType) {
         return res.status(404).json('Resource not found');
       }
@@ -465,7 +465,6 @@ export const getCaseRoutes = () => {
       }
 
       res.status(200).json('Resource updated');
-
     } catch (error) {
       console.error('error updating examination type ', error);
       return res.status(500).json('Something went wrong');
@@ -480,7 +479,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const response = await object.examination_type.destroy({ where: { id: id }});
+      const response = await object.examination_type.destroy({ where: { id: id } });
       if (!response) {
         return res.status(400).json('Could not find resource');
       }
@@ -503,7 +502,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const examinationSubtype = await object.examination_subtype.findOne({ where: { id: id }});
+      const examinationSubtype = await object.examination_subtype.findOne({ where: { id: id } });
 
       if (!examinationSubtype) {
         return res.status(404).json('Resource not found');
@@ -527,23 +526,22 @@ export const getCaseRoutes = () => {
     if (!id) {
       return res.status(400).json('Missing body');
     }
-      try {
-        const response = await object.examination_subtype.destroy({ where: { id: id }});
-        if (!response) {
-          return res.status(404).json('Resource not found');
-        }
+    try {
+      const response = await object.examination_subtype.destroy({ where: { id: id } });
+      if (!response) {
+        return res.status(404).json('Resource not found');
+      }
 
-        res.status(200).json('Resource deleted');
-      } catch (error) {
-        console.error('error deleting examination subtype ', error);
-        if (error instanceof ForeignKeyConstraintError) {
-          return res.status(400).json('Resource cannot be deleted');
-        } else {
-          return res.status(500).json('Something went wrong');
-        }
+      res.status(200).json('Resource deleted');
+    } catch (error) {
+      console.error('error deleting examination subtype ', error);
+      if (error instanceof ForeignKeyConstraintError) {
+        return res.status(400).json('Resource cannot be deleted');
+      } else {
+        return res.status(500).json('Something went wrong');
       }
     }
-  );
+  });
 
   router.get('/getExaminationSubtypes', async (req, res, _next) => {
     try {
@@ -721,12 +719,12 @@ export const getCaseRoutes = () => {
   router.patch('/examinationRange', async (req, res, _next) => {
     const { id, min, max, unit } = req.body;
 
-    if (!id || !min ||  !max || !unit) {
+    if (!id || !min || !max || !unit) {
       return res.status(400).json('Missing body');
     }
 
     try {
-      const examination = await object.examination_list.findOne({ where: { id: id }});
+      const examination = await object.examination_list.findOne({ where: { id: id } });
       if (!examination) {
         return res.status(404).json('Resource not found');
       }
@@ -916,12 +914,12 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const treatmentSubtype = await object.treatment_subtype.findOne({ where: { id: id }});
+      const treatmentSubtype = await object.treatment_subtype.findOne({ where: { id: id } });
       if (!treatmentSubtype) {
         return res.status(404).json('Could not find resource');
       }
 
-      const result = await treatmentSubtype.update({ name: name});
+      const result = await treatmentSubtype.update({ name: name });
       if (!result) {
         return res.status(500).json('Could not update resource');
       }
@@ -941,7 +939,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const response = await object.treatment_subtype.destroy({ where: { id: id }});
+      const response = await object.treatment_subtype.destroy({ where: { id: id } });
       if (!response) {
         return res.status(404).json('Could not find resource');
       }
@@ -954,7 +952,7 @@ export const getCaseRoutes = () => {
 
       return res.status(500).json('Something went wrong');
     }
-  })
+  });
 
   router.post('/treatmentTypes', async (req, res, _next) => {
     const { name } = req.body;
@@ -983,7 +981,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const treatmentType = await object.treatment_type.findOne({ where: { id: id }});
+      const treatmentType = await object.treatment_type.findOne({ where: { id: id } });
       if (!treatmentType) {
         return res.status(404).json('Resource not found');
       }
@@ -1009,12 +1007,12 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const response = await object.treatment_type.destroy({ where: { id: id }});
-  
+      const response = await object.treatment_type.destroy({ where: { id: id } });
+
       if (!response) {
         return res.status(404).json('Could not find resource');
       }
-  
+
       return res.status(200).json('Resource deleted');
     } catch (error) {
       console.error('error deleting treatment type ', error);
@@ -1023,7 +1021,6 @@ export const getCaseRoutes = () => {
       }
       return res.status(500).json('Something went wrong');
     }
-
   });
 
   router.put('/publishCase', async (req, res, next) => {

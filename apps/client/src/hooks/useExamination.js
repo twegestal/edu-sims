@@ -132,16 +132,16 @@ export const useExamination = () => {
 
   const editExaminationType = async (id, name) => {
     try {
-      const response = await editExaminationTypeApi({ body: { id: id, name: name }});
+      const response = await editExaminationTypeApi({ body: { id: id, name: name } });
       return response.status === 200;
     } catch (error) {
-      console.error('error editing examination type ', error);    
+      console.error('error editing examination type ', error);
     }
   };
 
   const deleteExaminationType = async (id) => {
     try {
-      const response = await deleteExaminationTypeApi({ body: { id: id }});
+      const response = await deleteExaminationTypeApi({ body: { id: id } });
       return response.status;
     } catch (error) {
       console.error('error deleting examination type ', error);
@@ -151,7 +151,7 @@ export const useExamination = () => {
 
   const editExaminationSubtype = async (id, name) => {
     try {
-      const response = await editExaminationSubtypeApi({ body: { id: id, name: name }});
+      const response = await editExaminationSubtypeApi({ body: { id: id, name: name } });
       return response.status === 200;
     } catch (error) {
       console.error('error deleting examination subtype ', error);
@@ -160,7 +160,7 @@ export const useExamination = () => {
 
   const deleteExaminationSubtype = async (id) => {
     try {
-      const response = await deleteExaminationSubtypeApi({ body: { id: id }});
+      const response = await deleteExaminationSubtypeApi({ body: { id: id } });
       return response.status;
     } catch (error) {
       console.error('error deleting examination subtype ', error);
@@ -170,12 +170,14 @@ export const useExamination = () => {
 
   const editExaminationRange = async (id, min, max, unit) => {
     try {
-      const response = await editExaminationRangeApi({ body: { id: id, min: min, max: max, unit: unit }});
+      const response = await editExaminationRangeApi({
+        body: { id: id, min: min, max: max, unit: unit },
+      });
       return response.status === 200;
     } catch (error) {
       console.error('error editing examination range ', error);
     }
-  }
+  };
 
   return {
     examinationStep,
@@ -196,6 +198,6 @@ export const useExamination = () => {
     deleteExaminationType,
     editExaminationSubtype,
     deleteExaminationSubtype,
-    editExaminationRange
+    editExaminationRange,
   };
 };

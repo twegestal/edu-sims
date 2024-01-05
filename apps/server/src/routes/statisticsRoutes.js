@@ -8,8 +8,8 @@ export const getStatisticRoutes = () => {
 
   router.get('/getTotalAmountUsers', async (_req, res, _next) => {
     const amount = await object.end_user.count({
-      where: {email: {[Op.ne]: 'DeletedUser'}}
-  });
+      where: { email: { [Op.ne]: 'DeletedUser' } },
+    });
     res.status(200).json(amount);
   });
 

@@ -59,22 +59,22 @@ export const useTreatment = () => {
 
   const editTreatmentType = async (id, name) => {
     try {
-      const response = await editTreatmentTypeApi({ body: { id: id, name: name }});
+      const response = await editTreatmentTypeApi({ body: { id: id, name: name } });
       return response.status === 200;
     } catch (error) {
       console.error('error editing treatment type ', error);
     }
-  }
+  };
 
   const deleteTreatmentType = async (id) => {
     try {
-      const response = await deleteTreatmentTypeApi({ body: { id: id }});
+      const response = await deleteTreatmentTypeApi({ body: { id: id } });
       return response.status;
     } catch (error) {
       console.error('error deleting treatment type ', error);
       return error.response;
     }
-  }
+  };
 
   const getTreatmentSubTypes = async () => {
     try {
@@ -98,22 +98,22 @@ export const useTreatment = () => {
 
   const editTreatmentSubtype = async (id, name) => {
     try {
-      const response = await editTreatmentSubtypeApi({ body: { id: id, name: name }});
+      const response = await editTreatmentSubtypeApi({ body: { id: id, name: name } });
       return response.status === 200;
     } catch (error) {
       console.error('error updating treatment subtype ', error);
     }
-  }
+  };
 
   const deleteTreatmentSubtype = async (id) => {
     try {
-      const response = await deleteTreatmentSubtypeApi({ body: { id: id }});
+      const response = await deleteTreatmentSubtypeApi({ body: { id: id } });
       return response.status;
     } catch (error) {
       console.error('error deleting treatment subtype ', error);
       return error.response;
     }
-  }
+  };
 
   const addNewTreatmentType = async (name) => {
     try {
@@ -185,6 +185,6 @@ export const useTreatment = () => {
     editTreatmentSubtype,
     deleteTreatmentSubtype,
     editTreatmentType,
-    deleteTreatmentType
+    deleteTreatmentType,
   };
 };
