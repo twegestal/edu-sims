@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionIcon,
   AccordionPanel,
+  VStack,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -53,10 +54,6 @@ export default function CaseNav(props) {
   useEffect(() => {
     setExaminationResult(props.treatmentResults);
   }, [props.treatmentResults]);
-
-  useEffect(() => {
-    console.log('examinationRes: ', examinationResult);
-  }, [examinationResult]);
 
   return (
     <nav id='caseNav'>
@@ -189,29 +186,15 @@ export default function CaseNav(props) {
               <ModalHeader>Labbtester</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {
-                  <Flex key={Date.now()} alignItems='center' flexDirection='column'>
-                    {examinationResult.map((step) => {
-                      {
-                        Object.keys(step).map((examinationId) =>
-                          step[examinationId].isNormal ? (
-                            <Flex key={examinationId} flexDirection='row'>
-                              <Text>
-                                {step[examinationId].name} : {step[examinationId].value}{' '}
-                              </Text>
-                            </Flex>
-                          ) : (
-                            <Flex key={examinationId} flexDirection='row'>
-                              <Text color='red'>
-                                {step[examinationId].name} : {step[examinationId].value}
-                              </Text>
-                            </Flex>
-                          ),
-                        );
-                      }
-                    })}
-                  </Flex>
-                }
+                <VStack alignItems={'flex-start'}>
+                  {examinationResult.map((exam) => (
+                    <Flex key={exam.name} flexDirection={'row'}>
+                      <Text color={exam.isNormal ? 'black' : 'red'}>
+                        {exam.name} : {exam.value}
+                      </Text>
+                    </Flex>
+                  ))}
+                </VStack>
               </ModalBody>
 
               <ModalFooter>

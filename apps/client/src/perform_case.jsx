@@ -138,7 +138,6 @@ export default function PerformCase() {
   };
 
   const attemptUpdateFunction = () => {
-    
     updateAttempt(
       attemptId,
       caseIsFinished,
@@ -169,10 +168,7 @@ export default function PerformCase() {
     }
   };
   const updateLabResultsList = (resultsObject) => {
-    setTreatmentResults([
-      ...treatmentResults,
-      resultsObject
-    ])
+    setTreatmentResults([...treatmentResults, ...Object.values(resultsObject)]);
     /*
     setTreatmentResults([
       ...treatmentResults,
@@ -205,10 +201,7 @@ export default function PerformCase() {
       title: `Feedback från steg # ${currentIndex + 1}`,
       feedback: feedbackToDisplay,
     };
-    setFeedback([
-      ...feedback,
-      feedbackToSave,
-    ]);
+    setFeedback([...feedback, feedbackToSave]);
     /*
     setFeedback([
       ...feedback,
