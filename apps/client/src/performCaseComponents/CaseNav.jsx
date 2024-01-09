@@ -13,6 +13,12 @@ import {
   Button,
   Flex,
   Text,
+  Card,
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionIcon,
+  AccordionPanel,
 } from '@chakra-ui/react';
 import { FaNotesMedical } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
@@ -25,6 +31,7 @@ import './PerformCase.css';
 export default function CaseNav(props) {
   const editorRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [examinationResult, setExaminationResult] = useState([]);
 
   useEffect(() => {
     window.addEventListener('scroll', listenToScroll);
@@ -42,6 +49,14 @@ export default function CaseNav(props) {
       setIsVisible(true);
     }
   };
+
+  useEffect(() => {
+    setExaminationResult(props.treatmentResults);
+  }, [props.treatmentResults]);
+
+  useEffect(() => {
+    console.log('examinationRes: ', examinationResult);
+  }, [examinationResult]);
 
   return (
     <nav id='caseNav'>
@@ -132,7 +147,21 @@ export default function CaseNav(props) {
               <ModalCloseButton />
               <ModalBody>
                 <Flex direction='column' rowGap='2'>
-                  {props.feedback}
+                  {props.feedback.map((feed) => (
+                    <Card key={feed.title} variant='filled'>
+                      <Accordion allowMultiple>
+                        <AccordionItem>
+                          <AccordionButton>
+                            <Box as='span' flex='1' textAlign='center'>
+                              {feed.title}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                          <AccordionPanel>{feed.feedback}</AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                    </Card>
+                  ))}
                 </Flex>
               </ModalBody>
 
@@ -159,7 +188,31 @@ export default function CaseNav(props) {
             <ModalContent>
               <ModalHeader>Labbtester</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>{props.treatmentResults}</ModalBody>
+              <ModalBody>
+                {
+                  <Flex key={Date.now()} alignItems='center' flexDirection='column'>
+                    {examinationResult.map((step) => {
+                      {
+                        Object.keys(step).map((examinationId) =>
+                          step[examinationId].isNormal ? (
+                            <Flex key={examinationId} flexDirection='row'>
+                              <Text>
+                                {step[examinationId].name} : {step[examinationId].value}{' '}
+                              </Text>
+                            </Flex>
+                          ) : (
+                            <Flex key={examinationId} flexDirection='row'>
+                              <Text color='red'>
+                                {step[examinationId].name} : {step[examinationId].value}
+                              </Text>
+                            </Flex>
+                          ),
+                        );
+                      }
+                    })}
+                  </Flex>
+                }
+              </ModalBody>
 
               <ModalFooter>
                 <Button colorScheme='blue' mr={3} onClick={props.onTreatmentResultsClose}>

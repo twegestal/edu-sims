@@ -138,11 +138,7 @@ export default function PerformCase() {
   };
 
   const attemptUpdateFunction = () => {
-    console.log('FEEEDDDDDDBACK: ', feedback);
-    console.log(
-      'examinations that the user has clicked on and are to be Valuated: ',
-      treatmentResults,
-    );
+    
     updateAttempt(
       attemptId,
       caseIsFinished,
@@ -175,6 +171,11 @@ export default function PerformCase() {
   const updateLabResultsList = (resultsObject) => {
     setTreatmentResults([
       ...treatmentResults,
+      resultsObject
+    ])
+    /*
+    setTreatmentResults([
+      ...treatmentResults,
       <Flex key={Date.now()} alignItems='center' flexDirection='column'>
         {Object.keys(resultsObject).map((index) =>
           resultsObject[index].isNormal ? (
@@ -193,11 +194,22 @@ export default function PerformCase() {
         )}
       </Flex>,
     ]);
+    */
+
     setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
   };
 
   const updateFeedback = (feedbackToDisplay) => {
     addFeedbackToStorage(feedbackToDisplay);
+    const feedbackToSave = {
+      title: `Feedback från steg # ${currentIndex + 1}`,
+      feedback: feedbackToDisplay,
+    };
+    setFeedback([
+      ...feedback,
+      feedbackToSave,
+    ]);
+    /*
     setFeedback([
       ...feedback,
       <Card key={currentIndex} variant='filled'>
@@ -213,7 +225,7 @@ export default function PerformCase() {
           </AccordionItem>
         </Accordion>
       </Card>,
-    ]);
+    ]);*/
   };
   const addFeedbackToStorage = (feedbackToDisplay) => {
     let feedbacks;
