@@ -188,8 +188,8 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
-  updateAttempt: async (headers) => {
-    const response = await apiClient.put(`${prefix}updateAttempt`, headers);
+  updateAttempt: async (body) => {
+    const response = await apiClient.put(`${prefix}updateAttempt`, body);
     return packageResponse(response);
   },
 

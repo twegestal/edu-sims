@@ -1082,43 +1082,107 @@ export const getCaseRoutes = () => {
     }
   });
 
-  router.put('/updateAttempt', async (req, res, next) => {
-    if (req.header('attempt_id') == '') {
-      res.status(404).json('Not Found');
-    } else {
-      let result = [];
-      if (req.header('timestamp_finished') == '') {
-        result = await object.attempt.update(
-          {
-            is_finished: req.header('is_finished'),
-            faults: req.header('faults'),
-            correct_diagnosis: req.header('correct_diagnosis'),
-            nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
-          },
-          {
-            where: {
-              id: req.header('attempt_id'),
-            },
-          },
-        );
-      } else {
-        result = await object.attempt.update(
-          {
-            is_finished: req.header('is_finished'),
-            faults: req.header('faults'),
-            timestamp_finished: req.header('timestamp_finished'),
-            correct_diagnosis: req.header('correct_diagnosis'),
-            nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
-          },
-          {
-            where: {
-              id: req.header('attempt_id'),
-            },
-          },
-        );
-      }
-      res.status(200).json(result);
+  router.put('/updateAttempt', async (req, res, _next) => {
+    const {
+      attempt_id,
+      is_finished,
+      faults,
+      timestamp_finished,
+      correct_diagnosis,
+      nbr_of_tests_performed,
+      examination_results,
+      feedback,
+    } = req.body;
+
+    if (!attempt_id) {
+      return res.status(400).json('Missing body');
     }
+
+    if (Object.keys(timestamp_finished).length === 0) {
+      try {
+        const result = await object.attempt.update(
+          {
+            is_finished: is_finished,
+            faults: faults,
+            correct_diagnosis: correct_diagnosis,
+            nbr_of_tests_performed: nbr_of_tests_performed,
+            examination_results: examination_results,
+            feedback: feedback,
+          },
+          {
+            where: {
+              id: attempt_id,
+            },
+          },
+        );
+
+        return res.status(200).json('Resource updated');
+      } catch (error) {
+        console.error('error updating attempt ', error);
+        return res.status(500).json('Something went wrong');
+      }
+    } else {
+      try {
+        const result = await object.attempt.update(
+          {
+            is_finished: is_finished,
+            faults: faults,
+            timestamp_finished: timestamp_finished,
+            correct_diagnosis: correct_diagnosis,
+            nbr_of_tests_performed: nbr_of_tests_performed,
+            examination_results: examination_results,
+            feedback: feedback,
+          },
+          {
+            where: {
+              id: attempt_id,
+            },
+          },
+        );
+
+        return res.status(200).json('Resource updated');
+      } catch (error) {
+        console.error('error updating attempt ', error);
+        return res.status(500).json('Something went wrong');
+      }
+    }
+
+    // if (req.header('attempt_id') == '') {
+    //   res.status(404).json('Not Found');
+    // } else {
+    //   let result = [];
+    //   if (req.header('timestamp_finished') == '') {
+    //     result = await object.attempt.update(
+    //       {
+    //         is_finished: req.header('is_finished'),
+    //         faults: req.header('faults'),
+    //         correct_diagnosis: req.header('correct_diagnosis'),
+    //         nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
+    //       },
+    //       {
+    //         where: {
+    //           id: req.header('attempt_id'),
+    //         },
+    //       },
+    //     );
+    //   } else {
+    //     result = await object.attempt.update(
+    //       {
+    //         is_finished: req.header('is_finished'),
+    //         faults: req.header('faults'),
+    //         timestamp_finished: req.header('timestamp_finished'),
+    //         correct_diagnosis: req.header('correct_diagnosis'),
+    //         nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
+    //       },
+    //       {
+    //         where: {
+    //           id: req.header('attempt_id'),
+    //         },
+    //       },
+    //     );
+    //   }
+    //   res.status(200).json(result);
+    // }
   });
 
   router.get('/getModuleTypes', async (_req, res, _next) => {

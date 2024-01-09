@@ -143,16 +143,20 @@ export const useCases = () => {
     timestamp_finished,
     correct_diagnosis,
     nbr_of_tests_performed,
+    examination_results,
+    feedback,
   ) => {
     try {
       const result = await updateAttemptApi({
-        headers: {
+        body: {
           attempt_id: attempt_id,
           is_finished: is_finished,
           faults: faults,
           timestamp_finished: timestamp_finished,
           correct_diagnosis: correct_diagnosis,
           nbr_of_tests_performed: nbr_of_tests_performed,
+          examination_results: examination_results,
+          feedback: feedback,
         },
       });
       if (result.status === 200) {

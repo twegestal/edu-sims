@@ -34,6 +34,12 @@ export const attempt = db.define(
     nbr_of_tests_performed: {
       type: DataTypes.INTEGER,
     },
+    examination_results: {
+      type: DataTypes.TEXT,
+    },
+    feedback: {
+      type: DataTypes.TEXT,
+    },
   },
   {
     // Other model are go here

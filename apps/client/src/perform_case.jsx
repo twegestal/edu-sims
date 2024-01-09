@@ -51,7 +51,6 @@ export default function PerformCase() {
   const [notes, setNotes] = useState('');
   const [feedback, setFeedback] = useState([]);
   const [treatmentResults, setTreatmentResults] = useState([]);
-  const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [faultsCounter, setFaultsCounter] = useState(0);
   const [correctDiagnosis, setCorrectDiagnosis] = useState(false);
@@ -59,6 +58,7 @@ export default function PerformCase() {
   const [finishCaseTimestamp, setFinishCaseTimestamp] = useState([]);
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
   const [wasCorrect, setWasCorrect] = useState(false);
+  const editorRef = useRef(null);
   const { caseById, getCaseById, updateAttempt } = useCases();
 
   useEffect(() => {
@@ -138,21 +138,18 @@ export default function PerformCase() {
   };
 
   const attemptUpdateFunction = () => {
-    //Variabels needed to update the attempt record
-    const isFinished = caseIsFinished;
-    const faults = faultsCounter;
-    const timestamp_finished = finishCaseTimestamp;
-    const correct_diagnosis = correctDiagnosis;
-    const nbr_of_tests_performed = nbrTestPerformed;
-
-    //Updates the attempt record
+    console.log('FEEEDDDDDDBACK: ', feedback);
+    console.log(
+      'examinations that the user has clicked on and are to be Valuated: ',
+      treatmentResults,
+    );
     updateAttempt(
       attemptId,
-      isFinished,
-      faults,
-      timestamp_finished,
-      correct_diagnosis,
-      nbr_of_tests_performed,
+      caseIsFinished,
+      faultsCounter,
+      finishCaseTimestamp,
+      correctDiagnosis,
+      nbrTestPerformed,
     );
   };
 
@@ -162,7 +159,7 @@ export default function PerformCase() {
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
     attemptUpdateFunction();
 
-    localStorage.setItem(caseid.toString() + 'index', JSON.stringify(nextIndex));
+    //localStorage.setItem(caseid.toString() + 'index', JSON.stringify(nextIndex));
 
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
