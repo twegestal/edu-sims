@@ -29,18 +29,29 @@ import { useNavigate } from 'react-router-dom';
 
 export default function ShowAllCases() {
   const [caseToRandomise, setCaseToRandomise] = useState();
-  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
-    useCases();
+  const {
+    cases,
+    getAllCases,
+    medicalFields,
+    getMedicalFields,
+    publishCase,
+    newPublishment,
+    getAttempts,
+  } = useCases();
   const { user } = useAuth();
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [buttonsLoadingState, setButtonsLoadingState] = useState({});
+  const [attempts, setAttempts] = useState(null);
+  const [attemptsFetched, setAttemptsFetched] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCases = async () => {
       await getAllCases();
       await getMedicalFields();
+      const result = await getAttempts();
+      setAttempts(result);
       setLoading(false);
     };
     fetchCases();
@@ -58,6 +69,12 @@ export default function ShowAllCases() {
       setButtonsLoadingState(initialState);
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (attempts !== null) {
+      setAttemptsFetched(true);
+    }
+  }, [attempts]);
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -170,7 +187,12 @@ export default function ShowAllCases() {
               </AccordionButton>
               <AccordionPanel pb={4} className='caseAccordion'>
                 {user.isAdmin ? (
-                  <SimpleGrid columns={[1, 2, 3]} spacing={10} justifyContent={'space-around'}>
+                  <SimpleGrid
+                    key={medicalFieldId}
+                    columns={[1, 2, 3]}
+                    spacing={10}
+                    justifyContent={'space-around'}
+                  >
                     {groupedCases[medicalFieldId].map((caseItem) => (
                       <Card key={caseItem.id} maxW={'md'} alignItems={'center'}>
                         <CardBody>
@@ -181,11 +203,15 @@ export default function ShowAllCases() {
                         </CardBody>
                         <CardFooter>
                           <Stack>
-                            <StartCase
-                              caseId={caseItem.id}
-                              caseToRandomise={caseToRandomise}
-                              published={caseItem.published}
-                            />
+                            {attemptsFetched && (
+                              <StartCase
+                                caseId={caseItem.id}
+                                caseToRandomise={caseToRandomise}
+                                published={caseItem.published}
+                                attempts={attempts}
+                                fetched={attemptsFetched}
+                              />
+                            )}
                             <ButtonGroup spacing={10}>
                               <Tooltip
                                 label={
@@ -232,16 +258,22 @@ export default function ShowAllCases() {
                     {groupedCases[medicalFieldId]
                       .filter((c) => c.published === true)
                       .map((caseItem) => (
-                        <Card maxW={'md'} alignItems={'center'}>
+                        <Card key={caseItem.id} maxW={'md'} alignItems={'center'}>
                           <CardBody>
                             <Stack>
                               <Heading size={'md'}>{caseItem.name}</Heading>
                             </Stack>
                           </CardBody>
                           <CardFooter>
-                            <Stack>
-                              <StartCase caseId={caseItem.id} caseToRandomise={caseToRandomise} />
-                            </Stack>
+                            {attempts !== null && (
+                              <Stack>
+                                <StartCase
+                                  caseId={caseItem.id}
+                                  caseToRandomise={caseToRandomise}
+                                  attemps={attempts}
+                                />
+                              </Stack>
+                            )}
                           </CardFooter>
                         </Card>
                       ))}

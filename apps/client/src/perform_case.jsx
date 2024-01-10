@@ -28,7 +28,7 @@ export default function PerformCase() {
   let params = useParams();
   let caseid = params['caseid'].split('caseid=')[1];
   let attemptId = params['attemptid'].split('attemptid=')[1];
-  let reload = params['reload'].split('reload=')[1];
+  //let reload = params['reload'].split('reload=')[1];
 
   const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
   const { isOpen: isHomeOpen, onOpen: onHomeOpen, onClose: onHomeClose } = useDisclosure();
@@ -71,50 +71,10 @@ export default function PerformCase() {
 
   useEffect(() => {
     if (!loading) {
-      if (reload === 'true') {
-        const storedIndex = JSON.parse(localStorage.getItem(caseid.toString() + 'index'));
-        const storedFeedback = JSON.parse(localStorage.getItem(caseid.toString()));
-        if (storedFeedback !== null) {
-          for (let index = 0; index < 3; index++) {
-            const listan = [];
-            for (let index = 0; index < storedFeedback.length; index++) {
-              listan[index] = (
-                <Card key={index} variant='filled'>
-                  <Accordion allowMultiple>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <Box as='span' flex='1' textAlign='center'>
-                          Feedback från steg # {index + 1}
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel>{storedFeedback[index]}</AccordionPanel>
-                    </AccordionItem>
-                  </Accordion>
-                </Card>
-              );
-            }
-            setFeedback([listan]);
-            setCurrentStep(caseById[storedIndex]);
-            setCurrentIndex(caseById[storedIndex].index);
-          }
-        }
-      } else {
-        localStorage.removeItem(caseid.toString());
-
-        setCurrentStep(caseById[0]);
-        setCurrentIndex(caseById[0].index);
-      }
+      setCurrentStep(caseById[0]);
+      setCurrentIndex(caseById[0].index);
     }
   }, [caseById]);
-
-  useEffect(() => {
-    // When caseIsFinished variable is set to true, the attempt data will be updated
-    if (caseIsFinished == true) {
-      attemptUpdateFunction();
-      return navigate('/');
-    }
-  }, [caseIsFinished]);
 
   useEffect(() => {
     // When caseIsFinished variable is set to true, the attempt data will be updated
@@ -145,6 +105,9 @@ export default function PerformCase() {
       finishCaseTimestamp,
       correctDiagnosis,
       nbrTestPerformed,
+      treatmentResults,
+      feedback,
+      currentIndex + 1,
     );
   };
 
@@ -169,30 +132,7 @@ export default function PerformCase() {
   };
   const updateLabResultsList = (resultsObject) => {
     setTreatmentResults([...treatmentResults, ...Object.values(resultsObject)]);
-    /*
-    setTreatmentResults([
-      ...treatmentResults,
-      <Flex key={Date.now()} alignItems='center' flexDirection='column'>
-        {Object.keys(resultsObject).map((index) =>
-          resultsObject[index].isNormal ? (
-            <Flex key={index} flexDirection='row'>
-              <Text>
-                {resultsObject[index].name} : {resultsObject[index].value}{' '}
-              </Text>
-            </Flex>
-          ) : (
-            <Flex key={index} flexDirection='row'>
-              <Text color='red'>
-                {resultsObject[index].name} : {resultsObject[index].value}
-              </Text>
-            </Flex>
-          ),
-        )}
-      </Flex>,
-    ]);
-    */
-
-    setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length); // saves the number of tests performed, for use in statistics
+    setNbrTestPerformed(nbrTestPerformed + Object.keys(resultsObject).length);
   };
 
   const updateFeedback = (feedbackToDisplay) => {
@@ -202,24 +142,8 @@ export default function PerformCase() {
       feedback: feedbackToDisplay,
     };
     setFeedback([...feedback, feedbackToSave]);
-    /*
-    setFeedback([
-      ...feedback,
-      <Card key={currentIndex} variant='filled'>
-        <Accordion allowMultiple>
-          <AccordionItem>
-            <AccordionButton>
-              <Box as='span' flex='1' textAlign='center'>
-                Feedback från steg # {currentIndex + 1}
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>{feedbackToDisplay}</AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Card>,
-    ]);*/
   };
+
   const addFeedbackToStorage = (feedbackToDisplay) => {
     let feedbacks;
     try {

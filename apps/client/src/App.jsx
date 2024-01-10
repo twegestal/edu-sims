@@ -34,7 +34,7 @@ export default function App() {
               <Route path='/' element={<Home />} />
               <Route path='/profilePage' element={<ProfilePage />}></Route>
               <Route path='/case'>
-                <Route path=':caseid/:attemptid/:reload' element={<PerformCase />} />
+                <Route path=':caseid/:attemptid' element={<PerformCase />} />
               </Route>
               <Route
                 path='/manageCases'

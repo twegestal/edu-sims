@@ -35,10 +35,13 @@ export const attempt = db.define(
       type: DataTypes.INTEGER,
     },
     examination_results: {
-      type: DataTypes.TEXT,
+      type: DataTypes.JSON,
     },
     feedback: {
-      type: DataTypes.TEXT,
+      type: DataTypes.JSON,
+    },
+    index: {
+      type: DataTypes.INTEGER,
     },
   },
   {

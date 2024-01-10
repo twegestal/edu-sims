@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApi } from './useApi';
+import { useAuth } from './useAuth';
 
 export const useCases = () => {
   const createCaseApi = useApi('createCase');
@@ -14,6 +15,7 @@ export const useCases = () => {
   const addMedicalFieldApi = useApi('addMedicalField');
   const updateMedicalFieldApi = useApi('updateMedicalField');
   const deleteMedicalFieldApi = useApi('deleteMedicalField');
+  const getAttemptsApi = useApi('getAttempts');
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
@@ -21,6 +23,7 @@ export const useCases = () => {
   const [introductionStep, setIntroductionStep] = useState({});
   const [summaryStep, setSummaryStep] = useState({});
   const [newPublishment, setNewPublishment] = useState('');
+  const { user } = useAuth();
 
   const getAllCases = async () => {
     try {
@@ -136,6 +139,15 @@ export const useCases = () => {
     }
   };
 
+  const getAttempts = async () => {
+    try {
+      const response = await getAttemptsApi({ headers: { id: user.id } });
+      return response.data;
+    } catch (error) {
+      console.error('error fetching attempts ', error);
+    }
+  };
+
   const updateAttempt = async (
     attempt_id,
     is_finished,
@@ -145,6 +157,7 @@ export const useCases = () => {
     nbr_of_tests_performed,
     examination_results,
     feedback,
+    index,
   ) => {
     try {
       const result = await updateAttemptApi({
@@ -157,6 +170,7 @@ export const useCases = () => {
           nbr_of_tests_performed: nbr_of_tests_performed,
           examination_results: examination_results,
           feedback: feedback,
+          index: index,
         },
       });
       if (result.status === 200) {
@@ -185,5 +199,6 @@ export const useCases = () => {
     newPublishment,
     createAttempt,
     updateAttempt,
+    getAttempts,
   };
 };

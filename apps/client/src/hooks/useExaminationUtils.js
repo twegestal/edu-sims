@@ -160,7 +160,6 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
   };
 
   const randomizeNormalValue = (examinationId) => {
-  
     let examination = null;
     for (const examinationSubCategoryId of Object.keys(examinationList)) {
       for (const examinationIdSearch of Object.keys(examinationList[examinationSubCategoryId])) {
@@ -169,7 +168,6 @@ export const useExaminationUtils = (examinationStep, stepId, loading) => {
         }
       }
     }
-    
 
     if (examination.isRandomizable) {
       let randomizedValue = 0;

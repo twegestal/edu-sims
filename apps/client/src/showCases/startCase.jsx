@@ -3,47 +3,51 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
+import ConfirmStartCase from '../components/ConfirmStartCase.jsx';
 
-export default function StartCase({ caseId, caseToRandomise, published }) {
+export default function StartCase({ caseId, caseToRandomise, published, attemps }) {
   const { user } = useAuth();
   const { createAttempt } = useCases();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (caseToRandomise === caseId) {
-      postToAttemptNoReload();
+      postToAttempt();
     }
   }, [caseToRandomise]);
 
-  const postToAttemptNoReload = async () => {
-    setLoading(true);
-    let createdAttempt = [];
-    createdAttempt = await createAttempt(user.id, caseId);
-    return navigate(
-      '/case/caseid=' + caseId + '/attemptid=' + createdAttempt.id + '/reload=' + false,
-    );
+  const startCase = () => {
+    const attempt = attemps.find((e) => e.case_id === caseId);
+    if (attempt) {
+      setIsConfirmOpen(true);
+    } else {
+      postToAttempt();
+    }
   };
 
-  const postToAttemptReload = async () => {
+  const postToAttempt = async () => {
+    setIsConfirmOpen(false);
     setLoading(true);
     let createdAttempt = [];
     createdAttempt = await createAttempt(user.id, caseId);
-    return navigate(
-      '/case/caseid=' + caseId + '/attemptid=' + createdAttempt.id + '/reload=' + true,
-    );
+    return navigate('/case/caseid=' + caseId + '/attemptid=' + createdAttempt.id);
+  };
+
+  const continueCase = () => {
+    setIsConfirmOpen(false);
+  };
+
+  const closeConfirm = () => {
+    setIsConfirmOpen(false);
   };
 
   return (
     <>
       {user.isAdmin ? (
         published ? (
-          <Button
-            onClick={postToAttemptNoReload}
-            colorScheme='teal'
-            marginBottom='10%'
-            isLoading={loading}
-          >
+          <Button onClick={postToAttempt} colorScheme='teal' marginBottom='10%' isLoading={loading}>
             Starta fallet
           </Button>
         ) : (
@@ -52,7 +56,7 @@ export default function StartCase({ caseId, caseToRandomise, published }) {
             label='Fallet är inte publicerat och visas därför inte för studenter, men du som admin kan testa fallet'
           >
             <Button
-              onClick={postToAttemptNoReload}
+              onClick={postToAttempt}
               colorScheme='teal'
               marginBottom='10%'
               isLoading={loading}
@@ -62,24 +66,16 @@ export default function StartCase({ caseId, caseToRandomise, published }) {
           </Tooltip>
         )
       ) : (
-        <Button
-          onClick={postToAttemptNoReload}
-          colorScheme='teal'
-          marginBottom='10%'
-          isLoading={loading}
-        >
+        <Button onClick={startCase} colorScheme='teal' marginBottom='10%' isLoading={loading}>
           Starta fallet
         </Button>
       )}
-
-      {/* <Button
-          onClick={postToAttemptReload}
-          colorScheme='teal'
-          marginBottom='5%'
-          isLoading={loading}
-        >
-          Fortsätt fallet
-        </Button> */}
+      <ConfirmStartCase
+        isOpen={isConfirmOpen}
+        onClose={closeConfirm}
+        onRestart={postToAttempt}
+        onContinue={continueCase}
+      />
     </>
   );
 }

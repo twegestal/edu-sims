@@ -4,6 +4,7 @@ import * as object from '../models/object_index.js';
 import { insertSteps, updateSteps, deleteModules } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
+import { sortAttempts } from '../utils/caseUtils.js';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -1069,6 +1070,23 @@ export const getCaseRoutes = () => {
     }
   });
 
+  router.get('/attempt', async (req, res, _next) => {
+    const id = req.header('id');
+
+    if (!id) {
+      return res.status(400).json('Missing identifier');
+    }
+
+    try {
+      const result = await object.attempt.findAll({ where: { user_id: id, is_finished: false }});
+      const sortedResults = sortAttempts(result);
+      return res.status(200).json(sortedResults);
+    } catch (error) {
+      console.error('error fetching attempts ', error);
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
   router.post('/createAttempt', async (req, res, _next) => {
     if (req.header('case_id') == '') {
       res.status(404).json('Not Found');
@@ -1076,6 +1094,7 @@ export const getCaseRoutes = () => {
       const result = await object.attempt.create({
         user_id: req.header('user_id'),
         case_id: req.header('case_id'),
+        is_finished: false,
         //Timestamp_started is automaticly created by Sequlize
       });
       res.status(200).json(result);
@@ -1092,6 +1111,7 @@ export const getCaseRoutes = () => {
       nbr_of_tests_performed,
       examination_results,
       feedback,
+      index,
     } = req.body;
 
     if (!attempt_id) {
@@ -1108,6 +1128,7 @@ export const getCaseRoutes = () => {
             nbr_of_tests_performed: nbr_of_tests_performed,
             examination_results: examination_results,
             feedback: feedback,
+            index: index,
           },
           {
             where: {
@@ -1132,6 +1153,7 @@ export const getCaseRoutes = () => {
             nbr_of_tests_performed: nbr_of_tests_performed,
             examination_results: examination_results,
             feedback: feedback,
+            index: index,
           },
           {
             where: {
@@ -1146,43 +1168,6 @@ export const getCaseRoutes = () => {
         return res.status(500).json('Something went wrong');
       }
     }
-
-    // if (req.header('attempt_id') == '') {
-    //   res.status(404).json('Not Found');
-    // } else {
-    //   let result = [];
-    //   if (req.header('timestamp_finished') == '') {
-    //     result = await object.attempt.update(
-    //       {
-    //         is_finished: req.header('is_finished'),
-    //         faults: req.header('faults'),
-    //         correct_diagnosis: req.header('correct_diagnosis'),
-    //         nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
-    //       },
-    //       {
-    //         where: {
-    //           id: req.header('attempt_id'),
-    //         },
-    //       },
-    //     );
-    //   } else {
-    //     result = await object.attempt.update(
-    //       {
-    //         is_finished: req.header('is_finished'),
-    //         faults: req.header('faults'),
-    //         timestamp_finished: req.header('timestamp_finished'),
-    //         correct_diagnosis: req.header('correct_diagnosis'),
-    //         nbr_of_tests_performed: req.header('nbr_of_tests_performed'),
-    //       },
-    //       {
-    //         where: {
-    //           id: req.header('attempt_id'),
-    //         },
-    //       },
-    //     );
-    //   }
-    //   res.status(200).json(result);
-    // }
   });
 
   router.get('/getModuleTypes', async (_req, res, _next) => {
