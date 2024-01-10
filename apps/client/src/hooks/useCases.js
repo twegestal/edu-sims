@@ -16,6 +16,8 @@ export const useCases = () => {
   const updateMedicalFieldApi = useApi('updateMedicalField');
   const deleteMedicalFieldApi = useApi('deleteMedicalField');
   const getAttemptsApi = useApi('getAttempts');
+  const getSpecificAttemptApi = useApi('getSpecificAttempt');
+
 
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
@@ -23,6 +25,7 @@ export const useCases = () => {
   const [introductionStep, setIntroductionStep] = useState({});
   const [summaryStep, setSummaryStep] = useState({});
   const [newPublishment, setNewPublishment] = useState('');
+  const [specificAttempt, setSpecificAttempt] = useState([])
   const { user } = useAuth();
 
   const getAllCases = async () => {
@@ -148,6 +151,27 @@ export const useCases = () => {
     }
   };
 
+  const getSpecificAttempt = async (attempt_id) => {
+    try {
+      const response = await getSpecificAttemptApi({ headers: { attempt_id: attempt_id } });
+      if (response.status === 200) {
+        const data = response.data[[0]]
+        if (data.index == null){
+          data.index = 0;
+        }
+        if (data.feedback == null){
+          data.feedback = []
+        }
+        if (data.examination_results == null){
+          data.examination_results = []
+        }
+        setSpecificAttempt(data);
+      }
+    } catch (error) {
+      console.error('error fetching attempt data ', error);
+    }
+  };
+
   const updateAttempt = async (
     attempt_id,
     is_finished,
@@ -200,5 +224,7 @@ export const useCases = () => {
     createAttempt,
     updateAttempt,
     getAttempts,
+    getSpecificAttempt,
+    specificAttempt,
   };
 };

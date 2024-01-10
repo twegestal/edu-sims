@@ -1087,6 +1087,22 @@ export const getCaseRoutes = () => {
     }
   });
 
+  router.get('/specificAttempt', async (req, res, _next) => {
+    const attempt_id = req.header('attempt_id');
+
+    if (!attempt_id) {
+      return res.status(400).json('Missing identifier');
+    }
+
+    try {
+      const result = await object.attempt.findAll({ where: { id: attempt_id }});
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error('error fetching attempt ', error);
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
   router.post('/createAttempt', async (req, res, _next) => {
     if (req.header('case_id') == '') {
       res.status(404).json('Not Found');

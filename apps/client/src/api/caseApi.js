@@ -193,6 +193,11 @@ export const caseApi = (apiClient) => ({
     return packageResponse(response);
   },
 
+  getSpecificAttempt: async (headers) => {
+    const response = await apiClient.get(`${prefix}specificAttempt`, headers);
+    return packageResponse(response);
+  },
+
   updateAttempt: async (body) => {
     const response = await apiClient.put(`${prefix}updateAttempt`, body);
     return packageResponse(response);

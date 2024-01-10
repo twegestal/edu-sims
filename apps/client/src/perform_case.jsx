@@ -59,22 +59,27 @@ export default function PerformCase() {
   const [nbrTestPerformed, setNbrTestPerformed] = useState(0);
   const [wasCorrect, setWasCorrect] = useState(false);
   const editorRef = useRef(null);
-  const { caseById, getCaseById, updateAttempt } = useCases();
+  const { caseById, getCaseById, updateAttempt, getSpecificAttempt, specificAttempt } = useCases();
 
   useEffect(() => {
     const getCaseList = async () => {
       await getCaseById(caseid);
+      await getSpecificAttempt(attemptId);
+
       setLoading(false);
     };
     getCaseList();
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if (!loading) {
-      setCurrentStep(caseById[0]);
-      setCurrentIndex(caseById[0].index);
+      setCurrentIndex(specificAttempt.index);
+      setCurrentStep(caseById[specificAttempt.index]);
+      setFeedback(specificAttempt.feedback)
+      setTreatmentResults(specificAttempt.examination_results)
     }
   }, [caseById]);
+
 
   useEffect(() => {
     // When caseIsFinished variable is set to true, the attempt data will be updated
