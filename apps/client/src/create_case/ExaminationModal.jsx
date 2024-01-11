@@ -322,12 +322,12 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
                   <FormLabel fontWeight={'bold'}>Uppmaning</FormLabel>
                   <Textarea
                     marginBottom={'5px'}
-                    placeholder='Fyll i din uppmaning till användaren'
+                    placeholder='Fyll i din uppmaning till studenten'
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   />
 
-                  <FormLabel fontWeight={'bold'}>Utredningar att visa för användare</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Utredningar att visa för studenten</FormLabel>
                   {Object.entries(examinationCategories).map(([categoryId, name]) => (
                     <VStack key={'div' + categoryId} alignItems={'flex-start'} marginBottom={'5px'}>
                       <Heading as='h3' size='sm' key={categoryId}>

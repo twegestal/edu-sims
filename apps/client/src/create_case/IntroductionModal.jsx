@@ -75,7 +75,7 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
 
               <FormLabel fontWeight={'bold'}>Uppmaning</FormLabel>
               <Textarea
-                placeholder='Fyll i din uppmaning till användaren som en Ja/Nej-fråga'
+                placeholder='Fyll i din uppmaning till studenten som en Ja/Nej-fråga'
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
               ></Textarea>
