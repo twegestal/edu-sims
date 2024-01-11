@@ -62,5 +62,5 @@ A proxy has been set up in the Vite configuration. This means that API calls fro
 `pwd:` Admin1337!
 
 `user:`
-`email:` apa@apa.se
+`email:` user@user.user
 `pwd:` Aa1!Aa1!
