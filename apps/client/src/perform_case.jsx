@@ -122,8 +122,6 @@ export default function PerformCase() {
     let indexOfNextStep = caseById.findIndex((x) => x.index === nextIndex);
     attemptUpdateFunction();
 
-    //localStorage.setItem(caseid.toString() + 'index', JSON.stringify(nextIndex));
-
     setCurrentStep(caseById[indexOfNextStep]);
     setCurrentIndex(caseById[indexOfNextStep].index);
   };
@@ -141,7 +139,6 @@ export default function PerformCase() {
   };
 
   const updateFeedback = (feedbackToDisplay) => {
-    addFeedbackToStorage(feedbackToDisplay);
     const feedbackToSave = {
       title: `Feedback från steg # ${currentIndex + 1}`,
       feedback: feedbackToDisplay,
@@ -149,29 +146,7 @@ export default function PerformCase() {
     setFeedback([...feedback, feedbackToSave]);
   };
 
-  const addFeedbackToStorage = (feedbackToDisplay) => {
-    let feedbacks;
-    try {
-      feedbacks = JSON.parse(localStorage.getItem(caseid.toString()));
-    } catch (error) {
-      console.log(error);
-    }
 
-    if (feedbacks === null) {
-      let feedbacks = [];
-      feedbacks[0] = feedbackToDisplay;
-      localStorage.setItem(caseid.toString(), JSON.stringify(feedbacks));
-    } else {
-      feedbacks[feedbacks.length] = feedbackToDisplay;
-      localStorage.setItem(caseid.toString(), JSON.stringify(feedbacks));
-    }
-    //...
-    const storedNames = JSON.parse(localStorage.getItem(caseid.toString()));
-
-    //localStorage.removeItem(caseid.toString());
-    //localStorage.removeItem("feedbackArray");
-    const arr = JSON.parse(localStorage.getItem('feedbackArray'));
-  };
 
   const finishCase = () => {
     setCaseIsFinished(true);
