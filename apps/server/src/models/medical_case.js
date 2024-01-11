@@ -26,6 +26,9 @@ export const medical_case = db.define(
     published: {
       type: DataTypes.BOOLEAN,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+    }
   },
   {
     // Other model information goes here

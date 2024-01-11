@@ -3,6 +3,7 @@ import { useApi } from './useApi';
 
 export const useCases = () => {
   const createCaseApi = useApi('createCase');
+  const deleteCaseApi = useApi('deleteCase');
   const getAllCasesApi = useApi('getAllCases');
   const getCaseByIdApi = useApi('getCaseById');
   const getMedicalFieldsApi = useApi('getMedicalFields');
@@ -136,6 +137,17 @@ export const useCases = () => {
     }
   };
 
+  const deleteCase = async (caseId) => {
+    try {
+      const result = await deleteCaseApi({body: {
+        caseId: caseId,
+      }});
+      return result.status === 200;
+    } catch (error) {
+      console.error('error deleting case', error);
+    }
+  }
+
   const updateAttempt = async (
     attempt_id,
     is_finished,
@@ -181,5 +193,6 @@ export const useCases = () => {
     newPublishment,
     createAttempt,
     updateAttempt,
+    deleteCase,
   };
 };

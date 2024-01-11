@@ -8,6 +8,33 @@ import { validateCaseToPublish } from 'api';
 export const getCaseRoutes = () => {
   const router = Router();
 
+  router.delete('/', async (req, res, _next) => {
+    const { caseId } = req.body;
+
+    if (!caseId) {
+      return res.status(400).json('Missing body');
+    }
+    try {
+      const medicalCase = await object.medical_case.findOne({
+        where: {
+          id: caseId
+        }
+      });
+      if (!medicalCase) {
+        return res.status(404).json('Resource not found');
+      }
+      const response = await medicalCase.update({
+        active: false
+      });
+      if (!response) {
+        return res.status(500).json('Something went wrong');
+      }
+      return res.status(200).json('Resource deleted');
+    } catch (error) {
+      return res.status(500).json('Something went wrong');
+    }
+  });
+
   router.patch('/', async (req, res, _next) => {
     const { caseObject, caseId, removedModules } = req.body;
     console.log('removedModules: ', removedModules);
@@ -89,6 +116,9 @@ export const getCaseRoutes = () => {
   router.get('/getAllCases', async (_req, res, _next) => {
     try {
       const cases = await object.medical_case.findAll({
+        where: {
+          active: true,
+        },
         include: [
           {
             model: object.end_user,

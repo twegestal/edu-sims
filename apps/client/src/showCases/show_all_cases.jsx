@@ -26,25 +26,37 @@ import StartCase from './startCase.jsx';
 import { errorWithPathToString } from 'api';
 import LoadingSkeleton from '../loadingSkeleton.jsx';
 import { useNavigate } from 'react-router-dom';
+import Confirm from '../components/Confirm.jsx';
 
 export default function ShowAllCases() {
   const [caseToRandomise, setCaseToRandomise] = useState();
-  const { cases, getAllCases, medicalFields, getMedicalFields, publishCase, newPublishment } =
-    useCases();
+  const {
+    cases,
+    getAllCases,
+    medicalFields,
+    getMedicalFields,
+    publishCase,
+    newPublishment,
+    deleteCase,
+  } = useCases();
   const { user } = useAuth();
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [buttonsLoadingState, setButtonsLoadingState] = useState({});
   const navigate = useNavigate();
+  const [isDeleteCaseOpen, setIsDeleteCaseOpen] = useState(false);
+  const [caseToDelete, setCaseToDelete] = useState();
 
   useEffect(() => {
-    const fetchCases = async () => {
-      await getAllCases();
-      await getMedicalFields();
-      setLoading(false);
-    };
+    
     fetchCases();
   }, []);
+
+  const fetchCases = async () => {
+    await getAllCases();
+    await getMedicalFields();
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (loading == false) {
@@ -123,13 +135,32 @@ export default function ShowAllCases() {
     }
   };
 
-  const removeCase = (caseId) => {
-    handleButtonChange('remove', caseId);
-    if (confirm('Är du säker på att du vill ta bort fallet?')) {
-      //TODO: API call
-      console.log('Ta bort');
-    }
-    handleButtonChange('remove', caseId);
+  const removeCase = async () => {
+    handleButtonChange('remove', caseToDelete.id);
+
+    const response = await deleteCase(caseToDelete.id);
+
+    toast({
+      title: response ? 'Fall raderat' : 'Fall kunde inte raderas',
+      description: response
+        ? `Fallet ${caseToDelete.name} har raderats`
+        : `Fallet ${caseToDelete.name} kunde inte raderas`,
+      status: response ? 'success' : 'error',
+      duration: 9000,
+      position: 'top',
+      isClosable: true,
+    });
+
+    
+    handleButtonChange('remove', caseToDelete.id);
+    setIsDeleteCaseOpen(false);
+    setCaseToDelete(null);
+    await fetchCases();
+  };
+
+  const handleCloseDeleteCase = () => {
+    setIsDeleteCaseOpen(false);
+    setCaseToDelete(null);
   };
 
   const randomiseCase = () => {
@@ -217,7 +248,10 @@ export default function ShowAllCases() {
                               <Tooltip label='Ta bort' fontSize={'md'} placement='right' hasArrow>
                                 <IconButton
                                   icon={<DeleteIcon />}
-                                  onClick={() => removeCase(caseItem.id)}
+                                  onClick={() => {
+                                    setCaseToDelete(caseItem);
+                                    setIsDeleteCaseOpen(true);
+                                  }}
                                   isLoading={buttonsLoadingState['remove_' + caseItem.id]}
                                 />
                               </Tooltip>
@@ -256,6 +290,15 @@ export default function ShowAllCases() {
         <Button onClick={randomiseCase} marginTop={'30px'}>
           Slumpa fall
         </Button>
+      )}
+      {caseToDelete && (
+        <Confirm
+          isOpen={isDeleteCaseOpen}
+          onClose={handleCloseDeleteCase}
+          header={'Ta bort fall'}
+          body={`Är du säker på att du vill ta bort fallet ${caseToDelete.name}?`}
+          handleConfirm={removeCase}
+        />
       )}
     </>
   );
