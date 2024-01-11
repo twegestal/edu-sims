@@ -271,6 +271,7 @@ export default function ShowAllCases() {
                                   caseId={caseItem.id}
                                   caseToRandomise={caseToRandomise}
                                   attemps={attempts}
+                                  caseName={caseItem.name}
                                 />
                               </Stack>
                             )}

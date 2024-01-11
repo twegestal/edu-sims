@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth.jsx';
 import { useCases } from '../hooks/useCases.js';
 import ConfirmStartCase from '../components/ConfirmStartCase.jsx';
 
-export default function StartCase({ caseId, caseToRandomise, published, attemps }) {
+export default function StartCase({ caseId, caseToRandomise, published, attemps, caseName }) {
   const { user } = useAuth();
   const { createAttempt } = useCases();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function StartCase({ caseId, caseToRandomise, published, attemps 
 
   useEffect(() => {
     if (caseToRandomise === caseId) {
-      postToAttempt();
+      startCase();
     }
   }, [caseToRandomise]);
 
@@ -77,6 +77,7 @@ export default function StartCase({ caseId, caseToRandomise, published, attemps 
         onClose={closeConfirm}
         onRestart={postToAttempt}
         onContinue={continueCase}
+        caseName={caseName}
       />
     </>
   );
