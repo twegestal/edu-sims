@@ -228,7 +228,7 @@ export default function CaseNav(props) {
 
               <ModalFooter>
                 <Button colorScheme='blue' mr={3} onClick={props.onHomeClose}>
-                  Close
+                  Stäng
                 </Button>
               </ModalFooter>
             </ModalContent>
