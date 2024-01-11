@@ -80,7 +80,7 @@ export default function IntroductionModal({ isOpen, onClose, moduleData }) {
                 onChange={(e) => setPrompt(e.target.value)}
               ></Textarea>
 
-              <FormLabel fontWeight={'bold'}>Feedbeck för rätt svar</FormLabel>
+              <FormLabel fontWeight={'bold'}>Feedback för rätt svar</FormLabel>
               <Textarea
                 placeholder='Fyll i feedback för rätt svar'
                 value={feedbackCorrect}
