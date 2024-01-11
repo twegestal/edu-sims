@@ -1,10 +1,14 @@
 import { packageResponse } from '../utils/apiUtils.js';
-import { api } from './index.js';
 const prefix = 'case/';
 
 export const caseApi = (apiClient) => ({
   createCase: async (body) => {
     const response = await apiClient.post(`${prefix}`, body);
+    return packageResponse(response);
+  },
+
+  deleteCase: async (body) => {
+    const response = await apiClient.delete(`${prefix}`, body);
     return packageResponse(response);
   },
 

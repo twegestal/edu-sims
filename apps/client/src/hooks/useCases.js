@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 
 export const useCases = () => {
   const createCaseApi = useApi('createCase');
+  const deleteCaseApi = useApi('deleteCase');
   const getAllCasesApi = useApi('getAllCases');
   const getCaseByIdApi = useApi('getCaseById');
   const getMedicalFieldsApi = useApi('getMedicalFields');
@@ -171,6 +172,16 @@ export const useCases = () => {
       console.error('error fetching attempt data ', error);
     }
   };
+  const deleteCase = async (caseId) => {
+    try {
+      const result = await deleteCaseApi({body: {
+        caseId: caseId,
+      }});
+      return result.status === 200;
+    } catch (error) {
+      console.error('error deleting case', error);
+    }
+  }
 
   const updateAttempt = async (
     attempt_id,
@@ -226,5 +237,6 @@ export const useCases = () => {
     getAttempts,
     getSpecificAttempt,
     specificAttempt,
+    deleteCase,
   };
 };
