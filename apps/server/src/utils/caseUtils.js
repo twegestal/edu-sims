@@ -13,7 +13,14 @@ export const sortAttempts = (attempts) => {
     } else {
       map.set(element.dataValues.case_id, element.dataValues);
     }
-});
+  });
+
+  for (let [caseId, attemptData] of map){
+   if (attemptData.is_finished){
+      map.delete(caseId)
+    }
+  }
+
   const resultArray = Array.from(map, ([key, value]) => ({ case_id: key, ...value }));
   return resultArray;
 }

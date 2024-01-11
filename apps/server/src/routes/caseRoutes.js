@@ -1078,7 +1078,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const result = await object.attempt.findAll({ where: { user_id: id, is_finished: false }});
+      const result = await object.attempt.findAll({ where: { user_id: id}});
       const sortedResults = sortAttempts(result);
       return res.status(200).json(sortedResults);
     } catch (error) {
