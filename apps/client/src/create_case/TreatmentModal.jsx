@@ -263,15 +263,15 @@ export default function TreatmentModal({ isOpen, onClose, moduleData }) {
 
               <ModalBody>
                 <FormControl isRequired>
-                  <FormLabel fontWeight={'bold'}>Uppmaning till användaren</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Uppmaning till studenten</FormLabel>
 
                   <Textarea
                     value={prompt}
-                    placeholder={'Fyll i uppmaning till användaren'}
+                    placeholder={'Fyll i uppmaning till studenten'}
                     onChange={(e) => setPrompt(e.target.value)}
                   ></Textarea>
 
-                  <FormLabel fontWeight={'bold'}>Behandlingar att visa för användare</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Behandlingar att visa för studenten</FormLabel>
                   {treatmentTypes &&
                     Object.entries(treatmentTypes).map(([treatmentId, name]) => (
                       <VStack

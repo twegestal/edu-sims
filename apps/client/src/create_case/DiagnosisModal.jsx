@@ -157,10 +157,10 @@ export default function DiagnosisModal({ isOpen, onClose, moduleData, medicalFie
 
               <ModalBody>
                 <FormControl isRequired>
-                  <FormLabel fontWeight={'bold'}>Uppmaning till användaren</FormLabel>
+                  <FormLabel fontWeight={'bold'}>Uppmaning till studenten</FormLabel>
                   <Textarea
                     marginBottom={'5px'}
-                    placeholder='Fyll i din uppmaning till användaren'
+                    placeholder='Fyll i din uppmaning till studenten'
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   />

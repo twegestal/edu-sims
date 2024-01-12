@@ -134,9 +134,9 @@ export default function CreateDiagnosis({ updateCaseObject }) {
       ) : (
         <div>
           <FormControl>
-            <FormLabel>Uppmaning till användaren</FormLabel>
+            <FormLabel>Uppmaning till studenten</FormLabel>
             <Textarea
-              placeholder='Ange uppmaning till användaren här'
+              placeholder='Ange uppmaning till studenten här'
               onChange={(e) => setPrompt(e.target.value)}
             ></Textarea>
             <Card>
