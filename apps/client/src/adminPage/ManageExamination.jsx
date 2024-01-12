@@ -126,14 +126,14 @@ export default function ManageExamination({ examinationListEdited }) {
 
     if (examinationSubtype) {
       showToast(
-        'Undersökningen finns redan',
+        'Utredningen finns redan',
         `${newValue} är redan tillagd under ${examinationSubtype}`,
         'warning',
       );
     } else {
       const response = await updateExamination(newValue, examinationToEdit.id);
       if (response) {
-        showToast('Undersökning ändrad', `${newValue} har lagts till`, 'success');
+        showToast('Utredning ändrad', `${newValue} har lagts till`, 'success');
         await fetchExaminations();
       } else {
         showToast('Någonting gick fel', `${newValue} kunde inte läggas till`, 'warning');
@@ -150,12 +150,12 @@ export default function ManageExamination({ examinationListEdited }) {
   const handleDeleteExamination = async () => {
     const response = await deleteExamination(examinationToDelete.id);
     if (response === 200) {
-      showToast('Undersökning borttagen', `${examinationToDelete.name} har tagits bort`, 'success');
+      showToast('Utredning borttagen', `${examinationToDelete.name} har tagits bort`, 'success');
       await fetchExaminations();
       examinationListEdited();
     } else if (response === 400) {
       showToast(
-        'Undersökningen kan inte tas bort',
+        'Utredningen kan inte tas bort',
         `${examinationToDelete.name} kan inte tas bort, eftersom den är del av ett fall`,
         'warning',
       );
@@ -321,7 +321,7 @@ export default function ManageExamination({ examinationListEdited }) {
       if (message === 'Resource cannot be deleted') {
         showToast(
           'Underkategori kan inte tas bort',
-          `Underkategorin ${examinationSubtypeToDelete.name} kan inte tas bort eftersom den har undersökningar kopplade till sig`,
+          `Underkategorin ${examinationSubtypeToDelete.name} kan inte tas bort eftersom den har utredningar kopplade till sig`,
           'error',
         );
       } else {
@@ -434,7 +434,7 @@ export default function ManageExamination({ examinationListEdited }) {
                           </HStack>
                           <HStack>
                             <Input
-                              placeholder='Ny undersökning'
+                              placeholder='Ny utredning'
                               value={newExamination?.[subtype.id] || ''}
                               onChange={(e) => handleExaminationChange(subtype.id, e.target.value)}
                               w={'30%'}
@@ -449,7 +449,7 @@ export default function ManageExamination({ examinationListEdited }) {
                             <Table variant={'simple'}>
                               <Thead>
                                 <Tr>
-                                  <Th>Undersökning</Th>
+                                  <Th>Utredning</Th>
                                   <Th>Ändra</Th>
                                   <Th>Ta bort</Th>
                                 </Tr>
@@ -516,7 +516,7 @@ export default function ManageExamination({ examinationListEdited }) {
         <Confirm
           isOpen={isConfirmDeleteOpen}
           onClose={handleCloseConfirmDelete}
-          header={'Ta bort undersökning'}
+          header={'Ta bort utredning'}
           body={`Är du säker på att du vill ta bort ${examinationToDelete.name}?`}
           handleConfirm={handleDeleteExamination}
         />

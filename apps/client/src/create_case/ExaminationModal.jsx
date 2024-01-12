@@ -356,7 +356,7 @@ export default function ExaminationModal({ isOpen, onClose, moduleData }) {
 
                   {Object.keys(examinationToDisplay).length > 0 && (
                     <FormLabel fontWeight={'bold'}>
-                      Bocka i korrekta undersökningar för det här steget
+                      Bocka i korrekta utredningar för det här steget
                     </FormLabel>
                   )}
                   {Object.entries(examinationToDisplay).map(([categoryId], index) => (

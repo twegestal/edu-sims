@@ -16,7 +16,7 @@ export default function ManageLists() {
       <TabList>
         <Tab>Diagnoser</Tab>
         <Tab>Behandlingar</Tab>
-        <Tab>Undersökningar</Tab>
+        <Tab>Utredningar</Tab>
         <Tab>Normalvärden</Tab>
       </TabList>
       <TabPanels>
