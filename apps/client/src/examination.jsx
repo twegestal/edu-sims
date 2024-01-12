@@ -220,7 +220,7 @@ export default function Examination(props) {
               </Card>
             </>
           )}
-          {props.displayFeedback ? (
+          {props.displayFeedback && (
             <>
               <Feedback
                 onToggle={onToggle}
@@ -229,7 +229,8 @@ export default function Examination(props) {
                 feedbackToDisplay={feedbackToDisplay}
               />
             </>
-          ) : (
+          )}
+          {(props.displayFeedback === false) && (Object.keys(results).length > 0) && (
             <Button onClick={evaluateAnswer} colorScheme='teal' id='test'>
               Klar med utredningar
             </Button>
