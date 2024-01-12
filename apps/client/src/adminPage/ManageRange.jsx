@@ -52,7 +52,7 @@ export default function ManageRange({ update }) {
     const response = await editExaminationRange(examinationToEdit.id, min, max, unit);
     if (response) {
       showToast(
-        'Undersökning uppdaterad',
+        'Utredning uppdaterad',
         `Värden för ${examinationToEdit.name} har uppdaterats`,
         'success',
       );
@@ -84,7 +84,7 @@ export default function ManageRange({ update }) {
           <Input
             autoComplete='off'
             marginBottom={'5px'}
-            placeholder='Sök efter en undersökning...'
+            placeholder='Sök efter en utredning...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -95,7 +95,7 @@ export default function ManageRange({ update }) {
         <Table variant={'simple'}>
           <Thead>
             <Tr>
-              <Th>Undersökning</Th>
+              <Th>Utredning</Th>
               <Th>Undre gräns</Th>
               <Th>Övre gräns</Th>
               <Th>Enhet</Th>
