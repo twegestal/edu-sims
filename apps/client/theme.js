@@ -29,3 +29,4 @@ const theme = extendTheme({
 });
 
 export default extendTheme(theme);
+console.log('dede');
