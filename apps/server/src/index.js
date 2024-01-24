@@ -6,7 +6,7 @@ const port = 443;
 
 const server = createServer();
 
-console.log('test') //REMOVE THIS
+console.log('DeDe MegaDooDoo') //REMOVE THIS
 
 const privateKey = fs.readFileSync(process.env.PATH_TO_KEY, 'utf8');
 const certificate = fs.readFileSync(process.env.PATH_TO_CERT, 'utf8');
