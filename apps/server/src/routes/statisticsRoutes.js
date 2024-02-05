@@ -3,6 +3,10 @@ import * as object from '../models/object_index.js';
 import { Op, QueryTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
 
+/**
+ * This file defines a set of routes used for the application statistics
+ */
+
 export const getStatisticRoutes = () => {
   const router = Router();
 
