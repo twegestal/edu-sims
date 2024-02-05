@@ -4,7 +4,7 @@ import * as object from '../models/object_index.js';
 import { insertSteps, updateSteps, deleteModules } from '../utils/databaseUtils.js';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
-import { sortAttempts } from '../utils/caseUtils.js';
+import { fetchStepData, sortAttempts } from '../utils/caseUtils.js';
 
 export const getCaseRoutes = () => {
   const router = Router();
@@ -18,14 +18,14 @@ export const getCaseRoutes = () => {
     try {
       const medicalCase = await object.medical_case.findOne({
         where: {
-          id: caseId
-        }
+          id: caseId,
+        },
       });
       if (!medicalCase) {
         return res.status(404).json('Resource not found');
       }
       const response = await medicalCase.update({
-        active: false
+        active: false,
       });
       if (!response) {
         return res.status(500).json('Something went wrong');
@@ -1108,7 +1108,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const result = await object.attempt.findAll({ where: { user_id: id}});
+      const result = await object.attempt.findAll({ where: { user_id: id } });
       const sortedResults = sortAttempts(result);
       return res.status(200).json(sortedResults);
     } catch (error) {
@@ -1125,7 +1125,7 @@ export const getCaseRoutes = () => {
     }
 
     try {
-      const result = await object.attempt.findAll({ where: { id: attempt_id }});
+      const result = await object.attempt.findAll({ where: { id: attempt_id } });
       return res.status(200).json(result);
     } catch (error) {
       console.error('error fetching attempt ', error);
@@ -1223,6 +1223,54 @@ export const getCaseRoutes = () => {
       res.status(200).send(response);
     } catch (error) {
       res.status(500).send(error);
+    }
+  });
+
+  router.get('/', async (req, res, _next) => {
+    const caseId = req.query.caseId;
+    if (caseId) {
+      try {
+        const medicalCase = await object.medical_case.findOne({
+          where: {
+            id: caseId,
+          },
+        });
+        let steps = await object.step.findAll({
+          where: {
+            case_id: caseId,
+          },
+          order: [['index', 'ASC']],
+        });
+        steps = await fetchStepData(steps);
+
+        const caseObject = {
+          name: medicalCase.name,
+          caseId: caseId,
+          steps: steps,
+        };
+
+        if (!medicalCase) {
+          return res.status(404).json('Resource not found');
+        }
+
+        //return res.status(200).send(medicalCase);
+        return res.status(200).send(caseObject);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json('Something went wrong.');
+      }
+    } else {
+      try {
+        const medicalCases = await object.medical_case.findAll();
+
+        if (medicalCases.length < 1) {
+          return res.status(404).json('Resource not found.');
+        }
+        return res.status(200).send(medicalCases);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json('Something went wrong.');
+      }
     }
   });
 
