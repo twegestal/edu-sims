@@ -3,69 +3,84 @@ import * as object from '../models/object_index.js';
 import { hashPassword } from '../utils/crypting.js';
 import { generateRandomPassword, generateRegistrationLink } from '../utils/userUtils.js';
 
+/**
+ * This file defines a set of routes under the '/user' path.
+ * It's responsible for handling user-related operations such as retrieving user information,
+ * deleting user information, managing user groups
+ */
+
 export const getUserRoutes = () => {
   const router = Router();
 
-  router.get('/', async (req, res, next) => {
-    const user = await object.end_user.findOne({
-      where: {
-        id: req.header('user_id'),
-      },
-    });
+  router.get('/', async (req, res, _next) => {
+    const userId = req.header('user_id');
 
-    if (user === null) {
-      res.status(404).json('User not found'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-    } else {
-      res.status(200).json(user);
+    if (!userId) {
+      return res.status(400).json('Missing identifier');
     }
-  });
-
-  router.delete('', async (req, res, next) => {
-    /*
-        Query the database to see if the user exists:
-        */
-    const user = await object.end_user.findOne({
-      where: {
-        id: req.body.user_id,
-      },
-    });
-
-    if (user === null) {
-      res.status(400).json('User not found'); //TODO: ändra felmeddelandet alternativt skriv det någon annanstans?
-    } else {
-      await end_user.destroy({
+    try {
+      const user = await object.end_user.findOne({
         where: {
-          id: user.id,
+          id: req.header(userId),
         },
       });
 
-      res.status(200).json('User removed');
+      if (!user) {
+        return res.status(404).json('Resource not found');
+      }
+
+      res.status(200).send(user);
+    } catch (error) {
+      console.error('Error fetching user ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
-  router.delete('/delete-all-users', async (req, res, next) => {
-    //await object.end_user.truncate();
-    //metoden ovan funkar inte när det finns foreign key constraints, jag blev lite skraj och har inte fortsatt :)
-    res.status(200).json('All users removed');
+  router.delete('/', async (req, res, _next) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json('Missing resource identifier');
+    }
+
+    try {
+      const user = await object.end_user.findOne({ where: { id: userId } });
+
+      if (user === null) {
+        return res.status(404).json('Resource not found');
+      }
+
+      await user.destroy();
+      res.status(200).json('Resource removed');
+    } catch (error) {
+      console.error('error deleting user ', error);
+      res.status(500).json('Something went wrong');
+    }
   });
 
   router.get('/getAllUsers', async (req, res, _next) => {
-    const request_user = await object.end_user.findOne({
-      where: {
-        id: req.header('user_id'),
-      },
-    });
-    //Checks if the user_id the request comes with belongs to an admin
-    if (request_user.is_admin == true) {
-      const user = await object.end_user.findAll();
+    const id = req.header('user_id');
 
-      if (user === null) {
-        res.status(404).json('No users found');
-      } else {
-        res.status(200).json(user);
+    if (!id) {
+      return res.status(400).json('Missing identifier');
+    }
+
+    try {
+      const user = object.end_user.findOne({ where: { id: id } });
+
+      if (!user) {
+        return res.status(404).json('Could not find resource');
       }
-    } else {
-      res.status(404).json('Only admins can perform this request');
+
+      if (!user.is_admin) {
+        return res.status(403).json('Not authorized for selected resource');
+      }
+
+      const users = object.end_user.findAll();
+      res.status(200).send(users);
+    } catch (error) {
+      console.error('error fetching all users ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -100,41 +115,46 @@ export const getUserRoutes = () => {
     }
   });
 
-  router.put('/assingAdminPrivilege', async (req, res, next) => {
-    const result = await object.end_user.update(
-      {
-        is_admin: true,
-      },
-      {
-        where: {
-          id: req.header('user_id'),
-        },
-      },
-    );
+  router.put('/assingAdminPrivilege', async (req, res, _next) => {
+    const id = req.header('user_id');
 
-    if (result === null) {
-      res.status(404).json('No user found');
-    } else {
-      res.status(200).json('User set as admin');
+    if (!id) {
+      return res.status(400).json('Missing identifier');
+    }
+
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+      if (user === null) {
+        return res.status(404).json('Resource not found');
+      }
+
+      await user.update({ is_admin: true });
+      res.status(200).json('Resource updated');
+    } catch (error) {
+      console.error('error assigning admin priviledge ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
-  router.put('/revokeAdminPrivilege', async (req, res, next) => {
-    const result = await object.end_user.update(
-      {
-        is_admin: false,
-      },
-      {
-        where: {
-          id: req.header('user_id'),
-        },
-      },
-    );
+  router.put('/revokeAdminPrivilege', async (req, res, _next) => {
+    const id = req.header('user_id');
 
-    if (result === null) {
-      res.status(404).json('No user found');
-    } else {
-      res.status(200).json('User set as not admin');
+    if (!id) {
+      return res.status(400).json('Missing identifier');
+    }
+
+    try {
+      const user = await object.end_user.findOne({ where: { id: id } });
+
+      if (user === null) {
+        return res.status(404).json('Resource not found');
+      }
+
+      await user.update({ is_admin: false });
+      res.status(200).json('Resource updated');
+    } catch (error) {
+      console.error('error revoking admin priviledge ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -192,7 +212,8 @@ export const getUserRoutes = () => {
       }
       res.status(400).json('Could not parse the request');
     } catch (error) {
-      res.status(500).json('Internal Server Error');
+      console.error('error deactivating user group ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -210,7 +231,8 @@ export const getUserRoutes = () => {
       }
       res.status(200).send(userGroups);
     } catch (error) {
-      res.status(500).json('Internal Server Error');
+      console.error('error fetching user groups ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -260,7 +282,7 @@ export const getUserRoutes = () => {
       }
     } catch (error) {
       console.error('error in update-password: ', error);
-      res.status(500).json('Internal Server Error');
+      res.status(500).json('Something went wrong');
     }
   });
 
@@ -279,27 +301,33 @@ export const getUserRoutes = () => {
         res.status(404).json('Could not find resource');
       }
     } catch (error) {
-      console.error('error in update-password: ', error);
-      res.status(500).json('Internal Server Error');
+      console.error('error updating password ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
   router.patch('/updateUsername', async (req, res, _next) => {
     const id = req.header('id');
     const { newUsername } = req.body;
-    const sameUsername = await object.end_user.findOne({ where: { email: newUsername } });
 
-    if (sameUsername !== null) {
-      res.status(400).json('Email is already registered');
-    } else {
-      const userToUpdate = await object.end_user.findOne({ where: { id: id } });
+    try {
+      const sameUsername = await object.end_user.findOne({ where: { email: newUsername } });
 
-      if (userToUpdate) {
-        const result = await userToUpdate.update({ email: newUsername });
-        res.status(201).send(result);
+      if (sameUsername !== null) {
+        res.status(400).json('Resource already exists');
       } else {
-        res.status(404).json('Could not find resource');
+        const userToUpdate = await object.end_user.findOne({ where: { id: id } });
+
+        if (userToUpdate) {
+          const result = await userToUpdate.update({ email: newUsername });
+          res.status(201).send(result);
+        } else {
+          res.status(404).json('Could not find resource');
+        }
       }
+    } catch (error) {
+      console.error('error updating username ', error);
+      res.status(500).json('Something went wrong');
     }
   });
 
