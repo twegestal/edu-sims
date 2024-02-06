@@ -6,6 +6,10 @@ import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
 import { fetchStepData, sortAttempts } from '../utils/caseUtils.js';
 
+/**
+ * This file contains routes for the REST API that serves data concerning medical cases.
+ */
+
 export const getCaseRoutes = () => {
   const router = Router();
 
@@ -182,7 +186,6 @@ export const getCaseRoutes = () => {
 
   router.patch('/medicalField', async (req, res, _next) => {
     const { id, name } = req.body;
-    console.log('Are we here?');
 
     if (!id || !name) {
       return res.status(400).json('Missing body');
@@ -1241,7 +1244,7 @@ export const getCaseRoutes = () => {
           },
           order: [['index', 'ASC']],
         });
-        steps = await fetchStepData(steps);
+        steps = await fetchStepData(steps, medicalCase.medical_field_id);
 
         const caseObject = {
           name: medicalCase.name,
@@ -1253,10 +1256,9 @@ export const getCaseRoutes = () => {
           return res.status(404).json('Resource not found');
         }
 
-        //return res.status(200).send(medicalCase);
         return res.status(200).send(caseObject);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching case', error);
         return res.status(500).json('Something went wrong.');
       }
     } else {

@@ -1,5 +1,10 @@
 import * as object from '../models/object_index.js';
 
+/**
+ * This file contains helper methods used by caseRoutes.js. All the database queries in this file are wrapped in a try-catch block
+ * in the calling method in caseRoutes.js.
+ */
+
 export const sortAttempts = (attempts) => {
   const map = new Map();
 
@@ -25,7 +30,7 @@ export const sortAttempts = (attempts) => {
   return resultArray;
 };
 
-export const fetchStepData = async (steps) => {
+export const fetchStepData = async (steps, medicalFieldId) => {
   for (let i = 0; i < steps.length; i++) {
     let step = steps[i];
     switch (step.module_type_identifier) {
@@ -36,6 +41,21 @@ export const fetchStepData = async (steps) => {
       }
       case 1: {
         const stepData = await fetchExaminationStep(step.step_id);
+        step.dataValues = { ...step.dataValues, stepData: stepData };
+        break;
+      }
+      case 2: {
+        const stepData = await fetchDiagnosisStep(step.step_id, medicalFieldId);
+        step.dataValues = { ...step.dataValues, stepData: stepData };
+        break;
+      }
+      case 3: {
+        const stepData = await fetchTreatmentStep(step.step_id);
+        step.dataValues = { ...step.dataValues, stepData: stepData };
+        break;
+      }
+      case 4: {
+        const stepData = await fetchSummaryStep(step.step_id);
         step.dataValues = { ...step.dataValues, stepData: stepData };
         break;
       }
@@ -67,48 +87,12 @@ const fetchExaminationStep = async (stepId) => {
 
   return stepData;
 };
-/* 
-const fetchExaminationsToDisplay = async (examinationsToDisplay) => {
-  let examinationToDisplay = {};
-  const examinationList = await object.examination_list.findAll();
-  const examinationTypes = await object.examination_type.findAll();
-  const examinationSubTypes = await object.examination_subtype.findAll();
-
-  console.log('examination_to_display:', examinationsToDisplay);
-
-  Object.entries(examinationsToDisplay).map(([examinationType, examinationSubTypeArray]) => {
-    const filteredType = examinationTypes.filter(
-      (examination) => examination.id === examinationType,
-    );
-
-    const examinationTypeName = filteredType[0].name;
-
-    console.log('examtypename:', examinationTypeName);
-
-    let subTypes = [];
-    examinationSubTypeArray.map((element) => {
-      const filteredSubType = examinationSubTypes.filter(
-        (examinationSubtype) => examinationSubtype.id === element,
-      );
-
-      const subTypeName = filteredSubType[0].name;
-      subTypes[subTypeName] = [];
-    });
-
-    examinationToDisplay[examinationTypeName] = subTypes;
-  });
-  console.log('exam2diw:', examinationToDisplay);
-  return examinationToDisplay;
-};
- */
 
 const fetchExaminationsToDisplay = async (examinationsToDisplay) => {
   let examinationToDisplay = {};
-  const examinationList = await object.examination_list.findAll();
+  const examinationList = await object.examination_list.findAll({ order: [['name', 'ASC']] });
   const examinationTypes = await object.examination_type.findAll();
   const examinationSubTypes = await object.examination_subtype.findAll();
-
-  console.log('examination_to_display:', examinationsToDisplay);
 
   for (const [examinationType, examinationSubTypeArray] of Object.entries(examinationsToDisplay)) {
     const filteredType = examinationTypes.find((examination) => examination.id === examinationType);
@@ -116,15 +100,16 @@ const fetchExaminationsToDisplay = async (examinationsToDisplay) => {
     if (filteredType) {
       const examinationTypeName = filteredType.name;
 
-      console.log('examtypename:', examinationTypeName);
-
       let subTypes = {};
       for (const element of examinationSubTypeArray) {
         const filteredSubType = examinationSubTypes.find((subType) => subType.id === element);
 
         if (filteredSubType) {
           const subTypeName = filteredSubType.name;
-          subTypes[subTypeName] = [];
+
+          subTypes[subTypeName] = examinationList.filter(
+            (examination) => examination.examination_subtype_id === filteredSubType.id,
+          );
         }
       }
 
@@ -132,6 +117,73 @@ const fetchExaminationsToDisplay = async (examinationsToDisplay) => {
     }
   }
 
-  console.log('exam2diw:', examinationToDisplay);
   return examinationToDisplay;
+};
+
+const fetchDiagnosisStep = async (stepId, medicalFieldId) => {
+  const stepData = await object.diagnosis.findOne({
+    where: {
+      id: stepId,
+    },
+  });
+
+  stepData.dataValues.diagnosis_list = await object.diagnosis_list.findAll({
+    where: { medical_field_id: medicalFieldId },
+  });
+
+  return stepData;
+};
+
+const fetchTreatmentStep = async (stepId) => {
+  const stepData = await object.treatment.findOne({
+    where: {
+      id: stepId,
+    },
+  });
+
+  stepData.treatments_to_display = await fetchTreatmentsToDisplay(stepData.treatments_to_display);
+
+  return stepData;
+};
+
+const fetchTreatmentsToDisplay = async (treatmentsToDisplay) => {
+  let treatmentToDisplay = {};
+  const treatmentList = await object.treatment_list.findAll({ order: [['name', 'ASC']] });
+  const treatmentTypes = await object.treatment_type.findAll();
+  const treatmentSubtypes = await object.treatment_subtype.findAll();
+
+  for (const [treatmentType, treatmentSubtypeArray] of Object.entries(treatmentsToDisplay)) {
+    const filteredType = treatmentTypes.find((treatment) => treatment.id === treatmentType);
+
+    if (filteredType) {
+      const treatmentTypeName = filteredType.name;
+
+      let subTypes = {};
+      for (const element of treatmentSubtypeArray) {
+        const filteredSubtype = treatmentSubtypes.find((subType) => subType.id === element);
+
+        if (filteredSubtype) {
+          const subTypeName = filteredSubtype.name;
+
+          subTypes[subTypeName] = treatmentList.filter(
+            (treatment) => treatment.treatment_subtype_id === filteredSubtype.id,
+          );
+        }
+      }
+
+      treatmentToDisplay[treatmentTypeName] = subTypes;
+    }
+  }
+
+  return treatmentToDisplay;
+};
+
+const fetchSummaryStep = async (stepId) => {
+  const stepData = await object.summary.findOne({
+    where: {
+      id: stepId,
+    },
+  });
+
+  return stepData;
 };
