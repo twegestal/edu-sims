@@ -1,12 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Card, CardBody, CardHeader, Collapse, HStack, Text, VStack, Icon } from '@chakra-ui/react';
-import { AddIcon, CloseIcon, LockIcon } from '@chakra-ui/icons';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Collapse,
+  HStack,
+  Text,
+  VStack,
+  Icon,
+  Tooltip,
+  Image,
+} from '@chakra-ui/react';
+import { AddIcon, CloseIcon, LockIcon, WarningIcon } from '@chakra-ui/icons';
 import { getMockSteps } from './ExampleData';
 import Introduction from './Introduction';
 import Examination from './Examination';
 import Diagnosis from './Diagnosis';
 import Treatment from './Treatment';
 import Summary from './Summary';
+import introIcon from '../images/introIcon.png';
+import examIcon from '../images/examIcon.png';
+import diagnosisIcon from '../images/diagnosisIcon.png';
+import questionMarkIcon from '../images/Black_question_mark.png';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -15,6 +30,7 @@ export default function DisplayCase() {
   const [openCardIndex, setOpenCardIndex] = useState(null);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [isFinishedArray, setIsFinishedArray] = useState(new Array(steps.length).fill(false));
+  const [faultsArray, setFaultsArray] = useState(new Array(steps.length).fill(false));
 
   const onToggle = (index) => {
     setOpenCardIndex((prevIndex) => {
@@ -26,12 +42,24 @@ export default function DisplayCase() {
     });
   };
 
+  useEffect(() => {
+    console.log('faulsArr:', faultsArray);
+  }, [faultsArray]);
+
   const incrementActiveStepIndex = () => {
     setActiveStepIndex(activeStepIndex + 1);
   };
 
   const updateIsFinishedArray = (index) => {
     setIsFinishedArray((prevState) => {
+      const newState = [...prevState];
+      newState[index] = true;
+      return newState;
+    });
+  };
+
+  const updateFaultsArray = (index) => {
+    setFaultsArray((prevState) => {
       const newState = [...prevState];
       newState[index] = true;
       return newState;
@@ -61,6 +89,85 @@ export default function DisplayCase() {
     );
   };
 
+  const getFaultsIcon = (index) => {
+    if (faultsArray[index]) {
+      return (
+        <Tooltip label='Det fanns ett fel i svaret på detta steg' fontSize='md'>
+          <WarningIcon />
+        </Tooltip>
+      );
+    }
+    return null;
+  };
+
+  const getImage = (moduleTypeIdentifier, index) => {
+    if (!isFinishedArray[index] && index !== activeStepIndex) {
+      return (
+        <Image
+          width='12%'
+          src={questionMarkIcon}
+          alt='Okänd'
+          /* minW='12%' */
+          maxW='50px'
+          maxH='50px'
+          minW='40px'
+          minH='40px'
+        />
+      );
+    }
+    switch (moduleTypeIdentifier) {
+      case 0: {
+        return (
+          <Image
+            width='12%'
+            src={introIcon}
+            alt='Introduktion'
+            /* minW='12%' */
+            maxW='50px'
+            maxH='50px'
+            minW='40px'
+            minH='40px'
+          />
+        );
+      }
+      case 1: {
+        return (
+          <Image
+            width='12%'
+            src={examIcon}
+            alt='Utredning'
+            /* minW='12%' */
+            maxW='50px'
+            maxH='50px'
+            minW='40px'
+            minH='40px'
+          />
+        );
+      }
+      case 2: {
+        return (
+          <Image
+            width='12%'
+            src={diagnosisIcon}
+            alt='Diagnos'
+            /* minW='12%' */
+            maxW='50px'
+            maxH='50px'
+            minW='40px'
+            minH='40px'
+          />
+        );
+      }
+    }
+  };
+
+  const getModuleName = (moduleTypeIdentifier, index) => {
+    if (!isFinishedArray[index] && index !== activeStepIndex) {
+      return '(❁´◡`❁)';
+    }
+    return moduleTypeTable[moduleTypeIdentifier];
+  };
+
   const CircleIcon = (props) => (
     <Icon viewBox='0 0 200 200' boxSize='4' {...props}>
       <path fill='currentColor' d='M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0' />
@@ -76,6 +183,7 @@ export default function DisplayCase() {
             index={index}
             updateIsFinishedArray={updateIsFinishedArray}
             incrementActiveStepIndex={incrementActiveStepIndex}
+            updateFaultsArray={updateFaultsArray}
           />
         );
       }
@@ -86,6 +194,7 @@ export default function DisplayCase() {
             index={index}
             updateIsFinishedArray={updateIsFinishedArray}
             incrementActiveStepIndex={incrementActiveStepIndex}
+            updateFaultsArray={updateFaultsArray}
           />
         );
       }
@@ -96,6 +205,7 @@ export default function DisplayCase() {
             index={index}
             updateIsFinishedArray={updateIsFinishedArray}
             incrementActiveStepIndex={incrementActiveStepIndex}
+            updateFaultsArray={updateFaultsArray}
           />
         );
       }
@@ -106,6 +216,7 @@ export default function DisplayCase() {
             index={index}
             updateIsFinishedArray={updateIsFinishedArray}
             incrementActiveStepIndex={incrementActiveStepIndex}
+            updateFaultsArray={updateFaultsArray}
           />
         );
       }
@@ -116,6 +227,7 @@ export default function DisplayCase() {
             index={index}
             updateIsFinishedArray={updateIsFinishedArray}
             incrementActiveStepIndex={incrementActiveStepIndex}
+            updateFaultsArray={updateFaultsArray}
           />
         );
       }
@@ -127,11 +239,16 @@ export default function DisplayCase() {
       <VStack margin='1' id='stepStack' alignItems='stretch' spacing='1'>
         {steps.map((step, index) => (
           <Card key={index}>
-            <CardHeader>
+            <CardHeader margin='-0.75'>
               <HStack justify='space-between'>
-                <Text>{moduleTypeTable[step.module_type_identifier]}</Text>
                 <HStack spacing='8'>
-                  {getProgressIcon(index)}
+                  {getImage(step.module_type_identifier, index)}
+                  <Text>{getModuleName(step.module_type_identifier, index)}</Text>
+                </HStack>
+
+                <HStack spacing='8'>
+                  {getFaultsIcon(index)}
+                  {/* {getProgressIcon(index)} */}
                   {getControlIcon(index)}
                 </HStack>
               </HStack>

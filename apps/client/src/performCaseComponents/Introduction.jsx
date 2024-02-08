@@ -14,6 +14,7 @@ export default function Introduction({
   index,
   updateIsFinishedArray,
   incrementActiveStepIndex,
+  updateFaultsArray,
 }) {
   const [isFinished, setIsFinished] = useState(false);
 
@@ -21,6 +22,8 @@ export default function Introduction({
     setIsFinished(true);
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
+    //TODO: if skiten var fel:
+    updateFaultsArray(index);
   };
   return (
     <>
