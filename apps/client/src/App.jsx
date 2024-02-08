@@ -13,6 +13,7 @@ import NavBar from './components/NavBar.jsx';
 import CaseBuilder from './create_case/CaseBuilder.jsx';
 import ManageLists from './adminPage/ManageLists.jsx';
 import WithAdminAuth from './adminPage/WithAdminAuth.jsx';
+import DisplayCase from './performCaseComponents/DisplayCase.jsx';
 
 export default function App() {
   const { user } = useAuth();
@@ -36,6 +37,8 @@ export default function App() {
               <Route path='/case'>
                 <Route path=':caseid/:attemptid' element={<PerformCase />} />
               </Route>
+              <Route path='/caseRedux' element={<DisplayCase />} />
+
               <Route
                 path='/manageCases'
                 element={<WithAdminAuth>{() => <ManageCases />}</WithAdminAuth>}
