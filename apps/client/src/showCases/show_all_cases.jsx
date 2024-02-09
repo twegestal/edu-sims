@@ -47,8 +47,12 @@ export default function ShowAllCases() {
   const [attempts, setAttempts] = useState(null);
   const [attemptsFetched, setAttemptsFetched] = useState(false);
   const navigate = useNavigate();
+
   const [isDeleteCaseOpen, setIsDeleteCaseOpen] = useState(false);
   const [caseToDelete, setCaseToDelete] = useState();
+
+  const [isToggleCaseOpen, setIsToggleCaseOpen] = useState(false);
+  const [caseToPublish, setCaseToPublish] = useState();
 
   useEffect(() => {
     fetchCases();
@@ -104,52 +108,9 @@ export default function ShowAllCases() {
     return medicalField ? medicalField.name : 'Unknown';
   };
 
-  const handlePublish = async (caseId, isPublished) => {
-    if (isPublished) {
-      handleButtonChange('unpublish', caseId);
-      if (confirm('Är du säker på att du vill avpublicera?')) {
-        const response = await publishCase(caseId, isPublished);
-        if (response != undefined) {
-          if (response.errors) {
-            toast({
-              title: 'Fel vid publicering av fall',
-              description: errorWithPathToString(response.errors[0]),
-              status: 'error',
-              duration: 9000,
-              position: 'top',
-              isClosable: true,
-            });
-          }
-        }
-      }
-      handleButtonChange('unpublish', caseId);
-    }
-    if (!isPublished) {
-      handleButtonChange('publish', caseId);
-      if (confirm('Är du säker på att du vill publicera?')) {
-        const response = await publishCase(caseId, isPublished);
-        if (response != undefined) {
-          if (response.errors) {
-            toast({
-              title: 'Fel vid publicering av fall',
-              description: errorWithPathToString(response.errors[0]),
-              status: 'error',
-              duration: 9000,
-              position: 'top',
-              isClosable: true,
-            });
-          }
-        }
-      }
-      handleButtonChange('publish', caseId);
-    }
-  };
-
   const removeCase = async () => {
     handleButtonChange('remove', caseToDelete.id);
-
     const response = await deleteCase(caseToDelete.id);
-
     toast({
       title: response ? 'Fall raderat' : 'Fall kunde inte raderas',
       description: response
@@ -167,9 +128,48 @@ export default function ShowAllCases() {
     await fetchCases();
   };
 
+  /**
+   * Use case needs to be updated. As of current, a successful API-call is made when it returns 'undefined'
+   * An answer which actually is defined is one which has error-answers in it.
+   */
+
+  const flipCasePublished = async () => {
+    const casePublished = caseToPublish.published;
+    const caseId = caseToPublish.id;
+    handleButtonChange(casePublished ? 'unbublish' : 'publish', caseId);
+    const response = await publishCase(caseId, casePublished);
+    if(response) {
+      toast({
+        title: 'Fel vid uppdatering av fall',
+        description: errorWithPathToString(response.errors[0]),
+        status: 'error',
+        duration: 9000,
+        position: 'top',
+        isClosable: true,
+      })
+    } else {
+        toast({
+          title: 'Fallet uppdaterades korrekt',
+          status: 'success',
+          description: casePublished ? 'Fallet är avpublicerat' : 'Fallet är publicerat', 
+          duration: 9000,
+          position: 'top',
+          isClosable: true,
+        });
+    }
+    handleButtonChange(casePublished ? 'unpublish' : 'publish', caseId);
+    setIsToggleCaseOpen(false);
+    setCaseToPublish(null);
+  }
+
   const handleCloseDeleteCase = () => {
     setIsDeleteCaseOpen(false);
     setCaseToDelete(null);
+  };
+
+  const handleCloseTogglePublish = () => {
+    setIsToggleCaseOpen(false);
+    setCaseToPublish(null)
   };
 
   const randomiseCase = () => {
@@ -248,7 +248,10 @@ export default function ShowAllCases() {
                               >
                                 <IconButton
                                   icon={caseItem.published ? <BiHide /> : <BiShow />}
-                                  onClick={() => handlePublish(caseItem.id, caseItem.published)}
+                                  onClick={() => {
+                                    setCaseToPublish(caseItem)
+                                    setIsToggleCaseOpen(true);
+                                  }}
                                   isLoading={
                                     caseItem.published
                                       ? buttonsLoadingState['unpublish_' + caseItem.id]
@@ -324,6 +327,15 @@ export default function ShowAllCases() {
           body={`Är du säker på att du vill ta bort fallet ${caseToDelete.name}?`}
           handleConfirm={removeCase}
         />
+      )}
+      {caseToPublish && (
+        <Confirm
+          isOpen={isToggleCaseOpen}
+          onClose={handleCloseTogglePublish}
+          header={caseToPublish.published ? `Avpublicera fall` : `Publicera fall`}
+          body={caseToPublish.published ? `Är du säker på att du vill avpublicera fallet ${caseToPublish.name}` : `Är du säker på att du vill publicera fallet ${caseToPublish.name}`}
+          handleConfirm={flipCasePublished}
+          />
       )}
     </>
   );
