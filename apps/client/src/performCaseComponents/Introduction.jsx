@@ -44,7 +44,11 @@ export default function Introduction({
 
         <Text align='left'>{stepData.prompt}</Text>
       </VStack>
-      {isFinished === false && <Button onClick={finishStep}>Gör färdigt steget</Button>}
+      {isFinished === false && (
+        <Button bg='fail.bg' onClick={finishStep}>
+          Gör färdigt steget
+        </Button>
+      )}
     </>
   );
 }

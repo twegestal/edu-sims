@@ -11,7 +11,15 @@ import {
   Tooltip,
   Image,
 } from '@chakra-ui/react';
-import { AddIcon, CloseIcon, LockIcon, WarningIcon } from '@chakra-ui/icons';
+import {
+  AddIcon,
+  CloseIcon,
+  LockIcon,
+  WarningIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from '@chakra-ui/icons';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getMockSteps } from './ExampleData';
 import Introduction from './Introduction';
 import Examination from './Examination';
@@ -21,7 +29,9 @@ import Summary from './Summary';
 import introIcon from '../images/introIcon.png';
 import examIcon from '../images/examIcon.png';
 import diagnosisIcon from '../images/diagnosisIcon.png';
-import questionMarkIcon from '../images/Black_question_mark.png';
+import treatmentIcon from '../images/treatmentIcon.png';
+import summaryIcon from '../images/summaryIcon.png';
+import questionMarkIcon from '../images/questionMarkIcon.png';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -69,9 +79,9 @@ export default function DisplayCase() {
   const getControlIcon = (index) => {
     if (index === activeStepIndex || isFinishedArray[index]) {
       return index === openCardIndex ? (
-        <CloseIcon onClick={() => onToggle(index)} />
+        <FaChevronUp onClick={() => onToggle(index)} />
       ) : (
-        <AddIcon onClick={() => onToggle(index)} />
+        <FaChevronDown onClick={() => onToggle(index)} />
       );
     } else {
       return <LockIcon />;
@@ -150,6 +160,34 @@ export default function DisplayCase() {
             width='12%'
             src={diagnosisIcon}
             alt='Diagnos'
+            /* minW='12%' */
+            maxW='50px'
+            maxH='50px'
+            minW='40px'
+            minH='40px'
+          />
+        );
+      }
+      case 3: {
+        return (
+          <Image
+            width='12%'
+            src={treatmentIcon}
+            alt='Behandling'
+            /* minW='12%' */
+            maxW='50px'
+            maxH='50px'
+            minW='40px'
+            minH='40px'
+          />
+        );
+      }
+      case 4: {
+        return (
+          <Image
+            width='12%'
+            src={summaryIcon}
+            alt='Sammanfattning'
             /* minW='12%' */
             maxW='50px'
             maxH='50px'
