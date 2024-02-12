@@ -5,6 +5,10 @@ import { getCaseRoutes } from './routes/caseRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { validateToken } from './utils/jwtHandler.js';
 import { getStatisticRoutes } from './routes/statisticsRoutes.js';
+import { medicalFieldRouter } from './routes/medicalFieldRoutes.js';
+import { diagnosisRouter } from './routes/diagnosisRoutes.js';
+import { examinationRouter } from './routes/examinationRoutes.js';
+import { treatmentRouter } from './routes/treatmentRoutes.js';
 
 export const createServer = () => {
   const app = express();
@@ -18,6 +22,10 @@ export const createServer = () => {
   app.use(validateToken);
   app.use('/user', getUserRoutes());
   app.use('/case', getCaseRoutes());
+  app.use('/medical-field', medicalFieldRouter());
+  app.use('/diagnosis', diagnosisRouter());
+  app.use('/examination', examinationRouter());
+  app.use('/treatment', treatmentRouter());
   app.use('/statistic', getStatisticRoutes());
 
   return app;
