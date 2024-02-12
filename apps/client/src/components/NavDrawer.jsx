@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.jsx';
-import DrawerBtn from './DrawerBtn.jsx';
+import DrawerBtn from './DrawerButton.jsx';
 import { useUser } from '../hooks/useUser.js';
 
 export default function NavDrawer({ isOpen, onClose, btnRef }) {

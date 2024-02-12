@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Box, Image, Flex, Avatar, Button, useDisclosure } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import logo from '../images/EDU-SIMS_logo_transparent3.png';
+import logo from '../../assets/images/EDU-SIMS_logo_transparent3.png';
 import NavDrawer from './NavDrawer';
 import { useAuth } from '../hooks/useAuth.jsx';
 
