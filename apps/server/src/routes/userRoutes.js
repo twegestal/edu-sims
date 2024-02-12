@@ -66,8 +66,8 @@ export const getUserRoutes = () => {
     }
 
     try {
-      const user = object.end_user.findOne({ where: { id: id } });
-
+      const user = await object.end_user.findOne({ where: { id: id } });
+      console.log('> USER HERE' + user);
       if (!user) {
         return res.status(404).json('Could not find resource');
       }

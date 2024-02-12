@@ -7,7 +7,7 @@ import { db } from '../database/databaseConnection.js';
  * This file defines a set of routes used for the application statistics
  */
 
-export const getStatisticRoutes = () => {
+export const statisticsRouter = () => {
   const router = Router();
 
   router.get('/getTotalAmountUsers', async (_req, res, _next) => {

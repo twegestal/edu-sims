@@ -1,4 +1,5 @@
-import express from "express"
+import express from "express";
+import * as object from '../models/object_index.js';
 
 export const medicalFieldRouter = () => {
   const router = express();
