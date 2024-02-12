@@ -1,19 +1,19 @@
 import { Box } from '@chakra-ui/react';
-import Register from './register.jsx';
-import PerformCase from './perform_case.jsx';
-import Home from './home.jsx';
+import Register from './pages/login/Register.jsx';
+import PerformCase from './pages/cases/PerformCase.jsx';
+import Home from './pages/Home.jsx';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
-import ManageCases from './adminPage/manageCases.jsx';
-import Login from './login.jsx';
+import ManageCases from './pages/admin/ManageCases.jsx';
+import Login from './pages/login/Login.jsx';
 import { useAuth } from './hooks/useAuth.jsx';
-import ManageUsers from './adminPage/manageUsers.jsx';
-import ProfilePage from './profilePage/profilePage.jsx';
+import ManageUsers from './pages/admin/userManagement/ManageUsers.jsx';
+import ProfilePage from './pages/profile/ProfilePage.jsx';
 import NavBar from './components/NavBar.jsx';
-import CaseBuilder from './create_case/CaseBuilder.jsx';
-import ManageLists from './adminPage/ManageLists.jsx';
-import WithAdminAuth from './adminPage/WithAdminAuth.jsx';
-import DisplayCase from './performCaseComponents/DisplayCase.jsx';
+import CaseBuilder from './pages/caseBuilder/CaseBuilder.jsx';
+import ManageLists from './pages/admin/listManagement/ManageLists.jsx';
+import WithAdminAuth from './utils/WithAdminAuth.jsx';
+import DisplayCase from './pages/cases/performCaseComponents/DisplayCase.jsx';
 
 export default function App() {
   const { user } = useAuth();
