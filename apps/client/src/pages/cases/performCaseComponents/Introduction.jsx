@@ -40,7 +40,7 @@ export default function Introduction({
         setIsCorrect(true);
         setFeedbackToDisplay(stepData.feedback_correct)
       }
-      if (btnPressed === "jaBtn") {
+      if (btnPressed === "yesBtn") {
         setDisableNejBtn(true);
       }else{
         setDisableJaBtn(true);
@@ -61,8 +61,8 @@ export default function Introduction({
         <Heading size='md'>Finns det anledning att utreda patienten vidare?</Heading>
 
         <HStack justifyContent="center" spacing='8' width='100%'>
-          <Button id='jaBtn' variant="base" width='20%' isDisabled={disableJaBtn} onClick={() => finishStep(true, "jaBtn")} >JA</Button>
-          <Button id='nejBtn' variant="base" width='20%' isDisabled={disableNejBtn} onClick={() => finishStep(false, "nejBtn")}>NEJ</Button>
+          <Button id='yesBtn' variant="base" width='20%' isDisabled={disableJaBtn} onClick={() => finishStep(true, "yesBtn")} >JA</Button>
+          <Button id='noBtn' variant="base" width='20%' isDisabled={disableNejBtn} onClick={() => finishStep(false, "noBtn")}>NEJ</Button>
         </HStack>
         {isFinished === true && (
           <Feedback wasCorrect={isCorrect} feedbackToDisplay={feedbackToDisplay}></Feedback>
