@@ -1,15 +1,14 @@
+/*
+  This file continans the introduction step component.
+  It recieves the specific step data in the variabel stepData.
+*/ 
 import {
   Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Center,
   Divider,
   HStack,
   Heading,
   Text,
   VStack,
-  StackDivider
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import Feedback from './Feedback';
@@ -23,7 +22,6 @@ export default function Introduction({
   const [isFinished, setIsFinished] = useState(false);
   const [isCorrect, setIsCorrect] = useState();
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
-  const [btnSize, setBtnSize] = useState('20%');
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [disableJaBtn, setDisableJaBtn] = useState(false);
   const [disableNejBtn, setDisableNejBtn] = useState(false);
