@@ -12,11 +12,20 @@ import {
   Box,
 } from '@chakra-ui/react';
 
-export default function Feedback({wasCorrect, feedbackToDisplay}) {
+export default function Feedback({ wasCorrect, feedbackToDisplay }) {
   return (
-    <Accordion allowToggle defaultIndex={[0]} id='feedback' width='95%' border={'solid'} borderWidth={'3px'} borderRadius={'12px'} borderColor={'gray.400'}>
-      <AccordionItem >
-        <AccordionButton bg={wasCorrect ? 'success.bg' : 'fail.bg'} >
+    <Accordion
+      allowToggle
+      defaultIndex={[0]}
+      id='feedback'
+      width='95%'
+      border={'solid'}
+      borderWidth={'3px'}
+      borderRadius={'12px'}
+      borderColor={'gray.400'}
+    >
+      <AccordionItem>
+        <AccordionButton bg={wasCorrect ? 'success.bg' : 'fail.bg'}>
           <Box as='span' flex='1' textAlign='center'>
             Feedback
           </Box>
