@@ -8,6 +8,7 @@ export const getMockSteps = () => {
       step_id: '9bea0534-b426-423c-bd2e-3594815ba566',
       stepData: {
         id: '9bea0534-b426-423c-bd2e-3594815ba566',
+        continue_treatment: true, 
         description:
           'En 50-årig man kommer på vårdcentralen för hälsokontroll. Har flyttat från Iran till Sverige för 40 år sedan. Är gift och har två biologiska barn. Han är frisk sedan tidigare och tar inte några mediciner. Har aldrig rökt och dricker inte alkohol. Jobbar som apotekare. Han tränar bara sporadiskt. Patientens far har drabbats av en mindre hjärnblödning i 39års ålder och modern är frisk. Han är välmående och har inte några klagomål men vill bli kontrollerad i och med han fyllde 50 i år.\nVid undersökning: hjärtat slår regelbundet utan några blåsljud, lungor utan anmärkning. Ser frisk ut, dock något överviktig med BMI 29. Har inte några utan dysendokrina drag. Man tar ett blodtryck som ligger på 165/105. Man har inför besöket tagit Hb 145 g/L (134–170), Na 143 mmol/l (137–145), K 3.2 mmol/l (3.6-4.6), kreatinin 97 µmol/L (60-105).',
         prompt: 'Finns det anledning att utreda patienten vidare?',
