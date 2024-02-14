@@ -38,7 +38,7 @@ export default function StartCase({ caseId, caseToRandomise, published, attemps,
   const continueCase = () => {
     const attempt = attemps.find((e) => e.case_id === caseId);
     setIsConfirmOpen(false);
-    return navigate('/case/caseid=' + caseId + '/attemptid=' + attempt.id );
+    return navigate('/case/caseid=' + caseId + '/attemptid=' + attempt.id);
   };
 
   const closeConfirm = () => {

@@ -19,14 +19,13 @@ export const useCases = () => {
   const getAttemptsApi = useApi('getAttempts');
   const getSpecificAttemptApi = useApi('getSpecificAttempt');
 
-
   const [cases, setCases] = useState([]);
   const [medicalFields, setMedicalFields] = useState([]);
   const [caseById, setCaseById] = useState([]);
   const [introductionStep, setIntroductionStep] = useState({});
   const [summaryStep, setSummaryStep] = useState({});
   const [newPublishment, setNewPublishment] = useState('');
-  const [specificAttempt, setSpecificAttempt] = useState([])
+  const [specificAttempt, setSpecificAttempt] = useState([]);
   const { user } = useAuth();
 
   const getAllCases = async () => {
@@ -156,15 +155,15 @@ export const useCases = () => {
     try {
       const response = await getSpecificAttemptApi({ headers: { attempt_id: attempt_id } });
       if (response.status === 200) {
-        const data = response.data[[0]]
-        if (data.index == null){
+        const data = response.data[[0]];
+        if (data.index == null) {
           data.index = 0;
         }
-        if (data.feedback == null){
-          data.feedback = []
+        if (data.feedback == null) {
+          data.feedback = [];
         }
-        if (data.examination_results == null){
-          data.examination_results = []
+        if (data.examination_results == null) {
+          data.examination_results = [];
         }
         setSpecificAttempt(data);
       }
@@ -174,14 +173,16 @@ export const useCases = () => {
   };
   const deleteCase = async (caseId) => {
     try {
-      const result = await deleteCaseApi({body: {
-        caseId: caseId,
-      }});
+      const result = await deleteCaseApi({
+        body: {
+          caseId: caseId,
+        },
+      });
       return result.status === 200;
     } catch (error) {
       console.error('error deleting case', error);
     }
-  }
+  };
 
   const updateAttempt = async (
     attempt_id,
