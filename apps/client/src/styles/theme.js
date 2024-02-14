@@ -1,5 +1,6 @@
 import { extendTheme } from '@chakra-ui/react';
 import { ButtonStyles as Button } from './buttonStyles';
+import { dividerTheme as Divider } from './divider'
 
 const theme = extendTheme({
   fonts: {
@@ -25,6 +26,7 @@ const theme = extendTheme({
   },
   components: {
     Button,
+    Divider,
   },
 });
 
