@@ -1,6 +1,7 @@
 import { extendTheme } from '@chakra-ui/react';
 import { ButtonStyles as Button } from './buttonStyles';
 import { dividerTheme as Divider } from './divider';
+import { accordionTheme as Accordion } from './accordionStyles';
 
 const theme = extendTheme({
   fonts: {
@@ -27,6 +28,7 @@ const theme = extendTheme({
   components: {
     Button,
     Divider,
+    Accordion,
   },
 });
 

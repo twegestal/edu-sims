@@ -32,6 +32,7 @@ import diagnosisIcon from '../../../../assets/images/DiagnosisIcon.png';
 import treatmentIcon from '../../../../assets/images/TreatmentIcon.png';
 import summaryIcon from '../../../../assets/images/SummaryIcon.png';
 import questionMarkIcon from '../../../../assets/images/QuestionMarkIcon.png';
+import GenericAccordion from '../../../components/GenericAccordion';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -201,7 +202,7 @@ export default function DisplayCase() {
 
   const getModuleName = (moduleTypeIdentifier, index) => {
     if (!isFinishedArray[index] && index !== activeStepIndex) {
-      return '(❁´◡`❁)';
+      return null;
     }
     return moduleTypeTable[moduleTypeIdentifier];
   };
@@ -285,17 +286,14 @@ export default function DisplayCase() {
                 </HStack>
 
                 <HStack spacing='8'>
-                  {getFaultsIcon(index)}
+                  {/* {getFaultsIcon(index)} */}
                   {/* {getProgressIcon(index)} */}
                   {getControlIcon(index)}
                 </HStack>
               </HStack>
             </CardHeader>
             <Collapse in={openCardIndex === index}>
-              <CardBody>
-                {moduleSwitch(step.stepData, step.module_type_identifier, index)}{' '}
-                {/*TODO: OBS!!! vet inte om jag skrivit denna raden rätt, borde det inte vara "() =>" innan?? */}
-              </CardBody>
+              <CardBody>{moduleSwitch(step.stepData, step.module_type_identifier, index)}</CardBody>
             </Collapse>
           </Card>
         ))}
