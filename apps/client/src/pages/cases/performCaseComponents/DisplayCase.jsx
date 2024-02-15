@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -11,14 +11,7 @@ import {
   Tooltip,
   Image,
 } from '@chakra-ui/react';
-import {
-  AddIcon,
-  CloseIcon,
-  LockIcon,
-  WarningIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from '@chakra-ui/icons';
+import { LockIcon, WarningIcon } from '@chakra-ui/icons';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getMockSteps } from './exampleData';
 import Introduction from './Introduction';
@@ -32,7 +25,6 @@ import diagnosisIcon from '../../../../assets/images/DiagnosisIcon.png';
 import treatmentIcon from '../../../../assets/images/TreatmentIcon.png';
 import summaryIcon from '../../../../assets/images/SummaryIcon.png';
 import questionMarkIcon from '../../../../assets/images/QuestionMarkIcon.png';
-import GenericAccordion from '../../../components/GenericAccordion';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -52,10 +44,6 @@ export default function DisplayCase() {
       }
     });
   };
-
-  useEffect(() => {
-    console.log('faulsArr:', faultsArray);
-  }, [faultsArray]);
 
   const incrementActiveStepIndex = () => {
     setActiveStepIndex(activeStepIndex + 1);
