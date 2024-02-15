@@ -75,11 +75,10 @@ export default function PerformCase() {
     if (!loading) {
       setCurrentIndex(specificAttempt.index);
       setCurrentStep(caseById[specificAttempt.index]);
-      setFeedback(specificAttempt.feedback)
-      setTreatmentResults(specificAttempt.examination_results)
+      setFeedback(specificAttempt.feedback);
+      setTreatmentResults(specificAttempt.examination_results);
     }
   }, [caseById]);
-
 
   useEffect(() => {
     // When caseIsFinished variable is set to true, the attempt data will be updated
@@ -145,8 +144,6 @@ export default function PerformCase() {
     };
     setFeedback([...feedback, feedbackToSave]);
   };
-
-
 
   const finishCase = () => {
     setCaseIsFinished(true);

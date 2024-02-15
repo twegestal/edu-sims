@@ -138,7 +138,7 @@ export default function ShowAllCases() {
     const caseId = caseToPublish.id;
     handleButtonChange(casePublished ? 'unbublish' : 'publish', caseId);
     const response = await publishCase(caseId, casePublished);
-    if(response) {
+    if (response) {
       toast({
         title: 'Fel vid uppdatering av fall',
         description: errorWithPathToString(response.errors[0]),
@@ -146,21 +146,21 @@ export default function ShowAllCases() {
         duration: 9000,
         position: 'top',
         isClosable: true,
-      })
+      });
     } else {
-        toast({
-          title: 'Fallet uppdaterades korrekt',
-          status: 'success',
-          description: casePublished ? 'Fallet är avpublicerat' : 'Fallet är publicerat', 
-          duration: 9000,
-          position: 'top',
-          isClosable: true,
-        });
+      toast({
+        title: 'Fallet uppdaterades korrekt',
+        status: 'success',
+        description: casePublished ? 'Fallet är avpublicerat' : 'Fallet är publicerat',
+        duration: 9000,
+        position: 'top',
+        isClosable: true,
+      });
     }
     handleButtonChange(casePublished ? 'unpublish' : 'publish', caseId);
     setIsToggleCaseOpen(false);
     setCaseToPublish(null);
-  }
+  };
 
   const handleCloseDeleteCase = () => {
     setIsDeleteCaseOpen(false);
@@ -169,7 +169,7 @@ export default function ShowAllCases() {
 
   const handleCloseTogglePublish = () => {
     setIsToggleCaseOpen(false);
-    setCaseToPublish(null)
+    setCaseToPublish(null);
   };
 
   const randomiseCase = () => {
@@ -249,7 +249,7 @@ export default function ShowAllCases() {
                                 <IconButton
                                   icon={caseItem.published ? <BiHide /> : <BiShow />}
                                   onClick={() => {
-                                    setCaseToPublish(caseItem)
+                                    setCaseToPublish(caseItem);
                                     setIsToggleCaseOpen(true);
                                   }}
                                   isLoading={
@@ -333,9 +333,13 @@ export default function ShowAllCases() {
           isOpen={isToggleCaseOpen}
           onClose={handleCloseTogglePublish}
           header={caseToPublish.published ? `Avpublicera fall` : `Publicera fall`}
-          body={caseToPublish.published ? `Är du säker på att du vill avpublicera fallet ${caseToPublish.name}` : `Är du säker på att du vill publicera fallet ${caseToPublish.name}`}
+          body={
+            caseToPublish.published
+              ? `Är du säker på att du vill avpublicera fallet ${caseToPublish.name}`
+              : `Är du säker på att du vill publicera fallet ${caseToPublish.name}`
+          }
           handleConfirm={flipCasePublished}
-          />
+        />
       )}
     </>
   );
