@@ -10,19 +10,22 @@ export default function Examination({
 }) {
   const [isFinished, setIsFinished] = useState(false);
   const [isDoneButtonDisabled, setIsDoneButtonDisabled] = useState(true);
+  const [examinationsToDisplay, setExaminationsToDisplay] = useState();
   const [examinationsToRun, setExaminationsToRun] = useState([]);
   const [stepSpecificValues, setStepSpecificValues] = useState();
+  const [resultList, setResultList] = useState([]);
 
   useEffect(() => {
     let tempStepSpecificValues = {};
     for (const examination of stepData.step_specific_values) {
-      tempStepSpecificValues[examination.id] = {
+      tempStepSpecificValues[examination.examination_id] = {
         value: examination.value,
         isNormal: examination.is_normal,
         userHasTested: false,
       };
     }
     setStepSpecificValues(tempStepSpecificValues);
+    setExaminationsToDisplay(stepData.examination_to_display);
   }, []);
 
   useEffect(() => {
@@ -39,11 +42,14 @@ export default function Examination({
     console.log('exams2run:', examinationsToRun);
   }, [examinationsToRun]);
 
+  useEffect(() => {
+    console.log('resultList:', resultList);
+  }, [resultList]);
+
   const handleCheckButton = (id, isChecked, type, subType) => {
     const examination = stepData.examination_to_display[type][subType].filter(
       (examination) => examination.id === id,
     )[0];
-    console.log(examination);
     if (isChecked) {
       setExaminationsToRun([...examinationsToRun, examination]);
     } else {
@@ -51,7 +57,31 @@ export default function Examination({
     }
   };
 
-  const runExaminations = () => {};
+  const runExaminations = () => {
+    let tempResultList = [...resultList];
+    for (const examination of examinationsToRun) {
+      if (examination.id in stepSpecificValues) {
+        setStepSpecificValues((prevState) => {
+          const newState = { ...prevState };
+          newState[examination.id].userHasTested = true;
+          return newState;
+        });
+
+        const newResult = {
+          name: examination.name,
+          value: stepSpecificValues[examination.id],
+          isNormal: stepSpecificValues[examination.id].isNormal,
+          maxValue: examination.max_value,
+          minValue: examination.min_value,
+          unit: examination.unit,
+        };
+        tempResultList.push(newResult);
+      }
+    }
+    setExaminationsToRun([]);
+    setResultList(tempResultList);
+    setIsDoneButtonDisabled(false);
+  };
 
   const setUpAccordions = () => {
     return (
