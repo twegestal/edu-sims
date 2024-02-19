@@ -15,10 +15,13 @@ export default function Diagnosis({
   updateIsFinishedArray,
   incrementActiveStepIndex,
 }) {
+
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [isCorrect, setIsCorrect] = useState();
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [isFinished, setIsFinished] = useState(false);
-  const [filterdList, setFilterdList] = useState([]);
+ // const [filterdList, setFilterdList] = useState([]);
   const [diagnosis, setDiagnosis] = useState();
   const [searchFieldText, setSearchFieldText] = useState();
 
@@ -28,16 +31,12 @@ export default function Diagnosis({
     incrementActiveStepIndex();
   };
 
-  const findDiagnosis = (searchString) => {
-    if (isFinished === false) {
-      var filteredSearchList = [];
-      if (searchString.length > 0) {
-        filteredSearchList = stepData.diagnosis_list.filter((diagnosis) => diagnosis.name.toLowerCase().includes(searchString.toLowerCase()));
-      }
-      setFilterdList(filteredSearchList);
-    }
+  const filteredList = searchTerm
+  ? stepData.diagnosis_list.filter((diagnosis) =>
+      diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+  : [];
 
-  }
   const validateChoosenDiagnosis = () => {
     if (diagnosis === stepData.diagnosis_id) {
       setIsCorrect(true);
@@ -59,8 +58,11 @@ export default function Diagnosis({
 
         <Stack width={'100%'}>
           <InputGroup>
-            <Input placeholder="Sök efter Diagnos" value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => {findDiagnosis(e.target.value);
-            setSearchFieldText(e.target.value)}} />
+            <Input placeholder="Sök efter Diagnos" value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
+            {
+            //findDiagnosis(e.target.value);
+            setSearchFieldText(e.target.value)
+            setSearchTerm(e.target.value)}} />
             <InputRightAddon >
               <Search2Icon />
             </InputRightAddon>
@@ -68,11 +70,11 @@ export default function Diagnosis({
         </Stack>
 
         <Stack>
-          {filterdList.map((diagnosis) => (
+          {filteredList.map((diagnosis) => (
             <Card key={diagnosis.id} padding={'10px'} border='2px' width={'100%'} onClick={() => {
               setDiagnosis(diagnosis.id);
               setSearchFieldText(diagnosis.name);
-              setFilterdList([]);
+              setSearchTerm("")
             }}>
               <HStack>
                 <AddIcon></AddIcon>
