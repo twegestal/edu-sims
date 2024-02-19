@@ -21,7 +21,6 @@ export default function Diagnosis({
   const [isCorrect, setIsCorrect] = useState();
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [isFinished, setIsFinished] = useState(false);
- // const [filterdList, setFilterdList] = useState([]);
   const [diagnosis, setDiagnosis] = useState();
   const [searchFieldText, setSearchFieldText] = useState();
 
@@ -60,7 +59,6 @@ export default function Diagnosis({
           <InputGroup>
             <Input placeholder="Sök efter Diagnos" value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
             {
-            //findDiagnosis(e.target.value);
             setSearchFieldText(e.target.value)
             setSearchTerm(e.target.value)}} />
             <InputRightAddon >
