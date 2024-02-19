@@ -59,8 +59,11 @@ export default function Diagnosis({
           <InputGroup>
             <Input value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
             {
-            setSearchFieldText(e.target.value)
-            setSearchTerm(e.target.value)}} />
+              if (!isFinished) {
+                setSearchTerm(e.target.value)
+                setSearchFieldText(e.target.value)
+              }
+            }} />
             <InputRightAddon >
               <Search2Icon />
             </InputRightAddon>
