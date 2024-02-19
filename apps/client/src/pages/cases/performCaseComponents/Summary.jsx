@@ -1,5 +1,9 @@
-import { Button } from '@chakra-ui/react';
-import { useState } from 'react';
+/*
+  This file continans the Summary step component.
+  It recieves the specific step data in the variabel stepData that is sent from DisplayCase. 
+*/
+import { Button, Divider, Heading, Text, VStack } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 
 export default function Summary({
   stepData,
@@ -13,10 +17,26 @@ export default function Summary({
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
   };
+
+  useEffect(() => {
+    console.log("HÄR", stepData);
+  }, []);
   return (
     <>
-      <p>Sammanfattningsgrejer</p>
-      {isFinished === false && <Button onClick={finishStep}>Gör färdigt steget</Button>}
+      <VStack spacing={8} textAlign={'left'}>
+        <Heading size={'md'}> Process</Heading>
+        <Text>{stepData.process}</Text>
+        <Divider variant={'edu'} />
+
+        <Heading size={'md'}>Additional Info</Heading>
+        <Text>{stepData.additional_info}</Text>
+        <Divider variant={'edu'} />
+
+        <Heading size={'md'}>Additional links</Heading>
+        <Text >{stepData.additional_links}</Text>
+
+        {isFinished === false && <Button onClick={finishStep}>Gör färdigt steget</Button>}
+      </VStack>
     </>
   );
 }
