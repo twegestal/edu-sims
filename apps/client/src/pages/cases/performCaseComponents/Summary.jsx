@@ -17,22 +17,18 @@ export default function Summary({
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
   };
-
-  useEffect(() => {
-    console.log("HÄR", stepData);
-  }, []);
   return (
     <>
       <VStack spacing={8} textAlign={'left'}>
-        <Heading size={'md'}> Process</Heading>
+        <Heading size={'md'}>Process</Heading>
         <Text>{stepData.process}</Text>
         <Divider variant={'edu'} />
 
-        <Heading size={'md'}>Additional Info</Heading>
+        <Heading size={'md'}>Ytterligare Information</Heading>
         <Text>{stepData.additional_info}</Text>
         <Divider variant={'edu'} />
 
-        <Heading size={'md'}>Additional links</Heading>
+        <Heading size={'md'}>Ytterliga Länkar</Heading>
         <Text >{stepData.additional_links}</Text>
 
         {isFinished === false && <Button onClick={finishStep}>Gör färdigt steget</Button>}
