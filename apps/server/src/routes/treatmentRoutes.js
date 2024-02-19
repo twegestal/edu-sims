@@ -1,4 +1,5 @@
 import express from 'express';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses';
 
 export const treatmentRouter = () => {
   const router = express();
@@ -14,19 +15,20 @@ export const treatmentRouter = () => {
       } else if (treatmentTypeId) {
         whereClause = { where: { treatment_type_id: treatmentTypeId } };
       }
-
       const treatments = await object.treatment_list.findAll(whereClause);
+      if(!treatments) {
+        return res.status(404).json(HTTPResponses.Error[404])
+      }
       res.status(200).json(treatments);
     } catch (error) {
-      console.error('Error fetching treatment list: ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.post('/', async (req, res, _next) => {
-    const { name, subtypeId, treatmentId } = req.body;
-
+  router.post('/', async (req, res, _next) => {    
     try {
+      const { name, subtypeId, treatmentId } = req.body;
       if (subtypeId && treatmentId && name) {
         const response = await object.treatment_list.create({
           name: name,
@@ -35,53 +37,51 @@ export const treatmentRouter = () => {
         });
 
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new treatment ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.patch('/', async (req, res, _next) => {
-    const { id, newName } = req.body;
-
+  router.patch('/', async (req, res, _next) => {    
     try {
+      const { id, newName } = req.body;
       if (id && newName) {
         const result = await object.treatment_list.update({ name: newName }, { where: { id: id } });
         if (result > 0) {
-          return res.status(200).json('Resource updated');
+          return res.status(200).json(HTTPResponses.Success(200));
         }
-        return res.status(400).json('Could not update resource');
+        return res.status(500).json(HTTPResponses.Error[500]);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error updating treatment list ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.delete('/', async (req, res, _next) => {
-    const { id } = req.body;
-
+  router.delete('/', async (req, res, _next) => {    
     try {
+      const { id } = req.body;
       const result = await object.treatment_list.destroy({ where: { id: id } });
       if (result) {
-        return res.status(200).json('Resource deleted');
+        return res.status(200).json(HTTPResponses.Success[200]);
       } else {
-        return res.status(400).json('Could not delete resouce');
+        return res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
       if (error instanceof ForeignKeyConstraintError) {
-        res.status(400).json('Resource cannot be deleted');
+        res.status(409).json(HTTPResponses.Error[409]);
       } else {
-        console.error('error deleting diagnosis ', error);
-        res.status(500).json('Something went wrong');
+        console.error(ConsoleResponses.DELETE_ERROR, error);
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });
@@ -91,8 +91,8 @@ export const treatmentRouter = () => {
       const result = await object.treatment_type.findAll({ order: [['name', 'ASC']] });
       res.status(200).send(result);
     } catch (error) {
-      console.error('error fetching treatment types ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
@@ -103,89 +103,84 @@ export const treatmentRouter = () => {
       if (name) {
         const response = object.treatment_type.create({ name: name });
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(500).json(HTTPResponses.Error[500]);
         }
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new treatment type ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.patch('/type', async (req, res, _next) => {
-    const { id, name } = req.body;
-
-    if (!id || !name) {
-      return res.status(400).json('Missing body');
-    }
-
     try {
+      const { id, name } = req.body;  
+      if (!id || !name) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const treatmentType = await object.treatment_type.findOne({ where: { id: id } });
       if (!treatmentType) {
-        return res.status(404).json('Resource not found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
-
       const response = await treatmentType.update({ name: name });
-
       if (!response) {
-        return res.status(500).json('Something went wrong');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
 
-      return res.status(200).json('Resource updated');
+      return res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error updating treatment type ', error);
-      return res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.delete('/type', async (req, res, _next) => {
-    const { id } = req.body;
-
-    if (!id) {
-      return res.status(400).json('Missing body');
-    }
-
+    
     try {
+      const { id } = req.body;
+      if (!id) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const response = await object.treatment_type.destroy({ where: { id: id } });
-
       if (!response) {
-        return res.status(404).json('Could not find resource');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
-      return res.status(200).json('Resource deleted');
+      return res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error deleting treatment type ', error);
+      console.error(ConsoleResponses.DELETE_ERROR, error);
       if (error instanceof ForeignKeyConstraintError) {
-        return res.status(400).json('Cannot delete resource');
+        return res.status(409).json(HTTPResponses.Error[409]);
       }
-      return res.status(500).json('Something went wrong');
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.get('/subtype', async (req, res, _next) => {
     try {
       const id = req.header('id');
+      if(!id) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const whereClause = id ? { where: { treatment_type_id: id } } : {};
       const response = await object.treatment_subtype.findAll(whereClause);
-
       if (response) {
         return res.status(200).send(response);
       } else {
-        return res.status(404).json('No resources found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
     } catch (error) {
-      console.error('error fetching treatment subtypes ', error);
-      return res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.post('/subtype', async (req, res, _next) => {
-    const { name, id } = req.body;
-
+  router.post('/subtype', async (req, res, _next) => {    
     try {
+      const { name, id } = req.body;
       if (name && id) {
         const response = await object.treatment_subtype.create({
           name: name,
@@ -193,16 +188,16 @@ export const treatmentRouter = () => {
         });
 
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
 
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new treatment subtype ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
@@ -210,24 +205,24 @@ export const treatmentRouter = () => {
     const { id, name } = req.body;
 
     if (!id || !name) {
-      return res.status(400).json('Missing body');
+      return res.status(400).json(HTTPResponses.Error[400]);
     }
 
     try {
       const treatmentSubtype = await object.treatment_subtype.findOne({ where: { id: id } });
       if (!treatmentSubtype) {
-        return res.status(404).json('Could not find resource');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
       const result = await treatmentSubtype.update({ name: name });
       if (!result) {
-        return res.status(500).json('Could not update resource');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
 
-      return res.status(200).json('Resource updated');
+      return res.status(201).json(HTTPResponses.Success[201]);
     } catch (error) {
-      console.error('error patching treatment subtype ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
@@ -235,22 +230,22 @@ export const treatmentRouter = () => {
     const { id } = req.body;
 
     if (!id) {
-      return res.status(400).json('Missing body');
+      return res.status(400).json(HTTPResponses.Error[400]);
     }
 
     try {
       const response = await object.treatment_subtype.destroy({ where: { id: id } });
       if (!response) {
-        return res.status(404).json('Could not find resource');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
-      return res.status(200).json('Resource deleted');
+      return res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
       if (error instanceof ForeignKeyConstraintError) {
-        return res.status(400).json('Cannot delete resource');
+        return res.status(409).json(HTTPResponses.Error[409]);
       }
 
-      return res.status(500).json('Something went wrong');
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 

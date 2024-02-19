@@ -1,8 +1,9 @@
 import express from 'express';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses';
 
 export const diagnosisRouter = () => {
   const router = express();
-
+  
   router.get('/', async (req, res, _next) => {
     const id = req.header('id');
     if (id) {
@@ -16,11 +17,11 @@ export const diagnosisRouter = () => {
         if (result) {
           res.status(200).send(result);
         } else {
-          res.status(404).json('Resource not found');
+          res.status(404).json(HTTPResponses.Error[404]);
         }
       } catch (error) {
-        console.error('Error getting diagnosis list from database', error);
-        res.status(500).json('Internal server error');
+        console.error(ConsoleResponses.GET_ERROR, error);
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     } else {
       try {
@@ -28,20 +29,22 @@ export const diagnosisRouter = () => {
         if (result) {
           res.status(200).send(result);
         } else {
-          res.status(404).json('Resource not found');
+          res.status(404).json(HTTPResponses.Error[404]);
         }
       } catch (error) {
-        console.error('Error getting diagnosis list from database', error);
-        res.status(500).json('Internal server error');
+        console.error(ConsoleResponses.GET_ERROR, error);
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });
   
 
   router.post('/', async (req, res, _next) => {
-    const { name, medical_field_id } = req.body;
-
     try {
+      const { name, medical_field_id } = req.body;
+      if(!name || !medical_field_id) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const resourceExists = await object.diagnosis_list.findOne({ where: { name: name } });
       if (resourceExists) {
         return res.status(400).json(`${name} is already a resource`);
@@ -49,53 +52,50 @@ export const diagnosisRouter = () => {
 
       const fieldExists = await object.medical_field.findOne({ where: { id: medical_field_id } });
       if (!fieldExists) {
-        return res.status(400).json('Medical field does not exist');
+        return res.status(400).json(HTTPResponses.Error[400]);
       }
 
       const result = await object.diagnosis_list.create({
         name: name,
         medical_field_id: medical_field_id,
       });
-
       res.status(201).send(result);
     } catch (error) {
-      console.error('error adding new diagnosis ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.patch('/', async (req, res, _next) => {
-    const { newName, id } = req.body;
-
     try {
+      const { newName, id } = req.body;
       const response = await object.diagnosis_list.update({ name: newName }, { where: { id: id } });
       if (response > 0) {
-        res.status(200).json('Resource updated');
+        res.status(200).json(HTTPResponses.Success[200]);
       } else {
-        res.status(400).json('Could not update resource');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error updating diagnosis ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.SERVER_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.delete('/', async (req, res, _next) => {
-    const { id } = req.body;
-
     try {
+      const { id } = req.body;
       const result = await object.diagnosis_list.destroy({ where: { id: id } });
       if (result) {
-        return res.status(200).json('Resource deleted');
+        return res.status(200).json(HTTPResponses.Success[200]);
       } else {
-        return res.status(400).json('Could not delete resouce');
+        return res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
       if (error instanceof ForeignKeyConstraintError) {
-        res.status(400).json('Resource cannot be deleted');
+        res.status(409).json(HTTPResponses.Error[409]);
       } else {
-        console.error('error deleting diagnosis ', error);
-        res.status(500).json('Something went wrong');
+        console.error(ConsoleResponses.SERVER_ERROR, error);
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });

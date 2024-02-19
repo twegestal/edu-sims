@@ -1,4 +1,5 @@
 import express from 'express';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses';
 
 export const examinationRouter = () => {
   const router = express();
@@ -17,7 +18,7 @@ export const examinationRouter = () => {
         if (response) {
           return res.status(200).send(response);
         } else {
-          return res.status(400).json('Could not find resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
       } else if (id) {
         const response = await object.examination_list.findAll({
@@ -27,26 +28,25 @@ export const examinationRouter = () => {
         if (response) {
           return res.status(200).send(response);
         } else {
-          return res.status(400).json('Could not find resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
       } else {
         const response = await object.examination_list.findAll({ order: [['name', 'ASC']] });
         if (response) {
           return res.status(200).send(response);
         } else {
-          return res.status(400).json('Could not find resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
       }
     } catch (error) {
-      console.error('error fetching examination list ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.SERVER_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.post('/', async (req, res, _next) => {
-    const { name, subtypeId, examinationTypeId } = req.body;
-
+  router.post('/', async (req, res, _next) => {    
     try {
+      const { name, subtypeId, examinationTypeId } = req.body;
       if (subtypeId && examinationTypeId && name) {
         const response = await object.examination_list.create({
           name: name,
@@ -55,56 +55,54 @@ export const examinationRouter = () => {
         });
 
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new examination ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.patch('/', async (req, res, _next) => {
-    const { id, newName } = req.body;
-
+  router.patch('/', async (req, res, _next) => {    
     try {
+      const { id, newName } = req.body;
       if (id && newName) {
         const result = await object.examination_list.update(
           { name: newName },
           { where: { id: id } },
         );
         if (result > 0) {
-          return res.status(200).json('Resource updated');
+          return res.status(200).json(HTTPResponses.Success[200]);
         }
-        return res.status(400).json('Could not update resource');
+        return res.status(400).json(HTTPResponses.Error[400]);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error updating examination list ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.delete('/', async (req, res, _next) => {
-    const { id } = req.body;
-
+  router.delete('/', async (req, res, _next) => {    
     try {
+      const { id } = req.body;
       const result = await object.examination_list.destroy({ where: { id: id } });
       if (result) {
-        return res.status(200).json('Resource deleted');
+        return res.status(200).json(HTTPResponses.Success[200]);
       } else {
-        return res.status(400).json('Could not delete resouce');
+        return res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
       if (error instanceof ForeignKeyConstraintError) {
-        res.status(400).json('Resource cannot be deleted');
+        res.status(400).json(HTTPResponses.Error[400]);
       } else {
-        console.error('error deleting diagnosis ', error);
-        res.status(500).json('Something went wrong');
+        console.error(ConsoleResponses.DELETE_ERROR, error);
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });
@@ -119,77 +117,72 @@ export const examinationRouter = () => {
       if (result) {
         res.status(200).send(result);
       } else {
-        res.status(400).json('Could not find resource');
+        res.status(404).json();
       }
     } catch (error) {
-      console.error('error feting examination types ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.SERVER_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.post('/type', async (req, res, _next) => {
-    const { name } = req.body;
-
+  router.post('/type', async (req, res, _next) => {    
     try {
+      const { name } = req.body;
       if (name) {
         const response = object.examination_type.create({ name: name });
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(500).json(HTTPResponses.Error[500]);
         }
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new examination type ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.patch('/type', async (req, res, _next) => {
-    const { id, name } = req.body;
-
-    if (!id || !name) {
-      return res.status(400).json('Missing body');
-    }
-
     try {
+      const { id, name } = req.body;  
+      if (!id || !name) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const examinationType = await object.examination_type.findOne({ where: { id: id } });
       if (!examinationType) {
-        return res.status(404).json('Resource not found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
       const result = await examinationType.update({ name: name });
       if (!result) {
-        return res.status(500).json('Something went wrong');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
 
-      res.status(200).json('Resource updated');
+      res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error updating examination type ', error);
-      return res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.delete('/type', async (req, res, _next) => {
-    const { id } = req.body;
-
-    if (!id) {
-      return res.status(400).json('Missing body');
-    }
-
     try {
+      const { id } = req.body;  
+      if (!id) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const response = await object.examination_type.destroy({ where: { id: id } });
       if (!response) {
-        return res.status(400).json('Could not find resource');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
-      res.status(200).json('Resource deleted');
+      res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error deleting examination type ', error);
+      console.error(ConsoleResponses.DELETE_ERROR, error);
       if (error instanceof ForeignKeyConstraintError) {
-        return res.status(400).json('Resource cannot be deleted');
+        return res.status(409).json(HTTPResponses.Error[409]);
       } else {
-        return res.status(500).json('Something went wrong');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });
@@ -198,7 +191,6 @@ export const examinationRouter = () => {
     try {
       const examinationTypeId = req.header('examination_type_id');
       const id = req.header('id');
-
       if (examinationTypeId) {
         const response = await object.examination_subtype.findAll({
           where: { examination_type_id: examinationTypeId },
@@ -212,108 +204,97 @@ export const examinationRouter = () => {
         return res.status(200).send(response);
       }
     } catch (error) {
-      console.error('Error fetching examination subtypes: ', error);
-      res.status(500).json('Internal Server Error');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.post('/subtype', async (req, res, _next) => {
-    const { name, id } = req.body;
-
+  router.post('/subtype', async (req, res, _next) => {    
     try {
+      const { name, id } = req.body;
       if (name && id) {
         const response = await object.examination_subtype.create({
           name: name,
           examination_type_id: id,
         });
-
         if (!response) {
-          return res.status(400).json('Could not create resource');
+          return res.status(400).json(HTTPResponses.Error[400]);
         }
-
         res.status(201).send(response);
       } else {
-        res.status(400).json('Could not parse input');
+        res.status(400).json(HTTPResponses.Error[400]);
       }
     } catch (error) {
-      console.error('error adding new examination subtype ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.POST_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.patch('/subtype', async (req, res, _next) => {
-    const { id, name } = req.body;
-
-    if (!id || !name) {
-      return res.status(400).json('Missing body');
-    }
-
     try {
+      const { id, name } = req.body;
+      if (!id || !name) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const examinationSubtype = await object.examination_subtype.findOne({ where: { id: id } });
 
       if (!examinationSubtype) {
-        return res.status(404).json('Resource not found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
       const result = await examinationSubtype.update({ name: name });
       if (!result) {
-        return res.status(500).json('Something went wrong');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
 
-      res.status(200).json('Resource updated');
+      res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error updating examination subtype ', error);
-      return res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
   router.delete('/subtype', async (req, res, _next) => {
-    const { id } = req.body;
-
-    if (!id) {
-      return res.status(400).json('Missing body');
-    }
     try {
+      const { id } = req.body;
+      if (!id) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const response = await object.examination_subtype.destroy({ where: { id: id } });
       if (!response) {
-        return res.status(404).json('Resource not found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
-
-      res.status(200).json('Resource deleted');
+      res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error deleting examination subtype ', error);
       if (error instanceof ForeignKeyConstraintError) {
-        return res.status(400).json('Resource cannot be deleted');
+        return res.status(409).json(HTTPResponses.Error[409]);
       } else {
-        return res.status(500).json('Something went wrong');
+        console.error(ConsoleResponses.DELETE_ERROR, error);
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });
 
   router.patch('/range', async (req, res, _next) => {
-    const { id, min, max, unit } = req.body;
-
-    if (!id || !min || !max || !unit) {
-      return res.status(400).json('Missing body');
-    }
-
     try {
+      const { id, min, max, unit } = req.body;  
+      if (!id || !min || !max || !unit) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const examination = await object.examination_list.findOne({ where: { id: id } });
       if (!examination) {
-        return res.status(404).json('Resource not found');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
 
       const result = await examination.update({ min_value: min, max_value: max, unit: unit });
       if (!result) {
-        return res.status(500).json('Something went wrong');
+        return res.status(500).json(HTTPResponses.Error[500]);
       }
-
-      res.status(200).json('Resource updated');
+      res.status(200).json(HTTPResponses.Success[200]);
     } catch (error) {
-      console.error('error updating examination range ', error);
-      return res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.PATCH_ERROR, error);
+      return res.status(500).json(HTTPResponses.Error[500]);
     }
   });
-
   return router;
 }

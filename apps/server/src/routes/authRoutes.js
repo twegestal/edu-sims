@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createRefreshCookie, createToken, validateRefreshToken } from '../utils/jwtHandler.js';
 import { comparePasswords, hashPassword } from '../utils/crypting.js';
 import * as object from '../models/object_index.js';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';
 
 export const authRouter = () => {
   const router = Router();
@@ -25,7 +26,7 @@ export const authRouter = () => {
         try {
           await user.save();
         } catch (error) {
-          console.error('error saving updated user to database', error);
+          console.error(ConsoleResponses.POST_ERROR, error);
         }
 
         res
@@ -73,13 +74,13 @@ export const authRouter = () => {
   router.get('/refreshToken', async (req, res, _next) => {
     const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken) {
-      return res.status(400).json('Missing refreshToken');
+      return res.status(400).json(HTTPResponses.Error[400]);
     }
 
     try {
       const userId = await validateRefreshToken(refreshToken);
       if (userId === null) {
-        return res.status(401).json('Invalid refresh token');
+        return res.status(401).json(HTTPResponses.Error[401]);
       }
 
       const user = await object.end_user.findOne({
@@ -89,7 +90,7 @@ export const authRouter = () => {
       });
 
       if (user === null) {
-        return res.status(404).json('User does not exist');
+        return res.status(404).json(HTTPResponses.Error[404]);
       }
       const token = createToken(user.id);
       res.status(200).send({
@@ -100,10 +101,10 @@ export const authRouter = () => {
       });
     } catch (error) {
       //TODO Change this to better error handling with custom error class or something
-      if (error.message === 'Invalid refresh token') {
+      if (error.message === HTTPResponses.Error[401]) {
         res.status(401).json('Token expired');
       } else {
-        res.status(500).json('Internal Server Error');
+        res.status(500).json(HTTPResponses.Error[500]);
       }
     }
   });

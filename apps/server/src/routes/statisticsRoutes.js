@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as object from '../models/object_index.js';
 import { Op, QueryTypes } from 'sequelize';
 import { db } from '../database/databaseConnection.js';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';
 
 /**
  * This file defines a set of routes used for the application statistics
@@ -17,25 +18,24 @@ export const getStatisticRoutes = () => {
       });
       res.status(200).json(amount);
     } catch (error) {
-      console.error('error fetching total amout of users ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
-  router.get('/getActiveUsers', async (req, res, _next) => {
-    const startDate = req.header('startdate');
-    if (!startDate) {
-      return res.status(400).json('Missing identifier');
-    }
-
+  router.get('/getActiveUsers', async (req, res, _next) => {    
     try {
+      const startDate = req.header('startdate');
+      if (!startDate) {
+        return res.status(400).json(HTTPResponses.Error[400]);
+      }
       const amount = await object.end_user.count({
         where: { last_login: { [Op.gt]: startDate } },
       });
       res.status(200).json(amount);
     } catch (error) {
-      console.error('error fetching active users ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
 
@@ -61,10 +61,9 @@ export const getStatisticRoutes = () => {
       );
       res.status(200).json(result);
     } catch (error) {
-      console.error('error fetching case statistics ', error);
-      res.status(500).json('Something went wrong');
+      console.error(ConsoleResponses.GET_ERROR, error);
+      res.status(500).json(HTTPResponses.Error[500]);
     }
   });
-
   return router;
 };
