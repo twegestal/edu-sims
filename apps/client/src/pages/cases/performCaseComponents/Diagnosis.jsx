@@ -22,7 +22,7 @@ export default function Diagnosis({
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [isFinished, setIsFinished] = useState(false);
   const [diagnosis, setDiagnosis] = useState();
-  const [searchFieldText, setSearchFieldText] = useState();
+  const [searchFieldText, setSearchFieldText] = useState("Sök efter Diagnos");
 
   const finishStep = () => {
     setIsFinished(true);
@@ -57,7 +57,7 @@ export default function Diagnosis({
 
         <Stack width={'100%'}>
           <InputGroup>
-            <Input placeholder="Sök efter Diagnos" value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
+            <Input value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
             {
             setSearchFieldText(e.target.value)
             setSearchTerm(e.target.value)}} />
