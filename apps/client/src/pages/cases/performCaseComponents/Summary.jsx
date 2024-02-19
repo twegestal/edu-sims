@@ -3,7 +3,8 @@
   It recieves the specific step data in the variabel stepData that is sent from DisplayCase. 
 */
 import { Button, Divider, Heading, Text, VStack } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Summary({
   stepData,
@@ -12,10 +13,12 @@ export default function Summary({
   incrementActiveStepIndex,
 }) {
   const [isFinished, setIsFinished] = useState(false);
+  const navigate = useNavigate();
   const finishStep = () => {
     setIsFinished(true);
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
+    return navigate('/');
   };
   return (
     <>
@@ -31,7 +34,7 @@ export default function Summary({
         <Heading size={'md'}>Ytterliga Länkar</Heading>
         <Text >{stepData.additional_links}</Text>
 
-        {isFinished === false && <Button onClick={finishStep}>Gör färdigt steget</Button>}
+        {isFinished === false && <Button onClick={finishStep}>Avsluta fallet</Button>}
       </VStack>
     </>
   );
