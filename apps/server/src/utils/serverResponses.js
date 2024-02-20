@@ -35,7 +35,6 @@ export const HTTPResponses = {
         /* 451 : "", */
         500: "Någonting gick fel på vår sida",
     },
-
 }
 
 export const ConsoleResponses = {
@@ -48,4 +47,3 @@ export const ConsoleResponses = {
     TRANSACTION_ERROR       : "> Transaction did not work. Rolling back.",
     SERVER_ERROR            : "> Something went wrong on the server",
 }
-

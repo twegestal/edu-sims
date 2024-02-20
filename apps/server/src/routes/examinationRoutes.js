@@ -1,5 +1,5 @@
 import express from 'express';
-import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses';
+import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';
 
 export const examinationRouter = () => {
   const router = express();
