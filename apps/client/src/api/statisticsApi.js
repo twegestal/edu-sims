@@ -1,7 +1,8 @@
 import { packageResponse } from '../utils/apiUtils.js';
-const prefix = 'statistic/';
+const prefix = 'statistics/';
 
-export const statisticApi = (apiClient) => ({
+export const statisticsApi = (apiClient) => ({
+  
   getTotalAmountUsers: async () => {
     const response = await apiClient.get(`${prefix}getTotalAmountUsers`);
     return packageResponse(response);
@@ -16,4 +17,5 @@ export const statisticApi = (apiClient) => ({
     const response = await apiClient.get(`${prefix}allCasesStatistics`, headers);
     return packageResponse(response);
   },
-});
+
+})

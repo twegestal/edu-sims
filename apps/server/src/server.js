@@ -4,7 +4,7 @@ import { getUserRoutes } from './routes/userRoutes.js';
 import { getCaseRoutes } from './routes/caseRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { validateToken } from './utils/jwtHandler.js';
-import { getStatisticRoutes } from './routes/statisticsRoutes.js';
+import { statisticsRouter as statisticsRouter } from './routes/statisticsRoutes.js';
 import { medicalFieldRouter } from './routes/medicalFieldRoutes.js';
 import { diagnosisRouter } from './routes/diagnosisRoutes.js';
 import { examinationRouter } from './routes/examinationRoutes.js';
@@ -26,7 +26,7 @@ export const createServer = () => {
   app.use('/diagnosis', diagnosisRouter());
   app.use('/examination', examinationRouter());
   app.use('/treatment', treatmentRouter());
-  app.use('/statistic', getStatisticRoutes());
+  app.use('/statistics', statisticsRouter());
 
   return app;
 };
