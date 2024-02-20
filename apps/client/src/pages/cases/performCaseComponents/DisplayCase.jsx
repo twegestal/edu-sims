@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -11,14 +11,7 @@ import {
   Tooltip,
   Image,
 } from '@chakra-ui/react';
-import {
-  AddIcon,
-  CloseIcon,
-  LockIcon,
-  WarningIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from '@chakra-ui/icons';
+import { LockIcon, WarningIcon } from '@chakra-ui/icons';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getMockSteps } from './exampleData';
 import Introduction from './Introduction';
@@ -26,12 +19,12 @@ import Examination from './Examination';
 import Diagnosis from './Diagnosis';
 import Treatment from './Treatment';
 import Summary from './Summary';
-import introIcon from '../../../../assets/images/IntroIcon.png';
-import examIcon from '../../../../assets/images/ExamIcon.png';
-import diagnosisIcon from '../../../../assets/images/DiagnosisIcon.png';
-import treatmentIcon from '../../../../assets/images/TreatmentIcon.png';
-import summaryIcon from '../../../../assets/images/SummaryIcon.png';
-import questionMarkIcon from '../../../../assets/images/QuestionMarkIcon.png';
+import introIcon from '../../../../assets/images/png/IntroIcon.png';
+import examIcon from '../../../../assets/images/png/ExamIcon.png';
+import diagnosisIcon from '../../../../assets/images/png/DiagnosisIcon.png';
+import treatmentIcon from '../../../../assets/images/png/TreatmentIcon.png';
+import summaryIcon from '../../../../assets/images/png/SummaryIcon.png';
+import questionMarkIcon from '../../../../assets/images/png/QuestionMarkIcon.png';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -51,10 +44,6 @@ export default function DisplayCase() {
       }
     });
   };
-
-  useEffect(() => {
-    console.log('faulsArr:', faultsArray);
-  }, [faultsArray]);
 
   const incrementActiveStepIndex = () => {
     setActiveStepIndex(activeStepIndex + 1);
@@ -201,7 +190,7 @@ export default function DisplayCase() {
 
   const getModuleName = (moduleTypeIdentifier, index) => {
     if (!isFinishedArray[index] && index !== activeStepIndex) {
-      return '(❁´◡`❁)';
+      return null;
     }
     return moduleTypeTable[moduleTypeIdentifier];
   };
@@ -285,17 +274,14 @@ export default function DisplayCase() {
                 </HStack>
 
                 <HStack spacing='8'>
-                  {getFaultsIcon(index)}
+                  {/* {getFaultsIcon(index)} */}
                   {/* {getProgressIcon(index)} */}
                   {getControlIcon(index)}
                 </HStack>
               </HStack>
             </CardHeader>
             <Collapse in={openCardIndex === index}>
-              <CardBody>
-                {moduleSwitch(step.stepData, step.module_type_identifier, index)}{' '}
-                {/*TODO: OBS!!! vet inte om jag skrivit denna raden rätt, borde det inte vara "() =>" innan?? */}
-              </CardBody>
+              <CardBody>{moduleSwitch(step.stepData, step.module_type_identifier, index)}</CardBody>
             </Collapse>
           </Card>
         ))}

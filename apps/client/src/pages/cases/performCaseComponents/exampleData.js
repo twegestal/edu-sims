@@ -8,10 +8,10 @@ export const getMockSteps = () => {
       step_id: '9bea0534-b426-423c-bd2e-3594815ba566',
       stepData: {
         id: '9bea0534-b426-423c-bd2e-3594815ba566',
-        continue_treatment: true,
         description:
           'En 50-årig man kommer på vårdcentralen för hälsokontroll. Har flyttat från Iran till Sverige för 40 år sedan. Är gift och har två biologiska barn. Han är frisk sedan tidigare och tar inte några mediciner. Har aldrig rökt och dricker inte alkohol. Jobbar som apotekare. Han tränar bara sporadiskt. Patientens far har drabbats av en mindre hjärnblödning i 39års ålder och modern är frisk. Han är välmående och har inte några klagomål men vill bli kontrollerad i och med han fyllde 50 i år.\nVid undersökning: hjärtat slår regelbundet utan några blåsljud, lungor utan anmärkning. Ser frisk ut, dock något överviktig med BMI 29. Har inte några utan dysendokrina drag. Man tar ett blodtryck som ligger på 165/105. Man har inför besöket tagit Hb 145 g/L (134–170), Na 143 mmol/l (137–145), K 3.2 mmol/l (3.6-4.6), kreatinin 97 µmol/L (60-105).',
         prompt: 'Finns det anledning att utreda patienten vidare?',
+        continue_treatment: true,
         feedback_correct:
           'Ja (rätt svar) – feedback: Pat har spontan hypokalemi och ärftlighet för cerebrovaskulär sjukdom i ung ålder. Vilka patienter bör screenas?\nBlodtryck >160/100 mm Hg\nTerapiresistent hypertoni (patienter med okontrollerad hypertoni [>140/90 mm Hg] som behandlas med tre olika läkemedel för högt blodtryck samt patienter med kontrollerad hypertoni som behandlas med fyra eller fler olika läkemedel för högt blodtryck)\nHypertoni och spontan eller diuretikautlöst hypokalemi\nBinjureincidentalom och hypertoni\nHypertoni i kombination med ärftlighet för cerebrovaskulär sjukdom i ung ålder (<40 år)',
         feedback_incorrect:
@@ -734,6 +734,36 @@ export const getMockSteps = () => {
         feedback_incorrect:
           'Svar på analys av korrekt prover:\n\n\n\tP-Aldosteron 690 pmol/L (\n\tli 655 stå 61-978)\n\tP-Renin 2mIE/L (li 2.8-40 stå 4.4-46) \n\tA/R kvot 345 (4-65 pmol/mIE)\n\t\n\tObservera att patientens hypokalemi bör korrigeras innan analysen av A/R-kvoten tas för att undvika falskt negativa resultat.\n\tA/R-kvoten är förhöjd, vilket talar starkt för primär aldosteronism, således bör man utreda vidare patientens hypertoni.\n\tSaltbelastning är bekräftande test för primär aldosteronism.',
         max_nbr_tests: 5,
+        step_specific_values: [
+          {
+            id: '691233b3-053b-41ad-9cb9-a64ff58ea70a',
+            examination_step_id: '2e68513c-51ac-4ba6-8b34-498ff5eeeb0f',
+            examination_id: '7f7445c2-ccc9-4ebe-bf0f-76a8519ca37a',
+            value: '345',
+            is_normal: false,
+          },
+          {
+            id: 'd16b08b6-2ae9-48aa-9384-c5f2732be98f',
+            examination_step_id: '2e68513c-51ac-4ba6-8b34-498ff5eeeb0f',
+            examination_id: '4ff6272f-a199-466a-8cd7-39711fb17601',
+            value: '210 mmol/dag',
+            is_normal: false,
+          },
+          {
+            id: '2e54a7aa-bfab-4b3e-9fcc-b66ce9e6f7ed',
+            examination_step_id: '2e68513c-51ac-4ba6-8b34-498ff5eeeb0f',
+            examination_id: '33ac9446-9feb-4323-a96f-ccf846e1d9c9',
+            value: '690 pmol/L',
+            is_normal: false,
+          },
+          {
+            id: '4066f91e-7e4a-4996-b5ca-f79429414533',
+            examination_step_id: '2e68513c-51ac-4ba6-8b34-498ff5eeeb0f',
+            examination_id: '77a9d045-4191-4e7a-958a-f81fa2e7c359',
+            value: '2mlE/L',
+            is_normal: false,
+          },
+        ],
       },
     },
     {
@@ -960,6 +990,15 @@ export const getMockSteps = () => {
         feedback_incorrect:
           'Alla patienter med bekräftad primär aldosteronism bör genomgå datortomografi av binjure, för att utesluta aldosteronproducerande binjurebarkscancer, vilket är extremt sällsynt men även för att kartlägga binjurevenssystemet inför eventuell binjurevenskateterisering. Observera att syftet med datortomografi av binjurarna är inte att skilja mellan patienter med unilateral eller bilateral aldosteronöverproduktion.',
         max_nbr_tests: 5,
+        step_specific_values: [
+          {
+            id: 'a088edd5-1924-4a70-a687-4946f2505707',
+            examination_step_id: '18f0171c-78e9-4d38-a1d3-fd8edbcd99a0',
+            examination_id: '1069a1f1-5e89-4bbf-8ee1-997f5ca1fb39',
+            value: 'Datortomografi visar inte någon expansivitet i binjurar',
+            is_normal: true,
+          },
+        ],
       },
     },
     {
