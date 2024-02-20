@@ -100,8 +100,3 @@ const edu_exam_subtype = definePartsStyle({
 export const accordionTheme = defineMultiStyleConfig({
   variants: { edu_exam_type, edu_exam_subtype },
 });
-
-// Now we can use the new `custom` variant
-{
-  /* <Accordion variant="custom"> ... </Accordion> */
-}

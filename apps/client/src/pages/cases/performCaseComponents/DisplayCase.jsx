@@ -19,12 +19,12 @@ import Examination from './Examination';
 import Diagnosis from './Diagnosis';
 import Treatment from './Treatment';
 import Summary from './Summary';
-import introIcon from '../../../../assets/images/IntroIcon.png';
-import examIcon from '../../../../assets/images/ExamIcon.png';
-import diagnosisIcon from '../../../../assets/images/DiagnosisIcon.png';
-import treatmentIcon from '../../../../assets/images/TreatmentIcon.png';
-import summaryIcon from '../../../../assets/images/SummaryIcon.png';
-import questionMarkIcon from '../../../../assets/images/QuestionMarkIcon.png';
+import introIcon from '../../../../assets/images/png/IntroIcon.png';
+import examIcon from '../../../../assets/images/png/ExamIcon.png';
+import diagnosisIcon from '../../../../assets/images/png/DiagnosisIcon.png';
+import treatmentIcon from '../../../../assets/images/png/TreatmentIcon.png';
+import summaryIcon from '../../../../assets/images/png/SummaryIcon.png';
+import questionMarkIcon from '../../../../assets/images/png/QuestionMarkIcon.png';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
