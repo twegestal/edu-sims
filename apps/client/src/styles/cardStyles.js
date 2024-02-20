@@ -1,11 +1,14 @@
 import { cardAnatomy } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
 
+/**
+ * Sets up custom styles for the Chakra Card component
+ */
+
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(
   cardAnatomy.keys,
 );
 
-// define custom styles for funky variant
 const variants = {
   edu_card: definePartsStyle({
     container: {
@@ -16,5 +19,4 @@ const variants = {
   }),
 };
 
-// export variants in the component theme
 export const cardTheme = defineMultiStyleConfig({ variants });

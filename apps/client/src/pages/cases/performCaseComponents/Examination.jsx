@@ -25,6 +25,17 @@ import { useState, useEffect } from 'react';
 import GenericAccordion from '../../../components/GenericAccordion';
 import Feedback from './Feedback';
 
+/**
+ * This component sets up the examination step used when performing a medical case.
+ * The required properties are:
+ * stepData - a JSON object containing specific data for this step
+ * index - the index of this step in the order of the medical case's timeline
+ * updateIsFinishedArray - a function implemented in the parent component that handles
+ *                         which of the steps are displayed as finished and unlocked
+ * incrementActiveStepIndex - a function implemented in the parent component that
+ *                            that updates the index of the active step in the case
+ */
+
 export default function Examination({
   stepData,
   index,
@@ -53,8 +64,6 @@ export default function Examination({
       setStepSpecificValues(tempStepSpecificValues);
       setLoading(false);
     }
-
-    console.log('stepValues: ', stepSpecificValues);
   }, [stepSpecificValues]);
 
   const handleCheckBox = (id, isChecked, type, subType) => {

@@ -1,5 +1,8 @@
 import { inputAnatomy } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers, defineStyle } from '@chakra-ui/react';
+/**
+ * Sets up custom styles for the Chakra Input component
+ */
 
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(
   inputAnatomy.keys,
@@ -11,7 +14,6 @@ const edu_input = definePartsStyle({
     borderColor: 'black',
     background: 'gray.50',
 
-    // Let's also provide dark mode alternatives
     _dark: {
       borderColor: 'gray.600',
       background: 'gray.800',

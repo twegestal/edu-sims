@@ -1,6 +1,10 @@
 import { accordionAnatomy } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers, defineStyle } from '@chakra-ui/react';
 
+/**
+ * Sets up custom styles for the Chakra Accordion component
+ */
+
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(
   accordionAnatomy.keys,
 );
@@ -36,32 +40,6 @@ const edu_exam_type = definePartsStyle({
   panel: {
     padding: '1%',
   },
-
-  /* panel: {
-    border: '1px solid',
-    borderColor: 'gray.200',
-    background: 'gray.50',
-    borderRadius: 'full',
-
-    // Let's also provide dark mode alternatives
-    _dark: {
-      borderColor: 'gray.600',
-      background: 'gray.800',
-    },
-  },
-  icon: {
-    border: '1px solid',
-    borderColor: 'gray.200',
-    background: 'gray.200',
-    borderRadius: 'full',
-    color: 'gray.500',
-
-    _dark: {
-      borderColor: 'gray.600',
-      background: 'gray.600',
-      color: 'gray.400',
-    },
-  }, */
 });
 
 const edu_exam_subtype = definePartsStyle({
