@@ -1,5 +1,9 @@
 import { defineStyle, defineStyleConfig } from '@chakra-ui/react';
 
+/**
+ * Sets up custom styles for the Chakra Divider component
+ */
+
 const thick = defineStyle({
   borderWidth: '5px', // change the width of the border
   borderStyle: 'solid', // change the style of the border

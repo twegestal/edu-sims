@@ -1,8 +1,4 @@
 import {
-  Button,
-  Collapse,
-  Card,
-  CardBody,
   Text,
   Accordion,
   AccordionItem,
