@@ -25,6 +25,7 @@ import diagnosisIcon from '../../../../assets/images/png/DiagnosisIcon.png';
 import treatmentIcon from '../../../../assets/images/png/TreatmentIcon.png';
 import summaryIcon from '../../../../assets/images/png/SummaryIcon.png';
 import questionMarkIcon from '../../../../assets/images/png/QuestionMarkIcon.png';
+import GenericAccordion from '../../../components/GenericAccordion';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
@@ -264,6 +265,35 @@ export default function DisplayCase() {
   return (
     <>
       <VStack margin='1' id='stepStack' alignItems='stretch' spacing='1'>
+        <GenericAccordion
+          allowMultiple={true}
+          variant={'edu_treatment_type'}
+          accordionItems={[
+            {
+              heading: 'Tjenare',
+              content: 'en apa är söt',
+            },
+            {
+              heading: 'bertil',
+              content: (
+                <GenericAccordion
+                  allowMultiple={true}
+                  variant={'edu_treatment_subtype'}
+                  accordionItems={[
+                    {
+                      heading: 'subtäp',
+                      content: 'täptäp',
+                    },
+                    {
+                      heading: 'säpo ser dig',
+                      content: 'täpotäpttätättääääpo',
+                    },
+                  ]}
+                ></GenericAccordion>
+              ),
+            },
+          ]}
+        ></GenericAccordion>
         {steps.map((step, index) => (
           <Card key={index}>
             <CardHeader margin='-0.75'>
