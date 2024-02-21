@@ -265,35 +265,6 @@ export default function DisplayCase() {
   return (
     <>
       <VStack margin='1' id='stepStack' alignItems='stretch' spacing='1'>
-        <GenericAccordion
-          allowMultiple={true}
-          variant={'edu_treatment_type'}
-          accordionItems={[
-            {
-              heading: 'Tjenare',
-              content: 'en apa är söt',
-            },
-            {
-              heading: 'bertil',
-              content: (
-                <GenericAccordion
-                  allowMultiple={true}
-                  variant={'edu_treatment_subtype'}
-                  accordionItems={[
-                    {
-                      heading: 'subtäp',
-                      content: 'täptäp',
-                    },
-                    {
-                      heading: 'säpo ser dig',
-                      content: 'täpotäpttätättääääpo',
-                    },
-                  ]}
-                ></GenericAccordion>
-              ),
-            },
-          ]}
-        ></GenericAccordion>
         {steps.map((step, index) => (
           <Card key={index}>
             <CardHeader margin='-0.75'>
