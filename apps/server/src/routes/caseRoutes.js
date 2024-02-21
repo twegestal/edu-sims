@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { getTransaction } from '../database/databaseConnection.js';
 import * as object from '../models/object_index.js';
 import { insertSteps, updateSteps, deleteModules } from '../utils/databaseUtils.js';
-import { ForeignKeyConstraintError } from 'sequelize';
 import { validateCaseToPublish } from 'api';
 import { fetchStepData, sortAttempts } from '../utils/caseUtils.js';
 import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';

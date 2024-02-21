@@ -1,4 +1,6 @@
 import express from 'express';
+import * as object from '../models/object_index.js';
+import { ForeignKeyConstraintError } from 'sequelize';
 import { ConsoleResponses, HTTPResponses } from '../utils/serverResponses.js';
 
 export const treatmentRouter = () => {
@@ -162,6 +164,7 @@ export const treatmentRouter = () => {
   router.get('/subtype', async (req, res, _next) => {
     try {
       const id = req.header('id');
+      console.log(id)
       if(!id) {
         return res.status(400).json(HTTPResponses.Error[400]);
       }

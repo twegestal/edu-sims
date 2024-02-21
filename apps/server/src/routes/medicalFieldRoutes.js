@@ -1,5 +1,8 @@
-import express from "express"
+import express from "express";
+import * as object from '../models/object_index.js';
+import { ForeignKeyConstraintError } from 'sequelize';
 import { ConsoleResponses, HTTPResponses } from "../utils/serverResponses.js";
+
 
 export const medicalFieldRouter = () => {
   const router = express();
