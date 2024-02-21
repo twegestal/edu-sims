@@ -11,11 +11,22 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import GenericAccordion from '../../../components/GenericAccordion';
 import Feedback from './Feedback';
 import { AddIcon, DeleteIcon, SearchIcon } from '@chakra-ui/icons';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
+
+/**
+ * This component sets up the treatment step used when performing a medical case.
+ * The required properties are:
+ * stepData - a JSON object containing specific data for this step
+ * index - the index of this step in the order of the medical case's timeline
+ * updateIsFinishedArray - a function implemented in the parent component that handles
+ *                         which of the steps are displayed as finished and unlocked
+ * incrementActiveStepIndex - a function implemented in the parent component that
+ *                            that updates the index of the active step in the case
+ */
 
 export default function Treatment({
   stepData,
@@ -27,14 +38,22 @@ export default function Treatment({
   const [searchTerms, setSearchTerms] = useState({});
   const [chosenTreatments, setChosenTreatments] = useState([]);
 
-  useEffect(() => {
-    console.log('chosenTreatments: ', chosenTreatments);
-  }, [chosenTreatments]);
+  const finishStep = () => {
+    setIsFinished(true);
+    updateIsFinishedArray(index);
+    incrementActiveStepIndex();
+  };
 
-  useEffect(() => {
-    console.log('FACIT: ', stepData.step_specific_treatments);
-  }, [stepData.step_specific_treatments]);
-
+  const evaluateAnswer = () => {
+    return stepData.step_specific_treatments.every((treatment) => {
+      for (const chosenTreatment of chosenTreatments) {
+        if (treatment.treatment_id === chosenTreatment.id) {
+          return true;
+        }
+        return false;
+      }
+    });
+  };
   const setupAccordions = () => {
     return (
       <GenericAccordion
@@ -168,23 +187,6 @@ export default function Treatment({
         ))}
       </VStack>
     );
-  };
-
-  const finishStep = () => {
-    setIsFinished(true);
-    updateIsFinishedArray(index);
-    incrementActiveStepIndex();
-  };
-
-  const evaluateAnswer = () => {
-    return stepData.step_specific_treatments.every((treatment) => {
-      for (const chosenTreatment of chosenTreatments) {
-        if (treatment.treatment_id === chosenTreatment.id) {
-          return true;
-        }
-        return false;
-      }
-    });
   };
 
   return (
