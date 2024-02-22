@@ -7,8 +7,13 @@ import {
   AccordionIcon,
   Box,
 } from '@chakra-ui/react';
+import GenericAccordion from '../../../components/GenericAccordion';
+import { useEffect } from 'react';
 
 export default function Feedback({ wasCorrect, feedbackToDisplay }) {
+  useEffect(() => {
+    console.log('hallå?', feedbackToDisplay);
+  }, [feedbackToDisplay]);
   return (
     <Accordion
       allowToggle
@@ -33,4 +38,17 @@ export default function Feedback({ wasCorrect, feedbackToDisplay }) {
       </AccordionItem>
     </Accordion>
   );
+
+  /* return (
+    <GenericAccordion
+      allowMultiple={true}
+      variant={wasCorrect ? 'edu_feedback_correct' : 'edu_feedback_incorrect'}
+      accordionItems={[
+        {
+          heading: 'Feedback',
+          content: { feedbackToDisplay },
+        },
+      ]}
+    />
+  ); */
 }

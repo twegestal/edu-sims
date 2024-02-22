@@ -1,13 +1,26 @@
-
 /*
   This file continans the Diagnosis step component.
   It recieves the specific step data in the variabel stepData that is sent from DisplayCase.
 */
 
-import { Button, Box, Card, Divider, Heading, Input, InputGroup, InputRightAddon, Stack, VStack, HStack, Text } from '@chakra-ui/react';
-import { Search2Icon, AddIcon } from '@chakra-ui/icons'
+import {
+  Button,
+  Box,
+  Card,
+  Divider,
+  Heading,
+  Input,
+  InputGroup,
+  InputRightAddon,
+  Stack,
+  VStack,
+  HStack,
+  Text,
+} from '@chakra-ui/react';
+import { Search2Icon, AddIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
 import Feedback from './Feedback';
+import SearchBar from '../../../components/SearchBar';
 
 export default function Diagnosis({
   stepData,
@@ -15,26 +28,34 @@ export default function Diagnosis({
   updateIsFinishedArray,
   incrementActiveStepIndex,
 }) {
-
   const [searchTerm, setSearchTerm] = useState('');
 
   const [isCorrect, setIsCorrect] = useState();
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [isFinished, setIsFinished] = useState(false);
   const [diagnosis, setDiagnosis] = useState();
-  const [searchFieldText, setSearchFieldText] = useState("Sök efter Diagnos");
-
+  const [searchFieldText, setSearchFieldText] = useState('Sök efter Diagnos');
+  const [filteredList, setFilteredList] = useState([]);
   const finishStep = () => {
     setIsFinished(true);
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
   };
 
-  const filteredList = searchTerm
-  ? stepData.diagnosis_list.filter((diagnosis) =>
-      diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
-  : [];
+  /* const filteredList = searchTerm
+    ? stepData.diagnosis_list.filter((diagnosis) =>
+        diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : []; */
+
+  const search = (searchTerm) => {
+    setFilteredList((prevState) => {
+      const newState = stepData.diagnosis_list.filter((diagnosis) =>
+        diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+      return newState;
+    });
+  };
 
   const validateChoosenDiagnosis = () => {
     if (diagnosis === stepData.diagnosis_id) {
@@ -45,18 +66,17 @@ export default function Diagnosis({
       setFeedbackToDisplay(stepData.feedback_incorrect);
     }
     finishStep();
-  }
+  };
 
   return (
     <>
       <VStack spacing='8'>
-
         <Heading size={'md'}>{stepData.prompt}</Heading>
 
         <Divider variant='edu'></Divider>
 
         <Stack width={'100%'}>
-          <InputGroup>
+          {/* <InputGroup>
             <Input value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
             {
               if (!isFinished) {
@@ -67,16 +87,23 @@ export default function Diagnosis({
             <InputRightAddon >
               <Search2Icon />
             </InputRightAddon>
-          </InputGroup>
+          </InputGroup> */}
+          <SearchBar onSearch={search} />
         </Stack>
 
         <Stack>
           {filteredList.map((diagnosis) => (
-            <Card key={diagnosis.id} padding={'10px'} border='2px' width={'100%'} onClick={() => {
-              setDiagnosis(diagnosis.id);
-              setSearchFieldText(diagnosis.name);
-              setSearchTerm("")
-            }}>
+            <Card
+              key={diagnosis.id}
+              padding={'10px'}
+              border='2px'
+              width={'100%'}
+              onClick={() => {
+                setDiagnosis(diagnosis.id);
+                setSearchFieldText(diagnosis.name);
+                /* setSearchTerm(''); */
+              }}
+            >
               <HStack>
                 <AddIcon></AddIcon>
                 <Text textAlign={'left'}>{diagnosis.name}</Text>
