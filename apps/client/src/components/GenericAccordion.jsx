@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Heading,
   Text,
+  Box,
   HStack,
 } from '@chakra-ui/react';
 
@@ -17,8 +18,10 @@ import {
  * variant - a string with the custom variant to be used. choose on of the following:
  *           edu_exam_type
  *           edu_exam_subtype
- *            ....
- *            ....
+ *           edu_treatment_type
+ *           edu_treatment_subtype
+ *           edu_feedback_correct
+ *           edu_feedback_incorrect
  * accordionItems - an array of JSON-objects with the following structure:
  *                  [
  *                    { heading: the title that should go in the AccordionButton
@@ -35,12 +38,21 @@ export default function GenericAccordion({ allowMultiple, variant, accordionItem
           <Heading size='md'>
             <AccordionButton>
               <HStack width='100%' justifyContent='space-between'>
-                <Text>{accordionItem.heading}</Text>
+                <Box
+                  flex='1'
+                  textAlign={
+                    variant === 'edu_feedback_correct' || variant === 'edu_feedback_incorrect'
+                      ? 'center'
+                      : 'left'
+                  }
+                >
+                  {accordionItem.heading}
+                </Box>
                 <AccordionIcon />
               </HStack>
             </AccordionButton>
           </Heading>
-          <AccordionPanel>{accordionItem.content}</AccordionPanel>
+          <AccordionPanel textAlign='left'>{accordionItem.content}</AccordionPanel>
         </AccordionItem>
       ))}
     </Accordion>

@@ -141,6 +141,87 @@ const edu_treatment_subtype = definePartsStyle({
   },
 });
 
+const edu_feedback_correct = definePartsStyle({
+  panel: {
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
+
+  button: {
+    backgroundColor: 'success.bg',
+    color: 'black',
+
+    _expanded: {
+      backgroundColor: 'success.bg',
+      color: 'black',
+    },
+
+    _hover: {
+      backgroundColor: 'success.bg',
+      color: 'black',
+    },
+  },
+
+  container: {
+    border: '2px solid',
+    borderRadius: '10px',
+    borderColor: 'gray.300',
+    marginBottom: '1%',
+    marginTop: '1%',
+    backgroundColor: '#f2f2f2',
+  },
+
+  icon: {
+    color: 'black',
+  },
+});
+
+const edu_feedback_incorrect = definePartsStyle({
+  panel: {
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
+
+  button: {
+    backgroundColor: 'fail.bg',
+    color: 'black',
+
+    _expanded: {
+      backgroundColor: 'fail.bg',
+      color: 'black',
+    },
+
+    _hover: {
+      backgroundColor: 'fail.bg',
+      color: 'black',
+    },
+  },
+
+  container: {
+    border: '2px solid',
+    borderColor: 'gray.300',
+    borderRadius: '10px',
+    marginBottom: '1%',
+    marginTop: '1%',
+    backgroundColor: '#f2f2f2',
+  },
+
+  icon: {
+    color: 'black',
+  },
+});
+
 export const accordionTheme = defineMultiStyleConfig({
-  variants: { edu_exam_type, edu_exam_subtype, edu_treatment_type, edu_treatment_subtype },
+  variants: {
+    edu_exam_type,
+    edu_exam_subtype,
+    edu_treatment_type,
+    edu_treatment_subtype,
+    edu_feedback_correct,
+    edu_feedback_incorrect,
+  },
 });
