@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Heading,
   Text,
+  Box,
   HStack,
 } from '@chakra-ui/react';
 
@@ -37,12 +38,21 @@ export default function GenericAccordion({ allowMultiple, variant, accordionItem
           <Heading size='md'>
             <AccordionButton>
               <HStack width='100%' justifyContent='space-between'>
-                <Text>{accordionItem.heading}</Text>
+                <Box
+                  flex='1'
+                  textAlign={
+                    variant === 'edu_feedback_correct' || variant === 'edu_feedback_incorrect'
+                      ? 'center'
+                      : 'left'
+                  }
+                >
+                  {accordionItem.heading}
+                </Box>
                 <AccordionIcon />
               </HStack>
             </AccordionButton>
           </Heading>
-          <AccordionPanel>{accordionItem.content}</AccordionPanel>
+          <AccordionPanel textAlign='left'>{accordionItem.content}</AccordionPanel>
         </AccordionItem>
       ))}
     </Accordion>

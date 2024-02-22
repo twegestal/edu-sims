@@ -142,6 +142,13 @@ const edu_treatment_subtype = definePartsStyle({
 });
 
 const edu_feedback_correct = definePartsStyle({
+  panel: {
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
+
   button: {
     backgroundColor: 'success.bg',
     color: 'black',
@@ -169,12 +176,16 @@ const edu_feedback_correct = definePartsStyle({
   icon: {
     color: 'black',
   },
-  panel: {
-    padding: '1%',
-  },
 });
 
 const edu_feedback_incorrect = definePartsStyle({
+  panel: {
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
+
   button: {
     backgroundColor: 'fail.bg',
     color: 'black',
@@ -192,8 +203,8 @@ const edu_feedback_incorrect = definePartsStyle({
 
   container: {
     border: '2px solid',
-    borderRadius: '10px',
     borderColor: 'gray.300',
+    borderRadius: '10px',
     marginBottom: '1%',
     marginTop: '1%',
     backgroundColor: '#f2f2f2',
@@ -201,9 +212,6 @@ const edu_feedback_incorrect = definePartsStyle({
 
   icon: {
     color: 'black',
-  },
-  panel: {
-    padding: '1%',
   },
 });
 
