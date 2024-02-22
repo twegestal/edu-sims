@@ -213,15 +213,8 @@ export default function Treatment({
         )}
 
         <Divider variant='edu' />
-        <Button
-          isDisabled={chosenTreatments.length === 0 || isFinished}
-          width='100%'
-          onClick={finishStep}
-        >
-          Klar med behandlingar
-        </Button>
 
-        {isFinished === true && (
+        {isFinished ? (
           <>
             {evaluateAnswer() ? (
               <Feedback wasCorrect={true} feedbackToDisplay={stepData.feedback_correct}></Feedback>
@@ -232,6 +225,10 @@ export default function Treatment({
               ></Feedback>
             )}
           </>
+        ) : (
+          <Button isDisabled={chosenTreatments.length === 0} width='100%' onClick={finishStep}>
+            Klar med behandlingar
+          </Button>
         )}
       </VStack>
     </>

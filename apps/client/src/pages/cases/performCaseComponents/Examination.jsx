@@ -314,14 +314,24 @@ export default function Examination({
       <VStack spacing='5'>
         <Text align='left'>{stepData.prompt}</Text>
 
-        <Divider variant='edu' />
+        {loading === false && isFinished === false && (
+          <>
+            <Divider variant='edu' />
 
-        <Heading size='sm'>Välj utredningar från listan:</Heading>
+            <Heading size='sm'>Välj utredningar från listan:</Heading>
 
-        {loading === false && setupAccordions()}
-        <Button isDisabled={examinationsToRun.length < 1} width='100%' onClick={runExaminations}>
-          Genomför utredningar
-        </Button>
+            {setupAccordions()}
+
+            <Button
+              isDisabled={examinationsToRun.length < 1}
+              width='100%'
+              onClick={runExaminations}
+            >
+              Genomför utredningar
+            </Button>
+          </>
+        )}
+
         <Divider variant='edu' />
 
         {resultList.length > 0 && setupResultList()}
