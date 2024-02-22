@@ -11,11 +11,11 @@ export const getMockSteps = () => {
         description:
           'En 50-årig man kommer på vårdcentralen för hälsokontroll. Har flyttat från Iran till Sverige för 40 år sedan. Är gift och har två biologiska barn. Han är frisk sedan tidigare och tar inte några mediciner. Har aldrig rökt och dricker inte alkohol. Jobbar som apotekare. Han tränar bara sporadiskt. Patientens far har drabbats av en mindre hjärnblödning i 39års ålder och modern är frisk. Han är välmående och har inte några klagomål men vill bli kontrollerad i och med han fyllde 50 i år.\nVid undersökning: hjärtat slår regelbundet utan några blåsljud, lungor utan anmärkning. Ser frisk ut, dock något överviktig med BMI 29. Har inte några utan dysendokrina drag. Man tar ett blodtryck som ligger på 165/105. Man har inför besöket tagit Hb 145 g/L (134–170), Na 143 mmol/l (137–145), K 3.2 mmol/l (3.6-4.6), kreatinin 97 µmol/L (60-105).',
         prompt: 'Finns det anledning att utreda patienten vidare?',
-        continue_treatment: true,
         feedback_correct:
           'Ja (rätt svar) – feedback: Pat har spontan hypokalemi och ärftlighet för cerebrovaskulär sjukdom i ung ålder. Vilka patienter bör screenas?\nBlodtryck >160/100 mm Hg\nTerapiresistent hypertoni (patienter med okontrollerad hypertoni [>140/90 mm Hg] som behandlas med tre olika läkemedel för högt blodtryck samt patienter med kontrollerad hypertoni som behandlas med fyra eller fler olika läkemedel för högt blodtryck)\nHypertoni och spontan eller diuretikautlöst hypokalemi\nBinjureincidentalom och hypertoni\nHypertoni i kombination med ärftlighet för cerebrovaskulär sjukdom i ung ålder (<40 år)',
         feedback_incorrect:
           'Nej (fel svar) – feedback: Pat har BT>160/100, spontan hypokalemi och ärftlighet för cerebrovaskulär sjukdom i ung ålder och bör därför screenas för sekundär hypertoni/primär aldosteronism. Vilka patienter bör screenas?\nBlodtryck >160/100 mm Hg\nTerapiresistent hypertoni (patienter med okontrollerad hypertoni [>140/90 mm Hg] som behandlas med tre olika läkemedel för högt blodtryck samt patienter med kontrollerad hypertoni som behandlas med fyra eller fler olika läkemedel för högt blodtryck)\nHypertoni och spontan eller diuretikautlöst hypokalemi\nBinjureincidentalom och hypertoni\nHypertoni i kombination med ärftlighet för cerebrovaskulär sjukdom i ung ålder (<40 år)',
+        continue_treatment: true,
       },
     },
     {
@@ -1231,6 +1231,14 @@ export const getMockSteps = () => {
           'Rätt svar! Mineralkortikoidreceptorantagonister sänker blodtrycket och korrigerar eventuell hypokalemi. De utgör specifik behandling för primär aldosteronism pga att de blockerar aldosteronets skadliga effekter på bland annat hjärta, kärl och njurar.',
         feedback_incorrect:
           'Mineralkortikoidreceptorantagonister sänker blodtrycket och korrigerar eventuell hypokalemi. De utgör specifik behandling för primär aldosteronism pga att de blockerar aldosteronets skadliga effekter på bland annat hjärta, kärl och njurar.',
+        step_specific_treatments: [
+          {
+            id: 'a0a54f3b-58c5-42d7-9a2f-8bf2b4f4d9da',
+            treatment_step_id: '107dc8b0-b826-4cfc-96b2-7313ff90fa76',
+            treatment_id: 'da3f4926-96d6-4a7b-ab69-001f886f6fcc',
+            value: 'Normal dosering',
+          },
+        ],
       },
     },
     {
