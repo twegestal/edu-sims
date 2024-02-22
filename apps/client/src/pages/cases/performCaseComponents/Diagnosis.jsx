@@ -9,16 +9,13 @@ import {
   Card,
   Divider,
   Heading,
-  Input,
-  InputGroup,
-  InputRightAddon,
   Stack,
   VStack,
   HStack,
   Text,
 } from '@chakra-ui/react';
-import { Search2Icon, AddIcon } from '@chakra-ui/icons';
-import { useState, useEffect } from 'react';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { useState } from 'react';
 import Feedback from './Feedback';
 import SearchBar from '../../../components/SearchBar';
 
@@ -28,37 +25,72 @@ export default function Diagnosis({
   updateIsFinishedArray,
   incrementActiveStepIndex,
 }) {
-  const [searchTerm, setSearchTerm] = useState('');
-
+  const [diagnosisName, setDiagnosisName] = useState();
   const [isCorrect, setIsCorrect] = useState();
   const [feedbackToDisplay, setFeedbackToDisplay] = useState();
   const [isFinished, setIsFinished] = useState(false);
-  const [diagnosis, setDiagnosis] = useState();
-  const [searchFieldText, setSearchFieldText] = useState('Sök efter Diagnos');
+  const [diagnosisId, setDiagnosisId] = useState("");
+  const [choosenDiagnosisCard, setchoosenDiagnosisCard] = useState();
   const [filteredList, setFilteredList] = useState([]);
+
   const finishStep = () => {
     setIsFinished(true);
     updateIsFinishedArray(index);
     incrementActiveStepIndex();
   };
 
-  /* const filteredList = searchTerm
-    ? stepData.diagnosis_list.filter((diagnosis) =>
-        diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    : []; */
-
   const search = (searchTerm) => {
-    setFilteredList((prevState) => {
-      const newState = stepData.diagnosis_list.filter((diagnosis) =>
-        diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-      return newState;
-    });
+    if (searchTerm) {
+      setFilteredList((prevState) => {
+        const newState = stepData.diagnosis_list.filter((diagnosis) =>
+          diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+        return newState;
+      });
+    } else {
+      setFilteredList([]);
+    }
+
   };
 
+  const getChoosenDiagnosisCard = () => {
+    return (
+      <Stack spacing={3}>
+        <Heading size={'sm'}>Vald Diagnos</Heading>,
+        <HStack>
+          <Box
+            border='1px solid'
+            borderRadius='5'
+            paddingTop='1%'
+            paddingBottom='1%'
+            paddingRight='2%'
+            paddingLeft='2%'
+            bg='brand.bg'
+            width='87%'
+          >
+            <Text textAlign='left'>{diagnosisName}</Text>
+          </Box>
+
+          {isFinished === false && (
+            <Box
+              border='1px solid'
+              borderRadius='5'
+              padding='1%'
+              paddingLeft='2%'
+              paddingRight='2%'
+              bg='fail.bg'
+              onClick={() => { setDiagnosisId(); setchoosenDiagnosisCard(); }}
+            >
+              <DeleteIcon />
+            </Box>
+          )}
+
+        </HStack>
+      </Stack>)
+  }
+
   const validateChoosenDiagnosis = () => {
-    if (diagnosis === stepData.diagnosis_id) {
+    if (diagnosisId === stepData.diagnosis_id) {
       setIsCorrect(true);
       setFeedbackToDisplay(stepData.feedback_correct);
     } else {
@@ -71,55 +103,46 @@ export default function Diagnosis({
   return (
     <>
       <VStack spacing='8'>
-        <Heading size={'md'}>{stepData.prompt}</Heading>
+        <Text size={'md'}>{stepData.prompt}</Text>
 
         <Divider variant='edu'></Divider>
+        {!diagnosisId ? (
+          <Stack width={'100%'}>
+            <SearchBar onSearch={search} />
 
-        <Stack width={'100%'}>
-          {/* <InputGroup>
-            <Input value={searchFieldText} onClick={() => {if (!isFinished) {setSearchFieldText("")}}} onChange={(e) => 
+            {filteredList.map((diagnosis) => (
+              <Card
+                key={diagnosis.id}
+                padding={'10px'}
+                spacing={-1}
+                border='2px'
+                width={'100%'}
+                onClick={() => {
+                  setDiagnosisId(diagnosis.id);
+                  setFilteredList([]);
+                  setDiagnosisName(diagnosis.name);
+                }}
+              >
+                <HStack>
+                  <AddIcon></AddIcon>
+                  <Text textAlign={'left'}>{diagnosis.name}</Text>
+                </HStack>
+              </Card>
+            ))}
+
+          </Stack>) : (
+          <Stack width={'100%'}>
             {
-              if (!isFinished) {
-                setSearchTerm(e.target.value)
-                setSearchFieldText(e.target.value)
-              }
-            }} />
-            <InputRightAddon >
-              <Search2Icon />
-            </InputRightAddon>
-          </InputGroup> */}
-          <SearchBar onSearch={search} />
-        </Stack>
+              getChoosenDiagnosisCard()
+            }
+          </Stack>)}
 
-        <Stack>
-          {filteredList.map((diagnosis) => (
-            <Card
-              key={diagnosis.id}
-              padding={'10px'}
-              border='2px'
-              width={'100%'}
-              onClick={() => {
-                setDiagnosis(diagnosis.id);
-                setSearchFieldText(diagnosis.name);
-                /* setSearchTerm(''); */
-              }}
-            >
-              <HStack>
-                <AddIcon></AddIcon>
-                <Text textAlign={'left'}>{diagnosis.name}</Text>
-              </HStack>
-            </Card>
-          ))}
-        </Stack>
 
-        {isFinished === false && (
-          <Button onClick={() => validateChoosenDiagnosis()}>Ställ Diagnos</Button>
-        )}
-
-        <Divider variant='edu'></Divider>
-
-        {isFinished === true && (
+        {isFinished === true ? (
+          <Divider variant='edu'></Divider>,
           <Feedback wasCorrect={isCorrect} feedbackToDisplay={feedbackToDisplay}></Feedback>
+        ) : (
+          <Button onClick={() => validateChoosenDiagnosis()} isDisabled={!diagnosisId}>Ställ Diagnos</Button>
         )}
       </VStack>
     </>
