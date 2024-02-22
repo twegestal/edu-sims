@@ -25,8 +25,6 @@ import diagnosisIcon from '../../../../assets/images/png/DiagnosisIcon.png';
 import treatmentIcon from '../../../../assets/images/png/TreatmentIcon.png';
 import summaryIcon from '../../../../assets/images/png/SummaryIcon.png';
 import questionMarkIcon from '../../../../assets/images/png/QuestionMarkIcon.png';
-import GenericAccordion from '../../../components/GenericAccordion';
-import Feedback from './Feedback';
 
 export default function DisplayCase() {
   const steps = getMockSteps();
